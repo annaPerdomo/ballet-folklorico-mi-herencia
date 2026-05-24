@@ -1167,73 +1167,170 @@
        CLASSES SECTION
     ════════════════════════════════════════════════════════════ */
     #classes {
-      background: linear-gradient(165deg, #1e0a10 0%, #220e14 30%, #1a0a0e 60%, #160810 100%);
+      background: linear-gradient(165deg, #162040 0%, #1e2a4a 30%, #142038 60%, #101a30 100%);
       padding-block: var(--section-gap);
     }
 
     .classes-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
       margin-block-start: 2rem;
     }
 
+    /* Double gold frame (like about-image-frame but without corner points) */
     .class-card {
-      background: var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1), border-color 0.22s;
+      background: var(--bg-elevated);
+      border-radius: 0;
+      padding: 12px;
       position: relative;
-      border-top: 3px solid var(--card-accent, var(--gold));
+      transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1);
+      text-align: center;
     }
+    /* Outer gold border */
+    .class-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--gold-dark);
+      border-radius: 0;
+      pointer-events: none;
+    }
+    /* Inner gold border */
     .class-card::after {
-      content: none;
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 0;
+      pointer-events: none;
     }
-    .class-card:nth-child(1) { --card-accent: #c9a84c; }
-    .class-card:nth-child(2) { --card-accent: #2a9d8f; }
-    .class-card:nth-child(3) { --card-accent: #c7295d; }
-    .class-card:nth-child(4) { --card-accent: #d4707a; }
 
     .class-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-      border-color: rgba(201,168,76,0.15);
+    }
+
+    .class-card-inner {
+      position: relative;
+      z-index: 1;
+      padding: 1.75rem 1.25rem;
     }
 
     .class-card h3 {
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: var(--gold-light);
-      margin-block-end: 1rem;
+      color: #fff;
+      margin-block-end: 1.5rem;
       line-height: 1.3;
+      letter-spacing: 0.02em;
     }
 
     .class-card dl {
       font-size: 0.9rem;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.35rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      text-align: center;
+    }
+
+    .class-card .dl-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      padding-block: 0.75rem;
+    }
+
+    /* Gold detail divider between dl rows — line with star */
+    .class-card .dl-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-inline: 0.5rem;
+    }
+    .class-card .dl-divider::before,
+    .class-card .dl-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gold-dark);
+    }
+    .class-card .dl-divider-star {
+      color: var(--gold);
+      font-size: 0.7rem;
+      line-height: 1;
     }
 
     .class-card dt {
       font-family: var(--font-ui);
       font-weight: 800;
-      color: var(--text-muted);
-      font-size: 0.7rem;
+      color: var(--gold);
+      font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      align-self: center;
-      padding: 0.15rem 0.5rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 4px;
-      white-space: nowrap;
+      letter-spacing: 0.12em;
     }
 
     .class-card dd {
       color: var(--text-secondary);
-      font-size: 0.88rem;
+      font-size: 0.92rem;
+    }
+
+    /* Promo banner (First 4 Sessions free) */
+    .classes-promo {
+      margin-block-start: 1.5rem;
+      background: var(--bg-elevated);
+      padding: 12px;
+      position: relative;
+    }
+    .classes-promo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--gold-dark);
+      pointer-events: none;
+    }
+    .classes-promo::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(201,168,76,0.35);
+      pointer-events: none;
+    }
+    .classes-promo-inner {
+      position: relative;
+      z-index: 1;
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+    }
+    .classes-promo h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-block-end: 0.75rem;
+    }
+    .classes-promo-details {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .classes-promo-details strong {
+      color: var(--gold);
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-inline-end: 0.4rem;
+    }
+    .classes-promo-details .dl-divider-star {
+      color: var(--gold);
+      font-size: 0.6rem;
     }
 
     #classes p > a {
@@ -1560,7 +1657,7 @@
 
       /* Classes */
       .classes-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-      .class-card { padding: 1.25rem; }
+      .class-card { padding: 1.5rem 1.25rem; }
 
       /* Contact */
       .book-layout { grid-template-columns: 1fr; gap: 2rem; }
@@ -1673,10 +1770,12 @@
 
       /* ── Classes — single column ── */
       .classes-grid { grid-template-columns: 1fr; gap: 1rem; }
-      .class-card { padding: 1.25rem; }
+      .class-card { padding: 1.5rem 1.25rem; }
       .class-card h3 { font-size: 1.1rem; }
       .class-card dl { font-size: 0.82rem; }
       .class-card dt { font-size: 0.62rem; }
+      .classes-promo-details { flex-direction: column; gap: 0.5rem; }
+      .classes-promo-details .dl-divider-star { display: none; }
 
       /* ── Contact ── */
       .book-layout { gap: 1.5rem; }
@@ -2347,7 +2446,7 @@
     <!-- ── EVENTS / PERFORMANCES ──────────────────────────────── -->
     <section id="performances" aria-labelledby="performances-heading">
       <div class="container text-center">
-        <span class="section-label" data-i18n="performances.label">Próximas Presentaciones</span>
+        <span class="section-label" data-i18n="performances.label">Nuestras Presentaciones</span>
         <h2 class="section-heading" id="performances-heading" data-i18n="performances.heading">
           Únete a nuestra celebración
         </h2>
@@ -2400,10 +2499,7 @@
       <div class="container">
         <span class="section-label" data-i18n="classes.label">Aprende Con Nosotros</span>
         <h2 class="section-heading" id="classes-heading" data-i18n="classes.heading">Clases</h2>
-        <p class="section-subheading" style="font-style:italic;" data-i18n="classes.subheading">
-          Desde 6 años · Todos los niveles · Primeras 4 sesiones GRATIS
-        </p>
-        <div class="heading-rule"></div>
+        <div class="story-divider"></div>
 
         <p style="margin-block-start:2rem;color:var(--text-secondary);max-width:54rem;" data-i18n="classes.description">
           Nuestra temporada de primavera 2026 está abierta y estamos recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la edad adulta. Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.
@@ -2411,44 +2507,65 @@
 
         <div class="classes-grid">
           <article class="class-card">
-            <h3 data-i18n="class1.name">Jóvenes (6–12)</h3>
-            <dl>
-              <dt data-i18n="class.label.level">Nivel</dt>
-              <dd data-i18n="class1.level">Principiante – Intermedio</dd>
-              <dt data-i18n="class.label.location">Ubicación</dt>
-              <dd data-i18n="class1.location">Hacienda Heights, CA</dd>
-            </dl>
+            <div class="class-card-inner">
+              <h3 data-i18n="class1.name">Jóvenes (6–12)</h3>
+              <dl>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.level">Nivel</dt>
+                  <dd data-i18n="class1.level">Principiante – Intermedio</dd>
+                </div>
+                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.location">Ubicación</dt>
+                  <dd data-i18n="class1.location">Hacienda Heights, CA</dd>
+                </div>
+              </dl>
+            </div>
           </article>
 
           <article class="class-card">
-            <h3 data-i18n="class2.name">Adolescentes (13–17)</h3>
-            <dl>
-              <dt data-i18n="class.label.level">Nivel</dt>
-              <dd data-i18n="class2.level">Todos los niveles</dd>
-              <dt data-i18n="class.label.location">Ubicación</dt>
-              <dd data-i18n="class2.location">Hacienda Heights, CA</dd>
-            </dl>
+            <div class="class-card-inner">
+              <h3 data-i18n="class2.name">Adolescentes (13–17)</h3>
+              <dl>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.level">Nivel</dt>
+                  <dd data-i18n="class2.level">Todos los niveles</dd>
+                </div>
+                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.location">Ubicación</dt>
+                  <dd data-i18n="class2.location">Hacienda Heights, CA</dd>
+                </div>
+              </dl>
+            </div>
           </article>
 
           <article class="class-card">
-            <h3 data-i18n="class3.name">Adultos (18+)</h3>
-            <dl>
-              <dt data-i18n="class.label.level">Nivel</dt>
-              <dd data-i18n="class3.level">Todos los niveles</dd>
-              <dt data-i18n="class.label.location">Ubicación</dt>
-              <dd data-i18n="class3.location">Hacienda Heights, CA</dd>
-            </dl>
+            <div class="class-card-inner">
+              <h3 data-i18n="class3.name">Adultos (18+)</h3>
+              <dl>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.level">Nivel</dt>
+                  <dd data-i18n="class3.level">Todos los niveles</dd>
+                </div>
+                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
+                <div class="dl-row">
+                  <dt data-i18n="class.label.location">Ubicación</dt>
+                  <dd data-i18n="class3.location">Hacienda Heights, CA</dd>
+                </div>
+              </dl>
+            </div>
           </article>
 
-          <article class="class-card">
+        </div>
+
+        <div class="classes-promo">
+          <div class="classes-promo-inner">
             <h3 data-i18n="class4.name">Primeras 4 Sesiones — GRATIS</h3>
-            <dl>
-              <dt data-i18n="class.label.who">Quién</dt>
-              <dd data-i18n="class4.who">Todos los nuevos bailarines, desde 6 años</dd>
-              <dt data-i18n="class.label.how">Cómo</dt>
-              <dd data-i18n="class4.how">Mándanos un mensaje para comenzar</dd>
-            </dl>
-          </article>
+            <div class="classes-promo-details">
+              <span><strong data-i18n="class.label.who">Quién</strong> <span data-i18n="class4.who">Todos los nuevos bailarines, desde 6 años</span></span>
+            </div>
+          </div>
         </div>
 
         <p style="margin-block-start:2rem;color:var(--text-secondary);" data-i18n="classes.contact">
@@ -2884,7 +3001,7 @@
         "gallery.photo":   "Foto",
 
         // Events
-        "performances.label":   "Próximas Presentaciones",
+        "performances.label":   "Nuestras Presentaciones",
         "performances.heading": "Únete a nuestra celebración",
         "performances.cta":     "Haz tu evento inolvidable",
         "events.past":          "Evento pasado",
@@ -2894,7 +3011,6 @@
         // Classes
         "classes.label":      "Aprende Con Nosotros",
         "classes.heading":    "Clases",
-        "classes.subheading": "Desde 6 años · Todos los niveles · Primeras 4 sesiones GRATIS",
         "classes.description":"Nuestra temporada de primavera 2026 está abierta y estamos recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la edad adulta. Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.",
         "class1.name":        "Jóvenes (6–12)",
         "class1.level":       "Principiante – Intermedio",
@@ -3003,7 +3119,7 @@
         "gallery.photo":   "Photo",
 
         // Events
-        "performances.label":   "Upcoming Performances",
+        "performances.label":   "Our Performances",
         "performances.heading": "Join our celebration",
         "performances.cta":     "Make Your Event Unforgettable",
         "events.past":          "Past event",
@@ -3013,7 +3129,6 @@
         // Classes
         "classes.label":      "Learn With Us",
         "classes.heading":    "Classes",
-        "classes.subheading": "Ages 6 and up · All levels welcome · First 4 sessions FREE",
         "classes.description":"Our 2026 Spring season is now open and we are welcoming new dancers! Whether you're stepping onto the dance floor for the first time or you're a seasoned performer, Mi Herencia is your home. We accept dancers from age 6 through adulthood. Come try your first four practice sessions completely free.",
         "class1.name":        "Youth (Ages 6–12)",
         "class1.level":       "Beginner – Intermediate",
