@@ -1365,13 +1365,38 @@
        CONTACT / BOOK SECTION
     ════════════════════════════════════════════════════════════ */
     #contact {
-      background: linear-gradient(175deg, #1a0e16 0%, #1e1220 35%, #16101c 65%, #120a14 100%);
+      background:
+        radial-gradient(ellipse 60% 50% at 0% 0%, rgba(199,41,93,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 100% 100%, rgba(42,157,143,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        linear-gradient(175deg, #fdf9f3 0%, #faf5ec 40%, #fdf9f3 100%);
       padding-block: var(--section-gap);
+      position: relative;
+    }
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #c7295d, #c9a84c, #2a9d8f, #6b3fa0, #c7295d);
+      background-size: 200% 100%;
+      animation: fiesta-bar 8s linear infinite;
+    }
+    @keyframes fiesta-bar {
+      0%   { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    #contact .section-label {
+      color: #c7295d;
+    }
+    #contact .section-heading {
+      color: #1a0e16;
     }
 
     .book-layout {
       display: grid;
-      grid-template-columns: 1fr 1.6fr;
+      grid-template-columns: 1fr 1.2fr;
       gap: 3rem;
       align-items: start;
     }
@@ -1381,66 +1406,102 @@
     }
 
     .book-info {
-      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-      border: 1px solid rgba(201,168,76,0.15);
+      color: #4a3f35;
+      position: relative;
+    }
+
+    .book-info .contact-intro {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #5a4e42;
+      margin-block-end: 2rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-block-end: 1.35rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .contact-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .contact-item-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .contact-item-icon.loc   { background: linear-gradient(135deg, #c7295d, #e0446f); }
+    .contact-item-icon.phone { background: linear-gradient(135deg, #2a9d8f, #38c4b2); }
+    .contact-item-icon.email { background: linear-gradient(135deg, #c9a84c, #dfc06a); }
+    .contact-item-icon.social { background: linear-gradient(135deg, #6b3fa0, #8b5fcf); }
+    .contact-item-text strong {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9a8e7e;
+      margin-block-end: 0.15rem;
+    }
+    .contact-item-text a,
+    .contact-item-text span {
+      color: #2a2420;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .contact-item-text a:hover { color: #c7295d; }
+
+    /* Form — light fiesta mode */
+    .book-form-wrapper fieldset {
+      border: none;
       border-radius: var(--radius-lg);
       padding: 2rem;
-      color: var(--text-secondary);
+      background: #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
       position: relative;
       overflow: hidden;
     }
-    .book-info::before {
+    .book-form-wrapper fieldset::before {
       content: '';
       position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
-      border-radius: 50%;
-      background: rgba(201,168,76,0.06);
-      pointer-events: none;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #c7295d, #c9a84c, #2a9d8f);
     }
 
-    .book-info h3 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--gold-light);
-      margin-block: 1.5rem 0.4rem;
-      letter-spacing: 0.01em;
-    }
-    .book-info h3:first-child { margin-block-start: 0; }
-
-    .book-info p, .book-info address {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      font-style: normal;
-      line-height: 1.7;
-    }
-
-    .book-info ul { list-style: none; }
-    .book-info a {
-      color: var(--gold-light);
-      text-decoration: none;
-      font-weight: 700;
-      transition: color 0.2s;
-    }
-    .book-info a:hover { color: #fff; text-decoration: underline; }
-
-    /* Form */
-    fieldset {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      background: var(--bg-card);
-      box-shadow: var(--shadow-card);
-    }
-
-    legend {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--gold-light);
+    .book-form-wrapper legend {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: #c7295d;
       padding-inline: 0.75rem;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
     }
 
     .form-group {
@@ -1450,11 +1511,11 @@
     .form-group label {
       display: block;
       font-family: var(--font-ui);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: #6b5e50;
       margin-block-end: 0.4rem;
     }
 
@@ -1462,34 +1523,53 @@
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 0.65rem 1rem;
-      border: 1.5px solid rgba(255,255,255,0.1);
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #e0d6c8;
       border-radius: var(--radius);
-      background: var(--bg-elevated);
-      color: var(--text-primary);
+      background: #faf7f2;
+      color: #2a2420;
       font-family: var(--font-body);
       font-size: 0.95rem;
       transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #b8ad9e;
     }
 
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+      border-color: #c7295d;
+      box-shadow: 0 0 0 3px rgba(199,41,93,0.1);
     }
 
     .form-group textarea { resize: vertical; min-height: 110px; }
-    .form-group select { cursor: pointer; }
-    .form-group select option { background: var(--bg-card); color: var(--text-primary); }
+    .form-group select { cursor: pointer; color: #2a2420; }
+    .form-group select option { background: #fff; color: #2a2420; }
+
+    #contact .btn-gold {
+      background: linear-gradient(135deg, #c7295d 0%, #d44478 100%);
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 16px rgba(199,41,93,0.25);
+    }
+    #contact .btn-gold:hover {
+      background: linear-gradient(135deg, #a82050 0%, #c7295d 100%);
+      box-shadow: 0 6px 24px rgba(199,41,93,0.35);
+      transform: translateY(-1px);
+    }
 
     .form-notice {
       font-family: var(--font-ui);
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: #9a8e7e;
       font-style: italic;
       margin-block-start: 1rem;
+      text-align: center;
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -1684,7 +1764,6 @@
 
       /* Contact */
       .book-layout { grid-template-columns: 1fr; gap: 2rem; }
-      .book-info { padding: 1.5rem; }
       fieldset { padding: 1.5rem 1.25rem; }
 
       /* Footer */
@@ -1802,10 +1881,8 @@
 
       /* ── Contact ── */
       .book-layout { gap: 1.5rem; }
-      .book-info { padding: 1.25rem; }
-      .book-info h3 { font-size: 1rem; margin-block: 1.25rem 0.35rem; }
-      .book-info p, .book-info address { font-size: 0.82rem; }
       fieldset { padding: 1.25rem 1rem; }
+      .form-row { grid-template-columns: 1fr; }
       .form-group label { font-size: 0.68rem; }
       .form-group input,
       .form-group select,
@@ -2714,111 +2791,109 @@
     <!-- ── CONTACT / BOOK ─────────────────────────────────────── -->
     <section id="contact" aria-labelledby="contact-heading">
       <div class="container">
-        <span class="section-label" data-i18n="contact.label">Contacto</span>
-        <h2 class="section-heading" id="contact-heading" data-i18n="contact.heading">Hablemos.</h2>
-        <p class="section-subheading" data-i18n="contact.subheading">
-          Respondemos en menos de 24 horas.
-        </p>
-        <div class="heading-rule"></div>
-
         <div class="book-layout">
           <!-- Contact info sidebar -->
           <aside class="book-info" aria-label="Información de contacto">
-            <h3 data-i18n="contact.info.phone.label">Teléfono</h3>
-            <address>
-              <p>
+            <span class="section-label" data-i18n="contact.label">Contacto</span>
+            <h2 class="section-heading" id="contact-heading" style="text-align:left;" data-i18n="contact.heading">Hablemos.</h2>
+            <p class="contact-intro" data-i18n="contact.intro">
+              Nos encantaría saber de ti. Ya sea que tengas preguntas sobre nuestras clases, próximos eventos, o quieras contratar una presentación, envíanos un mensaje y te responderemos lo antes posible. Únete a nuestra familia — sé parte de nuestra tradición, nuestra cultura y nuestra comunidad.
+            </p>
+
+            <div class="contact-item">
+              <span class="contact-item-icon loc">&#9906;</span>
+              <div class="contact-item-text">
+                <strong data-i18n="contact.info.location.label">Ubicación</strong>
+                <span data-i18n="contact.info.location.value">Hacienda Heights, CA</span>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <span class="contact-item-icon phone">&#9742;</span>
+              <div class="contact-item-text">
+                <strong data-i18n="contact.info.phone.label">Teléfono</strong>
                 <a href="tel:+17148640512" data-i18n="contact.info.phone.value">(714) 864-0512</a>
-              </p>
-            </address>
+              </div>
+            </div>
 
-            <h3 data-i18n="contact.info.email.label">Correo</h3>
-            <p>
-              <a href="mailto:mr_angelramirez@icloud.com" data-i18n="contact.info.email.value">
-                mr_angelramirez@icloud.com
-              </a>
-            </p>
+            <div class="contact-item">
+              <span class="contact-item-icon email">&#9993;</span>
+              <div class="contact-item-text">
+                <strong data-i18n="contact.info.email.label">Correo</strong>
+                <a href="mailto:mr_angelramirez@icloud.com" data-i18n="contact.info.email.value">mr_angelramirez@icloud.com</a>
+              </div>
+            </div>
 
-            <h3 data-i18n="contact.social.heading">GigSalad</h3>
-            <ul>
-              <li>
-                <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" data-i18n="contact.social.gigsalad">
-                  Contrátanos y déjanos una reseña en GigSalad
-                </a>
-              </li>
-            </ul>
+            <div class="contact-item">
+              <span class="contact-item-icon social">&#9733;</span>
+              <div class="contact-item-text">
+                <strong data-i18n="contact.social.heading">GigSalad</strong>
+                <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" data-i18n="contact.social.gigsalad">Contrátanos y déjanos una reseña en GigSalad</a>
+              </div>
+            </div>
 
-            <h3 data-i18n="contact.serviceArea.heading">Área de Servicio</h3>
-            <p data-i18n="contact.serviceArea.text">
-              Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Ángeles · SGV · Condado de Orange
-            </p>
-
-            <h3 data-i18n="contact.availability.heading">Disponibilidad</h3>
-            <p data-i18n="contact.availability.text" style="font-size:0.85rem;">
-              Eventos entre semana en horario diurno son limitados ya que nuestros bailarines son estudiantes y adultos con trabajo de tiempo completo. Los fines de semana normalmente estamos disponibles.
-            </p>
           </aside>
 
           <!-- Booking form -->
           <div class="book-form-wrapper">
+            <div data-fs-success style="display:none;text-align:center;padding:2rem;">
+              <p style="font-size:1.5rem;color:#2a9d8f;font-family:var(--font-display);margin-block-end:0.5rem;" data-i18n="contact.form.success.heading">&#10003; ¡Mensaje enviado!</p>
+              <p style="color:#5a4e42;" data-i18n="contact.form.success.text">Gracias por contactarnos. Te responderemos en 1–2 días hábiles.</p>
+            </div>
+            <div data-fs-error style="color:#c7295d;font-size:0.85rem;text-align:center;margin-block-end:1rem;"></div>
+
             <form
               id="bookingForm"
-              action="#"
-              method="post"
               aria-label="Formulario de solicitud de contratación"
-              novalidate
             >
               <fieldset>
-                <legend data-i18n="contact.form.legend">Solicitud de Contratación</legend>
+                <legend data-i18n="contact.form.legend">Envíanos un Mensaje</legend>
 
-                <div class="form-group">
-                  <label for="contact-name" data-i18n="contact.form.name">Tu Nombre</label>
-                  <input type="text" id="contact-name" name="contact-name" autocomplete="name" placeholder="María García" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-name" data-i18n="contact.form.name">Nombre Completo</label>
+                    <input type="text" id="contact-name" name="name" autocomplete="name" required data-fs-field data-placeholder-i18n="contact.form.name.placeholder" placeholder="Tu nombre completo" />
+                    <span data-fs-error="name" style="color:#e74c3c;font-size:0.78rem;"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-email" data-i18n="contact.form.email">Correo Electrónico</label>
+                    <input type="email" id="contact-email" name="email" autocomplete="email" required data-fs-field placeholder="correo@ejemplo.com" />
+                    <span data-fs-error="email" style="color:#e74c3c;font-size:0.78rem;"></span>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-phone" data-i18n="contact.form.phone">Número de Teléfono</label>
+                    <input type="tel" id="contact-phone" name="phone" autocomplete="tel" data-fs-field placeholder="(626) 000-0000" />
+                  </div>
+                  <div class="form-group">
+                    <label for="event-type" data-i18n="contact.form.eventType">Asunto</label>
+                    <select id="event-type" name="subject" data-fs-field>
+                      <option value="" data-i18n="contact.form.eventType.placeholder">— Seleccionar —</option>
+                      <option value="festival"    data-i18n="contact.form.eventType.festival">Festival Cultural</option>
+                      <option value="school"      data-i18n="contact.form.eventType.school">Escuela / Universidad</option>
+                      <option value="quinceanera" data-i18n="contact.form.eventType.quince">Quinceañera</option>
+                      <option value="private"     data-i18n="contact.form.eventType.private">Evento Privado</option>
+                      <option value="corporate"   data-i18n="contact.form.eventType.corporate">Evento Corporativo</option>
+                      <option value="classes"     data-i18n="contact.form.eventType.classes">Clases</option>
+                      <option value="other"       data-i18n="contact.form.eventType.other">Otro</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div class="form-group">
-                  <label for="contact-email" data-i18n="contact.form.email">Correo Electrónico</label>
-                  <input type="email" id="contact-email" name="contact-email" autocomplete="email" placeholder="correo@ejemplo.com" />
+                  <label for="message" data-i18n="contact.form.message">Mensaje</label>
+                  <textarea id="message" name="message" rows="5" required data-fs-field data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntanos cómo podemos ayudarte…"></textarea>
+                  <span data-fs-error="message" style="color:#e74c3c;font-size:0.78rem;"></span>
                 </div>
 
-                <div class="form-group">
-                  <label for="contact-phone" data-i18n="contact.form.phone">Número de Teléfono</label>
-                  <input type="tel" id="contact-phone" name="contact-phone" autocomplete="tel" placeholder="(626) 000-0000" />
-                </div>
-
-                <div class="form-group">
-                  <label for="event-type" data-i18n="contact.form.eventType">Tipo de Evento</label>
-                  <select id="event-type" name="event-type">
-                    <option value="" data-i18n="contact.form.eventType.placeholder">— Seleccionar —</option>
-                    <option value="festival"    data-i18n="contact.form.eventType.festival">Festival Cultural</option>
-                    <option value="school"      data-i18n="contact.form.eventType.school">Escuela / Universidad</option>
-                    <option value="quinceanera" data-i18n="contact.form.eventType.quince">Quinceañera</option>
-                    <option value="private"     data-i18n="contact.form.eventType.private">Evento Privado</option>
-                    <option value="corporate"   data-i18n="contact.form.eventType.corporate">Evento Corporativo</option>
-                    <option value="other"       data-i18n="contact.form.eventType.other">Otro</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="event-date" data-i18n="contact.form.eventDate">Fecha del Evento</label>
-                  <input type="date" id="event-date" name="event-date" />
-                </div>
-
-                <div class="form-group">
-                  <label for="event-location" data-i18n="contact.form.eventLocation">Ciudad / Lugar del Evento</label>
-                  <input type="text" id="event-location" name="event-location" placeholder="Whittier, CA" />
-                </div>
-
-                <div class="form-group">
-                  <label for="message" data-i18n="contact.form.message">Detalles Adicionales</label>
-                  <textarea id="message" name="message" rows="4" data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntanos sobre tu evento…"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-magenta" data-i18n="contact.form.submit">
-                  Enviar Solicitud
+                <button type="submit" class="btn btn-gold" style="width:100%;text-align:center;justify-content:center;" data-fs-submit-btn data-i18n="contact.form.submit">
+                  Enviar Mensaje
                 </button>
 
                 <p class="form-notice" data-i18n="contact.form.notice">
-                  El formulario aún no está activo — por favor comunícate directamente por correo o teléfono.
+                  Normalmente respondemos en 1–2 días hábiles.
                 </p>
 
               </fieldset>
@@ -3123,35 +3198,35 @@
         // Contact
         "contact.label":    "Contacto",
         "contact.heading":  "Hablemos.",
-        "contact.subheading": "Respondemos en menos de 24 horas.",
+        "contact.intro":    "Nos encantaría saber de ti. Ya sea que tengas preguntas sobre nuestras clases, próximos eventos, o quieras contratar una presentación, envíanos un mensaje y te responderemos lo antes posible. Únete a nuestra familia — sé parte de nuestra tradición, nuestra cultura y nuestra comunidad.",
+        "contact.info.location.label": "Ubicación",
+        "contact.info.location.value": "Hacienda Heights, CA",
         "contact.info.phone.label":   "Teléfono",
         "contact.info.phone.value":   "(714) 864-0512",
         "contact.info.email.label":   "Correo",
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
         "contact.social.heading":     "GigSalad",
         "contact.social.gigsalad":    "Contrátanos y déjanos una reseña en GigSalad",
-        "contact.serviceArea.heading":"Área de Servicio",
-        "contact.serviceArea.text":   "Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Ángeles · SGV · Condado de Orange",
-        "contact.availability.heading":"Disponibilidad",
-        "contact.availability.text":  "Eventos entre semana en horario diurno son limitados ya que nuestros bailarines son estudiantes y adultos con trabajo de tiempo completo. Los fines de semana normalmente estamos disponibles.",
-        "contact.form.legend":        "Solicitud de Contratación",
-        "contact.form.name":          "Tu Nombre",
+        "contact.form.legend":        "Envíanos un Mensaje",
+        "contact.form.name":          "Nombre Completo",
+        "contact.form.name.placeholder": "Tu nombre completo",
         "contact.form.email":         "Correo Electrónico",
         "contact.form.phone":         "Número de Teléfono",
-        "contact.form.eventType":     "Tipo de Evento",
+        "contact.form.eventType":     "Asunto",
         "contact.form.eventType.placeholder": "— Seleccionar —",
         "contact.form.eventType.festival":    "Festival Cultural",
         "contact.form.eventType.school":      "Escuela / Universidad",
         "contact.form.eventType.quince":      "Quinceañera",
         "contact.form.eventType.private":     "Evento Privado",
         "contact.form.eventType.corporate":   "Evento Corporativo",
+        "contact.form.eventType.classes":     "Clases",
         "contact.form.eventType.other":       "Otro",
-        "contact.form.eventDate":     "Fecha del Evento",
-        "contact.form.eventLocation": "Ciudad / Lugar del Evento",
-        "contact.form.message":       "Detalles Adicionales",
-        "contact.form.message.placeholder": "Cuéntanos sobre tu evento…",
-        "contact.form.submit":        "Enviar Solicitud",
-        "contact.form.notice":        "El formulario aún no está activo — por favor comunícate directamente por correo o teléfono.",
+        "contact.form.message":       "Mensaje",
+        "contact.form.message.placeholder": "Cuéntanos cómo podemos ayudarte…",
+        "contact.form.submit":        "Enviar Mensaje",
+        "contact.form.notice":        "Normalmente respondemos en 1–2 días hábiles.",
+        "contact.form.success.heading": "✓ ¡Mensaje enviado!",
+        "contact.form.success.text":  "Gracias por contactarnos. Te responderemos en 1–2 días hábiles.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -3246,37 +3321,37 @@
         "reviews.cta":      "See all reviews on GigSalad",
 
         // Contact
-        "contact.label":    "Contact",
-        "contact.heading":  "Let's talk.",
-        "contact.subheading": "We respond within 24 hours.",
+        "contact.label":    "Contact Us",
+        "contact.heading":  "Let's Connect.",
+        "contact.intro":    "We'd love to hear from you! Whether you have questions about our classes, upcoming events, or want to book a performance, send us a message and we'll get back to you as soon as possible. Join our familia — be part of our tradition, our culture, and our community.",
+        "contact.info.location.label": "Location",
+        "contact.info.location.value": "Hacienda Heights, CA",
         "contact.info.phone.label":   "Phone",
         "contact.info.phone.value":   "(714) 864-0512",
         "contact.info.email.label":   "Email",
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
         "contact.social.heading":     "GigSalad",
         "contact.social.gigsalad":    "Book & review us on GigSalad",
-        "contact.serviceArea.heading":"Service Area",
-        "contact.serviceArea.text":   "Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Angeles · SGV · Orange County",
-        "contact.availability.heading":"Availability",
-        "contact.availability.text":  "Weekday daytime events are limited since our performers are students and working adults. Weekends are typically available.",
-        "contact.form.legend":        "Booking Inquiry",
-        "contact.form.name":          "Your Name",
-        "contact.form.email":         "Email Address",
+        "contact.form.legend":        "Send Us a Message",
+        "contact.form.name":          "Full Name",
+        "contact.form.name.placeholder": "Your full name",
+        "contact.form.email":         "Email",
         "contact.form.phone":         "Phone Number",
-        "contact.form.eventType":     "Type of Event",
-        "contact.form.eventType.placeholder": "— Select —",
+        "contact.form.eventType":     "Subject",
+        "contact.form.eventType.placeholder": "— Select a topic —",
         "contact.form.eventType.festival":    "Cultural Festival",
         "contact.form.eventType.school":      "School / University",
         "contact.form.eventType.quince":      "Quinceañera",
         "contact.form.eventType.private":     "Private Event",
         "contact.form.eventType.corporate":   "Corporate Event",
+        "contact.form.eventType.classes":     "Classes",
         "contact.form.eventType.other":       "Other",
-        "contact.form.eventDate":     "Event Date",
-        "contact.form.eventLocation": "Event City / Location",
-        "contact.form.message":       "Additional Details",
-        "contact.form.message.placeholder": "Tell us about your event…",
-        "contact.form.submit":        "Send Inquiry",
-        "contact.form.notice":        "Form submission is not yet active — please email or call us directly.",
+        "contact.form.message":       "Message",
+        "contact.form.message.placeholder": "Tell us how we can help you…",
+        "contact.form.submit":        "Send Message",
+        "contact.form.notice":        "We typically respond within 1–2 business days.",
+        "contact.form.success.heading": "✓ Message sent!",
+        "contact.form.success.text":  "Thanks for reaching out. We'll get back to you within 1–2 business days.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -3539,5 +3614,12 @@
     })();
 
   </script>
+
+  <!-- Formspree Ajax -->
+  <script>
+    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+    formspree('initForm', { formElement: '#bookingForm', formId: 'mgoqzqpo' });
+  </script>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
