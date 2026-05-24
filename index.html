@@ -216,22 +216,6 @@
       },
       {
         "@type": "ListItem",
-        "position": 2,
-        "item": {
-          "@type": "DanceEvent",
-          "name": "Ballet Folklórico Mi Herencia at LA County Fair",
-          "startDate": "2026-05-18",
-          "location": {
-            "@type": "Place",
-            "name": "LA County Fair — Expo Hall 4",
-            "address": { "@type": "PostalAddress", "addressLocality": "Pomona", "addressRegion": "CA" }
-          },
-          "performer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia" },
-          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at the LA County Fair in Pomona, CA."
-        }
-      },
-      {
-        "@type": "ListItem",
         "position": 3,
         "item": {
           "@type": "DanceEvent",
@@ -1517,179 +1501,313 @@
       margin-block-start: 2rem;
     }
 
-    /* Double gold frame (like about-image-frame but without corner points) */
     .class-card {
-      background: #2c0a3e;
-      border-radius: 0;
-      padding: 12px;
-      position: relative;
+      background: #110b1f;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.15);
       transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1);
       text-align: center;
-    }
-    /* Outer gold border */
-    .class-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--gold-dark);
-      border-radius: 0;
-      pointer-events: none;
-      z-index: 3;
-    }
-    /* Inner gold border */
-    .class-card::after {
-      content: '';
-      position: absolute;
-      inset: 6px;
-      border: 1px solid rgba(201,168,76,0.35);
-      border-radius: 0;
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .class-card .frame-corner { position: absolute; width: 22px; height: 22px; z-index: 4; }
-    .class-card .frame-corner svg { width: 100%; height: 100%; }
-    .class-card .frame-corner--tl { top: -3px; left: -3px; }
-    .class-card .frame-corner--tr { top: -3px; right: -3px; transform: scaleX(-1); }
-    .class-card .frame-corner--bl { bottom: -3px; left: -3px; transform: scaleY(-1); }
-    .class-card .frame-corner--br { bottom: -3px; right: -3px; transform: scale(-1); }
-
-    .class-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-    }
-
-    .class-card-inner {
       position: relative;
-      z-index: 1;
-      padding: 1.75rem 1.25rem;
+    }
+    .class-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(201,168,76,0.25);
     }
 
-    .class-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #fff;
-      margin-block-end: 1.5rem;
-      line-height: 1.3;
-      letter-spacing: 0.02em;
+    /* Photo area */
+    .class-card-photo {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
     }
-
-    .class-card dl {
-      font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      text-align: center;
+    .class-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
     }
-
-    .class-card .dl-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      padding-block: 0.75rem;
+    .class-card:hover .class-card-photo img {
+      transform: scale(1.05);
     }
+    .class-card-photo-gradient {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(17,11,31,0.85), transparent);
+    }
+    /* Gold frame inside photo */
+    .class-card-photo-frame {
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+    .class-card-photo-frame .gold-corner {
+      position: absolute;
+      pointer-events: none;
+    }
+    .class-card-photo-frame .gold-corner--tl { top: -1px; left: -1px; }
+    .class-card-photo-frame .gold-corner--tr { top: -1px; right: -1px; transform: scaleX(-1); }
+    .class-card-photo-frame .gold-corner--bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+    .class-card-photo-frame .gold-corner--br { bottom: -1px; right: -1px; transform: scale(-1); }
 
-    /* Gold detail divider between dl rows — line with star */
-    .class-card .dl-divider {
+    /* Level badge — bottom left with dot */
+    .class-card-badge {
+      position: absolute;
+      bottom: 16px; left: 16px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding-inline: 0.5rem;
+      gap: 6px;
     }
-    .class-card .dl-divider::before,
-    .class-card .dl-divider::after {
+    .class-card-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201,168,76,0.37);
+      flex-shrink: 0;
+    }
+    .class-card-badge span {
+      font-family: var(--font-ui);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    .class-card[data-accent="teal"] .class-card-badge-dot { background: #2a9d8f; box-shadow: 0 0 8px rgba(42,157,143,0.37); }
+    .class-card[data-accent="teal"] .class-card-badge span { color: #2a9d8f; }
+    .class-card[data-accent="magenta"] .class-card-badge-dot { background: #c7295d; box-shadow: 0 0 8px rgba(199,41,93,0.37); }
+    .class-card[data-accent="magenta"] .class-card-badge span { color: #c7295d; }
+
+    /* Card body */
+    .class-card-body {
+      padding: 1.25rem 1.35rem 1.5rem;
+      position: relative;
+    }
+    /* Accent stripe at top of body */
+    .class-card-accent-stripe {
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+    }
+    .class-card[data-accent="teal"] .class-card-accent-stripe {
+      background: linear-gradient(90deg, transparent, rgba(42,157,143,0.3), transparent);
+    }
+    .class-card[data-accent="magenta"] .class-card-accent-stripe {
+      background: linear-gradient(90deg, transparent, rgba(199,41,93,0.3), transparent);
+    }
+
+    .class-card-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 0.15rem;
+    }
+    .class-card-title-row h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f0e6d0;
+    }
+    .class-card-title-row .class-card-subtitle {
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    /* Card divider — diamond ornament */
+    .class-card-divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 0.8rem 0;
+    }
+    .class-card-divider::before,
+    .class-card-divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: var(--gold-dark);
+      background: rgba(201,168,76,0.15);
     }
-    .class-card .dl-divider-star {
-      color: var(--gold);
-      font-size: 0.7rem;
-      line-height: 1;
+    .class-card-divider svg {
+      flex-shrink: 0;
+      margin: 0 6px;
     }
 
-    .class-card dt {
+    .class-card-desc {
       font-family: var(--font-ui);
-      font-weight: 800;
-      color: var(--gold);
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: rgba(240,230,208,0.55);
+      margin-bottom: 0.2rem;
     }
 
-    .class-card dd {
-      color: var(--text-secondary);
-      font-size: 0.92rem;
+    /* Schedule & location — simple icon rows */
+    .class-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .class-card-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .class-card-meta-icon svg {
+      flex-shrink: 0;
+      opacity: 0.6;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+    .class-card[data-accent="teal"] .class-card-meta-icon svg { stroke: #2a9d8f; }
+    .class-card[data-accent="magenta"] .class-card-meta-icon svg { stroke: #c7295d; }
+    .class-card-meta-row span {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(240,230,208,0.65);
     }
 
-    .class-card-img {
-      width: calc(100% + 24px);
-      margin: -12px -12px 0 -12px;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      display: block;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Promo banner (First 4 Sessions free) */
-    .classes-promo {
-      margin-block-start: 1.5rem;
-      background: #2c0a3e;
-      padding: 12px;
-      position: relative;
-    }
-    .classes-promo::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--gold-dark);
-      pointer-events: none;
-    }
-    .classes-promo::after {
-      content: '';
-      position: absolute;
-      inset: 6px;
-      border: 1px solid rgba(201,168,76,0.35);
-      pointer-events: none;
-    }
-    .classes-promo-inner {
-      position: relative;
-      z-index: 1;
-      padding: 1.25rem 1.5rem;
-      text-align: center;
-    }
-    .classes-promo h3 {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #fff;
-      margin-block-end: 0.75rem;
-    }
-    .classes-promo-details {
+    /* CTA — outline gold, unified */
+    .class-card-cta {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1.25rem;
-      flex-wrap: wrap;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-    .classes-promo-details strong {
+      gap: 6px;
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
       color: var(--gold);
+      border: 1.5px solid rgba(201,168,76,0.4);
+      border-radius: 8px;
       font-family: var(--font-ui);
-      font-size: 0.65rem;
-      font-weight: 800;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-inline-end: 0.4rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
     }
-    .classes-promo-details .dl-divider-star {
+    .class-card-cta:hover {
+      background: rgba(201,168,76,0.08);
+      border-color: rgba(201,168,76,0.6);
+    }
+
+    /* Free trial banner — ornate gold style */
+    .classes-promo {
+      margin-block-start: 2rem;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      background: #110b1f;
+      border: 1px solid rgba(201,168,76,0.15);
+    }
+    .classes-promo .gold-corner {
+      position: absolute;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .classes-promo .gold-corner--tl { top: 0; left: 0; }
+    .classes-promo .gold-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
+    .classes-promo .gold-corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
+    .classes-promo .gold-corner--br { bottom: 0; right: 0; transform: scale(-1); }
+
+    .classes-promo-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .classes-promo-content {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .classes-promo-badge {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c9a84c, #d9be6e);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+      gap: 4px;
+      padding-bottom: 1px;
+    }
+    .classes-promo-badge .badge-first {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 800;
+      color: #080311;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+    .classes-promo-badge .badge-number {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #080311;
+      line-height: 0.8;
+    }
+    .classes-promo-badge .badge-free {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      font-weight: 800;
+      color: #080311;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .classes-promo-text h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #f0e6d0;
+    }
+    .classes-promo-text h3 span {
       color: var(--gold);
-      font-size: 0.6rem;
     }
+    .classes-promo-text p {
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      color: rgba(240,230,208,0.5);
+      margin-top: 4px;
+    }
+    .classes-promo .btn-promo {
+      padding: 0.8rem 2rem;
+      background: var(--gold);
+      color: #080311;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      flex-shrink: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: filter 0.3s;
+    }
+    .classes-promo .btn-promo:hover { filter: brightness(1.1); }
 
     #classes p > a {
       color: var(--gold-light);
@@ -2276,7 +2394,7 @@
       .classes-photo-strip { grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
       .classes-photo { border-radius: 8px; }
       .classes-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-      .class-card { padding: 1.5rem 1.25rem; }
+      .classes-promo-inner { flex-direction: column; text-align: center; }
 
       /* Contact */
       .book-layout { grid-template-columns: 1fr; gap: 2rem; }
@@ -2390,12 +2508,9 @@
       .classes-photo img { aspect-ratio: 16/9; }
       .classes-photo:nth-child(n+3) { display: none; }
       .classes-grid { grid-template-columns: 1fr; gap: 1rem; }
-      .class-card { padding: 1.5rem 1.25rem; }
-      .class-card h3 { font-size: 1.1rem; }
-      .class-card dl { font-size: 0.82rem; }
-      .class-card dt { font-size: 0.62rem; }
-      .classes-promo-details { flex-direction: column; gap: 0.5rem; }
-      .classes-promo-details .dl-divider-star { display: none; }
+      .class-card-title-row h3 { font-size: 1.25rem; }
+      .classes-promo-inner { flex-direction: column; text-align: center; gap: 1.25rem; }
+      .classes-promo-content { flex-direction: column; }
 
       /* ── Contact ── */
       .book-layout { gap: 1.5rem; }
@@ -2446,7 +2561,7 @@
       .section-heading { font-size: 1.3rem; }
       .story-heading { font-size: 1.3rem; }
       .about-card { padding: 1rem; }
-      .class-card { padding: 1rem; }
+      .class-card-body { padding: 1rem; }
       fieldset { padding: 1rem 0.85rem; }
     }
 
@@ -2938,85 +3053,139 @@
         <h2 class="section-heading" id="classes-heading" data-i18n="classes.heading">Clases</h2>
         <div class="story-divider"></div>
 
-        <p style="margin-block-start:2rem;color:var(--text-secondary);max-width:54rem;" data-i18n="classes.description">
-          Nuestra temporada de primavera 2026 está abierta y estamos recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la edad adulta. Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.
+        <p style="margin-block-start:0.75rem;color:rgba(240,230,208,0.6);max-width:54rem;line-height:1.7;" data-i18n="classes.description">
+          Nuestra temporada está recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar.
         </p>
 
         <div class="classes-grid">
-          <article class="class-card class-card--has-img">
-            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <img src="images/optimized/Image_20260524_022800.webp" alt="Young dancers performing" loading="lazy" class="class-card-img" style="object-position:center 20%" />
-            <div class="class-card-inner">
-              <h3 data-i18n="class1.name">Jóvenes (6–12)</h3>
-              <dl>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.level">Nivel</dt>
-                  <dd data-i18n="class1.level">Principiante – Intermedio</dd>
+          <!-- Youth -->
+          <article class="class-card">
+            <div class="class-card-photo">
+              <img src="images/optimized/Image_20260524_022800.webp" alt="Young dancers performing" loading="lazy" style="object-position:center 20%" />
+              <div class="class-card-photo-gradient" aria-hidden="true"></div>
+              <div class="class-card-photo-frame" aria-hidden="true">
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+              </div>
+              <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class1.level">Principiante – Intermedio</span></div>
+            </div>
+            <div class="class-card-body">
+              <div class="class-card-accent-stripe" aria-hidden="true"></div>
+              <div class="class-card-title-row">
+                <h3 data-i18n="class1.title">Jóvenes</h3>
+                <span class="class-card-subtitle" data-i18n="class1.ages">(6–12)</span>
+              </div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <p class="class-card-desc" data-i18n="class1.desc">Una divertida introducción al baile folklórico. Los niños aprenden pasos básicos, ritmo y la alegría de la música tradicional a través del movimiento y el juego.</p>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-meta">
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
+                  <span data-i18n="class1.schedule">Martes</span>
                 </div>
-                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.location">Ubicación</dt>
-                  <dd data-i18n="class1.location">Hacienda Heights, CA</dd>
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1.5C5.2 1.5 3 3.7 3 6.5c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z"/><circle cx="8" cy="6.5" r="1.8"/></svg></div>
+                  <span data-i18n="class1.location">Hacienda Heights, CA</span>
                 </div>
-              </dl>
+              </div>
+              <a href="#contact" class="class-card-cta" data-i18n="classes.register">Regístrate</a>
             </div>
           </article>
 
-          <article class="class-card class-card--has-img">
-            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <img src="images/optimized/Image_20260524_023329.webp" alt="Adolescent dancers performing at a holiday event" loading="lazy" class="class-card-img" />
-            <div class="class-card-inner">
-              <h3 data-i18n="class2.name">Adolescentes (13–17)</h3>
-              <dl>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.level">Nivel</dt>
-                  <dd data-i18n="class2.level">Todos los niveles</dd>
+          <!-- Teen -->
+          <article class="class-card" data-accent="teal">
+            <div class="class-card-photo">
+              <img src="images/optimized/Image_20260524_023329.webp" alt="Adolescent dancers performing at a holiday event" loading="lazy" />
+              <div class="class-card-photo-gradient" aria-hidden="true"></div>
+              <div class="class-card-photo-frame" aria-hidden="true">
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+              </div>
+              <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class2.level">Todos los niveles</span></div>
+            </div>
+            <div class="class-card-body">
+              <div class="class-card-accent-stripe" aria-hidden="true"></div>
+              <div class="class-card-title-row">
+                <h3 data-i18n="class2.title">Adolescentes</h3>
+                <span class="class-card-subtitle" data-i18n="class2.ages">(13–17)</span>
+              </div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#2a9d8f" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#2a9d8f" opacity="0.6"/></svg></div>
+              <p class="class-card-desc" data-i18n="class2.desc">Los estudiantes desarrollan habilidades técnicas en zapateado, faldeo y coreografía regional mientras ganan confianza y se conectan con su cultura.</p>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-meta">
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
+                  <span data-i18n="class2.schedule">Martes</span>
                 </div>
-                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.location">Ubicación</dt>
-                  <dd data-i18n="class2.location">Hacienda Heights, CA</dd>
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1.5C5.2 1.5 3 3.7 3 6.5c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z"/><circle cx="8" cy="6.5" r="1.8"/></svg></div>
+                  <span data-i18n="class2.location">Hacienda Heights, CA</span>
                 </div>
-              </dl>
+              </div>
+              <a href="#contact" class="class-card-cta" data-i18n="classes.register">Regístrate</a>
             </div>
           </article>
 
-          <article class="class-card class-card--has-img">
-            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
-            <img src="images/optimized/sinaloa.webp" alt="Sinaloa dance performance" loading="lazy" class="class-card-img" />
-            <div class="class-card-inner">
-              <h3 data-i18n="class3.name">Adultos (18+)</h3>
-              <dl>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.level">Nivel</dt>
-                  <dd data-i18n="class3.level">Todos los niveles</dd>
+          <!-- Adult -->
+          <article class="class-card" data-accent="magenta">
+            <div class="class-card-photo">
+              <img src="images/optimized/sinaloa.webp" alt="Sinaloa dance performance" loading="lazy" />
+              <div class="class-card-photo-gradient" aria-hidden="true"></div>
+              <div class="class-card-photo-frame" aria-hidden="true">
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+              </div>
+              <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class3.level">Todos los niveles</span></div>
+            </div>
+            <div class="class-card-body">
+              <div class="class-card-accent-stripe" aria-hidden="true"></div>
+              <div class="class-card-title-row">
+                <h3 data-i18n="class3.title">Adultos</h3>
+                <span class="class-card-subtitle" data-i18n="class3.ages">(18+)</span>
+              </div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c7295d" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c7295d" opacity="0.6"/></svg></div>
+              <p class="class-card-desc" data-i18n="class3.desc">Para bailarines de todos los niveles que quieran conectar con sus raíces. Aprende danzas tradicionales de Jalisco, Veracruz, Sinaloa, Baja, Chiapas y más.</p>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-meta">
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
+                  <span data-i18n="class3.schedule">Martes</span>
                 </div>
-                <div class="dl-divider" aria-hidden="true"><span class="dl-divider-star">&#10038;</span></div>
-                <div class="dl-row">
-                  <dt data-i18n="class.label.location">Ubicación</dt>
-                  <dd data-i18n="class3.location">Hacienda Heights, CA</dd>
+                <div class="class-card-meta-row">
+                  <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1.5C5.2 1.5 3 3.7 3 6.5c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z"/><circle cx="8" cy="6.5" r="1.8"/></svg></div>
+                  <span data-i18n="class3.location">Hacienda Heights, CA</span>
                 </div>
-              </dl>
+              </div>
+              <a href="#contact" class="class-card-cta" data-i18n="classes.register">Regístrate</a>
             </div>
           </article>
-
         </div>
 
+        <!-- Free trial banner -->
         <div class="classes-promo">
+          <div class="gold-corner gold-corner--tl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--tr" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--bl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--br" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
           <div class="classes-promo-inner">
-            <h3 data-i18n="class4.name">Primeras 4 Sesiones — GRATIS</h3>
-            <div class="classes-promo-details">
-              <span><strong data-i18n="class.label.who">Quién</strong> <span data-i18n="class4.who">Todos los nuevos bailarines, desde 6 años</span></span>
+            <div class="classes-promo-content">
+              <div class="classes-promo-badge" aria-hidden="true">
+                <span class="badge-first">FIRST</span>
+                <span class="badge-number">4</span>
+                <span class="badge-free">FREE</span>
+              </div>
+              <div class="classes-promo-text">
+                <h3 data-i18n-html="class4.name">Primeras 4 Sesiones — <span>GRATIS</span></h3>
+                <p data-i18n="class4.who">Todos los nuevos bailarines, desde 6 años</p>
+              </div>
             </div>
+            <a href="#contact" class="btn-promo" data-i18n="classes.getstarted">Comienza Ahora</a>
           </div>
         </div>
 
@@ -3277,7 +3446,7 @@
           <address>
             <p data-i18n="footer.location">
               Con sede en Hacienda Heights, CA<br />
-              Servimos a Los Ángeles, SGV y Condado de Orange
+              Servimos a Los Ángeles, SGV, Inland Empire y Condado de Orange
             </p>
             <p style="margin-block-start:0.5rem;">
               <a href="tel:+17148640512" data-i18n="footer.phone">(714) 864-0512</a><br />
@@ -3461,14 +3630,6 @@
       },
       {
         name:     { es: "LA County Fair — Expo Hall 4", en: "LA County Fair — Expo Hall 4" },
-        date:     "2026-05-18",
-        time:     "6:00 PM",
-        location: { es: "Pomona, CA", en: "Pomona, CA" },
-        image:    null,
-        link:     null
-      },
-      {
-        name:     { es: "LA County Fair — Expo Hall 4", en: "LA County Fair — Expo Hall 4" },
         date:     "2026-05-24",
         time:     null,
         location: { es: "Pomona, CA", en: "Pomona, CA" },
@@ -3529,23 +3690,29 @@
         // Classes
         "classes.label":      "Aprende Con Nosotros",
         "classes.heading":    "Clases",
-        "classes.description":"Nuestra temporada de primavera 2026 está abierta y estamos recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la edad adulta. Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.",
-        "class1.name":        "Jóvenes (6–12)",
+        "classes.description":"Nuestra temporada de {season} {year} está recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar.",
+        "classes.register":   "Regístrate",
+        "classes.getstarted": "Comienza Ahora",
+        "class1.title":       "Jóvenes",
+        "class1.ages":        "(6–12)",
         "class1.level":       "Principiante – Intermedio",
+        "class1.desc":        "Una divertida introducción al baile folklórico. Los niños aprenden pasos básicos, ritmo y la alegría de la música tradicional a través del movimiento y el juego.",
+        "class1.schedule":    "Martes",
         "class1.location":    "Hacienda Heights, CA",
-        "class2.name":        "Adolescentes (13–17)",
+        "class2.title":       "Adolescentes",
+        "class2.ages":        "(13–17)",
         "class2.level":       "Todos los niveles",
+        "class2.desc":        "Los estudiantes desarrollan habilidades técnicas en zapateado, faldeo y coreografía regional mientras ganan confianza y se conectan con su cultura.",
+        "class2.schedule":    "Martes",
         "class2.location":    "Hacienda Heights, CA",
-        "class3.name":        "Adultos (18+)",
+        "class3.title":       "Adultos",
+        "class3.ages":        "(18+)",
         "class3.level":       "Todos los niveles",
+        "class3.desc":        "Para bailarines de todos los niveles que quieran conectar con sus raíces. Aprende danzas tradicionales de Jalisco, Veracruz, Sinaloa, Baja, Chiapas y más.",
+        "class3.schedule":    "Martes",
         "class3.location":    "Hacienda Heights, CA",
-        "class4.name":        "Primeras 4 Sesiones — GRATIS",
+        "class4.name":        "Primeras 4 Sesiones — <span>GRATIS</span>",
         "class4.who":         "Todos los nuevos bailarines, desde 6 años",
-        "class4.how":         "Mándanos un mensaje para comenzar",
-        "class.label.level":    "Nivel",
-        "class.label.location": "Ubicación",
-        "class.label.who":      "Quién",
-        "class.label.how":      "Cómo",
         "classes.contact":    "¿Interesado o tienes preguntas? Mándanos un mensaje — nos encantaría platicar e invitarte personalmente a nuestras próximas prácticas.",
 
         // Reviews
@@ -3660,23 +3827,29 @@
         // Classes
         "classes.label":      "Learn With Us",
         "classes.heading":    "Classes",
-        "classes.description":"Our 2026 Spring season is now open and we are welcoming new dancers! Whether you're stepping onto the dance floor for the first time or you're a seasoned performer, Mi Herencia is your home. We accept dancers from age 6 through adulthood. Come try your first four practice sessions completely free.",
-        "class1.name":        "Youth (Ages 6–12)",
+        "classes.description":"Our {year} {season} season is welcoming new dancers. Whether you're stepping onto the dance floor for the first time or you're a seasoned performer, Mi Herencia is your home.",
+        "classes.register":   "Register Now",
+        "classes.getstarted": "Get Started",
+        "class1.title":       "Youth",
+        "class1.ages":        "(Ages 6–12)",
         "class1.level":       "Beginner – Intermediate",
+        "class1.desc":        "A fun introduction to folklórico dance. Children learn basic footwork, rhythm, and the joy of traditional music through movement and play.",
+        "class1.schedule":    "Tuesdays",
         "class1.location":    "Hacienda Heights, CA",
-        "class2.name":        "Teen (Ages 13–17)",
+        "class2.title":       "Teen",
+        "class2.ages":        "(Ages 13–17)",
         "class2.level":       "All Levels",
+        "class2.desc":        "Students develop technical skills in zapateado, faldeo, and regional choreography while building confidence and connecting with their culture.",
+        "class2.schedule":    "Tuesdays",
         "class2.location":    "Hacienda Heights, CA",
-        "class3.name":        "Adult (18+)",
+        "class3.title":       "Adult",
+        "class3.ages":        "(18+)",
         "class3.level":       "All Levels",
+        "class3.desc":        "For dancers of all levels who want to connect with their roots. Learn traditional dances from Jalisco, Veracruz, Sinaloa, Baja, Chiapas, and more.",
+        "class3.schedule":    "Tuesdays",
         "class3.location":    "Hacienda Heights, CA",
-        "class4.name":        "First 4 Sessions — FREE",
+        "class4.name":        "First 4 Sessions — <span>FREE</span>",
         "class4.who":         "All new dancers, ages 6+",
-        "class4.how":         "Send us a message to get started",
-        "class.label.level":    "Level",
-        "class.label.location": "Location",
-        "class.label.who":      "Who",
-        "class.label.how":      "How",
         "classes.contact":    "Interested or have questions? Send us a message — we'd love to chat and personally invite you to our upcoming practices.",
 
         // Reviews
@@ -3745,6 +3918,19 @@
     };
 
     // ─────────────────────────────────────────────────────────
+    //  DYNAMIC SEASON / YEAR
+    // ─────────────────────────────────────────────────────────
+    function getCurrentSeason(lang) {
+      var m = new Date().getMonth(); // 0-11
+      var seasons = {
+        es: ['invierno', 'primavera', 'verano', 'otoño'],
+        en: ['Winter', 'Spring', 'Summer', 'Fall']
+      };
+      var idx = m < 3 ? 0 : m < 6 ? 1 : m < 9 ? 2 : 3;
+      return seasons[lang] ? seasons[lang][idx] : seasons.en[idx];
+    }
+
+    // ─────────────────────────────────────────────────────────
     //  LANGUAGE STATE & APPLY FUNCTION
     // ─────────────────────────────────────────────────────────
     let currentLang = 'es';
@@ -3753,10 +3939,13 @@
       const dict = STRINGS[lang];
       if (!dict) return;
 
+      var year = new Date().getFullYear();
+      var season = getCurrentSeason(lang);
+
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (dict[key] !== undefined) {
-          el.textContent = dict[key];
+          el.textContent = dict[key].replace('{year}', year).replace('{season}', season);
         }
       });
 
