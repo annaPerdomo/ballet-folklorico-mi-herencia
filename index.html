@@ -892,6 +892,28 @@
       border-color: rgba(201,168,76,0.25);
     }
 
+    .review-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(33.333% - 1.34rem);
+      flex-shrink: 0;
+      background: rgba(201,168,76,0.06);
+      border-color: rgba(201,168,76,0.2);
+    }
+    .review-card:hover {
+      background: rgba(201,168,76,0.1);
+    }
+    .review-card > div:first-child {
+      justify-content: center;
+    }
+    .review-card p:last-child {
+      margin-block-start: auto;
+      padding-block-start: 1rem;
+    }
+
     .about-card h3 {
       font-family: var(--font-display);
       font-size: 1.3rem;
@@ -1648,6 +1670,7 @@
       /* About */
       .about-cards { grid-template-columns: 1fr; gap: 1.25rem; }
       .about-card { padding: 1.5rem; }
+      .review-card { width: 100%; }
 
       /* Events */
       .event-card-body h3 { font-size: 0.75rem; }
@@ -2582,23 +2605,74 @@
           No lo decimos nosotros.
         </h2>
         <div class="heading-rule" style="margin-inline:auto;"></div>
+        <p style="margin-block-start:0.75rem;margin-block-end:0.25rem;color:var(--text-muted);font-size:0.95rem;">
+          <span style="color:#f5c518;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span data-i18n-html="reviews.subtitle"> 5.0 &mdash; 7 reseñas en <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--gold-light);text-decoration:underline;">GigSalad</a></span>
+        </p>
 
-        <div class="about-cards" style="max-width:800px;margin-inline:auto;">
-          <article class="about-card" style="text-align:left;">
+        <div class="about-cards" style="max-width:1200px;margin-inline:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;">
+          <article class="about-card review-card">
+            <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;">
+              <span style="color:#f5c518;font-size:0.9rem;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);font-size:0.75rem;text-decoration:none;opacity:0.7;">via GigSalad</a>
+            </div>
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review1.text">
-              &ldquo;Los bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar.&rdquo;
+              &ldquo;Los bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar, flexibles incluso con toda la locura. Contratamos a este increíble grupo para una sorpresa de cumpleaños de mi mamá y no nos decepcionaron. Mi familia y yo definitivamente los contrataríamos otra vez.&rdquo;
             </p>
             <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review1.author">
-              — Bianca B. · Evento Privado
+              — Bianca B. · Fiesta de Cumpleaños
             </p>
           </article>
 
-          <article class="about-card" style="text-align:left;">
+          <article class="about-card review-card">
+            <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;">
+              <span style="color:#f5c518;font-size:0.9rem;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);font-size:0.75rem;text-decoration:none;opacity:0.7;">via GigSalad</a>
+            </div>
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review2.text">
               &ldquo;Todo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.&rdquo;
             </p>
             <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review2.author">
               — Ramon A. · Boda
+            </p>
+          </article>
+
+          <article class="about-card review-card">
+            <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;">
+              <span style="color:#f5c518;font-size:0.9rem;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);font-size:0.75rem;text-decoration:none;opacity:0.7;">via GigSalad</a>
+            </div>
+            <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review3.text">
+              &ldquo;Este grupo es el mejor que he visto. Hicieron una presentación virtual para el Festival de la Herencia Hispana de mi escuela y fue mejor que nuestros grupos presenciales anteriores. Me encanta la historia que dan de cada baile y las lecciones interactivas para los estudiantes. Los recomendaría a cualquiera.&rdquo;
+            </p>
+            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review3.author">
+              — Antoinette M. · Festival Escolar
+            </p>
+          </article>
+
+          <article class="about-card review-card">
+            <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;">
+              <span style="color:#f5c518;font-size:0.9rem;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);font-size:0.75rem;text-decoration:none;opacity:0.7;">via GigSalad</a>
+            </div>
+            <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review4.text">
+              &ldquo;Ballet Folklórico Mi Herencia fueron nuestros invitados especiales para nuestra celebración virtual de Cinco de Mayo en toda la empresa. Realizaron 4 bailes tradicionales seguidos de una divertida lección de baile interactiva. Fue de lejos uno de nuestros eventos más divertidos del año.&rdquo;
+            </p>
+            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review4.author">
+              — Adrielle B. · Evento Corporativo
+            </p>
+          </article>
+
+          <article class="about-card review-card">
+            <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;">
+              <span style="color:#f5c518;font-size:0.9rem;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted);font-size:0.75rem;text-decoration:none;opacity:0.7;">via GigSalad</a>
+            </div>
+            <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review5.text">
+              &ldquo;Recomendamos ampliamente a Angel y su equipo. Los participantes de nuestro 5K quedaron impresionados. Definitivamente los contrataríamos de nuevo.&rdquo;
+            </p>
+            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review5.author">
+              — Eulogio R. · Evento Comunitario
             </p>
           </article>
         </div>
@@ -3033,11 +3107,18 @@
         // Reviews
         "reviews.label":    "Lo Que Dicen",
         "reviews.heading":  "No lo decimos nosotros.",
-        "review1.text":     "\u201CLos bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar.\u201D",
-        "review1.author":   "— Bianca B. · Evento Privado",
+        "reviews.subtitle": " 5.0 — 7 reseñas en <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--gold-light);text-decoration:underline;'>GigSalad</a>",
+        "review1.text":     "\u201CLos bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar, flexibles incluso con toda la locura. Contratamos a este increíble grupo para una sorpresa de cumpleaños de mi mamá y no nos decepcionaron. Mi familia y yo definitivamente los contrataríamos otra vez.\u201D",
+        "review1.author":   "— Bianca B. · Fiesta de Cumpleaños",
         "review2.text":     "\u201CTodo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.\u201D",
         "review2.author":   "— Ramon A. · Boda",
-        "reviews.cta":      "Lee más reseñas en GigSalad",
+        "review3.text":     "\u201CEste grupo es el mejor que he visto. Hicieron una presentación virtual para el Festival de la Herencia Hispana de mi escuela y fue mejor que nuestros grupos presenciales anteriores. Me encanta la historia que dan de cada baile y las lecciones interactivas para los estudiantes. Los recomendaría a cualquiera.\u201D",
+        "review3.author":   "— Antoinette M. · Festival Escolar",
+        "review4.text":     "\u201CBallet Folklórico Mi Herencia fueron nuestros invitados especiales para nuestra celebración virtual de Cinco de Mayo en toda la empresa. Realizaron 4 bailes tradicionales seguidos de una divertida lección de baile interactiva. Fue de lejos uno de nuestros eventos más divertidos del año.\u201D",
+        "review4.author":   "— Adrielle B. · Evento Corporativo",
+        "review5.text":     "\u201CRecomendamos ampliamente a Angel y su equipo. Los participantes de nuestro 5K quedaron impresionados. Definitivamente los contrataríamos de nuevo.\u201D",
+        "review5.author":   "— Eulogio R. · Evento Comunitario",
+        "reviews.cta":      "Lee todas las reseñas en GigSalad",
 
         // Contact
         "contact.label":    "Contacto",
@@ -3151,11 +3232,18 @@
         // Reviews
         "reviews.label":    "What People Say",
         "reviews.heading":  "Don't take our word for it.",
-        "review1.text":     "\u201CThe dances were beautiful and our guests loved their performances. Very easy and pleasant to work with.\u201D",
-        "review1.author":   "— Bianca B. · Private Event",
-        "review2.text":     "\u201CEverything was beautiful. On time, very professional and communicative. I had them for my wedding and everyone loved them.\u201D",
+        "reviews.subtitle": " 5.0 — 7 reviews on <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--gold-light);text-decoration:underline;'>GigSalad</a>",
+        "review1.text":     "\u201CThe dances were beautiful and our guests loved their performances! Very easy and pleasant to work with and flexible. We hired this amazing group for a surprise for my mom\u2019s birthday and they did not disappoint! My family and I would definitely hire again in a heartbeat!\u201D",
+        "review1.author":   "— Bianca B. · Birthday Party",
+        "review2.text":     "\u201CEverything was beautiful. On time, very professional and communicative. I had them for my wedding and everyone liked them.\u201D",
         "review2.author":   "— Ramon A. · Wedding",
-        "reviews.cta":      "See more reviews on GigSalad",
+        "review3.text":     "\u201CThis group was the best I have ever seen. They did a virtual performance for my school\u2019s Hispanic Heritage Festival and it was better than our live groups in the past. I love the history they provide for each dance and the interactive lessons for the students. I would recommend this group to absolutely anyone.\u201D",
+        "review3.author":   "— Antoinette M. · School Festival",
+        "review4.text":     "\u201CBallet Folklórico Mi Herencia were our special guests for our virtual company-wide Cinco de Mayo celebration. They performed 4 traditional dances followed by a fun interactive dance lesson. It was by far one of our most fun and entertaining events this year.\u201D",
+        "review4.author":   "— Adrielle B. · Corporate Event",
+        "review5.text":     "\u201CWe highly recommend Angel and his team. Our participants in our 5K were impressed! We would definitely hire them again!\u201D",
+        "review5.author":   "— Eulogio R. · Community Event",
+        "reviews.cta":      "See all reviews on GigSalad",
 
         // Contact
         "contact.label":    "Contact",
@@ -3217,6 +3305,13 @@
         const key = el.getAttribute('data-i18n');
         if (dict[key] !== undefined) {
           el.textContent = dict[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (dict[key] !== undefined) {
+          el.innerHTML = dict[key];
         }
       });
 
