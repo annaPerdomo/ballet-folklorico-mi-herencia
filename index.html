@@ -16,8 +16,8 @@
   <!-- ═══════════════════════════════════════════════
        FAVICON
   ═══════════════════════════════════════════════ -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="images/favicon.png" />
   <meta name="theme-color" content="#080311" />
 
   <!-- ═══════════════════════════════════════════════
@@ -104,7 +104,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600;700&family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 
   <style>
     /* ════════════════════════════════════════════════════════════
@@ -253,24 +253,34 @@
     }
 
     .site-wordmark {
-      font-family: var(--font-ui);
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: rgba(240,230,208,0.75);
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
-      letter-spacing: 0.14em;
       flex-shrink: 0;
+    }
+    .nav-logo {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3));
+    }
+    .wordmark-text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 1.5px;
       line-height: 1.2;
       text-transform: uppercase;
     }
-    .site-wordmark span {
+    .wordmark-text span {
       display: block;
-      font-family: var(--font-ui);
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      color: #c9a84c;
+      color: var(--gold-light);
       margin-top: 1px;
     }
 
@@ -452,25 +462,48 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0;
+      opacity: 1;
+      z-index: 0;
     }
 
     #home .hero-gradient-placeholder {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, #1a1030 0%, #0a0618 50%, #050210 100%);
+      background:
+        linear-gradient(
+          to right,
+          rgba(201,168,76,0.22) 0%,
+          rgba(201,168,76,0.10) 15%,
+          rgba(138,30,80,0.12) 28%,
+          #3a0e4a 45%,
+          #1e0836 60%,
+          #12042a 75%,
+          transparent 92%
+        );
+      z-index: 1;
     }
 
     #home .hero-texture-overlay {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(201,168,76,0.012) 20px, rgba(201,168,76,0.012) 40px);
+      display: none;
     }
 
     #home .hero-dark-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(5,2,16,0.35);
+      background:
+        /* Gold glow near the text on the left */
+        radial-gradient(ellipse at 12% 45%, rgba(201,168,76,0.2) 0%, transparent 45%),
+        /* Warm ember bloom in the mid-zone */
+        radial-gradient(ellipse at 30% 55%, rgba(180,80,50,0.15) 0%, transparent 45%),
+        /* Base darkening further right for depth */
+        linear-gradient(
+          to right,
+          transparent 0%,
+          rgba(18,4,42,0.2) 40%,
+          rgba(5,2,16,0.5) 70%,
+          rgba(5,2,16,0.4) 100%
+        );
+      z-index: 1;
     }
 
     /* Embroidery pattern border at top */
@@ -503,27 +536,27 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      text-align: center;
-      padding: 2rem;
+      text-align: left;
+      padding: 2rem 2rem 2rem 6%;
     }
 
     .hero-text {
-      max-width: 600px;
+      max-width: 560px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .hero-subtitle {
       font-family: var(--font-ui);
-      font-size: 0.78rem;
-      letter-spacing: 0.28em;
+      font-size: 0.82rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: #c9a84c;
-      font-weight: 700;
-      margin-block-end: 1.5rem;
+      font-weight: 600;
+      margin-block-end: 1rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -534,22 +567,31 @@
 
     #home h1 {
       font-family: var(--font-hero);
-      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-size: clamp(3rem, 6vw, 5.5rem);
       font-weight: 400;
       color: #fff;
-      line-height: 1.15;
-      margin-block-end: 2.5rem;
+      line-height: 1.05;
+      margin-block-end: 1.5rem;
       letter-spacing: 0.02em;
-      text-shadow: none;
+      text-shadow: 0 2px 30px rgba(201,168,76,0.15);
       text-wrap: balance;
     }
 
     #home h1 .line2 {
-      display: none;
+      display: block;
+      font-size: 1.15em;
+      font-weight: 400;
+      letter-spacing: 0.02em;
     }
 
     .hero-desc {
-      display: none;
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.78);
+      max-width: 480px;
+      margin-block-end: 2rem;
     }
 
     .hero-tagline {
@@ -560,7 +602,7 @@
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -1366,9 +1408,24 @@
       .container { padding-inline: 1.25rem; }
 
       /* Hero */
-      .hero-content { padding: 2rem 1.5rem; }
-      #home h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+      .hero-content { padding: 2rem 1.5rem; align-items: center; text-align: center; }
+      .hero-text { align-items: center; }
+      .hero-cta-group { justify-content: center; }
+      #home h1 { font-size: clamp(2rem, 7vw, 3rem); }
       .hero-subtitle { font-size: 0.68rem; letter-spacing: 0.18em; }
+      #home .hero-gradient-placeholder {
+        background: linear-gradient(
+          to bottom,
+          #1a0a2e 0%,
+          rgba(26,10,46,0.9) 40%,
+          rgba(26,10,46,0.6) 60%,
+          rgba(26,10,46,0.3) 80%,
+          transparent 100%
+        );
+      }
+      #home .hero-dark-overlay {
+        background: rgba(5,2,16,0.45);
+      }
 
       /* About */
       .about-cards { grid-template-columns: 1fr; gap: 1.25rem; }
@@ -1420,22 +1477,42 @@
       /* ── Header ── */
       header { height: var(--header-height); }
       .header-inner { padding-inline: 0; }
-      .site-wordmark { font-size: 0.72rem; }
-      .site-wordmark span { font-size: 0.82rem; }
+      .nav-logo { height: 32px; }
+      .wordmark-text { font-size: 11px; }
+      .wordmark-text span { font-size: 15px; }
       .lang-toggle { font-size: 0.58rem; padding: 0.25rem 0.6rem; }
 
       /* ── Hero — full impact on small screens ── */
       #home { height: 100svh; } /* svh = small viewport height, accounts for mobile browser chrome */
-      .hero-content { padding: 1.5rem 1.25rem; }
+      .hero-content { padding: 1.5rem 1.25rem; align-items: center; text-align: center; }
+      .hero-text { align-items: center; }
+      .hero-cta-group { justify-content: center; }
       .hero-subtitle {
         font-size: 0.62rem;
         letter-spacing: 0.15em;
-        margin-block-end: 1rem;
+        margin-block-end: 0.75rem;
       }
       #home h1 {
-        font-size: 1.65rem;
-        line-height: 1.35;
-        margin-block-end: 2rem;
+        font-size: 2rem;
+        line-height: 1.1;
+        margin-block-end: 1.25rem;
+      }
+      .hero-desc {
+        font-size: 0.85rem;
+        max-width: 320px;
+      }
+      #home .hero-gradient-placeholder {
+        background: linear-gradient(
+          to bottom,
+          #1a0a2e 0%,
+          rgba(26,10,46,0.92) 35%,
+          rgba(26,10,46,0.65) 55%,
+          rgba(26,10,46,0.35) 75%,
+          transparent 100%
+        );
+      }
+      #home .hero-dark-overlay {
+        background: rgba(5,2,16,0.5);
       }
       .hero-cta-group { flex-direction: column; align-items: center; width: 100%; }
       .hero-cta-group .btn {
@@ -1531,10 +1608,12 @@
     ════════════════════════════════════════════════════════════ */
     @media (max-width: 360px) {
       .container { padding-inline: 0.75rem; }
-      .site-wordmark { font-size: 0.65rem; }
-      .site-wordmark span { font-size: 0.75rem; }
-      #home h1 { font-size: 1.4rem; }
+      .nav-logo { height: 28px; }
+      .wordmark-text { font-size: 10px; }
+      .wordmark-text span { font-size: 14px; }
+      #home h1 { font-size: 1.6rem; }
       .hero-subtitle { font-size: 0.56rem; }
+      .hero-desc { font-size: 0.8rem; }
       .section-heading { font-size: 1.3rem; }
       .story-heading { font-size: 1.3rem; }
       .about-card { padding: 1rem; }
@@ -1582,7 +1661,8 @@
     <div class="container header-inner">
 
       <a href="#home" class="site-wordmark" aria-label="Ballet Folklórico Mi Herencia — Inicio">
-        Ballet Folklórico<span>Mi Herencia</span>
+        <img src="images/logo-dancers-color.png" alt="Ballet Folklórico Mi Herencia logo" class="nav-logo">
+        <span class="wordmark-text">Ballet Folklórico<span>Mi Herencia</span></span>
       </a>
 
       <nav aria-label="Primary navigation">
@@ -1651,23 +1731,18 @@
       <div class="hero-content">
         <div class="hero-text">
           <p class="hero-subtitle">
-            <span data-i18n="hero.subtitle">Ballet Folklórico Mi Herencia</span>
+            <span data-i18n="hero.subtitle">Nuestras Raíces,</span>
             <span class="ornament" aria-hidden="true">&#10022;</span>
-            <span data-i18n="hero.subtitle2" style="display:none;">Raíces</span>
           </p>
           <h1 id="hero-heading">
-            <span data-i18n="hero.tagline">La tradición que vive en cada paso.</span>
-            <span class="line2" data-i18n="hero.heading2" aria-hidden="true">Legado.</span>
+            <span data-i18n="hero.heading1">Nuestro</span>
+            <span class="line2" data-i18n="hero.heading2">Legado.</span>
           </h1>
           <p class="hero-desc" data-i18n="hero.description">
-            Ballet Folklórico Mi Herencia es cultura, tradición y el colorido espíritu de México a través de la danza.
-            La tradición que late en cada paso, el orgullo que se siente en cada giro.
-          </p>
-          <p class="hero-tagline" data-i18n="hero.tagline">
-            La tradición que vive en cada paso.
+            Celebramos la belleza, la cultura, y el espíritu de México a través de la danza. Llevamos nuestras tradiciones a cada escenario con orgullo y pasión.
           </p>
           <div class="hero-cta-group">
-            <a href="#contact" class="btn btn-gold" data-i18n="nav.cta">Contáctanos</a>
+            <a href="#about" class="btn btn-gold" data-i18n="hero.cta">Conoce Más</a>
           </div>
         </div>
       </div>
