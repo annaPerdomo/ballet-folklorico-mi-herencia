@@ -7,8 +7,8 @@
   <!-- ═══════════════════════════════════════════════
        PRIMARY SEO TAGS
   ═══════════════════════════════════════════════ -->
-  <title>Ballet Folklórico Mi Herencia | Hacienda Heights, CA | Folklórico Los Angeles, SGV & Orange County</title>
-  <meta name="description" content="Ballet Folklórico Mi Herencia — a professional Mexican folk dance company based in Hacienda Heights, CA. Performing throughout Folklórico Los Angeles, Folklórico SGV, Folklórico Orange County, Whittier, Montebello, and Costa Mesa. Book us for festivals, school events, quinceañeras, and cultural celebrations." />
+  <title>Ballet Folklórico Mi Herencia | Hacienda Heights, CA | Mexican Folk Dance Los Angeles, SGV & Orange County</title>
+  <meta name="description" content="Ballet Folklórico Mi Herencia — a community-based Mexican folk dance group in Hacienda Heights, CA. Book us for festivals, corporate events, quinceañeras, weddings, and school performances across Los Angeles, the San Gabriel Valley, and Orange County. Now accepting new dancers ages 6+." />
   <meta name="keywords" content="Ballet Folklorico Hacienda Heights, Folklorico Los Angeles, Folklorico SGV, Folklorico Orange County, Mexican folk dance Los Angeles, Folklorico San Gabriel Valley, Folklorico Whittier, Folklorico Montebello, Folklorico Costa Mesa, Ballet Folklorico Mi Herencia, baile folklorico California" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.balletfolkloriomiherencia.com/" />
@@ -26,7 +26,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.balletfolkloriomiherencia.com/" />
   <meta property="og:title" content="Ballet Folklórico Mi Herencia | Hacienda Heights, CA" />
-  <meta property="og:description" content="Professional Mexican folk dance company serving the San Gabriel Valley, Los Angeles, and Orange County. Book us for your next event." />
+  <meta property="og:description" content="Community-based Mexican folk dance group performing throughout Los Angeles, the San Gabriel Valley, and Orange County. Book us for your next event or join our group." />
   <meta property="og:image" content="https://www.balletfolkloriomiherencia.com/og-image.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="es_MX" />
@@ -35,7 +35,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Ballet Folklórico Mi Herencia | Hacienda Heights, CA" />
-  <meta name="twitter:description" content="Professional Mexican folk dance company serving the San Gabriel Valley, Los Angeles, and Orange County." />
+  <meta name="twitter:description" content="Community-based Mexican folk dance group performing throughout Los Angeles, the San Gabriel Valley, and Orange County. Book us for your next event or join our group." />
   <meta name="twitter:image" content="https://www.balletfolkloriomiherencia.com/og-image.jpg" />
 
   <!-- ═══════════════════════════════════════════════
@@ -47,7 +47,7 @@
     "@type": "PerformingArtsTheater",
     "name": "Ballet Folklórico Mi Herencia",
     "alternateName": "Mi Herencia Folklórico",
-    "description": "Professional Mexican folk dance company based in Hacienda Heights, CA, performing throughout the San Gabriel Valley, Los Angeles, and Orange County.",
+    "description": "Community-based Mexican folk dance group in Hacienda Heights, CA. Performing at festivals, corporate events, quinceañeras, weddings, and school assemblies across Los Angeles, the San Gabriel Valley, and Orange County.",
     "url": "https://www.balletfolkloriomiherencia.com/",
     "logo": "https://www.balletfolkloriomiherencia.com/logo.png",
     "image": "https://www.balletfolkloriomiherencia.com/og-image.jpg",
@@ -266,9 +266,9 @@
     }
     .wordmark-text {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 13px;
-      font-weight: 400;
-      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
       letter-spacing: 1.5px;
       line-height: 1.2;
       text-transform: uppercase;
@@ -276,7 +276,7 @@
     .wordmark-text span {
       display: block;
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -753,9 +753,78 @@
     ════════════════════════════════════════════════════════════ */
     #about {
       background: #180a1e;
-      padding-block: var(--section-gap);
-      text-align: center;
+      padding-block: 4rem;
       position: relative;
+    }
+
+    #about > .container {
+      max-width: 1400px;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-image-frame {
+      position: relative;
+      padding: 12px;
+      align-self: center;
+    }
+    /* Outer gold border */
+    .about-image-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--gold-dark);
+      border-radius: var(--radius);
+      pointer-events: none;
+    }
+    /* Inner gold border */
+    .about-image-frame::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .about-image-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--bg-elevated);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .about-image-placeholder .icon {
+      font-size: 3rem;
+      opacity: 0.3;
+      color: var(--gold);
+    }
+
+    /* Corner ornaments for about image */
+    .about-image-frame .frame-corner { position: absolute; width: 24px; height: 24px; z-index: 2; }
+    .about-image-frame .frame-corner svg { width: 100%; height: 100%; }
+    .about-image-frame .frame-corner--tl { top: -3px; left: -3px; }
+    .about-image-frame .frame-corner--tr { top: -3px; right: -3px; transform: scaleX(-1); }
+    .about-image-frame .frame-corner--bl { bottom: -3px; left: -3px; transform: scaleY(-1); }
+    .about-image-frame .frame-corner--br { bottom: -3px; right: -3px; transform: scale(-1); }
+
+    .about-text-col {
+      text-align: left;
     }
 
     .story-heading {
@@ -770,18 +839,35 @@
 
     .story-text {
       max-width: 700px;
-      margin-inline: auto;
       color: var(--text-secondary);
       font-size: 1rem;
       line-height: 1.85;
-      margin-block-end: 2rem;
+      margin-block-end: 1.5rem;
     }
 
     .story-divider {
       width: 80px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 1.5rem auto;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .about-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .about-image-frame {
+        max-width: 480px;
+        margin-inline: auto;
+      }
+      .about-text-col {
+        text-align: center;
+      }
+      .story-divider {
+        margin-inline: auto;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      }
     }
 
     /* About detail cards */
@@ -895,15 +981,12 @@
 
     .events-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
       margin-block: 2.5rem;
     }
 
-    @media (max-width: 900px) {
-      .events-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 550px) {
+    @media (max-width: 700px) {
       .events-grid { grid-template-columns: 1fr; }
     }
 
@@ -1432,7 +1515,6 @@
       .about-card { padding: 1.5rem; }
 
       /* Events */
-      .events-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
       .event-card-body { padding: 1rem; }
       .event-card-body h3 { font-size: 0.95rem; }
 
@@ -1662,15 +1744,14 @@
 
       <a href="#home" class="site-wordmark" aria-label="Ballet Folklórico Mi Herencia — Inicio">
         <img src="images/logo-dancers-color.png" alt="Ballet Folklórico Mi Herencia logo" class="nav-logo">
-        <span class="wordmark-text">Ballet Folklórico<span>Mi Herencia</span></span>
+        <span class="wordmark-text notranslate" translate="no">Ballet Folklórico<span>Mi Herencia</span></span>
       </a>
 
       <nav aria-label="Primary navigation">
         <ul>
           <li><a href="#home"           data-i18n="nav.home">Inicio</a></li>
           <li><a href="#about"          data-i18n="nav.about">Sobre Nosotros</a></li>
-          <li><a href="#performances"   data-i18n="nav.performances">Presentaciones</a></li>
-          <li><a href="#gallery"        data-i18n="nav.gallery">Galería</a></li>
+          <li><a href="#performances"   data-i18n="nav.events">Eventos</a></li>
           <li><a href="#classes"        data-i18n="nav.classes">Clases</a></li>
           <li><a href="#contact"        data-i18n="nav.contact">Contacto</a></li>
         </ul>
@@ -1704,8 +1785,7 @@
     <ul>
       <li><a href="#home"         data-i18n="nav.home">Inicio</a></li>
       <li><a href="#about"        data-i18n="nav.about">Sobre Nosotros</a></li>
-      <li><a href="#performances" data-i18n="nav.performances">Presentaciones</a></li>
-      <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
+      <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
       <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
       <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
       <li><a href="#contact"      data-i18n="nav.cta" style="color:var(--gold-light);">Contáctanos</a></li>
@@ -1731,18 +1811,19 @@
       <div class="hero-content">
         <div class="hero-text">
           <p class="hero-subtitle">
-            <span data-i18n="hero.subtitle">Nuestras Raíces,</span>
+            <span data-i18n="hero.subtitle" class="notranslate" translate="no">Ballet Folklórico Mi Herencia</span>
             <span class="ornament" aria-hidden="true">&#10022;</span>
           </p>
           <h1 id="hero-heading">
-            <span data-i18n="hero.heading1">Nuestro</span>
-            <span class="line2" data-i18n="hero.heading2">Legado.</span>
+            <span data-i18n="hero.heading1">Tradición en</span>
+            <span class="line2" data-i18n="hero.heading2">Movimiento.</span>
           </h1>
           <p class="hero-desc" data-i18n="hero.description">
-            Celebramos la belleza, la cultura, y el espíritu de México a través de la danza. Llevamos nuestras tradiciones a cada escenario con orgullo y pasión.
+            Un grupo comunitario de danza folklórica mexicana con base en Hacienda Heights, CA. Nos presentamos en festivales, eventos corporativos, quinceañeras, escuelas y mucho más.
           </p>
           <div class="hero-cta-group">
-            <a href="#about" class="btn btn-gold" data-i18n="hero.cta">Conoce Más</a>
+            <a href="#contact" class="btn btn-gold" data-i18n="hero.cta1">Contratar Presentación</a>
+            <a href="#classes" class="btn btn-outline" data-i18n="hero.cta2">Únete al Grupo</a>
           </div>
         </div>
       </div>
@@ -2119,35 +2200,42 @@
 
     <!-- ── ABOUT / STORY ─────────────────────────────────────── -->
     <section id="about" aria-labelledby="about-heading">
-      <div class="container text-center">
-        <h2 class="story-heading" id="about-heading" data-i18n="about.heading">
-          Danza que cuenta nuestra historia
-        </h2>
-        <div class="story-divider"></div>
-        <p class="story-text" data-i18n="about.text">
-          Ballet Folklórico Mi Herencia es un grupo de danza folklórica mexicana con raíces comunitarias
-          en Hacienda Heights, California. Somos una familia compuesta por bailarines de todas las edades
-          y niveles, unidos por la pasión de celebrar la cultura mexicana a través de la alegría del Folklórico.
-          Desde nuestros bailarines más jóvenes hasta nuestro conjunto adulto, cada bailarín forma parte de algo significativo.
-        </p>
+      <div class="container">
+        <div class="about-layout">
 
-        <div class="about-cards">
-          <article class="about-card">
-            <h3 data-i18n="about.mission.heading">Nuestra Misión</h3>
-            <p data-i18n="about.mission.text">
-              Nos dedicamos a mantener vivas las tradiciones del baile folklórico mexicano en el sur de California
-              — educando, inspirando y conectando a nuestra comunidad a través de presentaciones auténticas y
-              llenas de corazón.
-            </p>
-          </article>
+          <div class="about-image-frame">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--tr" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--bl" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="about-image-placeholder" aria-hidden="true">
+              <span class="icon">&#10022;</span>
+              <span data-i18n="placeholder.about">Foto del grupo</span>
+            </div>
+          </div>
 
-          <article class="about-card">
-            <h3 data-i18n="about.serviceArea.heading">Dónde Nos Presentamos</h3>
-            <p data-i18n="about.serviceArea.text">
-              Con orgullo nos presentamos en el área metropolitana de Los Ángeles, el Valle de San Gabriel
-              y el Condado de Orange — incluyendo Whittier, Montebello, Costa Mesa y más allá.
+          <div class="about-text-col">
+            <span class="section-label" data-i18n="about.label">Sobre Nosotros</span>
+            <h2 class="story-heading" id="about-heading" data-i18n="about.heading">
+              Más que un grupo de danza.
+            </h2>
+            <div class="story-divider"></div>
+            <p class="story-text" data-i18n="about.text1">
+              Ballet Folklórico Mi Herencia es un grupo comunitario de danza folklórica mexicana compuesto por bailarines de todas las edades — desde los 6 años hasta adultos. Algunos llevan años en el escenario. Otros apenas están aprendiendo sus primeros pasos. Todos tienen un lugar aquí.
             </p>
-            <div class="service-badges">
+            <p class="story-text" data-i18n="about.text2">
+              Nos hemos presentado en ferias del condado, eventos corporativos, bodas, quinceañeras, parques temáticos, eventos de medios y asambleas escolares por todo Los Ángeles, el Valle de San Gabriel y el Condado de Orange. Ningún escenario es demasiado grande, ningún evento demasiado pequeño.
+            </p>
+
+            <div class="service-badges" style="margin-block-start:1rem;">
               <span class="service-badge">Hacienda Heights</span>
               <span class="service-badge">San Gabriel Valley</span>
               <span class="service-badge">Los Angeles</span>
@@ -2156,12 +2244,47 @@
               <span class="service-badge">Montebello</span>
               <span class="service-badge">Costa Mesa</span>
             </div>
-          </article>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <!-- Embroidery border: about → performances -->
+    <!-- ── GALLERY (commented out for now) ──────────────────────
+    <section id="gallery" aria-labelledby="gallery-heading">
+      <div class="container text-center">
+        <h2 class="section-heading" id="gallery-heading" data-i18n="gallery.heading">
+          Véanos en acción.
+        </h2>
+        <div class="heading-rule" style="margin-inline:auto;"></div>
+
+        <div class="gallery-strip" aria-label="Galería de fotos">
+          <div class="gallery-item" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="gallery.photo">Foto</span>
+          </div>
+          <div class="gallery-item" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="gallery.photo">Foto</span>
+          </div>
+          <div class="gallery-item" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="gallery.photo">Foto</span>
+          </div>
+          <div class="gallery-item" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="gallery.photo">Foto</span>
+          </div>
+          <div class="gallery-item" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="gallery.photo">Foto</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    ── end gallery comment ──────────────────────────────────── -->
+
+    <!-- Embroidery border: about → events -->
     <div class="embroidery-divider" aria-hidden="true">
       <svg width="100%" height="44" preserveAspectRatio="xMidYMid slice">
         <defs>
@@ -2190,9 +2313,9 @@
     <!-- ── EVENTS / PERFORMANCES ──────────────────────────────── -->
     <section id="performances" aria-labelledby="performances-heading">
       <div class="container text-center">
-        <span class="section-label" data-i18n="performances.label">Experiencias Vivas Que Emocionan</span>
+        <span class="section-label" data-i18n="performances.label">Próximos Eventos</span>
         <h2 class="section-heading" id="performances-heading" data-i18n="performances.heading">
-          Únete a nuestra celebración
+          Encuéntranos en vivo.
         </h2>
         <div class="heading-rule" style="margin-inline:auto;"></div>
 
@@ -2203,7 +2326,7 @@
               <span class="icon">&#10022;</span>
             </div>
             <div class="event-card-body">
-              <h3 data-i18n="event1.name">Festival Cultural de Verano</h3>
+              <h3 data-i18n="event1.name">LA County Fair</h3>
               <div class="event-meta">
                 <span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -2222,7 +2345,7 @@
               <span class="icon">&#10022;</span>
             </div>
             <div class="event-card-body">
-              <h3 data-i18n="event2.name">Noche Mexicana en la Plaza</h3>
+              <h3 data-i18n="event2.name">Noche Mexicana</h3>
               <div class="event-meta">
                 <span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -2241,34 +2364,15 @@
               <span class="icon">&#10022;</span>
             </div>
             <div class="event-card-body">
-              <h3 data-i18n="event3.name">Celebrando Nuestras Raíces</h3>
+              <h3 data-i18n="event3.name">Eventos Privados y Corporativos</h3>
               <div class="event-meta">
                 <span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <span data-i18n="event3.date">Temporada Primavera 2026</span>
+                  <span data-i18n="event3.date">Bajo solicitud</span>
                 </span>
                 <span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span data-i18n="event3.location">Hacienda Heights, CA</span>
-                </span>
-              </div>
-            </div>
-          </article>
-
-          <article class="event-card" role="listitem">
-            <div class="event-card-image" aria-hidden="true">
-              <span class="icon">&#10022;</span>
-            </div>
-            <div class="event-card-body">
-              <h3 data-i18n="event4.name">Tradiciones Que Nos Moldean</h3>
-              <div class="event-meta">
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <span data-i18n="event4.date">Aceptando Nuevos Bailarines</span>
-                </span>
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span data-i18n="event4.location">Edades 6+ · Todos los niveles</span>
+                  <span data-i18n="event3.location">Donde nos necesites</span>
                 </span>
               </div>
             </div>
@@ -2278,41 +2382,8 @@
 
         <div class="events-cta">
           <a href="#contact" class="btn btn-gold-outline" data-i18n="performances.cta">
-            Ver Todas las Presentaciones
+            Contáctanos
           </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── GALLERY ────────────────────────────────────────────── -->
-    <section id="gallery" aria-labelledby="gallery-heading">
-      <div class="container text-center">
-        <h2 class="section-heading" id="gallery-heading" data-i18n="gallery.heading">
-          Momentos que nos mueven
-        </h2>
-        <div class="heading-rule" style="margin-inline:auto;"></div>
-
-        <div class="gallery-strip" aria-label="Galería de fotos">
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
-          </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
-          </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
-          </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
-          </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
-          </div>
         </div>
       </div>
     </section>
@@ -2346,69 +2417,94 @@
     <!-- ── CLASSES ─────────────────────────────────────────────── -->
     <section id="classes" aria-labelledby="classes-heading">
       <div class="container">
-        <span class="section-label" data-i18n="classes.label">Aprende Con Nosotros</span>
-        <h2 class="section-heading" id="classes-heading" data-i18n="classes.heading">Clases</h2>
+        <span class="section-label" data-i18n="classes.label">Únete</span>
+        <h2 class="section-heading" id="classes-heading" data-i18n="classes.heading">Primeras 4 sesiones gratis. No necesitas experiencia.</h2>
         <p class="section-subheading" data-i18n="classes.subheading">
-          Desde los 6 años · Todos los niveles · Primeras 4 sesiones GRATIS
+          La temporada de primavera 2026 está abierta — estamos recibiendo nuevos bailarines.
         </p>
         <div class="heading-rule"></div>
-        <p style="color:var(--text-secondary);max-width:760px;margin-block-end:0;" data-i18n="classes.intro">
-          Nuestra temporada de primavera 2026 está abierta y estamos dando la bienvenida a nuevos bailarines.
-          Ya sea que estés pisando la pista de baile por primera vez o que seas un bailarín experimentado,
-          Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la adultez.
-          Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.
-        </p>
 
         <div class="classes-grid">
           <article class="class-card">
-            <h3 data-i18n="class1.name">Jóvenes (6–12 años)</h3>
+            <h3 data-i18n="class1.name">Jóvenes</h3>
             <dl>
+              <dt data-i18n="class.label.ages">Edades</dt>
+              <dd data-i18n="class1.ages">6–12 años</dd>
               <dt data-i18n="class.label.level">Nivel</dt>
               <dd data-i18n="class1.level">Principiante – Intermedio</dd>
-              <dt data-i18n="class.label.location">Lugar</dt>
-              <dd data-i18n="class1.location">Hacienda Heights, CA</dd>
             </dl>
           </article>
 
           <article class="class-card">
-            <h3 data-i18n="class2.name">Adolescentes (13–17 años)</h3>
+            <h3 data-i18n="class2.name">Adolescentes</h3>
             <dl>
+              <dt data-i18n="class.label.ages">Edades</dt>
+              <dd data-i18n="class2.ages">13–17 años</dd>
               <dt data-i18n="class.label.level">Nivel</dt>
               <dd data-i18n="class2.level">Todos los niveles</dd>
-              <dt data-i18n="class.label.location">Lugar</dt>
-              <dd data-i18n="class2.location">Hacienda Heights, CA</dd>
             </dl>
           </article>
 
           <article class="class-card">
-            <h3 data-i18n="class3.name">Adultos (18+)</h3>
+            <h3 data-i18n="class3.name">Adultos</h3>
             <dl>
+              <dt data-i18n="class.label.ages">Edades</dt>
+              <dd data-i18n="class3.ages">18+</dd>
               <dt data-i18n="class.label.level">Nivel</dt>
               <dd data-i18n="class3.level">Todos los niveles</dd>
-              <dt data-i18n="class.label.location">Lugar</dt>
-              <dd data-i18n="class3.location">Hacienda Heights, CA</dd>
-            </dl>
-          </article>
-
-          <article class="class-card">
-            <h3 data-i18n="class4.name">Primeras 4 Sesiones — GRATIS</h3>
-            <dl>
-              <dt data-i18n="class.label.who">Quién</dt>
-              <dd data-i18n="class4.level">Todos los bailarines nuevos, 6+</dd>
-              <dt data-i18n="class.label.how">Cómo</dt>
-              <dd data-i18n="class4.location">Envíanos un mensaje para comenzar</dd>
             </dl>
           </article>
         </div>
 
-        <p style="margin-block-start:2rem;color:var(--text-secondary);" data-i18n="classes.contact">
-          ¿Interesado o tienes preguntas? Envíanos un mensaje — nos encantaría platicar e invitarte personalmente.
-          <a href="#contact" data-i18n="classes.contactLink">Contáctanos aquí.</a>
+        <p style="margin-block-start:0.75rem;color:var(--text-muted);font-size:0.88rem;" data-i18n="classes.location">
+          Hacienda Heights, CA
         </p>
+
+        <p style="margin-block-start:2rem;color:var(--text-secondary);" data-i18n="classes.contact">
+          Mándanos un mensaje y te invitamos personalmente a una práctica.
+        </p>
+        <a href="#contact" class="btn btn-gold-outline" data-i18n="classes.contactLink">Contáctanos</a>
       </div>
     </section>
 
-    <!-- Embroidery border: classes → contact -->
+    <!-- ── REVIEWS ──────────────────────────────────────────────── -->
+    <section id="reviews" aria-labelledby="reviews-heading" style="background:#130a1c;padding-block:var(--section-gap);">
+      <div class="container text-center">
+        <span class="section-label" data-i18n="reviews.label">Lo Que Dicen</span>
+        <h2 class="section-heading" id="reviews-heading" data-i18n="reviews.heading">
+          No lo decimos nosotros.
+        </h2>
+        <div class="heading-rule" style="margin-inline:auto;"></div>
+
+        <div class="about-cards" style="max-width:800px;margin-inline:auto;">
+          <article class="about-card" style="text-align:left;">
+            <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review1.text">
+              &ldquo;Los bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar.&rdquo;
+            </p>
+            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review1.author">
+              — Bianca B. · Evento Privado
+            </p>
+          </article>
+
+          <article class="about-card" style="text-align:left;">
+            <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review2.text">
+              &ldquo;Todo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.&rdquo;
+            </p>
+            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review2.author">
+              — Ramon A. · Boda
+            </p>
+          </article>
+        </div>
+
+        <div style="margin-block-start:2rem;">
+          <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" class="btn btn-gold-outline" data-i18n="reviews.cta">
+            Lee más reseñas en GigSalad
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Embroidery border: reviews → contact -->
     <div class="embroidery-divider" aria-hidden="true">
       <svg width="100%" height="44" preserveAspectRatio="xMidYMid slice">
         <defs>
@@ -2437,43 +2533,47 @@
     <!-- ── CONTACT / BOOK ─────────────────────────────────────── -->
     <section id="contact" aria-labelledby="contact-heading">
       <div class="container">
-        <span class="section-label" data-i18n="contact.label">Hablemos</span>
-        <h2 class="section-heading" id="contact-heading" data-i18n="contact.heading">Contáctanos</h2>
+        <span class="section-label" data-i18n="contact.label">Contacto</span>
+        <h2 class="section-heading" id="contact-heading" data-i18n="contact.heading">Hablemos.</h2>
         <p class="section-subheading" data-i18n="contact.subheading">
-          Lleve Ballet Folklórico Mi Herencia a su próximo evento
+          Respondemos en menos de 24 horas.
         </p>
         <div class="heading-rule"></div>
 
         <div class="book-layout">
           <!-- Contact info sidebar -->
           <aside class="book-info" aria-label="Información de contacto">
-            <h3 data-i18n="contact.info.heading">Póngase en Contacto</h3>
+            <h3 data-i18n="contact.info.phone.label">Teléfono</h3>
             <address>
               <p>
-                <strong data-i18n="contact.info.phone.label">Teléfono:</strong><br />
                 <a href="tel:+17148640512" data-i18n="contact.info.phone.value">(714) 864-0512</a>
-              </p>
-              <p style="margin-block-start:0.75rem;">
-                <strong data-i18n="contact.info.email.label">Correo:</strong><br />
-                <a href="mailto:mr_angelramirez@icloud.com" data-i18n="contact.info.email.value">
-                  mr_angelramirez@icloud.com
-                </a>
               </p>
             </address>
 
-            <h3 data-i18n="contact.social.heading">Encuéntranos en Línea</h3>
+            <h3 data-i18n="contact.info.email.label">Correo</h3>
+            <p>
+              <a href="mailto:mr_angelramirez@icloud.com" data-i18n="contact.info.email.value">
+                mr_angelramirez@icloud.com
+              </a>
+            </p>
+
+            <h3 data-i18n="contact.social.heading">GigSalad</h3>
             <ul>
               <li>
                 <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" data-i18n="contact.social.gigsalad">
-                  GigSalad — Contrátanos y Déjanos una Reseña
+                  Contrátanos y déjanos una reseña en GigSalad
                 </a>
               </li>
             </ul>
 
-            <h3 data-i18n="contact.serviceArea.heading">Servimos a</h3>
+            <h3 data-i18n="contact.serviceArea.heading">Área de Servicio</h3>
             <p data-i18n="contact.serviceArea.text">
-              Valle de San Gabriel · Los Ángeles · Condado de Orange<br />
-              Incluyendo Hacienda Heights, Whittier, Montebello, Costa Mesa y áreas circundantes.
+              Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Ángeles · SGV · Condado de Orange
+            </p>
+
+            <h3 data-i18n="contact.availability.heading">Disponibilidad</h3>
+            <p data-i18n="contact.availability.text" style="font-size:0.85rem;">
+              Eventos entre semana en horario diurno son limitados ya que nuestros bailarines son estudiantes y adultos con trabajo de tiempo completo. Los fines de semana normalmente estamos disponibles.
             </p>
           </aside>
 
@@ -2490,7 +2590,7 @@
                 <legend data-i18n="contact.form.legend">Solicitud de Contratación</legend>
 
                 <div class="form-group">
-                  <label for="contact-name" data-i18n="contact.form.name">Su Nombre</label>
+                  <label for="contact-name" data-i18n="contact.form.name">Tu Nombre</label>
                   <input type="text" id="contact-name" name="contact-name" autocomplete="name" placeholder="María García" />
                 </div>
 
@@ -2529,7 +2629,7 @@
 
                 <div class="form-group">
                   <label for="message" data-i18n="contact.form.message">Detalles Adicionales</label>
-                  <textarea id="message" name="message" rows="4" data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntenos sobre su evento, asistencia esperada, peticiones especiales…"></textarea>
+                  <textarea id="message" name="message" rows="4" data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntanos sobre tu evento…"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-magenta" data-i18n="contact.form.submit">
@@ -2537,7 +2637,7 @@
                 </button>
 
                 <p class="form-notice" data-i18n="contact.form.notice">
-                  &#10022; El envío del formulario aún no está activo — por favor comuníquese directamente por correo o teléfono.
+                  El formulario aún no está activo — por favor comunícate directamente por correo o teléfono.
                 </p>
 
               </fieldset>
@@ -2558,7 +2658,7 @@
 
         <!-- Brand col -->
         <div class="footer-brand">
-          <p class="footer-brand-name" data-i18n="footer.brand">Ballet Folklórico Mi Herencia</p>
+          <p class="footer-brand-name notranslate" data-i18n="footer.brand" translate="no">Ballet Folklórico Mi Herencia</p>
           <address>
             <p data-i18n="footer.location">
               Con sede en Hacienda Heights, CA<br />
@@ -2579,9 +2679,8 @@
           <ul>
             <li><a href="#home"         data-i18n="nav.home">Inicio</a></li>
             <li><a href="#about"        data-i18n="nav.about">Sobre Nosotros</a></li>
-            <li><a href="#performances" data-i18n="nav.performances">Presentaciones</a></li>
+            <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
             <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
-            <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
             <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
           </ul>
         </nav>
@@ -2608,7 +2707,7 @@
       <div class="footer-bottom">
         <p>
           &copy; <span id="footerYear"></span>
-          Ballet Folklórico Mi Herencia · Hacienda Heights, CA ·
+          <span class="notranslate" translate="no">Ballet Folklórico Mi Herencia</span> · Hacienda Heights, CA ·
           <span data-i18n="footer.rights">Todos los derechos reservados.</span>
         </p>
       </div>
@@ -2629,95 +2728,91 @@
         // Navigation
         "nav.home":         "Inicio",
         "nav.about":        "Sobre Nosotros",
-        "nav.performances": "Presentaciones",
-        "nav.press":        "Prensa",
-        "nav.shop":         "Tienda",
+        "nav.events":       "Eventos",
         "nav.contact":      "Contacto",
         "nav.classes":      "Clases",
-        "nav.gallery":      "Galería",
         "nav.cta":          "Contáctanos",
 
         // Hero
         "hero.subtitle":    "Ballet Folklórico Mi Herencia",
-        "hero.subtitle2":   "",
-        "hero.heading1":    "Nuestro",
-        "hero.heading2":    "Legado.",
-        "hero.description": "Ballet Folklórico Mi Herencia es cultura, tradición y el colorido espíritu de México a través de la danza. La tradición que late en cada paso, el orgullo que se siente en cada giro.",
-        "hero.tagline":     "La tradición que vive en cada paso.",
-        "hero.cta.learn":   "Conócenos",
-        "hero.cta.book":    "Contratar Presentación",
+        "hero.heading1":    "Tradición en",
+        "hero.heading2":    "Movimiento.",
+        "hero.description": "Un grupo comunitario de danza folklórica mexicana con base en Hacienda Heights, CA. Nos presentamos en festivales, eventos corporativos, quinceañeras, escuelas y mucho más.",
+        "hero.cta1":        "Contratar Presentación",
+        "hero.cta2":        "Únete al Grupo",
 
         // Featured
         "placeholder.featured": "Imagen principal del grupo",
+        "placeholder.about":    "Foto del grupo",
 
         // About
-        "about.heading":            "Danza que cuenta nuestra historia",
-        "about.text":               "Ballet Folklórico Mi Herencia es un grupo de danza folklórica mexicana con raíces comunitarias en Hacienda Heights, California. Somos una familia compuesta por bailarines de todas las edades y niveles, unidos por la pasión de celebrar la cultura mexicana a través de la alegría del Folklórico. Desde nuestros bailarines más jóvenes hasta nuestro conjunto adulto, cada bailarín forma parte de algo significativo.",
-        "about.mission.heading":    "Nuestra Misión",
-        "about.mission.text":       "Nos dedicamos a mantener vivas las tradiciones del baile folklórico mexicano en el sur de California — educando, inspirando y conectando a nuestra comunidad a través de presentaciones auténticas y llenas de corazón.",
-        "about.serviceArea.heading":"Dónde Nos Presentamos",
-        "about.serviceArea.text":   "Con orgullo nos presentamos en el área metropolitana de Los Ángeles, el Valle de San Gabriel y el Condado de Orange — incluyendo Whittier, Montebello, Costa Mesa y más allá.",
-
-        // Performances
-        "performances.label":   "Experiencias Vivas Que Emocionan",
-        "performances.heading": "Únete a nuestra celebración",
-        "performances.cta":     "Ver Todas las Presentaciones",
-        "event1.name":     "Festival Cultural de Verano",
-        "event1.date":     "Mayo 2026",
-        "event1.location": "Fairplex · Pomona, CA",
-        "event2.name":     "Noche Mexicana en la Plaza",
-        "event2.date":     "Durante todo 2026",
-        "event2.location": "SGV · Los Ángeles · OC",
-        "event3.name":     "Celebrando Nuestras Raíces",
-        "event3.date":     "Temporada Primavera 2026",
-        "event3.location": "Hacienda Heights, CA",
-        "event4.name":     "Tradiciones Que Nos Moldean",
-        "event4.date":     "Aceptando Nuevos Bailarines",
-        "event4.location": "Edades 6+ · Todos los niveles",
+        "about.label":              "Sobre Nosotros",
+        "about.heading":            "Más que un grupo de danza.",
+        "about.text1":              "Ballet Folklórico Mi Herencia es un grupo comunitario de danza folklórica mexicana compuesto por bailarines de todas las edades — desde los 6 años hasta adultos. Algunos llevan años en el escenario. Otros apenas están aprendiendo sus primeros pasos. Todos tienen un lugar aquí.",
+        "about.text2":              "Nos hemos presentado en ferias del condado, eventos corporativos, bodas, quinceañeras, parques temáticos, eventos de medios y asambleas escolares por todo Los Ángeles, el Valle de San Gabriel y el Condado de Orange. Ningún escenario es demasiado grande, ningún evento demasiado pequeño.",
 
         // Gallery
-        "gallery.heading": "Momentos que nos mueven",
+        "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
 
+        // Events
+        "performances.label":   "Próximos Eventos",
+        "performances.heading": "Encuéntranos en vivo.",
+        "performances.cta":     "Contáctanos",
+        "event1.name":     "LA County Fair",
+        "event1.date":     "Mayo 2026",
+        "event1.location": "Fairplex · Pomona, CA",
+        "event2.name":     "Noche Mexicana",
+        "event2.date":     "Durante todo 2026",
+        "event2.location": "SGV · Los Ángeles · OC",
+        "event3.name":     "Eventos Privados y Corporativos",
+        "event3.date":     "Bajo solicitud",
+        "event3.location": "Donde nos necesites",
+
         // Classes
-        "classes.label":      "Aprende Con Nosotros",
-        "classes.heading":    "Clases",
-        "classes.subheading": "Desde los 6 años · Todos los niveles · Primeras 4 sesiones GRATIS",
-        "classes.intro":      "Nuestra temporada de primavera 2026 está abierta y estamos dando la bienvenida a nuevos bailarines. Ya sea que estés pisando la pista de baile por primera vez o que seas un bailarín experimentado, Mi Herencia es tu hogar. Aceptamos bailarines desde los 6 años hasta la adultez. Ven a probar tus primeras cuatro sesiones de práctica completamente gratis.",
-        "class1.name":        "Jóvenes (6–12 años)",
+        "classes.label":      "Únete",
+        "classes.heading":    "Primeras 4 sesiones gratis. No necesitas experiencia.",
+        "classes.subheading": "La temporada de primavera 2026 está abierta — estamos recibiendo nuevos bailarines.",
+        "class1.name":        "Jóvenes",
+        "class1.ages":        "6–12 años",
         "class1.level":       "Principiante – Intermedio",
-        "class1.location":    "Hacienda Heights, CA",
-        "class2.name":        "Adolescentes (13–17 años)",
+        "class2.name":        "Adolescentes",
+        "class2.ages":        "13–17 años",
         "class2.level":       "Todos los niveles",
-        "class2.location":    "Hacienda Heights, CA",
-        "class3.name":        "Adultos (18+)",
+        "class3.name":        "Adultos",
+        "class3.ages":        "18+",
         "class3.level":       "Todos los niveles",
-        "class3.location":    "Hacienda Heights, CA",
-        "class4.name":        "Primeras 4 Sesiones — GRATIS",
-        "class4.level":       "Todos los bailarines nuevos, 6+",
-        "class4.location":    "Envíanos un mensaje para comenzar",
+        "class.label.ages":     "Edades",
         "class.label.level":    "Nivel",
-        "class.label.location": "Lugar",
-        "class.label.who":      "Quién",
-        "class.label.how":      "Cómo",
-        "classes.contact":    "¿Interesado o tienes preguntas? Envíanos un mensaje — nos encantaría platicar e invitarte personalmente.",
-        "classes.contactLink":"Contáctanos aquí.",
+        "classes.location":   "Hacienda Heights, CA",
+        "classes.contact":    "Mándanos un mensaje y te invitamos personalmente a una práctica.",
+        "classes.contactLink":"Contáctanos",
+
+        // Reviews
+        "reviews.label":    "Lo Que Dicen",
+        "reviews.heading":  "No lo decimos nosotros.",
+        "review1.text":     "\u201CLos bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar.\u201D",
+        "review1.author":   "— Bianca B. · Evento Privado",
+        "review2.text":     "\u201CTodo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.\u201D",
+        "review2.author":   "— Ramon A. · Boda",
+        "reviews.cta":      "Lee más reseñas en GigSalad",
 
         // Contact
-        "contact.label":    "Hablemos",
-        "contact.heading":  "Contáctanos",
-        "contact.subheading": "Lleve Ballet Folklórico Mi Herencia a su próximo evento",
-        "contact.info.heading":       "Póngase en Contacto",
-        "contact.info.phone.label":   "Teléfono:",
+        "contact.label":    "Contacto",
+        "contact.heading":  "Hablemos.",
+        "contact.subheading": "Respondemos en menos de 24 horas.",
+        "contact.info.phone.label":   "Teléfono",
         "contact.info.phone.value":   "(714) 864-0512",
-        "contact.info.email.label":   "Correo:",
+        "contact.info.email.label":   "Correo",
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
-        "contact.social.heading":     "Encuéntranos en Línea",
-        "contact.social.gigsalad":    "GigSalad — Contrátanos y Déjanos una Reseña",
-        "contact.serviceArea.heading":"Servimos a",
-        "contact.serviceArea.text":   "Valle de San Gabriel · Los Ángeles · Condado de Orange\nIncluyendo Hacienda Heights, Whittier, Montebello, Costa Mesa y áreas circundantes.",
+        "contact.social.heading":     "GigSalad",
+        "contact.social.gigsalad":    "Contrátanos y déjanos una reseña en GigSalad",
+        "contact.serviceArea.heading":"Área de Servicio",
+        "contact.serviceArea.text":   "Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Ángeles · SGV · Condado de Orange",
+        "contact.availability.heading":"Disponibilidad",
+        "contact.availability.text":  "Eventos entre semana en horario diurno son limitados ya que nuestros bailarines son estudiantes y adultos con trabajo de tiempo completo. Los fines de semana normalmente estamos disponibles.",
         "contact.form.legend":        "Solicitud de Contratación",
-        "contact.form.name":          "Su Nombre",
+        "contact.form.name":          "Tu Nombre",
         "contact.form.email":         "Correo Electrónico",
         "contact.form.phone":         "Número de Teléfono",
         "contact.form.eventType":     "Tipo de Evento",
@@ -2731,9 +2826,9 @@
         "contact.form.eventDate":     "Fecha del Evento",
         "contact.form.eventLocation": "Ciudad / Lugar del Evento",
         "contact.form.message":       "Detalles Adicionales",
-        "contact.form.message.placeholder": "Cuéntenos sobre su evento, asistencia esperada, peticiones especiales…",
+        "contact.form.message.placeholder": "Cuéntanos sobre tu evento…",
         "contact.form.submit":        "Enviar Solicitud",
-        "contact.form.notice":        "✦ El envío del formulario aún no está activo — por favor comuníquese directamente por correo o teléfono.",
+        "contact.form.notice":        "El formulario aún no está activo — por favor comunícate directamente por correo o teléfono.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -2754,93 +2849,89 @@
         // Navigation
         "nav.home":         "Home",
         "nav.about":        "About Us",
-        "nav.performances": "Performances",
-        "nav.press":        "Press",
-        "nav.shop":         "Shop",
+        "nav.events":       "Events",
         "nav.contact":      "Contact",
         "nav.classes":      "Classes",
-        "nav.gallery":      "Gallery",
-        "nav.cta":          "Contact Us",
+        "nav.cta":          "Book Us",
 
         // Hero
         "hero.subtitle":    "Ballet Folklórico Mi Herencia",
-        "hero.subtitle2":   "",
-        "hero.heading1":    "Our",
-        "hero.heading2":    "Legacy.",
-        "hero.description": "Ballet Folklórico Mi Herencia is culture, tradition, and the vibrant spirit of Mexico through dance. The tradition that beats in every step, the pride felt in every spin.",
-        "hero.tagline":     "The tradition that lives in every step.",
-        "hero.cta.learn":   "Learn More",
-        "hero.cta.book":    "Book a Performance",
+        "hero.heading1":    "Tradition in",
+        "hero.heading2":    "Motion.",
+        "hero.description": "A community-rooted Mexican folk dance group based in Hacienda Heights, CA. We perform at festivals, corporate events, quinceañeras, schools, and everything in between.",
+        "hero.cta1":        "Book a Performance",
+        "hero.cta2":        "Join the Group",
 
         // Featured
         "placeholder.featured": "Group main photo goes here",
+        "placeholder.about":    "Group photo",
 
         // About
-        "about.heading":            "Dance that tells our story",
-        "about.text":               "Ballet Folklórico Mi Herencia is a community-rooted Mexican folk dance group based in Hacienda Heights, California. We are a family made up of dancers of all ages and experience levels who share a passion for celebrating Mexican culture through the joy of Folklórico. From our youngest performers to our adult ensemble, every dancer is part of something meaningful.",
-        "about.mission.heading":    "Our Mission",
-        "about.mission.text":       "We are dedicated to keeping Mexican folk dance traditions alive in Southern California — educating, inspiring, and connecting our community through authentic, heartfelt performance.",
-        "about.serviceArea.heading":"Where We Perform",
-        "about.serviceArea.text":   "We proudly perform throughout the greater Los Angeles area, the San Gabriel Valley, and Orange County — including Whittier, Montebello, Costa Mesa, and beyond.",
-
-        // Performances
-        "performances.label":   "Live Experiences That Move You",
-        "performances.heading": "Join our celebration",
-        "performances.cta":     "See All Performances",
-        "event1.name":     "Summer Cultural Festival",
-        "event1.date":     "May 2026",
-        "event1.location": "Fairplex · Pomona, CA",
-        "event2.name":     "Mexican Night at the Plaza",
-        "event2.date":     "Throughout 2026",
-        "event2.location": "SGV · Los Angeles · OC",
-        "event3.name":     "Celebrating Our Roots",
-        "event3.date":     "Spring Season 2026",
-        "event3.location": "Hacienda Heights, CA",
-        "event4.name":     "Traditions That Shape Us",
-        "event4.date":     "Now Accepting Dancers",
-        "event4.location": "Ages 6+ · All levels",
+        "about.label":              "About Us",
+        "about.heading":            "More than a dance group.",
+        "about.text1":              "Ballet Folklórico Mi Herencia is a community-based Mexican folk dance group made up of dancers of all ages — from age 6 through adults. Some of us have been performing for years. Others are just learning their first steps. Everyone has a place here.",
+        "about.text2":              "We've performed at county fairs, corporate events, weddings, quinceañeras, theme parks, media events, and school assemblies across Los Angeles, the San Gabriel Valley, and Orange County. No stage is too big, no event too small.",
 
         // Gallery
-        "gallery.heading": "Moments that move us",
+        "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
 
+        // Events
+        "performances.label":   "Upcoming Events",
+        "performances.heading": "Catch us live.",
+        "performances.cta":     "Book Now",
+        "event1.name":     "LA County Fair",
+        "event1.date":     "May 2026",
+        "event1.location": "Fairplex · Pomona, CA",
+        "event2.name":     "Noche Mexicana",
+        "event2.date":     "Throughout 2026",
+        "event2.location": "SGV · Los Angeles · OC",
+        "event3.name":     "Private & Corporate Events",
+        "event3.date":     "By request",
+        "event3.location": "Wherever you need us",
+
         // Classes
-        "classes.label":      "Learn With Us",
-        "classes.heading":    "Classes",
-        "classes.subheading": "Ages 6 and up · All levels welcome · First 4 sessions FREE",
-        "classes.intro":      "Our 2026 Spring season is now open and we are welcoming new dancers! Whether you're stepping onto the dance floor for the first time or you're a seasoned performer, Mi Herencia is your home. We accept dancers from age 6 through adulthood. Come try your first four practice sessions completely free.",
-        "class1.name":        "Youth (Ages 6–12)",
+        "classes.label":      "Join Us",
+        "classes.heading":    "First 4 sessions free. No experience needed.",
+        "classes.subheading": "Spring 2026 season is open — we're welcoming new dancers.",
+        "class1.name":        "Youth",
+        "class1.ages":        "6–12",
         "class1.level":       "Beginner – Intermediate",
-        "class1.location":    "Hacienda Heights, CA",
-        "class2.name":        "Teen (Ages 13–17)",
+        "class2.name":        "Teen",
+        "class2.ages":        "13–17",
         "class2.level":       "All Levels",
-        "class2.location":    "Hacienda Heights, CA",
-        "class3.name":        "Adult (18+)",
+        "class3.name":        "Adult",
+        "class3.ages":        "18+",
         "class3.level":       "All Levels",
-        "class3.location":    "Hacienda Heights, CA",
-        "class4.name":        "First 4 Sessions — FREE",
-        "class4.level":       "All new dancers, ages 6+",
-        "class4.location":    "Send us a message to get started",
+        "class.label.ages":     "Ages",
         "class.label.level":    "Level",
-        "class.label.location": "Location",
-        "class.label.who":      "Who",
-        "class.label.how":      "How",
-        "classes.contact":    "Interested or have questions? Send us a message — we'd love to chat and personally invite you to our upcoming practices.",
-        "classes.contactLink":"Get in touch here.",
+        "classes.location":   "Hacienda Heights, CA",
+        "classes.contact":    "Send us a message and we'll personally invite you to a practice.",
+        "classes.contactLink":"Get in Touch",
+
+        // Reviews
+        "reviews.label":    "What People Say",
+        "reviews.heading":  "Don't take our word for it.",
+        "review1.text":     "\u201CThe dances were beautiful and our guests loved their performances. Very easy and pleasant to work with.\u201D",
+        "review1.author":   "— Bianca B. · Private Event",
+        "review2.text":     "\u201CEverything was beautiful. On time, very professional and communicative. I had them for my wedding and everyone loved them.\u201D",
+        "review2.author":   "— Ramon A. · Wedding",
+        "reviews.cta":      "See more reviews on GigSalad",
 
         // Contact
-        "contact.label":    "Let's Talk",
-        "contact.heading":  "Contact Us",
-        "contact.subheading": "Bring Ballet Folklórico Mi Herencia to your next event",
-        "contact.info.heading":       "Get In Touch",
-        "contact.info.phone.label":   "Phone:",
+        "contact.label":    "Contact",
+        "contact.heading":  "Let's talk.",
+        "contact.subheading": "We respond within 24 hours.",
+        "contact.info.phone.label":   "Phone",
         "contact.info.phone.value":   "(714) 864-0512",
-        "contact.info.email.label":   "Email:",
+        "contact.info.email.label":   "Email",
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
-        "contact.social.heading":     "Find Us Online",
-        "contact.social.gigsalad":    "GigSalad — Book & Review Us",
-        "contact.serviceArea.heading":"We Serve",
-        "contact.serviceArea.text":   "San Gabriel Valley · Los Angeles · Orange County\nIncluding Hacienda Heights, Whittier, Montebello, Costa Mesa, and surrounding areas.",
+        "contact.social.heading":     "GigSalad",
+        "contact.social.gigsalad":    "Book & review us on GigSalad",
+        "contact.serviceArea.heading":"Service Area",
+        "contact.serviceArea.text":   "Hacienda Heights · Whittier · Montebello · Costa Mesa · Los Angeles · SGV · Orange County",
+        "contact.availability.heading":"Availability",
+        "contact.availability.text":  "Weekday daytime events are limited since our performers are students and working adults. Weekends are typically available.",
         "contact.form.legend":        "Booking Inquiry",
         "contact.form.name":          "Your Name",
         "contact.form.email":         "Email Address",
@@ -2856,9 +2947,9 @@
         "contact.form.eventDate":     "Event Date",
         "contact.form.eventLocation": "Event City / Location",
         "contact.form.message":       "Additional Details",
-        "contact.form.message.placeholder": "Tell us about your event, expected attendance, special requests…",
+        "contact.form.message.placeholder": "Tell us about your event…",
         "contact.form.submit":        "Send Inquiry",
-        "contact.form.notice":        "✦ Form submission is not yet active — please email or call us directly.",
+        "contact.form.notice":        "Form submission is not yet active — please email or call us directly.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -2990,7 +3081,7 @@
     // ─────────────────────────────────────────────────────────
     (function () {
       const targets = document.querySelectorAll(
-        '.event-card, .class-card, .about-card, .section-heading, .story-heading, .book-layout, .gallery-strip, .featured-frame'
+        '.event-card, .class-card, .about-card, .section-heading, .story-heading, .book-layout, .gallery-strip, .featured-frame, #reviews .about-cards'
       );
       targets.forEach(el => el.classList.add('fade-in'));
 
