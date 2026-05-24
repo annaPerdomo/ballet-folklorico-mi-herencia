@@ -1584,6 +1584,13 @@
     #contact .section-label {
       color: #c7295d;
     }
+    #contact .section-label.anim-label {
+      background: linear-gradient(90deg, #c7295d 0%, #e84393 40%, #ffb6c1 50%, #e84393 60%, #c7295d 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     #contact .section-heading {
       color: #1a0e16;
     }
@@ -1911,6 +1918,165 @@
 
     /* Stagger children */
     .stagger > * { transition-delay: calc(var(--i, 0) * 80ms); }
+
+    /* ── Scroll-triggered animation variants ── */
+    .anim-slide-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+    }
+    .anim-slide-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+    }
+    .anim-scale-up {
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.22,1,.36,1);
+    }
+    .anim-rotate-in {
+      opacity: 0;
+      transform: translateY(30px) rotate(-3deg);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+    }
+    .anim-pop {
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.56,.64,1);
+    }
+    .anim-slide-up {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+    }
+
+    .anim-slide-left.visible,
+    .anim-slide-right.visible,
+    .anim-scale-up.visible,
+    .anim-rotate-in.visible,
+    .anim-pop.visible,
+    .anim-slide-up.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Floating shimmer on section labels ── */
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .section-label.anim-label {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 40%, #fff 50%, var(--gold-light) 60%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    .section-label.anim-label.visible {
+      animation-play-state: running;
+    }
+
+    /* ── Gallery items: staggered pop-in ── */
+    .gallery-item.anim-gallery {
+      opacity: 0;
+      transform: scale(0.7) rotate(2deg);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(.34,1.56,.64,1);
+    }
+    .gallery-item.anim-gallery:nth-child(even) {
+      transform: scale(0.7) rotate(-2deg);
+    }
+    .gallery-item.anim-gallery.visible {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    /* ── Review cards: slide up with gentle bounce ── */
+    .review-card.anim-review {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.2,.64,1);
+    }
+    .review-card.anim-review.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Service badges: pop in ── */
+    .service-badge.anim-badge {
+      opacity: 0;
+      transform: scale(0) rotate(-10deg);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.34,1.56,.64,1);
+    }
+    .service-badge.anim-badge.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Story divider: grow from center ── */
+    .story-divider.anim-divider {
+      transform: scaleX(0);
+      transition: transform 0.8s cubic-bezier(.22,1,.36,1);
+    }
+    .story-divider.anim-divider.visible {
+      transform: scaleX(1);
+    }
+
+    /* ── Contact section items slide in from left ── */
+    .contact-item.anim-contact {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.22,1,.36,1);
+    }
+    .contact-item.anim-contact.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Contact dancer art: gentle float ── */
+    @keyframes float-dancer {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-12px) rotate(1deg); }
+    }
+    .contact-dancer-art.anim-float {
+      animation: float-dancer 6s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    .contact-dancer-art.anim-float.visible {
+      animation-play-state: running;
+    }
+
+    /* ── Embroidery dividers: subtle scale-in ── */
+    .embroidery-divider.anim-emb {
+      opacity: 0;
+      transform: scaleX(0.3);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.22,1,.36,1);
+    }
+    .embroidery-divider.anim-emb.visible {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    /* ── Respect reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .anim-slide-left, .anim-slide-right, .anim-scale-up,
+      .anim-rotate-in, .anim-pop, .anim-slide-up,
+      .gallery-item.anim-gallery, .review-card.anim-review,
+      .service-badge.anim-badge, .story-divider.anim-divider,
+      .contact-item.anim-contact, .embroidery-divider.anim-emb,
+      .fade-in {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .section-label.anim-label,
+      .contact-dancer-art.anim-float {
+        animation: none !important;
+        -webkit-text-fill-color: var(--gold) !important;
+      }
+    }
 
     /* ════════════════════════════════════════════════════════════
        RESPONSIVE — TABLET (≤960px)
@@ -3862,24 +4028,131 @@
     })();
 
     // ─────────────────────────────────────────────────────────
-    //  SCROLL-TRIGGERED FADE-IN
+    //  SCROLL-TRIGGERED ANIMATIONS
     // ─────────────────────────────────────────────────────────
     (function () {
-      const targets = document.querySelectorAll(
-        '.class-card, .about-card, .section-heading, .story-heading, .book-layout, .gallery-strip, .featured-frame, #reviews .about-cards'
-      );
-      targets.forEach(el => el.classList.add('fade-in'));
+      // ── Featured section: scale up ──
+      var featured = document.querySelector('.featured-frame');
+      if (featured) featured.classList.add('anim-scale-up');
 
-      document.querySelectorAll('.events-grid, .classes-grid, .about-cards').forEach(grid => {
-        Array.from(grid.children).forEach((child, i) => {
+      // ── About section: image slides in from left, text from right ──
+      document.querySelectorAll('.about-layout > .about-image-frame').forEach(function(el) {
+        el.classList.add('anim-slide-left');
+      });
+      document.querySelectorAll('.about-layout > .about-text-col').forEach(function(el) {
+        el.classList.add('anim-slide-right');
+      });
+      // Instructors: text from left, image from right
+      document.querySelectorAll('.about-instructors > .about-text-col').forEach(function(el) {
+        el.classList.add('anim-slide-left');
+      });
+      document.querySelectorAll('.about-instructors > .about-image-frame').forEach(function(el) {
+        el.classList.add('anim-slide-right');
+      });
+      // Story headings with rotate
+      document.querySelectorAll('.story-heading').forEach(function(el) {
+        el.classList.add('anim-rotate-in');
+      });
+      // Story dividers: grow from center
+      document.querySelectorAll('#about .story-divider').forEach(function(el) {
+        el.classList.add('anim-divider');
+      });
+      // Service badges: pop in staggered
+      document.querySelectorAll('.service-badge').forEach(function(el, i) {
+        el.classList.add('anim-badge');
+        el.style.transitionDelay = (i * 60) + 'ms';
+      });
+
+      // ── Gallery: items pop in with staggered rotation ──
+      document.querySelectorAll('.gallery-item').forEach(function(el, i) {
+        el.classList.add('anim-gallery');
+        el.style.transitionDelay = (i * 100) + 'ms';
+      });
+      document.querySelectorAll('#gallery .section-heading').forEach(function(el) {
+        el.classList.add('anim-slide-up');
+      });
+      document.querySelectorAll('#gallery .story-divider').forEach(function(el) {
+        el.classList.add('anim-divider');
+      });
+
+      // ── Performances/Events: section heading slides up ──
+      document.querySelectorAll('#performances .section-heading').forEach(function(el) {
+        el.classList.add('anim-slide-up');
+      });
+
+      // ── Classes: cards rotate in staggered ──
+      document.querySelectorAll('.class-card').forEach(function(el, i) {
+        el.classList.add('anim-rotate-in');
+        el.style.transitionDelay = (i * 120) + 'ms';
+      });
+      document.querySelectorAll('#classes .section-heading').forEach(function(el) {
+        el.classList.add('anim-slide-up');
+      });
+      document.querySelectorAll('#classes .story-divider').forEach(function(el) {
+        el.classList.add('anim-divider');
+      });
+      // Promo banner: scale up
+      var promo = document.querySelector('.classes-promo');
+      if (promo) promo.classList.add('anim-scale-up');
+
+      // ── Reviews: cards bounce up staggered ──
+      document.querySelectorAll('.review-card').forEach(function(el, i) {
+        el.classList.add('anim-review');
+        el.style.transitionDelay = (i * 100) + 'ms';
+      });
+      document.querySelectorAll('#reviews .section-heading').forEach(function(el) {
+        el.classList.add('anim-slide-up');
+      });
+
+      // ── Contact: items slide in staggered, dancer art floats ──
+      document.querySelectorAll('.contact-item').forEach(function(el, i) {
+        el.classList.add('anim-contact');
+        el.style.transitionDelay = (i * 100) + 'ms';
+      });
+      document.querySelectorAll('#contact .section-heading').forEach(function(el) {
+        el.classList.add('anim-slide-left');
+      });
+      document.querySelectorAll('#contact .story-divider').forEach(function(el) {
+        el.classList.add('anim-divider');
+      });
+      var dancerArt = document.querySelector('.contact-dancer-art');
+      if (dancerArt) dancerArt.classList.add('anim-float');
+      // Book form slides up
+      var formWrapper = document.querySelector('.book-form-wrapper');
+      if (formWrapper) formWrapper.classList.add('anim-slide-up');
+
+      // ── Embroidery dividers ──
+      document.querySelectorAll('.embroidery-divider').forEach(function(el) {
+        el.classList.add('anim-emb');
+      });
+
+      // ── Section labels: shimmer effect ──
+      document.querySelectorAll('#about .section-label, #gallery .section-label, #performances .section-label, #classes .section-label, #reviews .section-label, #contact .section-label').forEach(function(el) {
+        el.classList.add('anim-label');
+      });
+
+      // ── Event cards: keep existing stagger behavior ──
+      document.querySelectorAll('.events-grid, .classes-grid, .about-cards').forEach(function(grid) {
+        Array.from(grid.children).forEach(function(child, i) {
           child.style.setProperty('--i', i);
           child.classList.add('stagger');
         });
       });
 
+      // Legacy fade-in for anything not covered by specific animations
+      document.querySelectorAll('.book-layout').forEach(function(el) {
+        if (!el.classList.contains('anim-slide-left') && !el.classList.contains('anim-slide-right') &&
+            !el.classList.contains('anim-slide-up') && !el.classList.contains('anim-scale-up')) {
+          el.classList.add('fade-in');
+        }
+      });
+
+      // ── Observe all animated elements ──
+      var animSelectors = '.fade-in, .anim-slide-left, .anim-slide-right, .anim-scale-up, .anim-rotate-in, .anim-pop, .anim-slide-up, .anim-gallery, .anim-review, .anim-badge, .anim-divider, .anim-contact, .anim-float, .anim-emb, .anim-label';
+
       if ('IntersectionObserver' in window) {
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
+        var io = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add('visible');
               io.unobserve(entry.target);
@@ -3887,9 +4160,9 @@
           });
         }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+        document.querySelectorAll(animSelectors).forEach(function(el) { io.observe(el); });
       } else {
-        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        document.querySelectorAll(animSelectors).forEach(function(el) { el.classList.add('visible'); });
       }
     })();
 
