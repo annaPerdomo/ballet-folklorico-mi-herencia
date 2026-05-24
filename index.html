@@ -680,7 +680,7 @@
        FEATURED IMAGE SECTION
     ════════════════════════════════════════════════════════════ */
     #featured {
-      background: var(--bg-primary);
+      background: linear-gradient(170deg, #0c0518 0%, #100820 40%, #0a0616 70%, #0c0518 100%);
       padding-block: var(--section-gap);
       position: relative;
       overflow: hidden;
@@ -752,7 +752,7 @@
        STORY / ABOUT SECTION — "Danza que cuenta nuestra historia"
     ════════════════════════════════════════════════════════════ */
     #about {
-      background: #180a1e;
+      background: linear-gradient(160deg, #1e0a28 0%, #180a1e 30%, #1a1028 60%, #120820 100%);
       padding-block: 4rem;
       position: relative;
     }
@@ -974,110 +974,148 @@
        EVENTS SECTION — "Únete a nuestra celebración"
     ════════════════════════════════════════════════════════════ */
     #performances {
-      background: #0a1c1e;
+      background: linear-gradient(170deg, #0a1c1e 0%, #0e2426 40%, #0a1a1c 70%, #0a1c1e 100%);
       padding-block: var(--section-gap);
       position: relative;
+    }
+    #performances > .container {
+      max-width: 1400px;
     }
 
     .events-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
       margin-block: 2.5rem;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 640px) {
       .events-grid { grid-template-columns: 1fr; }
     }
 
     .event-card {
-      background: var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
       overflow: hidden;
       transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1), border-color 0.22s;
-      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      border-left: 3px solid var(--card-accent, var(--gold));
     }
+    .event-card:nth-child(4n+1) { --card-accent: #c9a84c; }
+    .event-card:nth-child(4n+2) { --card-accent: #e84393; }
+    .event-card:nth-child(4n+3) { --card-accent: #2a9d8f; }
+    .event-card:nth-child(4n+4) { --card-accent: #c7295d; }
+
     .event-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.3);
       border-color: rgba(201,168,76,0.2);
     }
+    .event-card.is-past { opacity: 0.45; filter: grayscale(0.3); }
 
-    .event-card-image {
-      width: 100%;
-      aspect-ratio: 4/3;
-      background: var(--bg-elevated);
+    .event-date-badge {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      font-family: var(--font-ui);
+      padding: 0.75rem 0.85rem;
+      min-width: 64px;
+      text-align: center;
+      background: rgba(255,255,255,0.03);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .event-date-badge .day {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      line-height: 1;
+      color: #fff;
+    }
+    .event-date-badge .month {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 700;
       text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      position: relative;
-      overflow: hidden;
-    }
-    .event-card-image .icon {
-      font-size: 2rem;
-      opacity: 0.2;
+      letter-spacing: 0.1em;
       color: var(--gold);
+      margin-top: 3px;
     }
-
-    /* Colored accent stripe on image area */
-    .event-card:nth-child(1) .event-card-image { border-bottom-color: var(--folk-pink); }
-    .event-card:nth-child(2) .event-card-image { border-bottom-color: var(--folk-green); }
-    .event-card:nth-child(3) .event-card-image { border-bottom-color: var(--gold); }
-    .event-card:nth-child(4) .event-card-image { border-bottom-color: var(--folk-teal); }
+    .event-date-badge .year {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
 
     .event-card-body {
-      padding: 1.25rem 1.25rem 1.5rem;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
     }
 
     .event-card-body h3 {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 800;
       color: #fff;
-      margin-block-end: 0.6rem;
-      line-height: 1.25;
+      margin-block-end: 0.35rem;
+      line-height: 1.3;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .event-meta {
       display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
+      flex-wrap: wrap;
+      gap: 0.15rem 0.75rem;
     }
 
     .event-meta span {
       font-family: var(--font-ui);
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: rgba(255,255,255,0.72);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
       letter-spacing: 0.02em;
     }
     .event-meta svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
-      opacity: 0.5;
+      opacity: 0.6;
+      color: var(--card-accent, var(--gold));
+    }
+
+
+    .events-toggle {
+      text-align: center;
+      margin-block-start: 0.25rem;
+    }
+    .btn-small {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.65rem;
     }
 
     .events-cta {
       text-align: center;
-      margin-block-start: 0.5rem;
+      margin-block-start: 1.25rem;
     }
 
     /* ════════════════════════════════════════════════════════════
        GALLERY — "Momentos que nos mueven"
     ════════════════════════════════════════════════════════════ */
     #gallery {
-      background: #0d0820;
+      background: linear-gradient(170deg, #0d0820 0%, #140e2a 40%, #0a0e22 70%, #0d0820 100%);
       padding-block: var(--section-gap);
     }
 
@@ -1129,7 +1167,7 @@
        CLASSES SECTION
     ════════════════════════════════════════════════════════════ */
     #classes {
-      background: #16130a;
+      background: linear-gradient(165deg, #16130a 0%, #1a1510 30%, #12180e 60%, #0e1208 100%);
       padding-block: var(--section-gap);
     }
 
@@ -1208,7 +1246,7 @@
        CONTACT / BOOK SECTION
     ════════════════════════════════════════════════════════════ */
     #contact {
-      background: #1a0e16;
+      background: linear-gradient(175deg, #1a0e16 0%, #1e1220 35%, #16101c 65%, #120a14 100%);
       padding-block: var(--section-gap);
     }
 
@@ -1515,8 +1553,7 @@
       .about-card { padding: 1.5rem; }
 
       /* Events */
-      .event-card-body { padding: 1rem; }
-      .event-card-body h3 { font-size: 0.95rem; }
+      .event-card-body h3 { font-size: 0.75rem; }
 
       /* Gallery */
       .gallery-strip { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
@@ -1627,10 +1664,7 @@
       .service-badge { font-size: 0.6rem; padding: 0.2rem 0.55rem; }
 
       /* ── Events — stack to single column ── */
-      .events-grid { grid-template-columns: 1fr; gap: 1rem; }
-      .event-card-image { aspect-ratio: 16/9; }
-      .event-card-body { padding: 1rem; }
-      .event-card-body h3 { font-size: 1rem; }
+      .events-grid { grid-template-columns: 1fr; }
       .events-cta { margin-block-start: 1rem; }
 
       /* ── Gallery — 2 columns, tight and clean ── */
@@ -2313,76 +2347,23 @@
     <!-- ── EVENTS / PERFORMANCES ──────────────────────────────── -->
     <section id="performances" aria-labelledby="performances-heading">
       <div class="container text-center">
-        <span class="section-label" data-i18n="performances.label">Próximos Eventos</span>
+        <span class="section-label" data-i18n="performances.label">Próximas Presentaciones</span>
         <h2 class="section-heading" id="performances-heading" data-i18n="performances.heading">
-          Encuéntranos en vivo.
+          Únete a nuestra celebración
         </h2>
-        <div class="heading-rule" style="margin-inline:auto;"></div>
+        <div class="story-divider" style="margin-inline:auto;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
 
-        <div class="events-grid" role="list">
+        <div class="events-grid" role="list" id="events-grid">
+          <!-- Events are rendered by JavaScript -->
+        </div>
 
-          <article class="event-card" role="listitem">
-            <div class="event-card-image" aria-hidden="true">
-              <span class="icon">&#10022;</span>
-            </div>
-            <div class="event-card-body">
-              <h3 data-i18n="event1.name">LA County Fair</h3>
-              <div class="event-meta">
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <span data-i18n="event1.date">Mayo 2026</span>
-                </span>
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span data-i18n="event1.location">Fairplex · Pomona, CA</span>
-                </span>
-              </div>
-            </div>
-          </article>
-
-          <article class="event-card" role="listitem">
-            <div class="event-card-image" aria-hidden="true">
-              <span class="icon">&#10022;</span>
-            </div>
-            <div class="event-card-body">
-              <h3 data-i18n="event2.name">Noche Mexicana</h3>
-              <div class="event-meta">
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <span data-i18n="event2.date">Durante todo 2026</span>
-                </span>
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span data-i18n="event2.location">SGV · Los Ángeles · OC</span>
-                </span>
-              </div>
-            </div>
-          </article>
-
-          <article class="event-card" role="listitem">
-            <div class="event-card-image" aria-hidden="true">
-              <span class="icon">&#10022;</span>
-            </div>
-            <div class="event-card-body">
-              <h3 data-i18n="event3.name">Eventos Privados y Corporativos</h3>
-              <div class="event-meta">
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  <span data-i18n="event3.date">Bajo solicitud</span>
-                </span>
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span data-i18n="event3.location">Donde nos necesites</span>
-                </span>
-              </div>
-            </div>
-          </article>
-
+        <div class="events-toggle" id="events-toggle" style="display:none;">
+          <button type="button" class="btn btn-gold-outline btn-small" id="eventsToggleBtn"></button>
         </div>
 
         <div class="events-cta">
           <a href="#contact" class="btn btn-gold-outline" data-i18n="performances.cta">
-            Contáctanos
+            Haz tu evento inolvidable
           </a>
         </div>
       </div>
@@ -2468,7 +2449,7 @@
     </section>
 
     <!-- ── REVIEWS ──────────────────────────────────────────────── -->
-    <section id="reviews" aria-labelledby="reviews-heading" style="background:#130a1c;padding-block:var(--section-gap);">
+    <section id="reviews" aria-labelledby="reviews-heading" style="background:linear-gradient(170deg, #130a1c 0%, #18102a 40%, #0f0a1e 70%, #130a1c 100%);padding-block:var(--section-gap);">
       <div class="container text-center">
         <span class="section-label" data-i18n="reviews.label">Lo Que Dicen</span>
         <h2 class="section-heading" id="reviews-heading" data-i18n="reviews.heading">
@@ -2719,6 +2700,144 @@
   ═══════════════════════════════════════════════════════════ -->
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ─────────────────────────────────────────────────────────
+    //  PERFORMANCES — edit this array to update the events shown on the site.
+    //  Past events are automatically dimmed. Upcoming events appear first.
+    //  • name:     bilingual event title  { es: "…", en: "…" }
+    //  • date:     "YYYY-MM-DD" format
+    //  • time:     display string, e.g. "7:00 PM"
+    //  • location: bilingual location     { es: "…", en: "…" }
+    //  • image:    path to a photo (or null for placeholder)
+    //  • link:     URL for "More info" (or null → links to contact form)
+    // ─────────────────────────────────────────────────────────
+    const EVENTS = [
+      // ── 2024 ──
+      {
+        name:     { es: "Arcadia Elks Lodge", en: "Arcadia Elks Lodge" },
+        date:     "2024-05-03",
+        time:     null,
+        location: { es: "Arcadia, CA", en: "Arcadia, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "LA County Fair", en: "LA County Fair" },
+        date:     "2024-05-05",
+        time:     "12:00 PM",
+        location: { es: "Pomona, CA", en: "Pomona, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "VFW", en: "VFW" },
+        date:     "2024-08-02",
+        time:     "7:00 PM",
+        location: { es: "City of Industry, CA", en: "City of Industry, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "Arcadia Elks Lodge", en: "Arcadia Elks Lodge" },
+        date:     "2024-09-13",
+        time:     "7:30 PM",
+        location: { es: "Arcadia, CA", en: "Arcadia, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "Buena Park Library", en: "Buena Park Library" },
+        date:     "2024-09-28",
+        time:     null,
+        location: { es: "Buena Park, CA", en: "Buena Park, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "St. John Vianney Church", en: "St. John Vianney Church" },
+        date:     "2024-10-20",
+        time:     null,
+        location: { es: "Hacienda Heights, CA", en: "Hacienda Heights, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "La Serna High School", en: "La Serna High School" },
+        date:     "2024-11-06",
+        time:     "6:00 PM",
+        location: { es: "Whittier, CA", en: "Whittier, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "Lake Forest Sun & Sail Club", en: "Lake Forest Sun & Sail Club" },
+        date:     "2024-12-14",
+        time:     "7:30 PM",
+        location: { es: "Lake Forest, CA", en: "Lake Forest, CA" },
+        image:    null,
+        link:     null
+      },
+
+      // ── 2025 ──
+      {
+        name:     { es: "Arcadia Elks Lodge", en: "Arcadia Elks Lodge" },
+        date:     "2025-05-02",
+        time:     "8:00 PM",
+        location: { es: "Arcadia, CA", en: "Arcadia, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "Stonewood Center Mall", en: "Stonewood Center Mall" },
+        date:     "2025-09-20",
+        time:     "1:00 – 3:00 PM",
+        location: { es: "Downey, CA", en: "Downey, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "St. John Vianney Church", en: "St. John Vianney Church" },
+        date:     "2025-09-28",
+        time:     null,
+        location: { es: "Hacienda Heights, CA", en: "Hacienda Heights, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "La Serna High School", en: "La Serna High School" },
+        date:     "2025-11-05",
+        time:     "6:00 PM",
+        location: { es: "Whittier, CA", en: "Whittier, CA" },
+        image:    null,
+        link:     null
+      },
+
+      // ── 2026 ──
+      {
+        name:     { es: "Arcadia Elks Lodge", en: "Arcadia Elks Lodge" },
+        date:     "2026-05-08",
+        time:     null,
+        location: { es: "Arcadia, CA", en: "Arcadia, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "LA County Fair — Expo Hall 4", en: "LA County Fair — Expo Hall 4" },
+        date:     "2026-05-18",
+        time:     "6:00 PM",
+        location: { es: "Pomona, CA", en: "Pomona, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "LA County Fair — Expo Hall 4", en: "LA County Fair — Expo Hall 4" },
+        date:     "2026-05-24",
+        time:     null,
+        location: { es: "Pomona, CA", en: "Pomona, CA" },
+        image:    null,
+        link:     null
+      }
+    ];
+
+    // ─────────────────────────────────────────────────────────
     //  TRANSLATION STRINGS
     // ─────────────────────────────────────────────────────────
     const STRINGS = {
@@ -2756,18 +2875,12 @@
         "gallery.photo":   "Foto",
 
         // Events
-        "performances.label":   "Próximos Eventos",
-        "performances.heading": "Encuéntranos en vivo.",
-        "performances.cta":     "Contáctanos",
-        "event1.name":     "LA County Fair",
-        "event1.date":     "Mayo 2026",
-        "event1.location": "Fairplex · Pomona, CA",
-        "event2.name":     "Noche Mexicana",
-        "event2.date":     "Durante todo 2026",
-        "event2.location": "SGV · Los Ángeles · OC",
-        "event3.name":     "Eventos Privados y Corporativos",
-        "event3.date":     "Bajo solicitud",
-        "event3.location": "Donde nos necesites",
+        "performances.label":   "Próximas Presentaciones",
+        "performances.heading": "Únete a nuestra celebración",
+        "performances.cta":     "Haz tu evento inolvidable",
+        "events.past":          "Evento pasado",
+        "events.showMore":      "Ver todos los eventos",
+        "events.showLess":      "Ver menos",
 
         // Classes
         "classes.label":      "Únete",
@@ -2877,18 +2990,12 @@
         "gallery.photo":   "Photo",
 
         // Events
-        "performances.label":   "Upcoming Events",
-        "performances.heading": "Catch us live.",
-        "performances.cta":     "Book Now",
-        "event1.name":     "LA County Fair",
-        "event1.date":     "May 2026",
-        "event1.location": "Fairplex · Pomona, CA",
-        "event2.name":     "Noche Mexicana",
-        "event2.date":     "Throughout 2026",
-        "event2.location": "SGV · Los Angeles · OC",
-        "event3.name":     "Private & Corporate Events",
-        "event3.date":     "By request",
-        "event3.location": "Wherever you need us",
+        "performances.label":   "Upcoming Performances",
+        "performances.heading": "Join our celebration",
+        "performances.cta":     "Make Your Event Unforgettable",
+        "events.past":          "Past event",
+        "events.showMore":      "See all events",
+        "events.showLess":      "Show less",
 
         // Classes
         "classes.label":      "Join Us",
@@ -2997,6 +3104,9 @@
         'aria-label',
         lang === 'es' ? 'Switch to English' : 'Cambiar a Español'
       );
+
+      // Re-render events for current language
+      if (typeof renderEvents === 'function') renderEvents(lang);
     }
 
     // ─────────────────────────────────────────────────────────
@@ -3020,6 +3130,99 @@
     } else {
       initializeLanguageToggle();
     }
+
+    // ─────────────────────────────────────────────────────────
+    //  EVENTS RENDERING
+    // ─────────────────────────────────────────────────────────
+    const MONTH_NAMES = {
+      es: ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"],
+      en: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+    };
+
+    const EVENTS_VISIBLE = 4;
+    let eventsExpanded = false;
+
+    function buildEventCard(ev, lang, now) {
+      const d = new Date(ev.date + 'T00:00:00');
+      const day = d.getDate();
+      const month = MONTH_NAMES[lang][d.getMonth()];
+      const year = d.getFullYear();
+      const isPast = d < now;
+      const name = ev.name[lang] || ev.name.es;
+      const loc = ev.location[lang] || ev.location.es;
+
+      return '<article class="event-card' + (isPast ? ' is-past' : '') + '" role="listitem">'
+        + '<div class="event-date-badge"><span class="day">' + day + '</span><span class="month">' + month + '</span><span class="year">' + year + '</span></div>'
+        + '<div class="event-card-body">'
+        + '<h3>' + name + '</h3>'
+        + '<div class="event-meta">'
+        + '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + loc + '</span>'
+        + (ev.time ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + ev.time + '</span>' : '')
+        + '</div>'
+        + '</div>'
+        + '</article>';
+    }
+
+    function animateCards(grid) {
+      grid.querySelectorAll('.event-card').forEach((card, i) => {
+        card.classList.add('fade-in', 'stagger');
+        card.style.setProperty('--i', i);
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                io.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+          io.observe(card);
+        } else {
+          card.classList.add('visible');
+        }
+      });
+    }
+
+    function renderEvents(lang) {
+      const grid = document.getElementById('events-grid');
+      const toggleWrap = document.getElementById('events-toggle');
+      const toggleBtn = document.getElementById('eventsToggleBtn');
+      if (!grid) return;
+      const now = new Date();
+      now.setHours(0,0,0,0);
+
+      // Sort: upcoming first (soonest first), then past (most recent first)
+      const sorted = [...EVENTS].sort((a, b) => {
+        const da = new Date(a.date), db = new Date(b.date);
+        const aPast = da < now, bPast = db < now;
+        if (aPast !== bPast) return aPast ? 1 : -1;
+        return aPast ? db - da : da - db;
+      });
+
+      const visible = eventsExpanded ? sorted : sorted.slice(0, EVENTS_VISIBLE);
+      grid.innerHTML = visible.map(ev => buildEventCard(ev, lang, now)).join('');
+      animateCards(grid);
+
+      // Toggle button
+      if (sorted.length > EVENTS_VISIBLE && toggleWrap && toggleBtn) {
+        toggleWrap.style.display = '';
+        const dict = STRINGS[lang];
+        toggleBtn.textContent = eventsExpanded
+          ? (dict['events.showLess'] || 'Show less')
+          : (dict['events.showMore'] || 'See all events') + ' (' + sorted.length + ')';
+      } else if (toggleWrap) {
+        toggleWrap.style.display = 'none';
+      }
+    }
+
+    // Toggle expand/collapse
+    document.getElementById('eventsToggleBtn').addEventListener('click', function () {
+      eventsExpanded = !eventsExpanded;
+      renderEvents(currentLang);
+    });
+
+    // Render events on initial load
+    renderEvents(currentLang);
 
     // ─────────────────────────────────────────────────────────
     //  FOOTER YEAR
@@ -3081,7 +3284,7 @@
     // ─────────────────────────────────────────────────────────
     (function () {
       const targets = document.querySelectorAll(
-        '.event-card, .class-card, .about-card, .section-heading, .story-heading, .book-layout, .gallery-strip, .featured-frame, #reviews .about-cards'
+        '.class-card, .about-card, .section-heading, .story-heading, .book-layout, .gallery-strip, .featured-frame, #reviews .about-cards'
       );
       targets.forEach(el => el.classList.add('fade-in'));
 
