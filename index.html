@@ -507,19 +507,9 @@
       z-index: 1;
     }
 
-    /* Embroidery pattern border at top */
+    /* Section divider border (post-hero) */
     .embroidery-border {
-      width: 100%;
-      height: 90px;
-      position: relative;
-      z-index: 2;
-      overflow: hidden;
-      line-height: 0;
-    }
-    .embroidery-border svg {
-      display: block;
-      width: 100%;
-      height: 100%;
+      display: none;
     }
 
     /* Disabled - replaced by explicit overlay divs in the new cinematic hero */
@@ -1796,7 +1786,7 @@
     footer {
       background: #050210;
       color: var(--text-secondary);
-      padding-block: 3.5rem;
+      padding-block: 3.5rem 1.5rem;
       position: relative;
       overflow: hidden;
     }
@@ -1903,6 +1893,20 @@
       clip: rect(0,0,0,0);
       overflow: hidden;
       white-space: nowrap;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14%      { transform: scale(1.3); }
+      28%      { transform: scale(1); }
+      42%      { transform: scale(1.3); }
+      56%      { transform: scale(1); }
+    }
+
+    .beating-heart {
+      display: inline-block;
+      vertical-align: middle;
+      animation: heartbeat 1.5s ease-in-out infinite;
     }
 
     /* Scroll-triggered fade in */
@@ -2048,24 +2052,13 @@
       animation-play-state: running;
     }
 
-    /* ── Embroidery dividers: subtle scale-in ── */
-    .embroidery-divider.anim-emb {
-      opacity: 0;
-      transform: scaleX(0.3);
-      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.22,1,.36,1);
-    }
-    .embroidery-divider.anim-emb.visible {
-      opacity: 1;
-      transform: scaleX(1);
-    }
-
     /* ── Respect reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
       .anim-slide-left, .anim-slide-right, .anim-scale-up,
       .anim-rotate-in, .anim-pop, .anim-slide-up,
       .gallery-item.anim-gallery, .review-card.anim-review,
       .service-badge.anim-badge, .story-divider.anim-divider,
-      .contact-item.anim-contact, .embroidery-divider.anim-emb,
+      .contact-item.anim-contact,
       .fade-in {
         opacity: 1 !important;
         transform: none !important;
@@ -2147,9 +2140,6 @@
       .section-heading { font-size: clamp(1.6rem, 5vw, 2.2rem); }
       .story-heading { font-size: clamp(1.6rem, 5vw, 2.2rem); }
 
-      /* Embroidery */
-      .embroidery-border { height: 60px; }
-      .embroidery-divider { height: 32px; }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -2275,10 +2265,6 @@
       footer p, footer address, footer li { font-size: 0.82rem; line-height: 1.8; }
       .footer-bottom { font-size: 0.65rem; margin-block-start: 1.5rem; padding-block-start: 1rem; }
 
-      /* ── Embroidery borders ── */
-      .embroidery-border { height: 50px; }
-      .embroidery-divider { height: 28px; }
-
       /* ── Touch-friendly: no hover transform on mobile ── */
       .event-card:hover,
       .about-card:hover,
@@ -2326,20 +2312,79 @@
       display: none;
     }
 
-    /* ── Embroidery border dividers ── */
-    .embroidery-divider {
+    /* ── Section dividers — Mexican-inspired ── */
+    .section-divider {
       width: 100%;
-      height: 44px;
-      overflow: hidden;
-      background: #0a2a25;
       position: relative;
       z-index: 5;
-      line-height: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-block: 1.25rem;
     }
-    .embroidery-divider svg {
+    .section-divider svg {
       display: block;
+    }
+
+    /* Variant: ornamental line with rosette center */
+    .divider-rosette {
+      background: transparent;
+      height: auto;
+    }
+    .divider-rosette::before,
+    .divider-rosette::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dark), var(--gold), var(--gold-dark), transparent);
+      opacity: 0.5;
+    }
+    .divider-rosette .divider-center {
+      padding-inline: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .divider-rosette .divider-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    /* Variant: Papel picado style (cut paper) */
+    .divider-papel {
+      height: auto;
+      padding-block: 0;
+      flex-direction: column;
+    }
+    .divider-papel svg {
       width: 100%;
-      height: 100%;
+    }
+
+    /* Variant: thin double-line with diamond */
+    .divider-filigree {
+      background: transparent;
+      height: auto;
+      gap: 0;
+    }
+    .divider-filigree::before,
+    .divider-filigree::after {
+      content: '';
+      flex: 1;
+      height: 0;
+      border-top: 1px solid rgba(201,168,76,0.25);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+    .divider-filigree .divider-center {
+      padding-inline: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -2457,336 +2502,43 @@
       </div>
     </section>
 
-    <!-- Mexican embroidery decorative border -->
-    <div class="embroidery-border" aria-hidden="true">
-        <svg viewBox="0 0 2000 90" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <!-- Background -->
-          <rect width="2000" height="90" fill="#0a0616"/>
-
-          <defs>
-            <!-- Zigzag pattern tiles for top/bottom borders -->
-            <pattern id="zt" width="24" height="12" patternUnits="userSpaceOnUse">
-              <path d="M0,9 L12,3 L24,9" fill="none" stroke="#1a9b8a" stroke-width="2" stroke-linejoin="round"/>
-            </pattern>
-            <pattern id="zb" width="24" height="12" patternUnits="userSpaceOnUse">
-              <path d="M0,3 L12,9 L24,3" fill="none" stroke="#1a9b8a" stroke-width="2" stroke-linejoin="round"/>
-            </pattern>
-
-            <!-- Purple flower - 7 teardrop petals -->
-            <g id="fp">
-              <g fill="#9b59b6" stroke="#7d3c98" stroke-width="0.4">
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(0)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(51.4)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(102.9)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(154.3)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(205.7)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(257.1)"/>
-                <path d="M0,-3 Q4.5,-10 0,-18 Q-4.5,-10 0,-3Z" transform="rotate(308.6)"/>
+    <!-- Elegant filigree border: hero → about -->
+    <div class="section-divider divider-papel" aria-hidden="true" style="background:#0c0518;">
+      <svg viewBox="0 0 1200 48" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:48px;">
+        <defs>
+          <pattern id="hero-border" x="0" y="0" width="120" height="48" patternUnits="userSpaceOnUse">
+            <!-- thin gold lines top & bottom -->
+            <line x1="0" y1="2" x2="120" y2="2" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+            <line x1="0" y1="46" x2="120" y2="46" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+            <!-- central flower: 8 petals -->
+            <g transform="translate(60,24)">
+              <g opacity="0.7">
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(0 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(45 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(90 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(135 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(180 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(225 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(270 0 0)"/>
+                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(315 0 0)"/>
               </g>
-              <g stroke="#6c3483" stroke-width="0.5" opacity="0.4" fill="none">
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(0)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(51.4)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(102.9)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(154.3)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(205.7)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(257.1)"/>
-                <line x1="0" y1="-5" x2="0" y2="-16" transform="rotate(308.6)"/>
-              </g>
-              <circle r="5" fill="#f1c40f"/>
-              <circle r="2.5" fill="#e67e22"/>
+              <circle r="3.5" fill="#c9a84c" opacity="0.9"/>
+              <circle r="1.5" fill="#e8c97a"/>
             </g>
-
-            <!-- Red flower - 8 teardrop petals -->
-            <g id="fr">
-              <g fill="#e74c3c" stroke="#c0392b" stroke-width="0.4">
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(0)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(45)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(90)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(135)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(180)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(225)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(270)"/>
-                <path d="M0,-3 Q4,-9 0,-16 Q-4,-9 0,-3Z" transform="rotate(315)"/>
-              </g>
-              <g stroke="#922b21" stroke-width="0.5" opacity="0.4" fill="none">
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(0)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(45)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(90)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(135)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(180)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(225)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(270)"/>
-                <line x1="0" y1="-5" x2="0" y2="-14" transform="rotate(315)"/>
-              </g>
-              <circle r="4.5" fill="#f39c12"/>
-              <circle r="2.2" fill="#d68910"/>
-            </g>
-
-            <!-- Blue flower - 6 teardrop petals -->
-            <g id="fb">
-              <g fill="#3498db" stroke="#2471a3" stroke-width="0.4">
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(0)"/>
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(60)"/>
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(120)"/>
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(180)"/>
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(240)"/>
-                <path d="M0,-3 Q5,-10 0,-17 Q-5,-10 0,-3Z" transform="rotate(300)"/>
-              </g>
-              <g stroke="#1a5276" stroke-width="0.5" opacity="0.4" fill="none">
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(0)"/>
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(60)"/>
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(120)"/>
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(180)"/>
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(240)"/>
-                <line x1="0" y1="-5" x2="0" y2="-15" transform="rotate(300)"/>
-              </g>
-              <circle r="4.5" fill="#f1c40f"/>
-              <circle r="2.2" fill="#e67e22"/>
-            </g>
-
-            <!-- Pink flower - 5 wide petals -->
-            <g id="fk">
-              <g fill="#e84393" stroke="#c2185b" stroke-width="0.4">
-                <path d="M0,-2 Q6,-9 0,-16 Q-6,-9 0,-2Z" transform="rotate(0)"/>
-                <path d="M0,-2 Q6,-9 0,-16 Q-6,-9 0,-2Z" transform="rotate(72)"/>
-                <path d="M0,-2 Q6,-9 0,-16 Q-6,-9 0,-2Z" transform="rotate(144)"/>
-                <path d="M0,-2 Q6,-9 0,-16 Q-6,-9 0,-2Z" transform="rotate(216)"/>
-                <path d="M0,-2 Q6,-9 0,-16 Q-6,-9 0,-2Z" transform="rotate(288)"/>
-              </g>
-              <g stroke="#a31545" stroke-width="0.5" opacity="0.4" fill="none">
-                <line x1="0" y1="-4" x2="0" y2="-14" transform="rotate(0)"/>
-                <line x1="0" y1="-4" x2="0" y2="-14" transform="rotate(72)"/>
-                <line x1="0" y1="-4" x2="0" y2="-14" transform="rotate(144)"/>
-                <line x1="0" y1="-4" x2="0" y2="-14" transform="rotate(216)"/>
-                <line x1="0" y1="-4" x2="0" y2="-14" transform="rotate(288)"/>
-              </g>
-              <circle r="3.5" fill="#f39c12"/>
-              <circle r="1.8" fill="#d68910"/>
-            </g>
-
-            <!-- Small pink accent flower -->
-            <g id="fs">
-              <g fill="#fd79a8">
-                <path d="M0,-1.5 Q2.5,-5 0,-9 Q-2.5,-5 0,-1.5Z" transform="rotate(0)"/>
-                <path d="M0,-1.5 Q2.5,-5 0,-9 Q-2.5,-5 0,-1.5Z" transform="rotate(72)"/>
-                <path d="M0,-1.5 Q2.5,-5 0,-9 Q-2.5,-5 0,-1.5Z" transform="rotate(144)"/>
-                <path d="M0,-1.5 Q2.5,-5 0,-9 Q-2.5,-5 0,-1.5Z" transform="rotate(216)"/>
-                <path d="M0,-1.5 Q2.5,-5 0,-9 Q-2.5,-5 0,-1.5Z" transform="rotate(288)"/>
-              </g>
-              <circle r="2.2" fill="#f1c40f"/>
-            </g>
-
-            <!-- Small blue accent flower -->
-            <g id="fbs">
-              <g fill="#74b9ff">
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(0)"/>
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(60)"/>
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(120)"/>
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(180)"/>
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(240)"/>
-                <path d="M0,-1.5 Q2,-4.5 0,-8 Q-2,-4.5 0,-1.5Z" transform="rotate(300)"/>
-              </g>
-              <circle r="2" fill="#f1c40f"/>
-            </g>
-
-            <!-- Small yellow accent flower -->
-            <g id="fy">
-              <g fill="#f1c40f">
-                <path d="M0,-1 Q2,-4 0,-7 Q-2,-4 0,-1Z" transform="rotate(0)"/>
-                <path d="M0,-1 Q2,-4 0,-7 Q-2,-4 0,-1Z" transform="rotate(72)"/>
-                <path d="M0,-1 Q2,-4 0,-7 Q-2,-4 0,-1Z" transform="rotate(144)"/>
-                <path d="M0,-1 Q2,-4 0,-7 Q-2,-4 0,-1Z" transform="rotate(216)"/>
-                <path d="M0,-1 Q2,-4 0,-7 Q-2,-4 0,-1Z" transform="rotate(288)"/>
-              </g>
-              <circle r="1.5" fill="#e67e22"/>
-            </g>
-
-            <!-- Elongated teal leaf -->
-            <g id="lf">
-              <path d="M0,-12 Q4,-6 0.8,0 Q0,0.5 -0.8,0 Q-4,-6 0,-12Z" fill="#1a7b6a"/>
-              <line x1="0" y1="-10" x2="0" y2="-1" stroke="#14665a" stroke-width="0.6" opacity="0.5"/>
-              <line x1="-1.5" y1="-4" x2="0" y2="-6" stroke="#14665a" stroke-width="0.3" opacity="0.4"/>
-              <line x1="1.5" y1="-4" x2="0" y2="-6" stroke="#14665a" stroke-width="0.3" opacity="0.4"/>
-              <line x1="-2" y1="-7" x2="0" y2="-9" stroke="#14665a" stroke-width="0.3" opacity="0.4"/>
-              <line x1="2" y1="-7" x2="0" y2="-9" stroke="#14665a" stroke-width="0.3" opacity="0.4"/>
-            </g>
-
-            <!-- Small leaf -->
-            <g id="sl">
-              <path d="M0,-8 Q3,-4 0.5,0 Q0,0.3 -0.5,0 Q-3,-4 0,-8Z" fill="#1f9c84"/>
-              <line x1="0" y1="-6.5" x2="0" y2="-0.5" stroke="#178a73" stroke-width="0.4" opacity="0.5"/>
-            </g>
-
-            <!-- Orange teardrop bud -->
-            <g id="bd">
-              <path d="M0,-9 Q2.5,-4.5 0,0 Q-2.5,-4.5 0,-9Z" fill="#d4942a" stroke="#b8792a" stroke-width="0.3"/>
-              <path d="M-1.5,-1 Q-3,-4 -1.5,-5" fill="none" stroke="#1a7b6a" stroke-width="0.8"/>
-              <path d="M1.5,-1 Q3,-4 1.5,-5" fill="none" stroke="#1a7b6a" stroke-width="0.8"/>
-            </g>
-          </defs>
-
-          <!-- Top zigzag borders -->
-          <rect x="0" y="0" width="2000" height="12" fill="url(#zt)"/>
-          <rect x="0" y="0" width="2000" height="12" fill="url(#zt)" opacity="0.3" transform="translate(6,0)"/>
-
-          <!-- Bottom zigzag borders -->
-          <rect x="0" y="78" width="2000" height="12" fill="url(#zb)"/>
-          <rect x="0" y="78" width="2000" height="12" fill="url(#zb)" opacity="0.3" transform="translate(6,0)"/>
-
-          <!-- Vine stems -->
-          <g fill="none" stroke-linecap="round">
-            <path d="M-20,45 Q60,28 140,44 Q220,60 300,44 Q380,28 460,44 Q540,60 620,44 Q700,28 780,44 Q860,60 940,44 Q1020,28 1100,44 Q1180,60 1260,44 Q1340,28 1420,44 Q1500,60 1580,44 Q1660,28 1740,44 Q1820,60 1900,44 Q1980,30 2020,44" stroke="#1a7b6a" stroke-width="2.5" opacity="0.5"/>
-            <path d="M-20,47 Q80,62 160,46 Q240,30 320,46 Q400,62 480,46 Q560,30 640,46 Q720,62 800,46 Q880,30 960,46 Q1040,62 1120,46 Q1200,30 1280,46 Q1360,62 1440,46 Q1520,30 1600,46 Q1680,62 1760,46 Q1840,30 1920,46 Q2000,58 2020,47" stroke="#1f9c84" stroke-width="1.6" opacity="0.35"/>
-          </g>
-
-          <!-- Leaves (behind flowers) -->
-          <g opacity="0.9">
-            <use href="#lf" transform="translate(45,35) rotate(-40)"/>
-            <use href="#sl" transform="translate(80,58) rotate(30)"/>
-            <use href="#lf" transform="translate(120,55) rotate(25)"/>
-            <use href="#sl" transform="translate(160,30) rotate(-35)"/>
-            <use href="#lf" transform="translate(210,58) rotate(32)"/>
-            <use href="#sl" transform="translate(250,28) rotate(-28)"/>
-            <use href="#lf" transform="translate(330,30) rotate(-38)"/>
-            <use href="#sl" transform="translate(370,58) rotate(25)"/>
-            <use href="#lf" transform="translate(420,55) rotate(30)"/>
-            <use href="#sl" transform="translate(490,28) rotate(-32)"/>
-            <use href="#lf" transform="translate(540,58) rotate(28)"/>
-            <use href="#sl" transform="translate(580,30) rotate(-25)"/>
-            <use href="#lf" transform="translate(650,28) rotate(-35)"/>
-            <use href="#sl" transform="translate(700,58) rotate(32)"/>
-            <use href="#lf" transform="translate(750,55) rotate(22)"/>
-            <use href="#sl" transform="translate(810,30) rotate(-30)"/>
-            <use href="#lf" transform="translate(860,58) rotate(35)"/>
-            <use href="#sl" transform="translate(920,28) rotate(-28)"/>
-            <use href="#lf" transform="translate(970,30) rotate(-38)"/>
-            <use href="#sl" transform="translate(1030,58) rotate(25)"/>
-            <use href="#lf" transform="translate(1080,55) rotate(30)"/>
-            <use href="#sl" transform="translate(1130,28) rotate(-32)"/>
-            <use href="#lf" transform="translate(1190,58) rotate(28)"/>
-            <use href="#sl" transform="translate(1240,30) rotate(-25)"/>
-            <use href="#lf" transform="translate(1310,28) rotate(-35)"/>
-            <use href="#sl" transform="translate(1370,58) rotate(32)"/>
-            <use href="#lf" transform="translate(1420,55) rotate(22)"/>
-            <use href="#sl" transform="translate(1490,30) rotate(-30)"/>
-            <use href="#lf" transform="translate(1540,58) rotate(35)"/>
-            <use href="#sl" transform="translate(1590,28) rotate(-28)"/>
-            <use href="#lf" transform="translate(1650,30) rotate(-38)"/>
-            <use href="#sl" transform="translate(1710,58) rotate(25)"/>
-            <use href="#lf" transform="translate(1760,55) rotate(30)"/>
-            <use href="#sl" transform="translate(1830,28) rotate(-32)"/>
-            <use href="#lf" transform="translate(1880,58) rotate(28)"/>
-            <use href="#sl" transform="translate(1940,30) rotate(-25)"/>
-            <use href="#lf" transform="translate(1970,55) rotate(20)"/>
-          </g>
-
-          <!-- Main flowers - Purple -->
-          <use href="#fp" transform="translate(100,44)"/>
-          <use href="#fp" transform="translate(460,46) scale(0.9) rotate(15)"/>
-          <use href="#fp" transform="translate(780,44)"/>
-          <use href="#fp" transform="translate(1100,46) scale(0.9) rotate(-10)"/>
-          <use href="#fp" transform="translate(1420,44)"/>
-          <use href="#fp" transform="translate(1800,46) scale(0.9) rotate(12)"/>
-
-          <!-- Main flowers - Red -->
-          <use href="#fr" transform="translate(260,46)"/>
-          <use href="#fr" transform="translate(620,44) scale(0.95) rotate(8)"/>
-          <use href="#fr" transform="translate(940,46)"/>
-          <use href="#fr" transform="translate(1260,44) scale(0.95) rotate(-8)"/>
-          <use href="#fr" transform="translate(1620,46)"/>
-          <use href="#fr" transform="translate(1940,44) scale(0.95)"/>
-
-          <!-- Main flowers - Blue -->
-          <use href="#fb" transform="translate(180,42) scale(0.85)"/>
-          <use href="#fb" transform="translate(540,48) scale(0.85) rotate(10)"/>
-          <use href="#fb" transform="translate(860,42) scale(0.85)"/>
-          <use href="#fb" transform="translate(1180,48) scale(0.85) rotate(-12)"/>
-          <use href="#fb" transform="translate(1540,42) scale(0.85)"/>
-          <use href="#fb" transform="translate(1880,48) scale(0.85) rotate(8)"/>
-
-          <!-- Main flowers - Pink -->
-          <use href="#fk" transform="translate(340,44) scale(0.8)"/>
-          <use href="#fk" transform="translate(700,46) scale(0.8) rotate(14)"/>
-          <use href="#fk" transform="translate(1020,44) scale(0.8)"/>
-          <use href="#fk" transform="translate(1340,46) scale(0.8) rotate(-10)"/>
-          <use href="#fk" transform="translate(1700,44) scale(0.8)"/>
-
-          <!-- Small accent flowers -->
-          <use href="#fs" transform="translate(55,32)"/>
-          <use href="#fbs" transform="translate(150,60)"/>
-          <use href="#fy" transform="translate(225,30)"/>
-          <use href="#fs" transform="translate(305,58)"/>
-          <use href="#fbs" transform="translate(395,32)"/>
-          <use href="#fy" transform="translate(500,60)"/>
-          <use href="#fs" transform="translate(575,30)"/>
-          <use href="#fbs" transform="translate(665,58)"/>
-          <use href="#fy" transform="translate(740,30)"/>
-          <use href="#fs" transform="translate(825,60)"/>
-          <use href="#fbs" transform="translate(900,32)"/>
-          <use href="#fy" transform="translate(985,58)"/>
-          <use href="#fs" transform="translate(1055,30)"/>
-          <use href="#fbs" transform="translate(1145,60)"/>
-          <use href="#fy" transform="translate(1225,32)"/>
-          <use href="#fs" transform="translate(1305,58)"/>
-          <use href="#fbs" transform="translate(1385,30)"/>
-          <use href="#fy" transform="translate(1475,60)"/>
-          <use href="#fs" transform="translate(1575,32)"/>
-          <use href="#fbs" transform="translate(1660,58)"/>
-          <use href="#fy" transform="translate(1745,30)"/>
-          <use href="#fs" transform="translate(1845,60)"/>
-          <use href="#fbs" transform="translate(1920,32)"/>
-          <use href="#fy" transform="translate(1970,58)"/>
-
-          <!-- Orange buds -->
-          <use href="#bd" transform="translate(30,42) rotate(-15)"/>
-          <use href="#bd" transform="translate(200,52) rotate(10)"/>
-          <use href="#bd" transform="translate(410,36) rotate(-20)"/>
-          <use href="#bd" transform="translate(590,54) rotate(12)"/>
-          <use href="#bd" transform="translate(755,36) rotate(-18)"/>
-          <use href="#bd" transform="translate(895,54) rotate(8)"/>
-          <use href="#bd" transform="translate(1065,36) rotate(-15)"/>
-          <use href="#bd" transform="translate(1210,54) rotate(12)"/>
-          <use href="#bd" transform="translate(1380,36) rotate(-20)"/>
-          <use href="#bd" transform="translate(1560,54) rotate(10)"/>
-          <use href="#bd" transform="translate(1730,36) rotate(-15)"/>
-          <use href="#bd" transform="translate(1910,54) rotate(8)"/>
-
-          <!-- Decorative stitch dots -->
-          <g opacity="0.6">
-            <circle cx="15" cy="18" r="1" fill="#1a9b8a"/>
-            <circle cx="68" cy="72" r="1" fill="#e84393"/>
-            <circle cx="135" cy="20" r="1" fill="#9b59b6"/>
-            <circle cx="190" cy="70" r="1" fill="#1a9b8a"/>
-            <circle cx="240" cy="22" r="1" fill="#e74c3c"/>
-            <circle cx="290" cy="68" r="1" fill="#3498db"/>
-            <circle cx="355" cy="20" r="1" fill="#1a9b8a"/>
-            <circle cx="430" cy="72" r="1" fill="#e84393"/>
-            <circle cx="505" cy="20" r="1" fill="#9b59b6"/>
-            <circle cx="560" cy="70" r="1" fill="#1a9b8a"/>
-            <circle cx="640" cy="22" r="1" fill="#e74c3c"/>
-            <circle cx="715" cy="68" r="1" fill="#3498db"/>
-            <circle cx="770" cy="20" r="1" fill="#1a9b8a"/>
-            <circle cx="840" cy="72" r="1" fill="#e84393"/>
-            <circle cx="915" cy="20" r="1" fill="#9b59b6"/>
-            <circle cx="965" cy="70" r="1" fill="#1a9b8a"/>
-            <circle cx="1040" cy="22" r="1" fill="#e74c3c"/>
-            <circle cx="1115" cy="68" r="1" fill="#3498db"/>
-            <circle cx="1175" cy="20" r="1" fill="#1a9b8a"/>
-            <circle cx="1245" cy="72" r="1" fill="#e84393"/>
-            <circle cx="1320" cy="20" r="1" fill="#9b59b6"/>
-            <circle cx="1395" cy="70" r="1" fill="#1a9b8a"/>
-            <circle cx="1455" cy="22" r="1" fill="#e74c3c"/>
-            <circle cx="1525" cy="68" r="1" fill="#3498db"/>
-            <circle cx="1595" cy="20" r="1" fill="#1a9b8a"/>
-            <circle cx="1665" cy="72" r="1" fill="#e84393"/>
-            <circle cx="1735" cy="20" r="1" fill="#9b59b6"/>
-            <circle cx="1815" cy="70" r="1" fill="#1a9b8a"/>
-            <circle cx="1860" cy="22" r="1" fill="#e74c3c"/>
-            <circle cx="1935" cy="68" r="1" fill="#3498db"/>
-            <circle cx="1985" cy="20" r="1" fill="#1a9b8a"/>
-          </g>
-        </svg>
-      </div>
+            <!-- small leaf accents -->
+            <path d="M30,24 Q36,16 42,24" fill="none" stroke="#1a7b6a" stroke-width="1" opacity="0.4"/>
+            <path d="M78,24 Q84,32 90,24" fill="none" stroke="#1a7b6a" stroke-width="1" opacity="0.4"/>
+            <!-- small diamond accents -->
+            <polygon points="15,24 18,20 21,24 18,28" fill="#c9a84c" opacity="0.25"/>
+            <polygon points="99,24 102,20 105,24 102,28" fill="#c9a84c" opacity="0.25"/>
+            <!-- curving vine connectors -->
+            <path d="M0,24 Q15,14 30,24 Q45,34 60,24" fill="none" stroke="#c9a84c" stroke-width="0.6" opacity="0.2"/>
+            <path d="M60,24 Q75,14 90,24 Q105,34 120,24" fill="none" stroke="#c9a84c" stroke-width="0.6" opacity="0.2"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="48" fill="url(#hero-border)"/>
+      </svg>
+    </div>
 
     <!-- ── FEATURED IMAGE ─────────────────────────────────────── -->
     <section id="featured" aria-label="Featured dancers">
@@ -2908,6 +2660,27 @@
       </div>
     </section>
 
+    <!-- Divider: about → gallery — curling vine with leaves -->
+    <div class="section-divider divider-rosette" aria-hidden="true">
+      <div class="divider-center">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.3"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.6"/></svg>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <g transform="translate(16,16)" opacity="0.6">
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(51 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(103 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(154 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(206 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(257 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(309 0 0)"/>
+          </g>
+          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.8"/>
+          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
+        </svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.3"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.6"/></svg>
+      </div>
+    </div>
+
     <!-- ── GALLERY ──────────────────────────────────────────────── -->
     <section id="gallery" aria-labelledby="gallery-heading">
       <div class="container text-center">
@@ -2938,30 +2711,24 @@
       </div>
     </section>
 
-    <!-- Embroidery border: about → events -->
-    <div class="embroidery-divider" aria-hidden="true">
-      <svg width="100%" height="44" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="emb-pat-1" x="0" y="0" width="80" height="44" patternUnits="userSpaceOnUse">
-            <rect width="80" height="44" fill="#0c312b"/>
-            <rect width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <rect y="41" width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <path d="M0,6 L10,12 L20,6 L30,12 L40,6 L50,12 L60,6 L70,12 L80,6" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <path d="M0,38 L10,32 L20,38 L30,32 L40,38 L50,32 L60,38 L70,32 L80,38" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <polygon points="40,10 55,22 40,34 25,22" fill="none" stroke="#2a9d8f" stroke-width="2" opacity="0.7"/>
-            <polygon points="40,16 49,22 40,28 31,22" fill="#1a6b62" opacity="0.4"/>
-            <circle cx="40" cy="22" r="4" fill="#c7295d" opacity="0.8"/>
-            <circle cx="40" cy="22" r="2" fill="#c9a84c"/>
-            <circle cx="0" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <circle cx="80" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <ellipse cx="15" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 15 16)"/>
-            <ellipse cx="65" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 65 16)"/>
-            <ellipse cx="15" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 15 28)"/>
-            <ellipse cx="65" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 65 28)"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="44" fill="url(#emb-pat-1)"/>
-      </svg>
+    <!-- Divider: gallery → events — gold rosette with vine lines -->
+    <div class="section-divider divider-rosette" aria-hidden="true">
+      <div class="divider-center">
+        <span class="divider-dot"></span>
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(18,18)" opacity="0.7">
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(60 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(120 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(180 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(240 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(300 0 0)"/>
+          </g>
+          <circle cx="18" cy="18" r="3" fill="#c9a84c" opacity="0.85"/>
+          <circle cx="18" cy="18" r="1.2" fill="#e8c97a"/>
+        </svg>
+        <span class="divider-dot"></span>
+      </div>
     </div>
 
     <!-- ── EVENTS / PERFORMANCES ──────────────────────────────── -->
@@ -2989,30 +2756,23 @@
       </div>
     </section>
 
-    <!-- Embroidery border: gallery → classes -->
-    <div class="embroidery-divider" aria-hidden="true">
-      <svg width="100%" height="44" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="emb-pat-2" x="0" y="0" width="80" height="44" patternUnits="userSpaceOnUse">
-            <rect width="80" height="44" fill="#0c312b"/>
-            <rect width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <rect y="41" width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <path d="M0,6 L10,12 L20,6 L30,12 L40,6 L50,12 L60,6 L70,12 L80,6" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <path d="M0,38 L10,32 L20,38 L30,32 L40,38 L50,32 L60,38 L70,32 L80,38" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <polygon points="40,10 55,22 40,34 25,22" fill="none" stroke="#2a9d8f" stroke-width="2" opacity="0.7"/>
-            <polygon points="40,16 49,22 40,28 31,22" fill="#1a6b62" opacity="0.4"/>
-            <circle cx="40" cy="22" r="4" fill="#c7295d" opacity="0.8"/>
-            <circle cx="40" cy="22" r="2" fill="#c9a84c"/>
-            <circle cx="0" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <circle cx="80" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <ellipse cx="15" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 15 16)"/>
-            <ellipse cx="65" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 65 16)"/>
-            <ellipse cx="15" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 15 28)"/>
-            <ellipse cx="65" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 65 28)"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="44" fill="url(#emb-pat-2)"/>
-      </svg>
+    <!-- Divider: performances → classes — Oaxacan diamond filigree -->
+    <div class="section-divider divider-filigree" aria-hidden="true">
+      <div class="divider-center">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,1 17,9 9,17 1,9" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.4"/><polygon points="9,4 14,9 9,14 4,9" fill="#c9a84c" opacity="0.15"/><circle cx="9" cy="9" r="2" fill="#c9a84c" opacity="0.5"/></svg>
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <g transform="translate(14,14)" opacity="0.6">
+            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#1a7b6a" transform="rotate(72 0 0)"/>
+            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(144 0 0)"/>
+            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#1a7b6a" transform="rotate(216 0 0)"/>
+            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(288 0 0)"/>
+          </g>
+          <circle cx="14" cy="14" r="2.5" fill="#c9a84c" opacity="0.7"/>
+          <circle cx="14" cy="14" r="1" fill="#e8c97a"/>
+        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,1 17,9 9,17 1,9" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.4"/><polygon points="9,4 14,9 9,14 4,9" fill="#c9a84c" opacity="0.15"/><circle cx="9" cy="9" r="2" fill="#c9a84c" opacity="0.5"/></svg>
+      </div>
     </div>
 
     <!-- ── CLASSES ─────────────────────────────────────────────── -->
@@ -3110,6 +2870,15 @@
       </div>
     </section>
 
+    <!-- Divider: classes → reviews — triple diamond chain -->
+    <div class="section-divider divider-filigree" aria-hidden="true">
+      <div class="divider-center">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c9a84c" stroke-width="0.8" fill="#c9a84c" opacity="0.12"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c7295d" stroke-width="0.8" fill="#c7295d" opacity="0.15"/><circle cx="7" cy="7" r="1.5" fill="#c9a84c" opacity="0.5"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c9a84c" stroke-width="0.8" fill="#c9a84c" opacity="0.12"/></svg>
+      </div>
+    </div>
+
     <!-- ── REVIEWS ──────────────────────────────────────────────── -->
     <section id="reviews" aria-labelledby="reviews-heading" style="background:#130a1c;padding-block:var(--section-gap);">
       <div class="container text-center">
@@ -3198,30 +2967,26 @@
       </div>
     </section>
 
-    <!-- Embroidery border: reviews → contact -->
-    <div class="embroidery-divider" aria-hidden="true">
-      <svg width="100%" height="44" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="emb-pat-3" x="0" y="0" width="80" height="44" patternUnits="userSpaceOnUse">
-            <rect width="80" height="44" fill="#0c312b"/>
-            <rect width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <rect y="41" width="80" height="3" fill="#c9a84c" opacity="0.7"/>
-            <path d="M0,6 L10,12 L20,6 L30,12 L40,6 L50,12 L60,6 L70,12 L80,6" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <path d="M0,38 L10,32 L20,38 L30,32 L40,38 L50,32 L60,38 L70,32 L80,38" stroke="#d4707a" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <polygon points="40,10 55,22 40,34 25,22" fill="none" stroke="#2a9d8f" stroke-width="2" opacity="0.7"/>
-            <polygon points="40,16 49,22 40,28 31,22" fill="#1a6b62" opacity="0.4"/>
-            <circle cx="40" cy="22" r="4" fill="#c7295d" opacity="0.8"/>
-            <circle cx="40" cy="22" r="2" fill="#c9a84c"/>
-            <circle cx="0" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <circle cx="80" cy="22" r="2.5" fill="#c9a84c" opacity="0.4"/>
-            <ellipse cx="15" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 15 16)"/>
-            <ellipse cx="65" cy="16" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 65 16)"/>
-            <ellipse cx="15" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(-25 15 28)"/>
-            <ellipse cx="65" cy="28" rx="4" ry="7" fill="#2a9d8f" opacity="0.35" transform="rotate(25 65 28)"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="44" fill="url(#emb-pat-3)"/>
-      </svg>
+    <!-- Divider: reviews → contact — gold flower rosette -->
+    <div class="section-divider divider-rosette" aria-hidden="true">
+      <div class="divider-center">
+        <span class="divider-dot"></span>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(16,16)" opacity="0.75">
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(45 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(90 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(135 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(180 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(225 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(270 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(315 0 0)"/>
+          </g>
+          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.9"/>
+          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
+        </svg>
+        <span class="divider-dot"></span>
+      </div>
     </div>
 
     <!-- ── CONTACT / BOOK ─────────────────────────────────────── -->
@@ -3403,6 +3168,12 @@
           &copy; <span id="footerYear"></span>
           <span class="notranslate" translate="no">Ballet Folklórico Mi Herencia</span> · Hacienda Heights, CA ·
           <span data-i18n="footer.rights">Todos los derechos reservados.</span>
+        </p>
+        <p style="margin-block-start:1.25rem; font-style:italic;">
+          <span data-i18n="footer.made_with">Made with</span>
+          <svg class="beating-heart" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 512 512" fill="#ff6b9d" aria-hidden="true"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>
+          <span data-i18n="footer.by">by</span>
+          <a href="https://www.variationsonastring.com" target="_blank" rel="noopener noreferrer" style="color:var(--gold-light); text-decoration:none;">Variations on a String</a>
         </p>
       </div>
     </div>
@@ -3679,6 +3450,8 @@
         "footer.social.heading":"Encuéntranos en Línea",
         "footer.social.gigsalad": "Perfil en GigSalad",
         "footer.rights":        "Todos los derechos reservados.",
+        "footer.made_with":     "Hecho con",
+        "footer.by":            "por",
 
         "lang.toggle.label":    "English",
       },
@@ -3808,6 +3581,8 @@
         "footer.social.heading":"Find Us Online",
         "footer.social.gigsalad": "GigSalad Profile",
         "footer.rights":        "All rights reserved.",
+        "footer.made_with":     "Made with",
+        "footer.by":            "by",
 
         "lang.toggle.label":    "Español",
       }
@@ -4121,11 +3896,6 @@
       var formWrapper = document.querySelector('.book-form-wrapper');
       if (formWrapper) formWrapper.classList.add('anim-slide-up');
 
-      // ── Embroidery dividers ──
-      document.querySelectorAll('.embroidery-divider').forEach(function(el) {
-        el.classList.add('anim-emb');
-      });
-
       // ── Section labels: shimmer effect ──
       document.querySelectorAll('#about .section-label, #gallery .section-label, #performances .section-label, #classes .section-label, #reviews .section-label, #contact .section-label').forEach(function(el) {
         el.classList.add('anim-label');
@@ -4148,7 +3918,7 @@
       });
 
       // ── Observe all animated elements ──
-      var animSelectors = '.fade-in, .anim-slide-left, .anim-slide-right, .anim-scale-up, .anim-rotate-in, .anim-pop, .anim-slide-up, .anim-gallery, .anim-review, .anim-badge, .anim-divider, .anim-contact, .anim-float, .anim-emb, .anim-label';
+      var animSelectors = '.fade-in, .anim-slide-left, .anim-slide-right, .anim-scale-up, .anim-rotate-in, .anim-pop, .anim-slide-up, .anim-gallery, .anim-review, .anim-badge, .anim-divider, .anim-contact, .anim-float, .anim-label';
 
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function(entries) {
