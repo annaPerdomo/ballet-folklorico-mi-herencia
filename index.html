@@ -265,20 +265,21 @@
       filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3));
     }
     .wordmark-text {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.92);
-      letter-spacing: 1.5px;
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 11.2px;
+      font-weight: 500;
+      color: rgba(240, 230, 200, 0.75);
+      letter-spacing: 1.568px;
       line-height: 1.2;
       text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
     }
     .wordmark-text span {
       display: block;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 20px;
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       color: var(--gold-light);
       margin-top: 1px;
@@ -510,7 +511,6 @@
     .embroidery-border {
       width: 100%;
       height: 90px;
-      flex-shrink: 0;
       position: relative;
       z-index: 2;
       overflow: hidden;
@@ -535,18 +535,22 @@
       z-index: 3;
       flex: 1;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
       text-align: left;
-      padding: 2rem 2rem 2rem 6%;
+      padding: 0 0 0 5%;
+      gap: 3rem;
     }
 
     .hero-text {
-      max-width: 560px;
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-subtitle {
@@ -567,7 +571,7 @@
 
     #home h1 {
       font-family: var(--font-hero);
-      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
       font-weight: 400;
       color: #fff;
       line-height: 1.05;
@@ -603,6 +607,125 @@
       gap: 1rem;
       flex-wrap: wrap;
       justify-content: flex-start;
+    }
+
+    /* ── Hero Photo Collage ── */
+    .hero-photos {
+      flex: 0 0 auto;
+      width: 55%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-self: center;
+      height: clamp(420px, 65vh, 600px);
+      padding-right: 60px;
+    }
+
+    .hero-photos .photo-tall,
+    .hero-photos .photo-stack-item {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-credit {
+      position: absolute;
+      bottom: 6px;
+      right: 8px;
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      z-index: 3;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .photo-credit:hover {
+      color: rgba(255,255,255,0.85);
+    }
+
+    .hero-photos .photo-tall img,
+    .hero-photos .photo-stack-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Soft edge fade — left photo fades on left edge, right photos fade on left; all fade top/bottom */
+    .hero-photos .photo-tall {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
+                          linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-composite: destination-in;
+      mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
+                  linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-composite: intersect;
+    }
+    .hero-photos .photo-stack-item {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
+                          linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-composite: destination-in;
+      mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
+                  linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      mask-composite: intersect;
+    }
+
+    /* Tall photo on the left */
+    .hero-photos .photo-tall {
+      opacity: 0;
+      transform: scale(0.93);
+      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 0.3s forwards;
+    }
+    .hero-photos .photo-tall img {
+      object-position: center top;
+      animation: heroDrift1 30s ease-in-out 3.8s infinite alternate;
+    }
+
+    /* Right column — two stacked photos */
+    .hero-photos .photo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 0;
+    }
+
+    .hero-photos .photo-stack-item {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .hero-photos .photo-stack-top {
+      opacity: 0;
+      transform: scale(0.95);
+      animation: heroReveal 4.2s cubic-bezier(0.05, 0, 0.35, 0) 0.9s forwards;
+    }
+    .hero-photos .photo-stack-top img {
+      animation: heroDrift2 26s ease-in-out 5.1s infinite alternate;
+    }
+    .hero-photos .photo-stack-bottom {
+      opacity: 0;
+      transform: scale(0.93);
+      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 1.5s forwards;
+    }
+    .hero-photos .photo-stack-bottom img {
+      animation: heroDrift3 34s ease-in-out 5s infinite alternate;
+    }
+
+    /* Single smooth arc — no intermediate keyframes, no snapping */
+    @keyframes heroReveal {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Living breath — gentle, slow swaying like fabric at rest */
+    @keyframes heroDrift1 {
+      0%   { transform: scale(1)    translate(0, 0); }
+      100% { transform: scale(1.04) translate(-0.3%, 0.2%); }
+    }
+    @keyframes heroDrift2 {
+      0%   { transform: scale(1.03) translate(0, 0); }
+      100% { transform: scale(1)    translate(0.3%, 0.3%); }
+    }
+    @keyframes heroDrift3 {
+      0%   { transform: scale(1)    translate(0, 0); }
+      100% { transform: scale(1.03) translate(-0.3%, 0.2%); }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -680,7 +803,7 @@
        FEATURED IMAGE SECTION
     ════════════════════════════════════════════════════════════ */
     #featured {
-      background: linear-gradient(170deg, #0c0518 0%, #100820 40%, #0a0616 70%, #0c0518 100%);
+      background: #0c0518;
       padding-block: var(--section-gap);
       position: relative;
       overflow: hidden;
@@ -752,7 +875,7 @@
        STORY / ABOUT SECTION — "Danza que cuenta nuestra historia"
     ════════════════════════════════════════════════════════════ */
     #about {
-      background: linear-gradient(160deg, #1e0a28 0%, #180a1e 30%, #1a1028 60%, #120820 100%);
+      background: #180a1e;
       padding-block: 4rem;
       position: relative;
     }
@@ -848,8 +971,28 @@
     .story-divider {
       width: 80px;
       height: 2px;
-      background: linear-gradient(90deg, var(--gold), transparent);
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
       margin: 1.5rem 0;
+    }
+
+    .about-instructors {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: center;
+      margin-block-start: 4rem;
+      padding-block-start: 4rem;
+      border-top: 1px solid rgba(201,168,76,0.15);
+    }
+
+    .about-instructors .about-text-col {
+      order: 1;
+    }
+
+    .about-instructors .about-image-frame {
+      order: 2;
+      max-width: 420px;
+      justify-self: center;
     }
 
     @media (max-width: 768px) {
@@ -868,6 +1011,14 @@
         margin-inline: auto;
         background: linear-gradient(90deg, transparent, var(--gold), transparent);
       }
+      .about-instructors {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-block-start: 2.5rem;
+        padding-block-start: 2.5rem;
+      }
+      .about-instructors .about-text-col { order: 2; }
+      .about-instructors .about-image-frame { order: 1; }
     }
 
     /* About detail cards */
@@ -980,9 +1131,9 @@
     }
 
     .heading-rule {
-      width: 60px;
+      width: 80px;
       height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--magenta));
+      background: var(--gold);
       border-radius: 2px;
       margin-block-end: 2rem;
     }
@@ -996,7 +1147,7 @@
        EVENTS SECTION — "Únete a nuestra celebración"
     ════════════════════════════════════════════════════════════ */
     #performances {
-      background: linear-gradient(170deg, #0a1c1e 0%, #0e2426 40%, #0a1a1c 70%, #0a1c1e 100%);
+      background: #0a1c1e;
       padding-block: var(--section-gap);
       position: relative;
     }
@@ -1137,22 +1288,27 @@
        GALLERY — "Momentos que nos mueven"
     ════════════════════════════════════════════════════════════ */
     #gallery {
-      background: linear-gradient(170deg, #0d0820 0%, #140e2a 40%, #0a0e22 70%, #0d0820 100%);
+      background: #0d0820;
       padding-block: var(--section-gap);
     }
 
     .gallery-strip {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1rem;
       margin-block-start: 2rem;
     }
 
+    .gallery-item {
+      width: calc(33.333% - 0.75rem);
+    }
+
     @media (max-width: 700px) {
-      .gallery-strip { grid-template-columns: repeat(3, 1fr); }
+      .gallery-item { width: calc(33.333% - 0.75rem); }
     }
     @media (max-width: 450px) {
-      .gallery-strip { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item { width: calc(50% - 0.5rem); }
     }
 
     .gallery-item {
@@ -1160,37 +1316,59 @@
       background: var(--bg-elevated);
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: var(--text-muted);
-      font-family: var(--font-ui);
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: border-color 0.2s, transform 0.2s;
       overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      position: relative;
     }
     .gallery-item:hover {
       border-color: rgba(201,168,76,0.3);
       transform: scale(1.03);
+      box-shadow: 0 8px 30px rgba(201,168,76,0.15);
     }
-    .gallery-item svg {
-      width: 28px;
-      height: 28px;
-      opacity: 0.2;
-      color: var(--gold);
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.08);
     }
 
     /* ════════════════════════════════════════════════════════════
        CLASSES SECTION
     ════════════════════════════════════════════════════════════ */
     #classes {
-      background: linear-gradient(165deg, #162040 0%, #1e2a4a 30%, #142038 60%, #101a30 100%);
+      background: #162040;
       padding-block: var(--section-gap);
+    }
+
+    .classes-photo-strip {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 1rem;
+      margin-block: 2.5rem;
+    }
+
+    .classes-photo {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.15);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    }
+
+    .classes-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      aspect-ratio: 4/3;
+      transition: transform 0.5s ease;
+    }
+
+    .classes-photo:hover img {
+      transform: scale(1.05);
     }
 
     .classes-grid {
@@ -1217,6 +1395,7 @@
       border: 2px solid var(--gold-dark);
       border-radius: 0;
       pointer-events: none;
+      z-index: 3;
     }
     /* Inner gold border */
     .class-card::after {
@@ -1226,7 +1405,15 @@
       border: 1px solid rgba(201,168,76,0.35);
       border-radius: 0;
       pointer-events: none;
+      z-index: 3;
     }
+
+    .class-card .frame-corner { position: absolute; width: 22px; height: 22px; z-index: 4; }
+    .class-card .frame-corner svg { width: 100%; height: 100%; }
+    .class-card .frame-corner--tl { top: -3px; left: -3px; }
+    .class-card .frame-corner--tr { top: -3px; right: -3px; transform: scaleX(-1); }
+    .class-card .frame-corner--bl { bottom: -3px; left: -3px; transform: scaleY(-1); }
+    .class-card .frame-corner--br { bottom: -3px; right: -3px; transform: scale(-1); }
 
     .class-card:hover {
       transform: translateY(-6px);
@@ -1298,6 +1485,16 @@
       font-size: 0.92rem;
     }
 
+    .class-card-img {
+      width: calc(100% + 24px);
+      margin: -12px -12px 0 -12px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
     /* Promo banner (First 4 Sessions free) */
     .classes-promo {
       margin-block-start: 1.5rem;
@@ -1365,13 +1562,10 @@
        CONTACT / BOOK SECTION
     ════════════════════════════════════════════════════════════ */
     #contact {
-      background:
-        radial-gradient(ellipse 60% 50% at 0% 0%, rgba(199,41,93,0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 60% at 100% 100%, rgba(42,157,143,0.07) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 60%),
-        linear-gradient(175deg, #fdf9f3 0%, #faf5ec 40%, #fdf9f3 100%);
+      background: #fdf9f3;
       padding-block: var(--section-gap);
       position: relative;
+      overflow: hidden;
     }
     #contact::before {
       content: '';
@@ -1415,6 +1609,23 @@
       line-height: 1.8;
       color: #5a4e42;
       margin-block-end: 2rem;
+    }
+
+    .contact-dancer-art {
+      position: absolute;
+      right: 3%;
+      bottom: 0;
+      width: 380px;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #contact .container {
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 760px) {
+      .contact-dancer-art { display: none; }
     }
 
     .contact-item {
@@ -1587,15 +1798,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 3px;
-      background: linear-gradient(90deg,
-        var(--folk-pink) 0%,
-        var(--folk-orange) 17%,
-        var(--folk-yellow) 33%,
-        var(--folk-green) 50%,
-        var(--folk-teal) 67%,
-        var(--folk-purple) 83%,
-        var(--folk-pink) 100%
-      );
+      background: var(--gold);
     }
 
     .footer-inner {
@@ -1609,12 +1812,13 @@
     }
 
     .footer-brand-name {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
+      font-family: var(--font-ui);
+      font-size: 1.3rem;
       font-weight: 700;
       color: var(--gold-light);
       margin-block-end: 0.75rem;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     footer h3 {
@@ -1728,9 +1932,11 @@
       .container { padding-inline: 1.25rem; }
 
       /* Hero */
-      .hero-content { padding: 2rem 1.5rem; align-items: center; text-align: center; }
+      #home { min-height: 100vh; }
+      .hero-content { padding: 2rem 1.5rem; align-items: center; text-align: center; flex-direction: column; }
       .hero-text { align-items: center; }
       .hero-cta-group { justify-content: center; }
+      .hero-photos { max-width: 420px; height: auto; max-height: none; width: 100%; gap: 0.5rem; }
       #home h1 { font-size: clamp(2rem, 7vw, 3rem); }
       .hero-subtitle { font-size: 0.68rem; letter-spacing: 0.18em; }
       #home .hero-gradient-placeholder {
@@ -1756,9 +1962,11 @@
       .event-card-body h3 { font-size: 0.75rem; }
 
       /* Gallery */
-      .gallery-strip { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+      .gallery-strip { gap: 0.75rem; }
 
       /* Classes */
+      .classes-photo-strip { grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+      .classes-photo { border-radius: 8px; }
       .classes-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
       .class-card { padding: 1.5rem 1.25rem; }
 
@@ -1801,10 +2009,12 @@
       .lang-toggle { font-size: 0.58rem; padding: 0.25rem 0.6rem; }
 
       /* ── Hero — full impact on small screens ── */
-      #home { height: 100svh; } /* svh = small viewport height, accounts for mobile browser chrome */
-      .hero-content { padding: 1.5rem 1.25rem; align-items: center; text-align: center; }
+      #home { height: auto; min-height: 100svh; } /* svh = small viewport height, accounts for mobile browser chrome */
+      .hero-content { padding: 1.5rem 1.25rem; align-items: center; text-align: center; flex-direction: column; gap: 1.5rem; }
       .hero-text { align-items: center; }
       .hero-cta-group { justify-content: center; }
+      .hero-photos { max-width: 340px; height: auto; max-height: none; width: 100%; gap: 0.5rem; }
+      .hero-photos .photo-stack { gap: 0.5rem; }
       .hero-subtitle {
         font-size: 0.62rem;
         letter-spacing: 0.15em;
@@ -1866,11 +2076,14 @@
       .events-grid { grid-template-columns: 1fr; }
       .events-cta { margin-block-start: 1rem; }
 
-      /* ── Gallery — 2 columns, tight and clean ── */
-      .gallery-strip { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      /* ── Gallery — tight and clean ── */
+      .gallery-strip { gap: 0.5rem; }
       .gallery-item { border-radius: 6px; }
 
       /* ── Classes — single column ── */
+      .classes-photo-strip { grid-template-columns: 1fr; gap: 0.6rem; margin-block: 1.5rem; }
+      .classes-photo img { aspect-ratio: 16/9; }
+      .classes-photo:nth-child(n+3) { display: none; }
       .classes-grid { grid-template-columns: 1fr; gap: 1rem; }
       .class-card { padding: 1.5rem 1.25rem; }
       .class-card h3 { font-size: 1.1rem; }
@@ -1976,7 +2189,7 @@
     <div class="container header-inner">
 
       <a href="#home" class="site-wordmark" aria-label="Ballet Folklórico Mi Herencia — Inicio">
-        <img src="images/logo-dancers-color.png" alt="Ballet Folklórico Mi Herencia logo" class="nav-logo">
+        <img src="images/optimized/logo-dancers-color.webp" alt="Ballet Folklórico Mi Herencia logo" class="nav-logo">
         <span class="wordmark-text notranslate" translate="no">Ballet Folklórico<span>Mi Herencia</span></span>
       </a>
 
@@ -2059,10 +2272,27 @@
             <a href="#classes" class="btn btn-outline" data-i18n="hero.cta2">Únete al Grupo</a>
           </div>
         </div>
-      </div>
 
-      <!-- Mexican embroidery decorative border -->
-      <div class="embroidery-border" aria-hidden="true">
+        <div class="hero-photos" aria-label="Photos of Ballet Folklórico Mi Herencia">
+          <div class="photo-tall">
+            <img src="images/optimized/tranchete.webp" alt="Ballet Folklórico Mi Herencia performing tranchete" loading="eager" />
+          </div>
+          <div class="photo-stack">
+            <div class="photo-stack-item photo-stack-top">
+              <img src="images/optimized/2022-group-a.webp" alt="Ballet Folklórico Mi Herencia dancers" loading="eager" />
+              <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
+            </div>
+            <div class="photo-stack-item photo-stack-bottom">
+              <img src="images/optimized/2022-group.webp" alt="Ballet Folklórico Mi Herencia group photo" loading="eager" style="object-position:center 40%;" />
+              <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mexican embroidery decorative border -->
+    <div class="embroidery-border" aria-hidden="true">
         <svg viewBox="0 0 2000 90" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
           <!-- Background -->
           <rect width="2000" height="90" fill="#0a0616"/>
@@ -2391,7 +2621,6 @@
           </g>
         </svg>
       </div>
-    </section>
 
     <!-- ── FEATURED IMAGE ─────────────────────────────────────── -->
     <section id="featured" aria-label="Featured dancers">
@@ -2449,10 +2678,7 @@
             <div class="frame-corner frame-corner--br" aria-hidden="true">
               <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
             </div>
-            <div class="about-image-placeholder" aria-hidden="true">
-              <span class="icon">&#10022;</span>
-              <span data-i18n="placeholder.about">Foto del grupo</span>
-            </div>
+            <img src="images/optimized/2024-fair-group.webp" alt="Ballet Folklórico Mi Herencia group photo at a fair" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;aspect-ratio:4/3;" />
           </div>
 
           <div class="about-text-col">
@@ -2480,42 +2706,71 @@
           </div>
 
         </div>
+
+        <!-- Instructors -->
+        <div class="about-instructors">
+
+          <div class="about-text-col">
+            <span class="section-label" data-i18n="about.instructors.label">Nuestros Instructores</span>
+            <h2 class="story-heading" data-i18n="about.instructors.heading">
+              Una tradición familiar.
+            </h2>
+            <div class="story-divider"></div>
+            <p class="story-text" data-i18n="about.instructors.text">
+              Fundado y dirigido por los instructores Angel y Mayra Ramirez, Mi Herencia es un verdadero asunto de familia. El padre de Mayra, Jorge, anuncia cada presentación, mientras su madre, Francisca, trabaja tras bambalinas asegurándose de que cada traje quede perfecto. Sus tres hijos — Tatiana, Natalia y Sebastian — bailan junto al resto del grupo, celebrando la belleza de la cultura mexicana un zapateado a la vez.
+            </p>
+          </div>
+
+          <div class="about-image-frame">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--tr" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--bl" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+            </div>
+            <img src="images/optimized/instructors.webp" alt="Angel and Mayra Ramirez, instructors of Ballet Folklórico Mi Herencia" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;aspect-ratio:3/4;" />
+          </div>
+
+        </div>
+
       </div>
     </section>
 
-    <!-- ── GALLERY (commented out for now) ──────────────────────
+    <!-- ── GALLERY ──────────────────────────────────────────────── -->
     <section id="gallery" aria-labelledby="gallery-heading">
       <div class="container text-center">
+        <span class="section-label" data-i18n="gallery.label">Galería</span>
         <h2 class="section-heading" id="gallery-heading" data-i18n="gallery.heading">
           Véanos en acción.
         </h2>
-        <div class="heading-rule" style="margin-inline:auto;"></div>
+        <div class="story-divider" style="margin-inline:auto;"></div>
 
         <div class="gallery-strip" aria-label="Galería de fotos">
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
+          <div class="gallery-item">
+            <img src="images/optimized/2022-group-b.webp" alt="Stage performance" loading="lazy" />
+            <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
           </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
+          <div class="gallery-item">
+            <img src="images/optimized/2025-group.webp" alt="Día de los Muertos performance" loading="lazy" />
           </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
+          <div class="gallery-item">
+            <img src="images/optimized/Image_20260524_023113.webp" alt="Norteño dance" loading="lazy" />
           </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
+          <div class="gallery-item">
+            <img src="images/optimized/Image_20260524_023353.webp" alt="Dancers performing outdoors" loading="lazy" />
           </div>
-          <div class="gallery-item" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-            <span data-i18n="gallery.photo">Foto</span>
+          <div class="gallery-item">
+            <img src="images/optimized/Image_20260524_022841.webp" alt="Full group portrait in traditional attire" loading="lazy" />
           </div>
         </div>
       </div>
     </section>
-    ── end gallery comment ──────────────────────────────────── -->
 
     <!-- Embroidery border: about → events -->
     <div class="embroidery-divider" aria-hidden="true">
@@ -2550,7 +2805,7 @@
         <h2 class="section-heading" id="performances-heading" data-i18n="performances.heading">
           Únete a nuestra celebración
         </h2>
-        <div class="story-divider" style="margin-inline:auto;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+        <div class="story-divider" style="margin-inline:auto;"></div>
 
         <div class="events-grid" role="list" id="events-grid">
           <!-- Events are rendered by JavaScript -->
@@ -2606,7 +2861,12 @@
         </p>
 
         <div class="classes-grid">
-          <article class="class-card">
+          <article class="class-card class-card--has-img">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <img src="images/optimized/Image_20260524_022800.webp" alt="Young dancers performing" loading="lazy" class="class-card-img" style="object-position:center 20%" />
             <div class="class-card-inner">
               <h3 data-i18n="class1.name">Jóvenes (6–12)</h3>
               <dl>
@@ -2623,7 +2883,12 @@
             </div>
           </article>
 
-          <article class="class-card">
+          <article class="class-card class-card--has-img">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <img src="images/optimized/Image_20260524_023329.webp" alt="Adolescent dancers performing at a holiday event" loading="lazy" class="class-card-img" />
             <div class="class-card-inner">
               <h3 data-i18n="class2.name">Adolescentes (13–17)</h3>
               <dl>
@@ -2640,7 +2905,12 @@
             </div>
           </article>
 
-          <article class="class-card">
+          <article class="class-card class-card--has-img">
+            <div class="frame-corner frame-corner--tl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--tr" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--bl" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <div class="frame-corner frame-corner--br" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg></div>
+            <img src="images/optimized/sinaloa.webp" alt="Sinaloa dance performance" loading="lazy" class="class-card-img" />
             <div class="class-card-inner">
               <h3 data-i18n="class3.name">Adultos (18+)</h3>
               <dl>
@@ -2675,13 +2945,13 @@
     </section>
 
     <!-- ── REVIEWS ──────────────────────────────────────────────── -->
-    <section id="reviews" aria-labelledby="reviews-heading" style="background:linear-gradient(170deg, #130a1c 0%, #18102a 40%, #0f0a1e 70%, #130a1c 100%);padding-block:var(--section-gap);">
+    <section id="reviews" aria-labelledby="reviews-heading" style="background:#130a1c;padding-block:var(--section-gap);">
       <div class="container text-center">
         <span class="section-label" data-i18n="reviews.label">Lo Que Dicen</span>
         <h2 class="section-heading" id="reviews-heading" data-i18n="reviews.heading">
           No lo decimos nosotros.
         </h2>
-        <div class="heading-rule" style="margin-inline:auto;"></div>
+        <div class="story-divider" style="margin-inline:auto;"></div>
         <p style="margin-block-start:0.75rem;margin-block-end:0.25rem;color:var(--text-muted);font-size:0.95rem;">
           <span style="color:#f5c518;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
           <span data-i18n-html="reviews.subtitle"> 5.0 &mdash; 7 reseñas en <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--gold-light);text-decoration:underline;">GigSalad</a></span>
@@ -2790,12 +3060,14 @@
 
     <!-- ── CONTACT / BOOK ─────────────────────────────────────── -->
     <section id="contact" aria-labelledby="contact-heading">
+      <img src="images/optimized/logo-dancers-color.webp" alt="" aria-hidden="true" class="contact-dancer-art" loading="lazy" />
       <div class="container">
         <div class="book-layout">
           <!-- Contact info sidebar -->
           <aside class="book-info" aria-label="Información de contacto">
             <span class="section-label" data-i18n="contact.label">Contacto</span>
             <h2 class="section-heading" id="contact-heading" style="text-align:left;" data-i18n="contact.heading">Hablemos.</h2>
+            <div class="story-divider"></div>
             <p class="contact-intro" data-i18n="contact.intro">
               Nos encantaría saber de ti. Ya sea que tengas preguntas sobre nuestras clases, próximos eventos, o quieras contratar una presentación, envíanos un mensaje y te responderemos lo antes posible. Únete a nuestra familia — sé parte de nuestra tradición, nuestra cultura y nuestra comunidad.
             </p>
@@ -2945,7 +3217,7 @@
         <div class="footer-social">
           <h3 data-i18n="footer.social.heading">Encuéntranos en Línea</h3>
           <div class="footer-social-icons">
-            <a href="#" class="social-icon-link" aria-label="YouTube">
+            <a href="https://www.youtube.com/@annaperdomo9160/videos" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="YouTube">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
             </a>
           </div>
@@ -3144,8 +3416,12 @@
         "about.heading":            "Más que un grupo de danza.",
         "about.text1":              "Ballet Folklórico Mi Herencia es un grupo comunitario de danza folklórica mexicana compuesto por bailarines de todas las edades — desde los 6 años hasta adultos. Algunos llevan años en el escenario. Otros apenas están aprendiendo sus primeros pasos. Todos tienen un lugar aquí.",
         "about.text2":              "Nos hemos presentado en ferias del condado, eventos corporativos, bodas, quinceañeras, parques temáticos, eventos de medios y asambleas escolares por todo Los Ángeles, el Valle de San Gabriel y el Condado de Orange. Ningún escenario es demasiado grande, ningún evento demasiado pequeño.",
+        "about.instructors.label":  "Nuestros Instructores",
+        "about.instructors.heading":"Una tradición familiar.",
+        "about.instructors.text":   "Fundado y dirigido por los instructores Angel y Mayra Ramirez, Mi Herencia es un verdadero asunto de familia. El padre de Mayra, Jorge, anuncia cada presentación, mientras su madre, Francisca, trabaja tras bambalinas asegurándose de que cada traje quede perfecto. Sus tres hijos — Tatiana, Natalia y Sebastian — bailan junto al resto del grupo, celebrando la belleza de la cultura mexicana un zapateado a la vez.",
 
         // Gallery
+        "gallery.label":   "Galería",
         "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
 
@@ -3269,8 +3545,12 @@
         "about.heading":            "More than a dance group.",
         "about.text1":              "Ballet Folklórico Mi Herencia is a community-based Mexican folk dance group made up of dancers of all ages — from age 6 through adults. Some of us have been performing for years. Others are just learning their first steps. Everyone has a place here.",
         "about.text2":              "We've performed at county fairs, corporate events, weddings, quinceañeras, theme parks, media events, and school assemblies across Los Angeles, the San Gabriel Valley, and Orange County. No stage is too big, no event too small.",
+        "about.instructors.label":  "Our Instructors",
+        "about.instructors.heading":"A family tradition.",
+        "about.instructors.text":   "Founded and led by husband-and-wife instructors Angel and Mayra Ramirez, Mi Herencia is a true family affair. Mayra\u2019s father Jorge announces each performance, while her mother Francisca works behind the scenes ensuring every costume fits just right. Their three children \u2014 Tatiana, Natalia, and Sebastian \u2014 dance right alongside the rest of the group, celebrating the beauty of Mexican culture one zapateado at a time.",
 
         // Gallery
+        "gallery.label":   "Gallery",
         "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
 
