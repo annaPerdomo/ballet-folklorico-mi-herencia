@@ -218,15 +218,49 @@
         "position": 1,
         "item": {
           "@type": "DanceEvent",
-          "name": "Ballet Folklórico Mi Herencia at Arcadia Elks Lodge",
-          "startDate": "2026-05-08",
+          "name": "Ballet Folklórico Mi Herencia at Head Start",
+          "startDate": "2026-06-01T09:15:00-07:00",
+          "endDate": "2026-06-01T10:15:00-07:00",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "image": "https://bfmh.dance/og-image.jpg",
+          "organizer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia", "url": "https://bfmh.dance/" },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://bfmh.dance/",
+            "availability": "https://schema.org/InStock"
+          },
           "location": {
             "@type": "Place",
-            "name": "Arcadia Elks Lodge",
-            "address": { "@type": "PostalAddress", "addressLocality": "Arcadia", "addressRegion": "CA" }
+            "name": "Head Start",
+            "address": { "@type": "PostalAddress", "addressLocality": "Baldwin Park", "addressRegion": "CA" }
           },
           "performer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia" },
-          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at the Arcadia Elks Lodge."
+          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at Head Start in Baldwin Park, CA."
+        }
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "item": {
+          "@type": "DanceEvent",
+          "name": "Ballet Folklórico Mi Herencia at Pico Rivera City Event",
+          "startDate": "2026-06-26T11:30:00-07:00",
+          "endDate": "2026-06-26T12:30:00-07:00",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "image": "https://bfmh.dance/og-image.jpg",
+          "organizer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia", "url": "https://bfmh.dance/" },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://bfmh.dance/",
+            "availability": "https://schema.org/InStock"
+          },
+          "location": {
+            "@type": "Place",
+            "name": "Pico Rivera City Event",
+            "address": { "@type": "PostalAddress", "addressLocality": "Pico Rivera", "addressRegion": "CA" }
+          },
+          "performer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia" },
+          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at a Pico Rivera city event."
         }
       },
       {
@@ -234,15 +268,24 @@
         "position": 3,
         "item": {
           "@type": "DanceEvent",
-          "name": "Ballet Folklórico Mi Herencia at LA County Fair",
-          "startDate": "2026-05-24",
+          "name": "Ballet Folklórico Mi Herencia at St. John Vianney Church",
+          "startDate": "2026-10-18T10:00:00-07:00",
+          "endDate": "2026-10-18T11:00:00-07:00",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "image": "https://bfmh.dance/og-image.jpg",
+          "organizer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia", "url": "https://bfmh.dance/" },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://bfmh.dance/",
+            "availability": "https://schema.org/InStock"
+          },
           "location": {
             "@type": "Place",
-            "name": "LA County Fair — Expo Hall 4",
-            "address": { "@type": "PostalAddress", "addressLocality": "Pomona", "addressRegion": "CA" }
+            "name": "St. John Vianney Church",
+            "address": { "@type": "PostalAddress", "addressLocality": "Hacienda Heights", "addressRegion": "CA" }
           },
           "performer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia" },
-          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at the LA County Fair in Pomona, CA."
+          "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at St. John Vianney Church in Hacienda Heights, CA."
         }
       }
     ]
@@ -1408,9 +1451,58 @@
     }
 
 
+    .events-subheading {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      margin-block: 2rem 1rem;
+      letter-spacing: 0.04em;
+    }
+    .events-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      margin-block: 1rem;
+    }
+
     .events-toggle {
       text-align: center;
-      margin-block-start: 0.25rem;
+      margin-block-start: 0.5rem;
+    }
+    /* Past-events toggle — a quiet underlined text link, not a button, so it
+       doesn't compete with the primary CTA below it */
+    .events-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.15rem;
+      background: none;
+      border: none;
+      color: var(--gold-light);
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+      transition: color 0.25s ease, border-color 0.25s ease;
+    }
+    .events-toggle-btn:hover,
+    .events-toggle-btn:focus-visible {
+      color: #fff;
+      border-bottom-color: var(--gold);
+    }
+    .events-toggle-btn::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 0.25s ease;
+    }
+    .events-toggle-btn.is-expanded::after {
+      transform: rotate(-135deg) translate(-2px, -2px);
     }
     .btn-small {
       padding: 0.5rem 1.5rem;
@@ -1419,7 +1511,7 @@
 
     .events-cta {
       text-align: center;
-      margin-block-start: 1.25rem;
+      margin-block-start: 2.5rem;
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -3026,12 +3118,19 @@
         </h2>
         <div class="story-divider" style="margin-inline:auto;"></div>
 
-        <div class="events-grid" role="list" id="events-grid">
-          <!-- Events are rendered by JavaScript -->
+        <h3 class="events-subheading" id="upcoming-heading" data-i18n="events.upcoming">Próximos Eventos</h3>
+        <div class="events-grid" role="list" id="events-grid-upcoming">
+          <!-- Upcoming events rendered by JavaScript -->
+        </div>
+        <p class="events-empty" id="events-empty" style="display:none;" data-i18n="events.noUpcoming">No hay eventos próximos por el momento.</p>
+
+        <h3 class="events-subheading" id="past-heading" data-i18n="events.pastHeading">Eventos Pasados</h3>
+        <div class="events-grid" role="list" id="events-grid-past">
+          <!-- Past events rendered by JavaScript -->
         </div>
 
         <div class="events-toggle" id="events-toggle" style="display:none;">
-          <button type="button" class="btn btn-gold-outline btn-small" id="eventsToggleBtn"></button>
+          <button type="button" class="events-toggle-btn" id="eventsToggleBtn"></button>
         </div>
 
         <div class="events-cta">
@@ -3650,6 +3749,30 @@
         location: { es: "Pomona, CA", en: "Pomona, CA" },
         image:    null,
         link:     null
+      },
+      {
+        name:     { es: "Head Start", en: "Head Start" },
+        date:     "2026-06-01",
+        time:     "9:15 AM",
+        location: { es: "Baldwin Park, CA", en: "Baldwin Park, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "Evento de la Ciudad de Pico Rivera", en: "Pico Rivera City Event" },
+        date:     "2026-06-26",
+        time:     "11:30 AM",
+        location: { es: "Pico Rivera, CA", en: "Pico Rivera, CA" },
+        image:    null,
+        link:     null
+      },
+      {
+        name:     { es: "St. John Vianney Church", en: "St. John Vianney Church" },
+        date:     "2026-10-18",
+        time:     null,
+        location: { es: "Hacienda Heights, CA", en: "Hacienda Heights, CA" },
+        image:    null,
+        link:     null
       }
     ];
 
@@ -3698,8 +3821,11 @@
         "performances.label":   "Nuestras Presentaciones",
         "performances.heading": "Únete a nuestra celebración",
         "performances.cta":     "Haz tu evento inolvidable",
+        "events.upcoming":      "Próximos Eventos",
+        "events.pastHeading":   "Eventos Pasados",
+        "events.noUpcoming":    "No hay eventos próximos por el momento.",
         "events.past":          "Evento pasado",
-        "events.showMore":      "Ver todos los eventos",
+        "events.showMore":      "Ver eventos pasados",
         "events.showLess":      "Ver menos",
 
         // Classes
@@ -3835,8 +3961,11 @@
         "performances.label":   "Our Performances",
         "performances.heading": "Join our celebration",
         "performances.cta":     "Make Your Event Unforgettable",
+        "events.upcoming":      "Upcoming Events",
+        "events.pastHeading":   "Past Events",
+        "events.noUpcoming":    "No upcoming events at this time.",
         "events.past":          "Past event",
-        "events.showMore":      "See all events",
+        "events.showMore":      "See past events",
         "events.showLess":      "Show less",
 
         // Classes
@@ -4067,32 +4196,38 @@
     }
 
     function renderEvents(lang) {
-      const grid = document.getElementById('events-grid');
+      const upcomingGrid = document.getElementById('events-grid-upcoming');
+      const pastGrid = document.getElementById('events-grid-past');
+      const emptyMsg = document.getElementById('events-empty');
       const toggleWrap = document.getElementById('events-toggle');
       const toggleBtn = document.getElementById('eventsToggleBtn');
-      if (!grid) return;
+      if (!upcomingGrid || !pastGrid) return;
       const now = new Date();
       now.setHours(0,0,0,0);
 
-      // Sort: upcoming first (soonest first), then past (most recent first)
-      const sorted = [...EVENTS].sort((a, b) => {
-        const da = new Date(a.date), db = new Date(b.date);
-        const aPast = da < now, bPast = db < now;
-        if (aPast !== bPast) return aPast ? 1 : -1;
-        return aPast ? db - da : da - db;
-      });
+      const upcoming = EVENTS.filter(ev => new Date(ev.date + 'T00:00:00') >= now)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      const past = EVENTS.filter(ev => new Date(ev.date + 'T00:00:00') < now)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      const visible = eventsExpanded ? sorted : sorted.slice(0, EVENTS_VISIBLE);
-      grid.innerHTML = visible.map(ev => buildEventCard(ev, lang, now)).join('');
-      animateCards(grid);
+      // Upcoming: show all, soonest first
+      upcomingGrid.innerHTML = upcoming.map(ev => buildEventCard(ev, lang, now)).join('');
+      animateCards(upcomingGrid);
+      if (emptyMsg) emptyMsg.style.display = upcoming.length ? 'none' : '';
 
-      // Toggle button
-      if (sorted.length > EVENTS_VISIBLE && toggleWrap && toggleBtn) {
+      // Past: show EVENTS_VISIBLE by default, most recent first
+      const visiblePast = eventsExpanded ? past : past.slice(0, EVENTS_VISIBLE);
+      pastGrid.innerHTML = visiblePast.map(ev => buildEventCard(ev, lang, now)).join('');
+      animateCards(pastGrid);
+
+      // Toggle button for past events
+      if (past.length > EVENTS_VISIBLE && toggleWrap && toggleBtn) {
         toggleWrap.style.display = '';
         const dict = STRINGS[lang];
+        toggleBtn.classList.toggle('is-expanded', eventsExpanded);
         toggleBtn.textContent = eventsExpanded
           ? (dict['events.showLess'] || 'Show less')
-          : (dict['events.showMore'] || 'See all events') + ' (' + sorted.length + ')';
+          : (dict['events.showMore'] || 'See past events') + ' (' + past.length + ')';
       } else if (toggleWrap) {
         toggleWrap.style.display = 'none';
       }
