@@ -984,7 +984,7 @@
        FEATURED IMAGE SECTION
     ════════════════════════════════════════════════════════════ */
     #featured {
-      background: #0c0518;
+      background: radial-gradient(1200px 600px at 50% -8%, #1c1138 0%, #0c0518 62%);
       padding-block: var(--section-gap);
       position: relative;
       overflow: hidden;
@@ -1056,7 +1056,7 @@
        STORY / ABOUT SECTION — "Danza que cuenta nuestra historia"
     ════════════════════════════════════════════════════════════ */
     #about {
-      background: #180a1e;
+      background: radial-gradient(1200px 600px at 50% -8%, #2a1540 0%, #180a1e 62%);
       padding-block: 4rem;
       position: relative;
     }
@@ -1328,7 +1328,7 @@
        EVENTS SECTION — "Únete a nuestra celebración"
     ════════════════════════════════════════════════════════════ */
     #performances {
-      background: #0a1c1e;
+      background: radial-gradient(1200px 600px at 50% -8%, #143a3e 0%, #0a1c1e 62%);
       padding-block: var(--section-gap);
       position: relative;
     }
@@ -1518,7 +1518,7 @@
        GALLERY — "Momentos que nos mueven"
     ════════════════════════════════════════════════════════════ */
     #gallery {
-      background: #0d0820;
+      background: radial-gradient(1200px 600px at 50% -8%, #191040 0%, #0d0820 62%);
       padding-block: var(--section-gap);
     }
 
@@ -1567,10 +1567,132 @@
     }
 
     /* ════════════════════════════════════════════════════════════
+       VIDEO STRIP — performance videos inside "See us in action"
+    ════════════════════════════════════════════════════════════ */
+    .video-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-block-start: 1.25rem;
+    }
+    @media (max-width: 600px) {
+      .video-strip { grid-template-columns: 1fr; gap: 1rem; }
+    }
+
+    .video-item {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.18);
+      background: var(--bg-elevated);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    }
+
+    .video-facade {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      cursor: pointer;
+      background: transparent;
+      display: block;
+    }
+    .video-facade img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .video-facade::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(8,3,17,0.85) 0%, rgba(8,3,17,0.18) 45%, rgba(8,3,17,0.08) 100%);
+    }
+    .video-facade:hover img,
+    .video-facade:focus-visible img {
+      transform: scale(1.05);
+    }
+
+    .video-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.92);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .video-facade:hover .video-play,
+    .video-facade:focus-visible .video-play {
+      transform: translate(-50%, -50%) scale(1.12);
+      background: var(--gold-light);
+    }
+
+    .video-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      padding: 0.85rem 1rem;
+      text-align: left;
+      pointer-events: none;
+    }
+    .video-caption-title {
+      display: block;
+      font-family: var(--font-display);
+      color: var(--text-primary);
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+    .video-caption-region {
+      display: block;
+      color: var(--gold-light);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-block-start: 0.25rem;
+    }
+
+    .video-item iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-cta {
+      text-align: center;
+      margin-block-start: 2rem;
+    }
+
+    .events-cta-note {
+      color: var(--text-muted);
+      max-width: 42rem;
+      margin: 1.5rem auto 0;
+      line-height: 1.6;
+      font-size: 0.85rem;
+    }
+
+    /* ════════════════════════════════════════════════════════════
        CLASSES SECTION
     ════════════════════════════════════════════════════════════ */
     #classes {
-      background: #162040;
+      background: radial-gradient(1200px 600px at 50% -8%, #233a70 0%, #162040 62%);
       padding-block: var(--section-gap);
     }
 
@@ -1926,7 +2048,7 @@
        CONTACT / BOOK SECTION
     ════════════════════════════════════════════════════════════ */
     #contact {
-      background: #fdf9f3;
+      background: radial-gradient(1200px 600px at 50% -8%, #ffffff 0%, #fdf9f3 62%);
       padding-block: var(--section-gap);
       position: relative;
       overflow: hidden;
@@ -1963,7 +2085,7 @@
       display: grid;
       grid-template-columns: 1fr 1.2fr;
       gap: 3rem;
-      align-items: start;
+      align-items: stretch;
     }
 
     @media (max-width: 760px) {
@@ -1973,6 +2095,39 @@
     .book-info {
       color: #4a3f35;
       position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    /* gold flourish under the form heading — auto-matches the heading text width */
+    .form-flourish {
+      display: block;
+      width: 100%;
+      height: 10px;
+      margin-block-start: 0.6rem;
+      position: relative;
+      background:
+        radial-gradient(circle, rgba(201,168,76,0.7) 1.3px, transparent 1.7px) left center / 7px 100% no-repeat,
+        radial-gradient(circle, rgba(201,168,76,0.7) 1.3px, transparent 1.7px) right center / 7px 100% no-repeat,
+        linear-gradient(90deg, rgba(201,168,76,0.5), rgba(201,168,76,0.5)) center / 100% 1.5px no-repeat;
+    }
+    .form-flourish::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      transform: translate(-50%, -50%) rotate(45deg);
+      background: #c9a84c;
+      box-shadow: 0 0 0 4px #fff;
+    }
+    /* lets the contact cards distribute to align their bottom with the form's bottom edge */
+    .contact-cards {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
     .book-info .contact-intro {
@@ -2003,16 +2158,17 @@
       display: flex;
       align-items: flex-start;
       gap: 1rem;
-      margin-block-end: 1.35rem;
+      margin-block-end: 0;
       padding: 0.75rem 1rem;
       border-radius: var(--radius);
       background: rgba(255,255,255,0.6);
-      border: 1px solid rgba(0,0,0,0.04);
-      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(201,168,76,0.18);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     }
     .contact-item:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 6px 18px rgba(122,90,30,0.1);
     }
     .contact-item-icon {
       flex-shrink: 0;
@@ -2028,7 +2184,7 @@
     .contact-item-icon.loc   { background: linear-gradient(135deg, #c7295d, #e0446f); }
     .contact-item-icon.phone { background: linear-gradient(135deg, #2a9d8f, #38c4b2); }
     .contact-item-icon.email { background: linear-gradient(135deg, #c9a84c, #dfc06a); }
-    .contact-item-icon.social { background: linear-gradient(135deg, #6b3fa0, #8b5fcf); }
+    .contact-item-icon.social { background: linear-gradient(135deg, #c7295d, #c9a84c); }
     .contact-item-text strong {
       display: block;
       font-family: var(--font-ui);
@@ -2051,31 +2207,41 @@
 
     /* Form — light fiesta mode */
     .book-form-wrapper fieldset {
-      border: none;
+      border: 1px solid rgba(201,168,76,0.32);
       border-radius: var(--radius-lg);
-      padding: 2rem;
+      padding: 2.25rem 2rem;
       background: #fff;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+      box-shadow: 0 10px 44px rgba(122,90,30,0.10), 0 1px 3px rgba(0,0,0,0.04);
       position: relative;
-      overflow: hidden;
     }
-    .book-form-wrapper fieldset::before {
-      content: '';
+    /* gold ornamental corners — echoes the class-card frames */
+    .form-corner {
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #c7295d, #c9a84c, #2a9d8f);
+      pointer-events: none;
+      z-index: 2;
+      line-height: 0;
     }
+    .form-corner--tl { top: 7px; left: 7px; }
+    .form-corner--tr { top: 7px; right: 7px; transform: scaleX(-1); }
+    .form-corner--bl { bottom: 7px; left: 7px; transform: scaleY(-1); }
+    .form-corner--br { bottom: 7px; right: 7px; transform: scale(-1); }
 
     .book-form-wrapper legend {
+      /* float drops the label out of the default "straddle"; max-content shrinks it to the text */
+      float: left;
+      width: max-content;
+      max-width: 100%;
+      margin: 0 0 1.5rem;
+      padding-inline: 0;
       font-family: var(--font-ui);
       font-weight: 800;
       font-size: 0.8rem;
       color: #c7295d;
-      padding-inline: 0.75rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
+    .book-form-wrapper legend > span[data-i18n] { display: block; }
+    .book-form-wrapper legend + .form-row { clear: both; }
 
     .form-row {
       display: grid;
@@ -2119,12 +2285,18 @@
       color: #b8ad9e;
     }
 
+    .form-group input:hover,
+    .form-group select:hover,
+    .form-group textarea:hover {
+      border-color: #d4c39a;
+    }
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
       border-color: #c7295d;
-      box-shadow: 0 0 0 3px rgba(199,41,93,0.1);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(199,41,93,0.13);
     }
 
     .form-group textarea { resize: vertical; min-height: 110px; }
@@ -2779,6 +2951,7 @@
         <ul>
           <li><a href="#home"           data-i18n="nav.home">Inicio</a></li>
           <li><a href="#about"          data-i18n="nav.about">Sobre Nosotros</a></li>
+          <li><a href="#gallery"        data-i18n="nav.gallery">Galería</a></li>
           <li><a href="#performances"   data-i18n="nav.events">Eventos</a></li>
           <li><a href="#classes"        data-i18n="nav.classes">Clases</a></li>
           <li><a href="#contact"        data-i18n="nav.contact">Contacto</a></li>
@@ -2813,6 +2986,7 @@
     <ul>
       <li><a href="#home"         data-i18n="nav.home">Inicio</a></li>
       <li><a href="#about"        data-i18n="nav.about">Sobre Nosotros</a></li>
+      <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
       <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
       <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
       <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
@@ -3086,6 +3260,53 @@
             <img src="images/optimized/Image_20260524_022841.webp" alt="Ballet Folklórico Mi Herencia full group portrait in traditional Mexican folklorico attire" loading="lazy" />
           </div>
         </div>
+
+        <h3 class="events-subheading" style="margin-block-start:3rem;" data-i18n="videos.heading">Mírenos bailar</h3>
+        <div class="video-strip">
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="GKdhpoolSUA" aria-label="Jarabe Tapatío, Jalisco — video">
+              <img src="https://i.ytimg.com/vi/GKdhpoolSUA/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">Jarabe Tapatío</span>
+                <span class="video-caption-region">Jalisco</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="nnUA3nC0mnc" aria-label="El Toro Mambo, Sinaloa — video">
+              <img src="https://i.ytimg.com/vi/nnUA3nC0mnc/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">El Toro Mambo</span>
+                <span class="video-caption-region">Sinaloa</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="WlxCxR4rHik" aria-label="La Llorona, Chiapas — video">
+              <img src="https://i.ytimg.com/vi/WlxCxR4rHik/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">La Llorona</span>
+                <span class="video-caption-region">Chiapas</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="JfjUILnEuhk" aria-label="Baile de los Viejitos, Michoacán — video">
+              <img src="https://i.ytimg.com/vi/JfjUILnEuhk/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">Baile de los Viejitos</span>
+                <span class="video-caption-region">Michoacán</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="video-cta">
+          <a href="https://www.youtube.com/@annaperdomo9160/videos" target="_blank" rel="noopener noreferrer" class="btn btn-gold-outline" data-i18n="videos.cta">Ver más en YouTube</a>
+        </div>
       </div>
     </section>
 
@@ -3137,6 +3358,7 @@
           <a href="#contact" class="btn btn-gold-outline" data-i18n="performances.cta">
             Haz tu evento inolvidable
           </a>
+          <p class="events-cta-note" data-i18n="performances.interactiveNote">¿Buscas algo más? También ofrecemos sesiones interactivas donde sus invitados aprenden algunos de nuestros bailes folklóricos.</p>
         </div>
       </div>
     </section>
@@ -3319,7 +3541,7 @@
     </div>
 
     <!-- ── REVIEWS ──────────────────────────────────────────────── -->
-    <section id="reviews" aria-labelledby="reviews-heading" style="background:#130a1c;padding-block:var(--section-gap);">
+    <section id="reviews" aria-labelledby="reviews-heading" style="background:radial-gradient(1200px 600px at 50% -8%, #241338 0%, #130a1c 62%);padding-block:var(--section-gap);">
       <div class="container text-center">
         <span class="section-label" data-i18n="reviews.label">Lo Que Dicen</span>
         <h2 class="section-heading" id="reviews-heading" data-i18n="reviews.heading">
@@ -3442,6 +3664,7 @@
               Nos encantaría saber de ti. Ya sea que tengas preguntas sobre nuestras clases, próximos eventos, o quieras contratar una presentación, envíanos un mensaje y te responderemos lo antes posible. Únete a nuestra familia — sé parte de nuestra tradición, nuestra cultura y nuestra comunidad.
             </p>
 
+            <div class="contact-cards">
             <div class="contact-item">
               <span class="contact-item-icon loc">&#9906;</span>
               <div class="contact-item-text">
@@ -3473,6 +3696,7 @@
                 <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" data-i18n="contact.social.gigsalad">Contrátanos y déjanos una reseña en GigSalad</a>
               </div>
             </div>
+            </div>
 
           </aside>
 
@@ -3489,7 +3713,14 @@
               aria-label="Formulario de solicitud de contratación"
             >
               <fieldset>
-                <legend data-i18n="contact.form.legend">Envíanos un Mensaje</legend>
+                <span class="form-corner form-corner--tl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--tr" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--bl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--br" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+                <legend>
+                  <span data-i18n="contact.form.legend">Lleva la Fiesta a Tu Evento</span>
+                  <span class="form-flourish" aria-hidden="true"></span>
+                </legend>
 
                 <div class="form-row">
                   <div class="form-group">
@@ -3577,6 +3808,7 @@
           <ul>
             <li><a href="#home"         data-i18n="nav.home">Inicio</a></li>
             <li><a href="#about"        data-i18n="nav.about">Sobre Nosotros</a></li>
+            <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
             <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
             <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
             <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
@@ -3786,6 +4018,7 @@
         // Navigation
         "nav.home":         "Inicio",
         "nav.about":        "Sobre Nosotros",
+        "nav.gallery":      "Galería",
         "nav.events":       "Eventos",
         "nav.contact":      "Contacto",
         "nav.classes":      "Clases",
@@ -3816,11 +4049,14 @@
         "gallery.label":   "Galería",
         "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
+        "videos.heading":  "Mírenos bailar",
+        "videos.cta":      "Ver más en YouTube",
 
         // Events
         "performances.label":   "Nuestras Presentaciones",
         "performances.heading": "Únete a nuestra celebración",
         "performances.cta":     "Haz tu evento inolvidable",
+        "performances.interactiveNote": "¿Buscas algo más? También ofrecemos sesiones interactivas donde sus invitados aprenden algunos de nuestros bailes folklóricos.",
         "events.upcoming":      "Próximos Eventos",
         "events.pastHeading":   "Eventos Pasados",
         "events.noUpcoming":    "No hay eventos próximos por el momento.",
@@ -3884,7 +4120,7 @@
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
         "contact.social.heading":     "GigSalad",
         "contact.social.gigsalad":    "Contrátanos y déjanos una reseña en GigSalad",
-        "contact.form.legend":        "Envíanos un Mensaje",
+        "contact.form.legend":        "Lleva la Fiesta a Tu Evento",
         "contact.form.name":          "Nombre Completo",
         "contact.form.name.placeholder": "Tu nombre completo",
         "contact.form.email":         "Correo Electrónico",
@@ -3926,6 +4162,7 @@
         // Navigation
         "nav.home":         "Home",
         "nav.about":        "About Us",
+        "nav.gallery":      "Gallery",
         "nav.events":       "Events",
         "nav.contact":      "Contact",
         "nav.classes":      "Classes",
@@ -3956,11 +4193,14 @@
         "gallery.label":   "Gallery",
         "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
+        "videos.heading":  "Watch us dance",
+        "videos.cta":      "Watch more on YouTube",
 
         // Events
         "performances.label":   "Our Performances",
         "performances.heading": "Join our celebration",
         "performances.cta":     "Make Your Event Unforgettable",
+        "performances.interactiveNote": "Looking for something extra? We also offer interactive sessions where your guests learn some of our folklórico dances.",
         "events.upcoming":      "Upcoming Events",
         "events.pastHeading":   "Past Events",
         "events.noUpcoming":    "No upcoming events at this time.",
@@ -4024,7 +4264,7 @@
         "contact.info.email.value":   "mr_angelramirez@icloud.com",
         "contact.social.heading":     "GigSalad",
         "contact.social.gigsalad":    "Book & review us on GigSalad",
-        "contact.form.legend":        "Send Us a Message",
+        "contact.form.legend":        "Bring the Fiesta to Your Event",
         "contact.form.name":          "Full Name",
         "contact.form.name.placeholder": "Your full name",
         "contact.form.email":         "Email",
@@ -4141,6 +4381,35 @@
       document.addEventListener('DOMContentLoaded', initializeLanguageToggle);
     } else {
       initializeLanguageToggle();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  VIDEO FACADES — click thumbnail to load the YouTube player
+    //  (keeps the page fast: no iframe until the visitor clicks)
+    // ─────────────────────────────────────────────────────────
+    function initVideoFacades() {
+      document.querySelectorAll('.video-facade').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-video-id');
+          if (!id) return;
+          var item = btn.closest('.video-item');
+          if (!item) return;
+          var iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+          iframe.title = btn.getAttribute('aria-label') || 'YouTube video';
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+          iframe.allowFullscreen = true;
+          item.innerHTML = '';
+          item.appendChild(iframe);
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initVideoFacades);
+    } else {
+      initVideoFacades();
     }
 
     // ─────────────────────────────────────────────────────────
