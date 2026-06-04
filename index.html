@@ -227,7 +227,10 @@
           "offers": {
             "@type": "Offer",
             "url": "https://bfmh.dance/",
-            "availability": "https://schema.org/InStock"
+            "availability": "https://schema.org/InStock",
+            "price": "0",
+            "priceCurrency": "USD",
+            "validFrom": "2026-01-01T00:00:00-08:00"
           },
           "location": {
             "@type": "Place",
@@ -252,7 +255,10 @@
           "offers": {
             "@type": "Offer",
             "url": "https://bfmh.dance/",
-            "availability": "https://schema.org/InStock"
+            "availability": "https://schema.org/InStock",
+            "price": "0",
+            "priceCurrency": "USD",
+            "validFrom": "2026-01-01T00:00:00-08:00"
           },
           "location": {
             "@type": "Place",
@@ -277,7 +283,10 @@
           "offers": {
             "@type": "Offer",
             "url": "https://bfmh.dance/",
-            "availability": "https://schema.org/InStock"
+            "availability": "https://schema.org/InStock",
+            "price": "0",
+            "priceCurrency": "USD",
+            "validFrom": "2026-01-01T00:00:00-08:00"
           },
           "location": {
             "@type": "Place",
@@ -287,6 +296,46 @@
           "performer": { "@type": "DanceGroup", "name": "Ballet Folklórico Mi Herencia" },
           "description": "Live folklorico performance by Ballet Folklórico Mi Herencia at St. John Vianney Church in Hacienda Heights, CA."
         }
+      }
+    ]
+  }
+  </script>
+
+  <!-- FAQ schema for rich results / People Also Ask -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does it cost to hire a ballet folklórico group in Los Angeles?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Pricing depends on the type of event, the length of the performance, and the number of dancers. Ballet Folklórico Mi Herencia performs at festivals, quinceañeras, weddings, corporate events, and schools. Contact us for a free, personalized quote." }
+      },
+      {
+        "@type": "Question",
+        "name": "What areas do you travel to for performances?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We're based in Hacienda Heights, CA and travel throughout Southern California, including Los Angeles, the San Gabriel Valley, the Inland Empire, and Orange County." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you perform at quinceañeras and weddings?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes! We specialize in quinceañeras, weddings, cultural festivals, corporate events, school assemblies, and private celebrations." }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is Ballet Folklórico Mi Herencia located?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We're a community Mexican folk dance group based in Hacienda Heights, California." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you offer folklórico classes and how do I join?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. We offer folklórico dance classes for children (ages 6–12), teens (13–17), and adults (18+) in Hacienda Heights. The first 4 classes are free. Message us to enroll." }
+      },
+      {
+        "@type": "Question",
+        "name": "How far in advance should I book a folklórico performance?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We recommend booking at least 3–4 weeks ahead, especially for peak-season dates. For last-minute dates, reach out and we'll do our best to accommodate you." }
       }
     ]
   }
@@ -2954,6 +3003,7 @@
           <li><a href="#gallery"        data-i18n="nav.gallery">Galería</a></li>
           <li><a href="#performances"   data-i18n="nav.events">Eventos</a></li>
           <li><a href="#classes"        data-i18n="nav.classes">Clases</a></li>
+          <li><a href="#faq"            data-i18n="nav.faq">Preguntas</a></li>
           <li><a href="#contact"        data-i18n="nav.contact">Contacto</a></li>
         </ul>
       </nav>
@@ -2989,6 +3039,7 @@
       <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
       <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
       <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
+      <li><a href="#faq"          data-i18n="nav.faq">Preguntas</a></li>
       <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
       <li><a href="#contact"      data-i18n="nav.cta" style="color:var(--gold-light);">Contáctanos</a></li>
     </ul>
@@ -3628,6 +3679,51 @@
       </div>
     </section>
 
+    <!-- ── FAQ ──────────────────────────────────────────────────── -->
+    <style>
+      .faq-list{max-width:780px;margin-inline:auto;text-align:start;}
+      .faq-item{border-block-end:1px solid rgba(201,168,76,0.22);}
+      .faq-item summary{list-style:none;cursor:pointer;padding-block:1.15rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:var(--font-display);font-size:1.18rem;color:#f3e9d6;transition:color .2s ease;}
+      .faq-item summary::-webkit-details-marker{display:none;}
+      .faq-item summary:hover{color:var(--gold-light);}
+      .faq-item summary::after{content:"+";font-size:1.5rem;color:var(--gold-light);line-height:1;flex:0 0 auto;transition:transform .2s ease;}
+      .faq-item[open] summary::after{transform:rotate(45deg);}
+      .faq-item .faq-a{padding-block:0 1.25rem;color:var(--text-muted);font-size:1rem;line-height:1.65;max-width:68ch;}
+    </style>
+    <section id="faq" aria-labelledby="faq-heading" style="background:radial-gradient(1200px 600px at 50% -8%, #1b1029 0%, #130a1c 62%);padding-block:var(--section-gap);">
+      <div class="container text-center">
+        <span class="section-label" data-i18n="faq.label">Dudas Comunes</span>
+        <h2 class="section-heading" id="faq-heading" data-i18n="faq.heading">Preguntas Frecuentes</h2>
+        <div class="story-divider" style="margin-inline:auto;"></div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary data-i18n="faq.q1">¿Cuánto cuesta contratar un grupo de ballet folklórico en Los Ángeles?</summary>
+            <div class="faq-a" data-i18n="faq.a1">El costo depende del tipo de evento, la duración de la presentación y el número de bailarines. Hacemos presentaciones en festivales, quinceañeras, bodas, eventos corporativos y escuelas. Contáctanos para una cotización gratuita y personalizada.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q2">¿A qué zonas viajan para presentaciones?</summary>
+            <div class="faq-a" data-i18n="faq.a2">Tenemos base en Hacienda Heights, CA y viajamos por todo el sur de California, incluyendo Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q3">¿Hacen presentaciones para quinceañeras y bodas?</summary>
+            <div class="faq-a" data-i18n="faq.a3">¡Sí! Nos especializamos en quinceañeras, bodas, festivales culturales, eventos corporativos, asambleas escolares y celebraciones privadas.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q4">¿Dónde están ubicados?</summary>
+            <div class="faq-a" data-i18n="faq.a4">Somos un grupo comunitario de danza folklórica mexicana con base en Hacienda Heights, California.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q5">¿Ofrecen clases de folklórico? ¿Cómo me uno?</summary>
+            <div class="faq-a" data-i18n="faq.a5">Sí. Ofrecemos clases de danza folklórica para niños (6–12 años), adolescentes (13–17) y adultos (18+) en Hacienda Heights. Las primeras 4 clases son gratis. Escríbenos para inscribirte.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q6">¿Con cuánta anticipación debo reservar?</summary>
+            <div class="faq-a" data-i18n="faq.a6">Recomendamos reservar con al menos 3–4 semanas de anticipación, especialmente en temporada alta. Para fechas próximas, contáctanos — haremos lo posible por acomodarte.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- Divider: reviews → contact — gold flower rosette -->
     <div class="section-divider divider-rosette" aria-hidden="true">
       <div class="divider-center">
@@ -3811,6 +3907,7 @@
             <li><a href="#gallery"      data-i18n="nav.gallery">Galería</a></li>
             <li><a href="#performances" data-i18n="nav.events">Eventos</a></li>
             <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
+            <li><a href="#faq"          data-i18n="nav.faq">Preguntas</a></li>
             <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
           </ul>
         </nav>
@@ -4022,6 +4119,7 @@
         "nav.events":       "Eventos",
         "nav.contact":      "Contacto",
         "nav.classes":      "Clases",
+        "nav.faq":          "Preguntas",
         "nav.cta":          "Contáctanos",
 
         // Hero
@@ -4108,6 +4206,22 @@
         "review5.author":   "— Eulogio R. · Evento Comunitario",
         "reviews.cta":      "Lee todas las reseñas en GigSalad",
 
+        // FAQ
+        "faq.label":   "Dudas Comunes",
+        "faq.heading": "Preguntas Frecuentes",
+        "faq.q1": "¿Cuánto cuesta contratar un grupo de ballet folklórico en Los Ángeles?",
+        "faq.a1": "El costo depende del tipo de evento, la duración de la presentación y el número de bailarines. Hacemos presentaciones en festivales, quinceañeras, bodas, eventos corporativos y escuelas. Contáctanos para una cotización gratuita y personalizada.",
+        "faq.q2": "¿A qué zonas viajan para presentaciones?",
+        "faq.a2": "Tenemos base en Hacienda Heights, CA y viajamos por todo el sur de California, incluyendo Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "faq.q3": "¿Hacen presentaciones para quinceañeras y bodas?",
+        "faq.a3": "¡Sí! Nos especializamos en quinceañeras, bodas, festivales culturales, eventos corporativos, asambleas escolares y celebraciones privadas.",
+        "faq.q4": "¿Dónde están ubicados?",
+        "faq.a4": "Somos un grupo comunitario de danza folklórica mexicana con base en Hacienda Heights, California.",
+        "faq.q5": "¿Ofrecen clases de folklórico? ¿Cómo me uno?",
+        "faq.a5": "Sí. Ofrecemos clases de danza folklórica para niños (6–12 años), adolescentes (13–17) y adultos (18+) en Hacienda Heights. Las primeras 4 clases son gratis. Escríbenos para inscribirte.",
+        "faq.q6": "¿Con cuánta anticipación debo reservar?",
+        "faq.a6": "Recomendamos reservar con al menos 3–4 semanas de anticipación, especialmente en temporada alta. Para fechas próximas, contáctanos — haremos lo posible por acomodarte.",
+
         // Contact
         "contact.label":    "Contacto",
         "contact.heading":  "Hablemos.",
@@ -4166,6 +4280,7 @@
         "nav.events":       "Events",
         "nav.contact":      "Contact",
         "nav.classes":      "Classes",
+        "nav.faq":          "FAQ",
         "nav.cta":          "Book Us",
 
         // Hero
@@ -4251,6 +4366,22 @@
         "review5.text":     "\u201CWe highly recommend Angel and his team. Our participants in our 5K were impressed! We would definitely hire them again!\u201D",
         "review5.author":   "— Eulogio R. · Community Event",
         "reviews.cta":      "See all reviews on GigSalad",
+
+        // FAQ
+        "faq.label":   "Common Questions",
+        "faq.heading": "Frequently Asked Questions",
+        "faq.q1": "How much does it cost to hire a ballet folklórico group in Los Angeles?",
+        "faq.a1": "Pricing depends on the type of event, the length of the performance, and the number of dancers. We perform at festivals, quinceañeras, weddings, corporate events, and schools. Contact us for a free, personalized quote.",
+        "faq.q2": "What areas do you travel to for performances?",
+        "faq.a2": "We're based in Hacienda Heights, CA and travel throughout Southern California, including Los Angeles, the San Gabriel Valley, the Inland Empire, and Orange County.",
+        "faq.q3": "Do you perform at quinceañeras and weddings?",
+        "faq.a3": "Yes! We specialize in quinceañeras, weddings, cultural festivals, corporate events, school assemblies, and private celebrations.",
+        "faq.q4": "Where are you located?",
+        "faq.a4": "We're a community Mexican folk dance group based in Hacienda Heights, California.",
+        "faq.q5": "Do you offer folklórico classes? How do I join?",
+        "faq.a5": "Yes. We offer folklórico dance classes for children (ages 6–12), teens (13–17), and adults (18+) in Hacienda Heights. The first 4 classes are free. Message us to enroll.",
+        "faq.q6": "How far in advance should I book?",
+        "faq.a6": "We recommend booking at least 3–4 weeks ahead, especially for peak-season dates. For last-minute dates, reach out — we'll do our best to accommodate you.",
 
         // Contact
         "contact.label":    "Contact Us",
