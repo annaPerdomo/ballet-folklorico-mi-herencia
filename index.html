@@ -2205,8 +2205,10 @@
 
     @media (max-width: 760px) {
       .book-layout { grid-template-columns: 1fr; }
+      .book-layout > * { min-width: 0; max-width: 100%; }
       .book-form-wrapper,
-      .book-form-wrapper fieldset { min-width: 0; width: 100%; }
+      .book-form-wrapper form,
+      .book-form-wrapper fieldset { min-width: 0; width: 100%; max-width: 100%; }
     }
 
     .book-info {
@@ -2302,6 +2304,9 @@
     .contact-item-icon.phone { background: linear-gradient(135deg, #2a9d8f, #38c4b2); }
     .contact-item-icon.email { background: linear-gradient(135deg, #c9a84c, #dfc06a); }
     .contact-item-icon.social { background: linear-gradient(135deg, #c7295d, #c9a84c); }
+    .contact-item-text {
+      min-width: 0;
+    }
     .contact-item-text strong {
       display: block;
       font-family: var(--font-ui);
@@ -2319,6 +2324,8 @@
       font-size: 0.92rem;
       font-weight: 500;
       transition: color 0.2s;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .contact-item-text a:hover { color: #c7295d; }
 
