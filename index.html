@@ -768,8 +768,8 @@
       align-items: center;
       justify-content: space-between;
       text-align: left;
-      padding: 0 0 0 5%;
-      gap: 3rem;
+      padding: 0 2.5% 0 5%;
+      gap: 2rem;
     }
 
     .hero-text {
@@ -841,13 +841,13 @@
     /* ── Hero Photo Collage ── */
     .hero-photos {
       flex: 0 0 auto;
-      width: 55%;
+      width: 64%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0;
       align-self: center;
-      height: clamp(420px, 65vh, 600px);
-      padding-right: 60px;
+      height: clamp(480px, 78vh, 760px);
+      padding-right: 0;
     }
 
     .hero-photos .photo-tall,
@@ -858,18 +858,26 @@
 
     .photo-credit {
       position: absolute;
-      bottom: 6px;
-      right: 8px;
+      bottom: 10px;
+      right: 10px;
       font-family: var(--font-ui);
-      font-size: 0.55rem;
-      color: rgba(255,255,255,0.5);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: #fff;
       text-decoration: none;
-      z-index: 3;
+      z-index: 4;
       letter-spacing: 0.02em;
-      transition: color 0.2s;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.42);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+      transition: background 0.2s, color 0.2s;
     }
     .photo-credit:hover {
-      color: rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.62);
+      color: #fff;
     }
 
     .hero-photos .photo-tall img,
@@ -880,15 +888,16 @@
       display: block;
     }
     /* Soft edge fade — left photo fades on left edge, right photos fade on left; all fade top/bottom */
-    .hero-photos .photo-tall {
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
+    /* Masks live on the <img> (not the container) so photo credits stay fully opaque */
+    .hero-photos .photo-tall img {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 86%, transparent 100%),
                           linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
       -webkit-mask-composite: destination-in;
-      mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
+      mask-image: linear-gradient(to right, transparent 0%, black 18%, black 86%, transparent 100%),
                   linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
       mask-composite: intersect;
     }
-    .hero-photos .photo-stack-item {
+    .hero-photos .photo-stack-item img {
       -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
                           linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
       -webkit-mask-composite: destination-in;
@@ -900,12 +909,12 @@
     /* Tall photo on the left */
     .hero-photos .photo-tall {
       opacity: 0;
-      transform: scale(0.93);
-      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 0.3s forwards;
+      transform: scale(0.97);
+      animation: heroReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
     }
     .hero-photos .photo-tall img {
       object-position: center top;
-      animation: heroDrift1 30s ease-in-out 3.8s infinite alternate;
+      animation: heroDrift1 36s ease-in-out 3.1s infinite alternate;
     }
 
     /* Right column — two stacked photos */
@@ -923,19 +932,19 @@
 
     .hero-photos .photo-stack-top {
       opacity: 0;
-      transform: scale(0.95);
-      animation: heroReveal 4.2s cubic-bezier(0.05, 0, 0.35, 0) 0.9s forwards;
+      transform: scale(0.97);
+      animation: heroReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
     }
     .hero-photos .photo-stack-top img {
-      animation: heroDrift2 26s ease-in-out 5.1s infinite alternate;
+      animation: heroDrift2 32s ease-in-out 3.4s infinite alternate;
     }
     .hero-photos .photo-stack-bottom {
       opacity: 0;
-      transform: scale(0.93);
-      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 1.5s forwards;
+      transform: scale(0.97);
+      animation: heroReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
     }
     .hero-photos .photo-stack-bottom img {
-      animation: heroDrift3 34s ease-in-out 5s infinite alternate;
+      animation: heroDrift3 38s ease-in-out 3.6s infinite alternate;
     }
 
     /* Single smooth arc — no intermediate keyframes, no snapping */
@@ -946,15 +955,15 @@
     /* Living breath — gentle, slow swaying like fabric at rest */
     @keyframes heroDrift1 {
       0%   { transform: scale(1)    translate(0, 0); }
-      100% { transform: scale(1.04) translate(-0.3%, 0.2%); }
+      100% { transform: scale(1.02) translate(-0.3%, 0.2%); }
     }
     @keyframes heroDrift2 {
-      0%   { transform: scale(1.03) translate(0, 0); }
-      100% { transform: scale(1)    translate(0.3%, 0.3%); }
+      0%   { transform: scale(1)    translate(0, 0); }
+      100% { transform: scale(1.02) translate(0.3%, 0.3%); }
     }
     @keyframes heroDrift3 {
       0%   { transform: scale(1)    translate(0, 0); }
-      100% { transform: scale(1.03) translate(-0.3%, 0.2%); }
+      100% { transform: scale(1.02) translate(-0.3%, 0.2%); }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -1617,6 +1626,12 @@
     /* ════════════════════════════════════════════════════════════
        VIDEO STRIP — performance videos inside "See us in action"
     ════════════════════════════════════════════════════════════ */
+    .gallery-video-wrap {
+      max-width: 1600px;
+      margin-inline: auto;
+      padding-inline: 2rem;
+    }
+
     .video-carousel {
       position: relative;
       margin-block-start: 1.25rem;
@@ -2713,6 +2728,16 @@
         animation: none !important;
         -webkit-text-fill-color: var(--gold) !important;
       }
+      .hero-photos .photo-tall,
+      .hero-photos .photo-stack-top,
+      .hero-photos .photo-stack-bottom,
+      .hero-photos .photo-tall img,
+      .hero-photos .photo-stack-top img,
+      .hero-photos .photo-stack-bottom img {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -2733,6 +2758,7 @@
       }
 
       .container { padding-inline: 1.25rem; }
+      .gallery-video-wrap { padding-inline: 1.25rem; }
 
       /* Hero */
       #home { min-height: 100vh; }
@@ -2799,6 +2825,7 @@
       body { font-size: 15px; }
 
       .container { padding-inline: 1rem; }
+      .gallery-video-wrap { padding-inline: 1rem; }
 
       /* ── Header ── */
       header { height: var(--header-height); }
@@ -3131,15 +3158,15 @@
 
         <div class="hero-photos" aria-label="Photos of Ballet Folklórico Mi Herencia">
           <div class="photo-tall">
-            <img src="images/optimized/tranchete.webp" alt="Ballet Folklórico Mi Herencia performing tranchete" loading="eager" />
+            <img src="images/optimized/hero-mariachi.webp" alt="Ballet Folklórico Mi Herencia performing in mariachi attire" loading="eager" />
           </div>
           <div class="photo-stack">
             <div class="photo-stack-item photo-stack-top">
-              <img src="images/optimized/2022-group-a.webp" alt="Ballet Folklórico Mi Herencia dancers" loading="eager" />
+              <img src="images/optimized/hero-white-dress.webp" alt="Ballet Folklórico Mi Herencia dancer in white Veracruz dress" loading="eager" style="object-position:center 36%;" />
               <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
             </div>
             <div class="photo-stack-item photo-stack-bottom">
-              <img src="images/optimized/2022-group.webp" alt="Ballet Folklórico Mi Herencia group photo" loading="eager" style="object-position:center 40%;" />
+              <img src="images/optimized/hero-jalisco.webp" alt="Ballet Folklórico Mi Herencia Jalisco dancer in red dress with partner" loading="eager" style="object-position:center 30%;" />
               <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
             </div>
           </div>
@@ -3341,7 +3368,9 @@
           Véanos en acción.
         </h2>
         <div class="story-divider" style="margin-inline:auto;"></div>
+      </div>
 
+      <div class="gallery-video-wrap">
         <div class="video-carousel">
           <button type="button" class="carousel-arrow prev" data-carousel-prev aria-label="Previous videos">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
@@ -3445,8 +3474,10 @@
         <div class="video-cta">
           <a href="https://www.youtube.com/@annaperdomo9160/videos" target="_blank" rel="noopener noreferrer" class="btn btn-gold-outline" data-i18n="videos.cta">Ver más en YouTube</a>
         </div>
+      </div>
 
-        <h3 class="events-subheading" style="margin-block-start:3.5rem;" data-i18n="gallery.stage">Momentos en escena</h3>
+      <div class="container text-center">
+        <h3 class="events-subheading" style="margin-block-start:3.5rem;" data-i18n="gallery.stage">Momentos dentro y fuera del escenario</h3>
         <div class="gallery-strip" aria-label="Galería de fotos">
           <div class="gallery-item">
             <img src="images/optimized/2022-group-b.webp" alt="Ballet Folklórico Mi Herencia performing traditional Mexican folk dance on stage in Los Angeles area" loading="lazy" />
@@ -4246,7 +4277,7 @@
         "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
         "videos.heading":  "Mírenos bailar!",
-        "gallery.stage":   "Momentos en escena",
+        "gallery.stage":   "Momentos dentro y fuera del escenario",
         "videos.cta":      "Ver más en YouTube",
 
         // Events
@@ -4405,7 +4436,7 @@
         "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
         "videos.heading":  "Watch us dance!",
-        "gallery.stage":   "Moments on stage",
+        "gallery.stage":   "Moments on and off the stage",
         "videos.cta":      "Watch more on YouTube",
 
         // Events
