@@ -23,7 +23,7 @@
   ═══════════════════════════════════════════════ -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="images/favicon.png" />
-  <meta name="theme-color" content="#080311" />
+  <meta name="theme-color" content="#FFF9EF" />
 
   <!-- ═══════════════════════════════════════════════
        OPEN GRAPH — SOCIAL SHARING
@@ -343,77 +343,87 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600;700&family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     /* ════════════════════════════════════════════════════════════
        DESIGN SYSTEM — Ballet Folklórico Mi Herencia
-       Theme: Dark, elegant, Mexican-inspired
+       Theme: "La Fiesta de las Regiones" — light, vibrant, slick.
+       Every section is tinted & accented after a region we dance:
+       About → Jalisco (rosa mexicano) · Gallery → Veracruz (aqua)
+       Events → Michoacán (cempasúchil) · Classes → Puebla (talavera)
+       Reviews → Sinaloa (carnaval coral) · FAQ → Oaxaca (olive & sand)
     ════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* ── Dark palette ── */
-      --bg-deep:       #080311;
-      --bg-primary:    #0c0514;
-      --bg-secondary:  #130a1c;
-      --bg-elevated:   #1a0f25;
-      --bg-card:       #1e1230;
-      --bg-card-hover: #251740;
+      /* ── Light fiesta palette ── */
+      --bg-deep:       #2C1B28;   /* deep plum-ink — footer & text on bright accents */
+      --bg-primary:    #FFF9EF;   /* warm cream base */
+      --bg-secondary:  #FFF3E2;
+      --bg-elevated:   #FFFFFF;
+      --bg-card:       #FFFFFF;
+      --bg-card-hover: #FFFDF8;
 
-      /* ── Gold accents ── */
-      --gold:          #c9a84c;
-      --gold-light:    #e8c97a;
-      --gold-dark:     #9a7b2e;
-      --gold-glow:     rgba(201,168,76,0.15);
+      /* ── Marigold (cempasúchil) — replaces the old gold ── */
+      --gold:          #E08700;
+      --gold-light:    #F7A823;
+      --gold-dark:     #B96E00;
+      --gold-glow:     rgba(247,168,35,0.18);
 
-      /* ── Rich accent colors ── */
-      --magenta:       #c62a6e;
-      --magenta-light: #e84393;
-      --deep-red:      #8b1a32;
-      --teal:          #1a7b6a;
-      --teal-light:    #2ecda7;
+      /* ── Fiesta accents ── */
+      --rosa:          #E4287C;   /* rosa mexicano */
+      --rosa-deep:     #C9176A;
+      --magenta:       #E4287C;
+      --magenta-light: #F0568F;
+      --deep-red:      #C0392B;
+      --teal:          #0E9E8E;
+      --teal-light:    #2EC4B6;
+      --teal-deep:     #0B7C70;
+      --cobalt:        #2D5DB9;
+      --terracotta:    #D65A3A;
+      --olive:         #6D8B2F;
 
       /* ── Folklórico vivid spectrum (embroidery & accents) ── */
-      --folk-pink:     #e84393;
-      --folk-magenta:  #c62a6e;
-      --folk-red:      #d63031;
-      --folk-orange:   #e17055;
-      --folk-yellow:   #fdcb6e;
-      --folk-green:    #00b894;
-      --folk-teal:     #0097a7;
-      --folk-blue:     #0984e3;
-      --folk-purple:   #6c5ce7;
+      --folk-pink:     #E4287C;
+      --folk-magenta:  #C9176A;
+      --folk-red:      #D63031;
+      --folk-orange:   #E17055;
+      --folk-yellow:   #F7A823;
+      --folk-green:    #00B894;
+      --folk-teal:     #0E9E8E;
+      --folk-blue:     #2D5DB9;
+      --folk-purple:   #6C5CE7;
 
       /* ── Text colors ── */
-      --text-primary:  rgba(255,255,255,0.92);
-      --text-secondary:rgba(255,255,255,0.68);
-      --text-muted:    rgba(255,255,255,0.45);
-      --text-gold:     var(--gold-light);
+      --text-primary:  #33202F;
+      --text-secondary:#5C4356;
+      --text-muted:    #8A7183;
+      --text-gold:     var(--gold-dark);
 
-      /* ── Warm surface (for contrast sections) ── */
-      --cream:         #f5efe0;
-      --cream-dark:    #e8dcc8;
-      --ink:           #1C1209;
+      /* ── Warm surface ── */
+      --cream:         #FFF9EF;
+      --cream-dark:    #F3E8D2;
+      --ink:           #33202F;
 
       /* ── Layout ── */
       --header-height: 72px;
       --section-gap:   6rem;
       --content-width: 1200px;
-      --radius:        8px;
-      --radius-lg:     16px;
-      --shadow-card:   0 4px 24px rgba(0,0,0,0.4);
-      --shadow-hover:  0 8px 40px rgba(0,0,0,0.6);
-      --shadow-glow:   0 0 40px rgba(201,168,76,0.12);
+      --radius:        10px;
+      --radius-lg:     18px;
+      --shadow-card:   0 4px 20px rgba(90,40,70,0.10);
+      --shadow-hover:  0 14px 40px rgba(90,40,70,0.16);
+      --shadow-glow:   0 8px 30px rgba(228,40,124,0.12);
 
       /* ── Typography ── */
-      --font-display:  'Playfair Display', Georgia, serif;
-      --font-hero:     'DM Serif Display', Georgia, serif;
+      --font-display:  'Fraunces', Georgia, serif;
+      --font-hero:     'Fraunces', Georgia, serif;
       --font-body:     'Montserrat', system-ui, sans-serif;
       --font-ui:       'Montserrat', system-ui, sans-serif;
 
       /* ── Card styles ── */
-      --bg-card-border: rgba(201,168,76,0.1);
+      --bg-card-border: rgba(51,32,47,0.08);
     }
 
     html {
@@ -431,9 +441,9 @@
 
     /* ── Custom scrollbar ── */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 4px; }
-    ::selection { background: rgba(201,168,76,0.25); }
+    ::-webkit-scrollbar-track { background: var(--cream-dark); }
+    ::-webkit-scrollbar-thumb { background: rgba(228,40,124,0.35); border-radius: 4px; }
+    ::selection { background: rgba(247,168,35,0.35); }
 
     /* ── Skip link ── */
     .skip-link {
@@ -448,8 +458,8 @@
       top: 0; left: 0;
       width: auto; height: auto;
       padding: 0.5rem 1rem;
-      background: var(--gold);
-      color: var(--bg-deep);
+      background: var(--rosa);
+      color: #fff;
       z-index: 9999;
       font-family: var(--font-ui);
       font-weight: 700;
@@ -469,18 +479,18 @@
       position: sticky;
       top: 0;
       z-index: 200;
-      background: rgba(8,3,17,0.92);
+      background: rgba(255,251,243,0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       height: var(--header-height);
-      border-bottom: 1px solid rgba(201,168,76,0.12);
+      border-bottom: 1px solid rgba(228,40,124,0.10);
       transition: box-shadow 0.3s ease, background 0.3s ease;
     }
 
     header.scrolled {
-      box-shadow: 0 4px 32px rgba(0,0,0,0.5);
-      background: rgba(8,3,17,0.97);
-      border-bottom-color: rgba(201,168,76,0.2);
+      box-shadow: 0 4px 24px rgba(90,40,70,0.10);
+      background: rgba(255,251,243,0.97);
+      border-bottom-color: rgba(228,40,124,0.18);
     }
 
     .header-inner {
@@ -501,13 +511,12 @@
     .nav-logo {
       height: 40px;
       width: auto;
-      filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3));
     }
     .wordmark-text {
       font-family: 'Montserrat', system-ui, sans-serif;
       font-size: 11.2px;
-      font-weight: 500;
-      color: rgba(240, 230, 200, 0.75);
+      font-weight: 600;
+      color: var(--text-muted);
       letter-spacing: 1.568px;
       line-height: 1.2;
       text-transform: uppercase;
@@ -517,10 +526,10 @@
       display: block;
       font-family: 'Montserrat', system-ui, sans-serif;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 1.2px;
       text-transform: uppercase;
-      color: var(--gold-light);
+      color: var(--rosa-deep);
       margin-top: 1px;
     }
 
@@ -547,8 +556,8 @@
 
     nav[aria-label="Primary navigation"] a:hover,
     nav[aria-label="Primary navigation"] a:focus {
-      background: rgba(201,168,76,0.15);
-      color: var(--gold-light);
+      background: rgba(228,40,124,0.10);
+      color: var(--rosa-deep);
       outline: none;
     }
 
@@ -569,20 +578,23 @@
       text-transform: uppercase;
       text-decoration: none;
       cursor: pointer;
-      border: 1.5px solid var(--gold);
+      border: 1.5px solid var(--rosa);
       border-radius: 100px;
-      background: transparent;
-      color: var(--gold-light);
+      background: var(--rosa);
+      color: #fff;
       padding: 0.4rem 1.1rem;
-      transition: background 0.2s, color 0.2s, transform 0.15s;
+      box-shadow: 0 3px 12px rgba(228,40,124,0.28);
+      transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
       white-space: nowrap;
     }
     .header-cta:hover,
     .header-cta:focus {
-      background: var(--gold);
-      color: var(--bg-deep);
+      background: var(--rosa-deep);
+      border-color: var(--rosa-deep);
+      color: #fff;
       outline: none;
       transform: scale(1.03);
+      box-shadow: 0 5px 18px rgba(228,40,124,0.38);
     }
 
     /* Language toggle */
@@ -593,18 +605,18 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
-      border: 1.5px solid rgba(255,255,255,0.25);
+      border: 1.5px solid rgba(51,32,47,0.22);
       border-radius: 100px;
       background: transparent;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       padding: 0.3rem 0.8rem;
       transition: background 0.2s, color 0.2s, border-color 0.2s;
       white-space: nowrap;
     }
     .lang-toggle:hover,
     .lang-toggle:focus {
-      border-color: var(--gold);
-      color: var(--gold-light);
+      border-color: var(--rosa);
+      color: var(--rosa-deep);
       outline: none;
     }
 
@@ -622,11 +634,11 @@
       border-radius: var(--radius);
       transition: background 0.2s;
     }
-    .hamburger:hover { background: rgba(255,255,255,0.08); }
+    .hamburger:hover { background: rgba(228,40,124,0.08); }
     .hamburger span {
       display: block;
       height: 2px;
-      background: var(--gold-light);
+      background: var(--rosa-deep);
       border-radius: 2px;
       transition: transform 0.3s ease, opacity 0.3s ease;
       transform-origin: center;
@@ -641,7 +653,7 @@
       position: fixed;
       top: var(--header-height);
       left: 0; right: 0; bottom: 0;
-      background: rgba(8,3,17,0.97);
+      background: rgba(255,249,239,0.97);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       z-index: 199;
@@ -679,16 +691,20 @@
     }
     .mobile-nav a:hover,
     .mobile-nav a:active {
-      background: rgba(201,168,76,0.12);
-      color: var(--gold-light);
+      background: rgba(228,40,124,0.10);
+      color: var(--rosa-deep);
     }
 
     /* ════════════════════════════════════════════════════════════
-       HERO SECTION
+       HERO SECTION — bright fiesta morning, photos front & center
     ════════════════════════════════════════════════════════════ */
     #home {
       position: relative;
-      background: #050210;
+      background:
+        radial-gradient(680px 460px at 86% 14%, rgba(228,40,124,0.10) 0%, transparent 70%),
+        radial-gradient(520px 380px at 6% 90%, rgba(247,168,35,0.12) 0%, transparent 70%),
+        radial-gradient(440px 340px at 55% 100%, rgba(14,158,142,0.07) 0%, transparent 70%),
+        linear-gradient(168deg, #FFEBF4 0%, #FFF4EE 48%, #FFF9EF 100%);
       padding-block: 0;
       overflow: hidden;
       height: 100vh;
@@ -706,58 +722,45 @@
       z-index: 0;
     }
 
-    #home .hero-gradient-placeholder {
+    /* Papel picado — one continuous string: a swag from the left edge up to a
+       pinned peak, then a long drape descending across the hero to the right edge */
+    .papel-picado {
       position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          to right,
-          rgba(201,168,76,0.22) 0%,
-          rgba(201,168,76,0.10) 15%,
-          rgba(138,30,80,0.12) 28%,
-          #3a0e4a 45%,
-          #1e0836 60%,
-          #12042a 75%,
-          transparent 92%
-        );
-      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 4;
+      line-height: 0;
+      pointer-events: none;
+      animation: papelSway 7s ease-in-out infinite alternate;
+      transform-origin: top left;
+    }
+    .papel-picado svg {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
-    #home .hero-texture-overlay {
-      display: none;
+    @keyframes papelSway {
+      0%   { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(3px) rotate(0.25deg); }
     }
 
-    #home .hero-dark-overlay {
-      position: absolute;
-      inset: 0;
-      background:
-        /* Gold glow near the text on the left */
-        radial-gradient(ellipse at 12% 45%, rgba(201,168,76,0.2) 0%, transparent 45%),
-        /* Warm ember bloom in the mid-zone */
-        radial-gradient(ellipse at 30% 55%, rgba(180,80,50,0.15) 0%, transparent 45%),
-        /* Base darkening further right for depth */
-        linear-gradient(
-          to right,
-          transparent 0%,
-          rgba(18,4,42,0.2) 40%,
-          rgba(5,2,16,0.5) 70%,
-          rgba(5,2,16,0.4) 100%
-        );
-      z-index: 1;
+    /* Each flag swings gently on the string, like a light breeze */
+    .papel-picado .ppw {
+      transform-box: fill-box;
+      transform-origin: 50% 0%;
+      animation: ppWind 4.5s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes ppWind {
+      0%   { transform: rotate(-1.7deg); }
+      100% { transform: rotate(2deg); }
     }
 
-    /* Section divider border (post-hero) */
-    .embroidery-border {
-      display: none;
-    }
-
-    /* Disabled - replaced by explicit overlay divs in the new cinematic hero */
-    #home::before {
-      content: none;
-    }
-    #home::after {
-      content: none;
-    }
+    .embroidery-border { display: none; }
+    #home::before { content: none; }
+    #home::after { content: none; }
 
     .hero-content {
       position: relative;
@@ -768,8 +771,9 @@
       align-items: center;
       justify-content: space-between;
       text-align: left;
-      padding: 0 0 0 5%;
+      padding: 0 0 1.5rem 6%;
       gap: 3rem;
+      min-height: 0;
     }
 
     .hero-text {
@@ -787,49 +791,59 @@
       font-size: 0.82rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #c9a84c;
-      font-weight: 600;
+      color: var(--rosa-deep);
+      font-weight: 700;
       margin-block-end: 1rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
     }
-    .hero-subtitle .ornament {
-      display: none;
+    .hero-subtitle::before {
+      content: '';
+      width: 30px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--rosa);
+      flex-shrink: 0;
     }
+    .hero-subtitle .ornament { display: none; }
 
     #home h1 {
       font-family: var(--font-hero);
-      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
-      font-weight: 400;
-      color: #fff;
-      line-height: 1.05;
+      font-size: clamp(2.6rem, 4.8vw, 4.8rem);
+      font-weight: 560;
+      color: var(--ink);
+      line-height: 1.02;
       margin-block-end: 1.5rem;
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 30px rgba(201,168,76,0.15);
+      letter-spacing: 0.01em;
       text-wrap: balance;
     }
 
     #home h1 .line2 {
       display: block;
-      font-size: 1.15em;
-      font-weight: 400;
-      letter-spacing: 0.02em;
+      font-size: 1.12em;
+      font-weight: 620;
+      font-style: italic;
+      letter-spacing: 0.01em;
+      background: linear-gradient(92deg, var(--rosa) 0%, var(--rosa-deep) 48%, var(--terracotta) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: var(--rosa);
+      padding-right: 0.08em;
     }
 
     .hero-desc {
       display: block;
       font-family: var(--font-body);
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.78);
+      font-size: 0.98rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
       max-width: 480px;
       margin-block-end: 2rem;
     }
 
-    .hero-tagline {
-      display: none;
-    }
+    .hero-tagline { display: none; }
 
     .hero-cta-group {
       display: flex;
@@ -838,38 +852,66 @@
       justify-content: flex-start;
     }
 
-    /* ── Hero Photo Collage ── */
+    /* ── Hero Photo Collage — framed prints, front & center ── */
     .hero-photos {
       flex: 0 0 auto;
-      width: 55%;
+      width: 52%;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 1.25rem;
       align-self: center;
-      height: clamp(420px, 65vh, 600px);
-      padding-right: 60px;
+      height: clamp(420px, 66vh, 620px);
+      padding-right: 5%;
+      position: relative;
     }
 
+    /* Listones fan — Jalisco ribbon-skirt swirl behind the collage */
+    .hero-listones {
+      position: absolute;
+      top: -62px;
+      right: -8px;
+      width: 215px;
+      height: 215px;
+      z-index: 0;
+      pointer-events: none;
+    }
     .hero-photos .photo-tall,
     .hero-photos .photo-stack-item {
       overflow: hidden;
       position: relative;
+      background: #fff;
+      border: 6px solid #fff;
+      box-shadow:
+        0 16px 40px rgba(90,40,70,0.16),
+        0 2px 6px rgba(90,40,70,0.07);
+    }
+
+    /* Tall photo: hacienda-arch frame */
+    .hero-photos .photo-tall {
+      border-radius: 999px 999px 18px 18px;
+      z-index: 2;
+    }
+
+    .hero-photos .photo-stack-item {
+      border-radius: 18px;
+      z-index: 1;
     }
 
     .photo-credit {
       position: absolute;
       bottom: 6px;
-      right: 8px;
+      right: 10px;
       font-family: var(--font-ui);
       font-size: 0.55rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.75);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       text-decoration: none;
       z-index: 3;
       letter-spacing: 0.02em;
       transition: color 0.2s;
     }
     .photo-credit:hover {
-      color: rgba(255,255,255,0.85);
+      color: #fff;
     }
 
     .hero-photos .photo-tall img,
@@ -879,40 +921,22 @@
       object-fit: cover;
       display: block;
     }
-    /* Soft edge fade — left photo fades on left edge, right photos fade on left; all fade top/bottom */
-    .hero-photos .photo-tall {
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
-                          linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-      -webkit-mask-composite: destination-in;
-      mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%),
-                  linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-      mask-composite: intersect;
-    }
-    .hero-photos .photo-stack-item {
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
-                          linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-      -webkit-mask-composite: destination-in;
-      mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
-                  linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-      mask-composite: intersect;
-    }
 
-    /* Tall photo on the left */
+    /* Entrance: gentle scale-up reveal */
     .hero-photos .photo-tall {
       opacity: 0;
-      transform: scale(0.93);
-      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 0.3s forwards;
+      animation: heroReveal 1.2s cubic-bezier(.22,1,.36,1) 0.25s forwards;
     }
     .hero-photos .photo-tall img {
       object-position: center top;
-      animation: heroDrift1 30s ease-in-out 3.8s infinite alternate;
+      animation: heroDrift1 30s ease-in-out 2s infinite alternate;
     }
 
     /* Right column — two stacked photos */
     .hero-photos .photo-stack {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1.25rem;
       min-height: 0;
     }
 
@@ -923,24 +947,22 @@
 
     .hero-photos .photo-stack-top {
       opacity: 0;
-      transform: scale(0.95);
-      animation: heroReveal 4.2s cubic-bezier(0.05, 0, 0.35, 0) 0.9s forwards;
+      animation: heroReveal 1.2s cubic-bezier(.22,1,.36,1) 0.5s forwards;
     }
     .hero-photos .photo-stack-top img {
-      animation: heroDrift2 26s ease-in-out 5.1s infinite alternate;
+      animation: heroDrift2 26s ease-in-out 2.4s infinite alternate;
     }
     .hero-photos .photo-stack-bottom {
       opacity: 0;
-      transform: scale(0.93);
-      animation: heroReveal 3.5s cubic-bezier(0.11, 0, 0.5, 0) 1.5s forwards;
+      animation: heroReveal 1.2s cubic-bezier(.22,1,.36,1) 0.75s forwards;
     }
     .hero-photos .photo-stack-bottom img {
-      animation: heroDrift3 34s ease-in-out 5s infinite alternate;
+      animation: heroDrift3 34s ease-in-out 2.6s infinite alternate;
     }
 
-    /* Single smooth arc — no intermediate keyframes, no snapping */
     @keyframes heroReveal {
-      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0; translate: 0 22px; }
+      to   { opacity: 1; translate: 0 0; }
     }
 
     /* Living breath — gentle, slow swaying like fabric at rest */
@@ -976,135 +998,71 @@
       position: relative;
     }
 
+    /* Primary — rosa mexicano (class name kept for markup compatibility) */
     .btn-gold {
-      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
-      color: var(--bg-deep);
+      background: linear-gradient(135deg, var(--rosa) 0%, var(--rosa-deep) 100%);
+      color: #fff;
       border-color: transparent;
-      box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+      box-shadow: 0 4px 20px rgba(228,40,124,0.32);
     }
     .btn-gold:hover, .btn-gold:focus {
-      background: linear-gradient(135deg, #f0d98e 0%, #d4b45a 100%);
+      background: linear-gradient(135deg, var(--magenta-light) 0%, var(--rosa) 100%);
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(201,168,76,0.5);
+      box-shadow: 0 8px 30px rgba(228,40,124,0.42);
       outline: none;
     }
 
     .btn-outline {
       background: transparent;
-      color: #fff;
-      border-color: rgba(255,255,255,0.4);
+      color: var(--ink);
+      border-color: rgba(51,32,47,0.30);
     }
     .btn-outline:hover, .btn-outline:focus {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.7);
+      background: rgba(51,32,47,0.06);
+      border-color: rgba(51,32,47,0.55);
       transform: translateY(-2px);
       outline: none;
     }
 
     .btn-magenta {
-      background: var(--magenta);
+      background: var(--rosa);
       color: #fff;
-      border-color: var(--magenta);
-      box-shadow: 0 4px 16px rgba(198,42,110,0.3);
+      border-color: var(--rosa);
+      box-shadow: 0 4px 16px rgba(228,40,124,0.3);
     }
     .btn-magenta:hover, .btn-magenta:focus {
       background: var(--magenta-light);
       border-color: var(--magenta-light);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(198,42,110,0.4);
+      box-shadow: 0 8px 24px rgba(228,40,124,0.4);
       outline: none;
     }
 
+    /* Accent outline — picks up each section's regional accent */
     .btn-gold-outline {
       background: transparent;
-      color: var(--gold-light);
-      border-color: var(--gold);
+      color: var(--accent, var(--rosa-deep));
+      border-color: var(--accent, var(--rosa-deep));
     }
     .btn-gold-outline:hover, .btn-gold-outline:focus {
-      background: var(--gold);
-      color: var(--bg-deep);
+      background: var(--accent, var(--rosa-deep));
+      color: #fff;
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+      box-shadow: 0 8px 24px rgba(51,32,47,0.18);
       outline: none;
     }
 
     /* ════════════════════════════════════════════════════════════
-       FEATURED IMAGE SECTION
+       FEATURED IMAGE SECTION (hidden — replaced by hero collage)
     ════════════════════════════════════════════════════════════ */
-    #featured {
-      background: radial-gradient(1200px 600px at 50% -8%, #1c1138 0%, #0c0518 62%);
-      padding-block: var(--section-gap);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .featured-frame {
-      max-width: 900px;
-      margin-inline: auto;
-      position: relative;
-      padding: 1.5rem;
-    }
-
-    /* Ornate gold frame */
-    .featured-frame::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid var(--gold-dark);
-      border-radius: var(--radius-lg);
-      pointer-events: none;
-    }
-    .featured-frame::after {
-      content: '';
-      position: absolute;
-      inset: 8px;
-      border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 12px;
-      pointer-events: none;
-    }
-
-    /* Corner ornaments */
-    .frame-corner {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      z-index: 2;
-    }
-    .frame-corner svg { width: 100%; height: 100%; }
-    .frame-corner--tl { top: -4px; left: -4px; }
-    .frame-corner--tr { top: -4px; right: -4px; transform: scaleX(-1); }
-    .frame-corner--bl { bottom: -4px; left: -4px; transform: scaleY(-1); }
-    .frame-corner--br { bottom: -4px; right: -4px; transform: scale(-1); }
-
-    .featured-image-placeholder {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background: var(--bg-elevated);
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-family: var(--font-ui);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: 2px dashed rgba(201,168,76,0.2);
-    }
-    .featured-image-placeholder .icon {
-      font-size: 3rem;
-      opacity: 0.3;
-      color: var(--gold);
-    }
+    #featured { display: none; }
 
     /* ════════════════════════════════════════════════════════════
-       STORY / ABOUT SECTION — "Danza que cuenta nuestra historia"
+       STORY / ABOUT SECTION — Jalisco · rosa mexicano
     ════════════════════════════════════════════════════════════ */
     #about {
-      background: radial-gradient(1200px 600px at 50% -8%, #2a1540 0%, #180a1e 62%);
+      --accent: var(--rosa-deep);
+      background: linear-gradient(180deg, #FDECF4 0%, #FFF6FA 100%);
       padding-block: 4rem;
       position: relative;
     }
@@ -1124,31 +1082,25 @@
       position: relative;
       padding: 12px;
       align-self: center;
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 40px rgba(201,23,106,0.12), 0 2px 8px rgba(90,40,70,0.07);
     }
-    /* Outer gold border */
     .about-image-frame::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border: 2px solid var(--gold-dark);
-      border-radius: var(--radius);
+      inset: 5px;
+      border: 2px solid rgba(201,23,106,0.22);
+      border-radius: 13px;
       pointer-events: none;
     }
-    /* Inner gold border */
-    .about-image-frame::after {
-      content: '';
-      position: absolute;
-      inset: 6px;
-      border: 1px solid rgba(201,168,76,0.35);
-      border-radius: 6px;
-      pointer-events: none;
-    }
+    .about-image-frame::after { content: none; }
 
     .about-image-placeholder {
       width: 100%;
       aspect-ratio: 4/3;
-      background: var(--bg-elevated);
-      border-radius: 5px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1164,11 +1116,20 @@
     .about-image-placeholder .icon {
       font-size: 3rem;
       opacity: 0.3;
-      color: var(--gold);
+      color: var(--rosa);
     }
 
-    /* Corner ornaments for about image */
-    .about-image-frame .frame-corner { position: absolute; width: 24px; height: 24px; z-index: 2; }
+    /* Corner ornaments — recolored to each section's accent */
+    .frame-corner { position: absolute; width: 26px; height: 26px; z-index: 2; }
+    .frame-corner svg { width: 100%; height: 100%; }
+    .frame-corner svg path { stroke: var(--accent, var(--rosa-deep)); }
+    .frame-corner svg rect { fill: var(--accent, var(--rosa-deep)); }
+    .frame-corner--tl { top: -4px; left: -4px; }
+    .frame-corner--tr { top: -4px; right: -4px; transform: scaleX(-1); }
+    .frame-corner--bl { bottom: -4px; left: -4px; transform: scaleY(-1); }
+    .frame-corner--br { bottom: -4px; right: -4px; transform: scale(-1); }
+
+    .about-image-frame .frame-corner { width: 24px; height: 24px; }
     .about-image-frame .frame-corner svg { width: 100%; height: 100%; }
     .about-image-frame .frame-corner--tl { top: -3px; left: -3px; }
     .about-image-frame .frame-corner--tr { top: -3px; right: -3px; transform: scaleX(-1); }
@@ -1182,11 +1143,11 @@
     .story-heading {
       font-family: var(--font-display);
       font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 400;
+      font-weight: 560;
       font-style: italic;
-      color: #fff;
+      color: var(--ink);
       margin-block-end: 0.5rem;
-      line-height: 1.25;
+      line-height: 1.22;
     }
 
     .story-text {
@@ -1198,9 +1159,10 @@
     }
 
     .story-divider {
-      width: 80px;
+      width: 56px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 2px;
+      background: var(--accent, var(--rosa));
       margin: 1.5rem 0;
     }
 
@@ -1211,7 +1173,7 @@
       align-items: center;
       margin-block-start: 4rem;
       padding-block-start: 4rem;
-      border-top: 1px solid rgba(201,168,76,0.15);
+      border-top: 1px dashed rgba(201,23,106,0.28);
     }
 
     .about-instructors .about-text-col {
@@ -1238,7 +1200,6 @@
       }
       .story-divider {
         margin-inline: auto;
-        background: linear-gradient(90deg, transparent, var(--gold), transparent);
       }
       .about-instructors {
         grid-template-columns: 1fr;
@@ -1260,16 +1221,17 @@
     }
 
     .about-card {
-      background: var(--bg-elevated);
-      border: 1px solid rgba(201,168,76,0.1);
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
       border-radius: var(--radius-lg);
       padding: 2rem;
+      box-shadow: var(--shadow-card);
       transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
     }
     .about-card:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-glow);
-      border-color: rgba(201,168,76,0.25);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(228,40,124,0.22);
     }
 
     .review-card {
@@ -1280,11 +1242,11 @@
       justify-content: space-between;
       width: calc(33.333% - 1.34rem);
       flex-shrink: 0;
-      background: rgba(201,168,76,0.06);
-      border-color: rgba(201,168,76,0.2);
+      background: #fff;
+      border-top: 4px solid var(--accent, var(--terracotta));
     }
     .review-card:hover {
-      background: rgba(201,168,76,0.1);
+      background: #fff;
     }
     .review-card > div:first-child {
       justify-content: center;
@@ -1297,8 +1259,8 @@
     .about-card h3 {
       font-family: var(--font-display);
       font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold-light);
+      font-weight: 650;
+      color: var(--accent, var(--rosa-deep));
       margin-block-end: 0.75rem;
     }
 
@@ -1320,9 +1282,9 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.25);
-      color: var(--gold-light);
+      background: rgba(201,23,106,0.07);
+      border: 1px solid rgba(201,23,106,0.25);
+      color: var(--accent, var(--rosa-deep));
       padding: 0.25rem 0.7rem;
       border-radius: 100px;
     }
@@ -1336,7 +1298,7 @@
       font-weight: 800;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--accent, var(--rosa-deep));
       margin-block-end: 0.75rem;
       display: block;
     }
@@ -1344,11 +1306,11 @@
     .section-heading {
       font-family: var(--font-display);
       font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 400;
+      font-weight: 560;
       font-style: italic;
-      color: #fff;
+      color: var(--ink);
       margin-block-end: 0.75rem;
-      line-height: 1.25;
+      line-height: 1.22;
     }
 
     .section-subheading {
@@ -1360,9 +1322,9 @@
     }
 
     .heading-rule {
-      width: 80px;
+      width: 56px;
       height: 2px;
-      background: var(--gold);
+      background: var(--accent, var(--rosa));
       border-radius: 2px;
       margin-block-end: 2rem;
     }
@@ -1373,10 +1335,11 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       EVENTS SECTION — "Únete a nuestra celebración"
+       EVENTS SECTION — Michoacán · cempasúchil marigold
     ════════════════════════════════════════════════════════════ */
     #performances {
-      background: radial-gradient(1200px 600px at 50% -8%, #143a3e 0%, #0a1c1e 62%);
+      --accent: var(--gold-dark);
+      background: linear-gradient(180deg, #FFF2DC 0%, #FFF8EA 100%);
       padding-block: var(--section-gap);
       position: relative;
     }
@@ -1396,27 +1359,28 @@
     }
 
     .event-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
+      background: #fff;
+      border: 1px solid rgba(51,32,47,0.07);
+      border-radius: 14px;
       overflow: hidden;
+      box-shadow: 0 3px 14px rgba(120,70,20,0.07);
       transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1), border-color 0.22s;
       display: flex;
       flex-direction: row;
       align-items: stretch;
-      border-left: 3px solid var(--card-accent, var(--gold));
+      border-left: 4px solid var(--card-accent, var(--gold));
     }
-    .event-card:nth-child(4n+1) { --card-accent: #c9a84c; }
-    .event-card:nth-child(4n+2) { --card-accent: #e84393; }
-    .event-card:nth-child(4n+3) { --card-accent: #2a9d8f; }
-    .event-card:nth-child(4n+4) { --card-accent: #c7295d; }
+    .event-card:nth-child(4n+1) { --card-accent: #E08700; }
+    .event-card:nth-child(4n+2) { --card-accent: #E4287C; }
+    .event-card:nth-child(4n+3) { --card-accent: #0E9E8E; }
+    .event-card:nth-child(4n+4) { --card-accent: #2D5DB9; }
 
     .event-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.3);
-      border-color: rgba(201,168,76,0.2);
+      box-shadow: 0 12px 32px rgba(120,70,20,0.14);
+      border-color: rgba(224,135,0,0.25);
     }
-    .event-card.is-past { opacity: 0.45; filter: grayscale(0.3); }
+    .event-card.is-past { opacity: 0.55; filter: saturate(0.6); }
 
     .event-date-badge {
       display: flex;
@@ -1426,8 +1390,8 @@
       padding: 0.75rem 0.85rem;
       min-width: 64px;
       text-align: center;
-      background: rgba(255,255,255,0.03);
-      border-right: 1px solid rgba(255,255,255,0.06);
+      background: color-mix(in srgb, var(--card-accent, var(--gold)) 8%, #fff);
+      border-right: 1px solid rgba(51,32,47,0.06);
       flex-shrink: 0;
     }
     .event-date-badge .day {
@@ -1435,22 +1399,22 @@
       font-size: 1.6rem;
       font-weight: 700;
       line-height: 1;
-      color: #fff;
+      color: var(--ink);
     }
     .event-date-badge .month {
       font-family: var(--font-ui);
       font-size: 0.6rem;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--gold);
+      color: var(--card-accent, var(--gold-dark));
       margin-top: 3px;
     }
     .event-date-badge .year {
       font-family: var(--font-ui);
       font-size: 0.5rem;
       font-weight: 600;
-      color: rgba(255,255,255,0.4);
+      color: var(--text-muted);
       letter-spacing: 0.05em;
       margin-top: 2px;
     }
@@ -1468,7 +1432,7 @@
       font-family: var(--font-ui);
       font-size: 0.78rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--ink);
       margin-block-end: 0.35rem;
       line-height: 1.3;
       text-transform: uppercase;
@@ -1484,7 +1448,7 @@
     .event-meta span {
       font-family: var(--font-ui);
       font-size: 0.72rem;
-      color: rgba(255,255,255,0.72);
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       gap: 0.35rem;
@@ -1494,7 +1458,7 @@
       width: 12px;
       height: 12px;
       flex-shrink: 0;
-      opacity: 0.6;
+      opacity: 0.8;
       color: var(--card-accent, var(--gold));
     }
 
@@ -1502,7 +1466,8 @@
     .events-subheading {
       font-family: var(--font-display);
       font-size: 1.2rem;
-      color: var(--gold-light);
+      font-weight: 600;
+      color: var(--ink);
       margin-block: 2rem 1rem;
       letter-spacing: 0.04em;
     }
@@ -1525,20 +1490,20 @@
       padding: 0.35rem 0.15rem;
       background: none;
       border: none;
-      color: var(--gold-light);
+      color: var(--gold-dark);
       font-family: var(--font-ui);
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+      border-bottom: 1px solid rgba(185,110,0,0.4);
       transition: color 0.25s ease, border-color 0.25s ease;
     }
     .events-toggle-btn:hover,
     .events-toggle-btn:focus-visible {
-      color: #fff;
-      border-bottom-color: var(--gold);
+      color: var(--ink);
+      border-bottom-color: var(--gold-dark);
     }
     .events-toggle-btn::after {
       content: "";
@@ -1563,10 +1528,11 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       GALLERY — "Momentos que nos mueven"
+       GALLERY — Veracruz · aqua & white lace
     ════════════════════════════════════════════════════════════ */
     #gallery {
-      background: radial-gradient(1200px 600px at 50% -8%, #191040 0%, #0d0820 62%);
+      --accent: var(--teal-deep);
+      background: linear-gradient(180deg, #E6F6F2 0%, #F2FBF8 100%);
       padding-block: var(--section-gap);
     }
 
@@ -1591,23 +1557,27 @@
 
     .gallery-item {
       aspect-ratio: 1;
-      background: var(--bg-elevated);
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: #fff;
+      border-radius: 12px;
+      border: 5px solid #fff;
+      box-shadow: 0 6px 20px rgba(11,124,112,0.14);
       overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      transition: outline-color 0.3s, transform 0.3s, box-shadow 0.3s;
       position: relative;
+      outline: 2px solid transparent;
+      outline-offset: 3px;
     }
     .gallery-item:hover {
-      border-color: rgba(201,168,76,0.3);
-      transform: scale(1.03);
-      box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+      outline-color: rgba(14,158,142,0.45);
+      transform: scale(1.02);
+      box-shadow: 0 14px 34px rgba(11,124,112,0.22);
     }
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 7px;
       transition: transform 0.5s ease;
     }
     .gallery-item:hover img {
@@ -1630,11 +1600,11 @@
     .video-item {
       position: relative;
       aspect-ratio: 16 / 9;
-      border-radius: var(--radius);
+      border-radius: 14px;
       overflow: hidden;
-      border: 1px solid rgba(201,168,76,0.18);
-      background: var(--bg-elevated);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      border: 5px solid #fff;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(11,124,112,0.16);
     }
 
     .video-facade {
@@ -1661,7 +1631,7 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(to top, rgba(8,3,17,0.85) 0%, rgba(8,3,17,0.18) 45%, rgba(8,3,17,0.08) 100%);
+      background: linear-gradient(to top, rgba(30,16,28,0.72) 0%, rgba(30,16,28,0.12) 45%, rgba(30,16,28,0.04) 100%);
     }
     .video-facade:hover img,
     .video-facade:focus-visible img {
@@ -1677,17 +1647,20 @@
       width: 62px;
       height: 62px;
       border-radius: 50%;
-      background: rgba(201,168,76,0.92);
+      background: rgba(255,255,255,0.94);
       display: grid;
       place-items: center;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
       transition: transform 0.3s, background 0.3s;
     }
+    .video-play svg { fill: var(--ink); transition: fill 0.3s; }
     .video-facade:hover .video-play,
     .video-facade:focus-visible .video-play {
       transform: translate(-50%, -50%) scale(1.12);
-      background: var(--gold-light);
+      background: var(--rosa);
     }
+    .video-facade:hover .video-play svg,
+    .video-facade:focus-visible .video-play svg { fill: #fff; }
 
     .video-caption {
       position: absolute;
@@ -1702,7 +1675,7 @@
     .video-caption-title {
       display: block;
       font-family: var(--font-display);
-      color: var(--text-primary);
+      color: #fff;
       font-size: 1.02rem;
       line-height: 1.2;
     }
@@ -1737,10 +1710,11 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       CLASSES SECTION
+       CLASSES SECTION — Puebla · talavera cobalt
     ════════════════════════════════════════════════════════════ */
     #classes {
-      background: radial-gradient(1200px 600px at 50% -8%, #233a70 0%, #162040 62%);
+      --accent: var(--cobalt);
+      background: linear-gradient(180deg, #EAF1FB 0%, #F5F8FE 100%);
       padding-block: var(--section-gap);
     }
 
@@ -1754,8 +1728,8 @@
     .classes-photo {
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid rgba(201,168,76,0.15);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+      border: 4px solid #fff;
+      box-shadow: 0 6px 20px rgba(45,93,185,0.14);
     }
 
     .classes-photo img {
@@ -1779,17 +1753,18 @@
     }
 
     .class-card {
-      background: #110b1f;
-      border-radius: 14px;
+      background: #fff;
+      border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(201,168,76,0.15);
+      border: 1px solid rgba(45,93,185,0.14);
+      box-shadow: 0 4px 18px rgba(45,93,185,0.10);
       transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1);
       text-align: center;
       position: relative;
     }
     .class-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(201,168,76,0.25);
+      box-shadow: 0 20px 44px rgba(45,93,185,0.18), 0 0 0 1px rgba(45,93,185,0.20);
     }
 
     /* Photo area */
@@ -1812,20 +1787,21 @@
       position: absolute;
       bottom: 0; left: 0; right: 0;
       height: 50%;
-      background: linear-gradient(to top, rgba(17,11,31,0.85), transparent);
+      background: linear-gradient(to top, rgba(30,16,28,0.62), transparent);
     }
-    /* Gold frame inside photo */
+    /* White inner frame inside photo */
     .class-card-photo-frame {
       position: absolute;
       inset: 8px;
-      border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 8px;
       pointer-events: none;
     }
     .class-card-photo-frame .gold-corner {
       position: absolute;
       pointer-events: none;
     }
+    .class-card-photo-frame .gold-corner svg path { fill: rgba(255,255,255,0.75); }
     .class-card-photo-frame .gold-corner--tl { top: -1px; left: -1px; }
     .class-card-photo-frame .gold-corner--tr { top: -1px; right: -1px; transform: scaleX(-1); }
     .class-card-photo-frame .gold-corner--bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
@@ -1842,8 +1818,8 @@
     .class-card-badge-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 8px rgba(201,168,76,0.37);
+      background: var(--gold-light);
+      box-shadow: 0 0 8px rgba(247,168,35,0.5);
       flex-shrink: 0;
     }
     .class-card-badge span {
@@ -1852,13 +1828,11 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: #fff;
       text-shadow: 0 1px 4px rgba(0,0,0,0.6);
     }
-    .class-card[data-accent="teal"] .class-card-badge-dot { background: #2a9d8f; box-shadow: 0 0 8px rgba(42,157,143,0.37); }
-    .class-card[data-accent="teal"] .class-card-badge span { color: #2a9d8f; }
-    .class-card[data-accent="magenta"] .class-card-badge-dot { background: #c7295d; box-shadow: 0 0 8px rgba(199,41,93,0.37); }
-    .class-card[data-accent="magenta"] .class-card-badge span { color: #c7295d; }
+    .class-card[data-accent="teal"] .class-card-badge-dot { background: var(--teal-light); box-shadow: 0 0 8px rgba(46,196,182,0.5); }
+    .class-card[data-accent="magenta"] .class-card-badge-dot { background: var(--magenta-light); box-shadow: 0 0 8px rgba(240,86,143,0.5); }
 
     /* Card body */
     .class-card-body {
@@ -1869,14 +1843,15 @@
     .class-card-accent-stripe {
       position: absolute;
       top: 0; left: 15%; right: 15%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+      height: 3px;
+      border-radius: 0 0 3px 3px;
+      background: linear-gradient(90deg, transparent, rgba(45,93,185,0.45), transparent);
     }
     .class-card[data-accent="teal"] .class-card-accent-stripe {
-      background: linear-gradient(90deg, transparent, rgba(42,157,143,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(14,158,142,0.45), transparent);
     }
     .class-card[data-accent="magenta"] .class-card-accent-stripe {
-      background: linear-gradient(90deg, transparent, rgba(199,41,93,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(228,40,124,0.45), transparent);
     }
 
     .class-card-title-row {
@@ -1889,14 +1864,14 @@
     .class-card-title-row h3 {
       font-family: var(--font-display);
       font-size: 1.5rem;
-      font-weight: 700;
-      color: #f0e6d0;
+      font-weight: 650;
+      color: var(--ink);
     }
     .class-card-title-row .class-card-subtitle {
       font-family: var(--font-ui);
       font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--gold);
+      font-weight: 700;
+      color: var(--cobalt);
     }
 
     /* Card divider — diamond ornament */
@@ -1911,7 +1886,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(201,168,76,0.15);
+      background: rgba(45,93,185,0.18);
     }
     .class-card-divider svg {
       flex-shrink: 0;
@@ -1922,7 +1897,7 @@
       font-family: var(--font-ui);
       font-size: 0.82rem;
       line-height: 1.7;
-      color: rgba(240,230,208,0.55);
+      color: var(--text-secondary);
       margin-bottom: 0.2rem;
     }
 
@@ -1937,25 +1912,26 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      justify-content: center;
     }
     .class-card-meta-icon svg {
       flex-shrink: 0;
-      opacity: 0.6;
-      stroke: var(--gold);
+      opacity: 0.8;
+      stroke: var(--cobalt);
       fill: none;
       stroke-width: 1.5;
       stroke-linecap: round;
     }
-    .class-card[data-accent="teal"] .class-card-meta-icon svg { stroke: #2a9d8f; }
-    .class-card[data-accent="magenta"] .class-card-meta-icon svg { stroke: #c7295d; }
+    .class-card[data-accent="teal"] .class-card-meta-icon svg { stroke: var(--teal); }
+    .class-card[data-accent="magenta"] .class-card-meta-icon svg { stroke: var(--rosa); }
     .class-card-meta-row span {
       font-family: var(--font-ui);
       font-size: 0.8rem;
       font-weight: 600;
-      color: rgba(240,230,208,0.65);
+      color: var(--text-secondary);
     }
 
-    /* CTA — outline gold, unified */
+    /* CTA — accent outline, unified */
     .class-card-cta {
       display: flex;
       align-items: center;
@@ -1964,11 +1940,11 @@
       width: 100%;
       padding: 0.75rem;
       background: transparent;
-      color: var(--gold);
-      border: 1.5px solid rgba(201,168,76,0.4);
-      border-radius: 8px;
+      color: var(--cobalt);
+      border: 1.5px solid rgba(45,93,185,0.45);
+      border-radius: 100px;
       font-family: var(--font-ui);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.72rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -1977,24 +1953,31 @@
       text-decoration: none;
     }
     .class-card-cta:hover {
-      background: rgba(201,168,76,0.08);
-      border-color: rgba(201,168,76,0.6);
+      background: var(--cobalt);
+      color: #fff;
+      border-color: var(--cobalt);
     }
+    .class-card[data-accent="teal"] .class-card-cta { color: var(--teal-deep); border-color: rgba(14,158,142,0.45); }
+    .class-card[data-accent="teal"] .class-card-cta:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .class-card[data-accent="magenta"] .class-card-cta { color: var(--rosa-deep); border-color: rgba(228,40,124,0.45); }
+    .class-card[data-accent="magenta"] .class-card-cta:hover { background: var(--rosa); color: #fff; border-color: var(--rosa); }
 
-    /* Free trial banner — ornate gold style */
+    /* Free trial banner — sunny marigold style */
     .classes-promo {
       margin-block-start: 2rem;
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: hidden;
       position: relative;
-      background: #110b1f;
-      border: 1px solid rgba(201,168,76,0.15);
+      background: linear-gradient(120deg, #FFF6E0 0%, #FFFDF6 60%);
+      border: 1.5px solid rgba(224,135,0,0.30);
+      box-shadow: 0 8px 26px rgba(224,135,0,0.12);
     }
     .classes-promo .gold-corner {
       position: absolute;
       pointer-events: none;
       z-index: 2;
     }
+    .classes-promo .gold-corner svg path { fill: var(--gold-light); }
     .classes-promo .gold-corner--tl { top: 0; left: 0; }
     .classes-promo .gold-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
     .classes-promo .gold-corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
@@ -2017,13 +2000,13 @@
     .classes-promo-badge {
       width: 68px; height: 68px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #c9a84c, #d9be6e);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+      box-shadow: 0 4px 20px rgba(224,135,0,0.32);
       gap: 4px;
       padding-bottom: 1px;
     }
@@ -2031,7 +2014,7 @@
       font-family: var(--font-ui);
       font-size: 0.55rem;
       font-weight: 800;
-      color: #080311;
+      color: #fff;
       letter-spacing: 0.08em;
       line-height: 1;
     }
@@ -2039,40 +2022,40 @@
       font-family: var(--font-display);
       font-size: 1.3rem;
       font-weight: 900;
-      color: #080311;
+      color: #fff;
       line-height: 0.8;
     }
     .classes-promo-badge .badge-free {
       font-family: var(--font-ui);
       font-size: 0.5rem;
       font-weight: 800;
-      color: #080311;
+      color: #fff;
       letter-spacing: 0.06em;
       line-height: 1;
     }
     .classes-promo-text h3 {
       font-family: var(--font-display);
       font-size: 1.35rem;
-      font-weight: 700;
-      color: #f0e6d0;
+      font-weight: 650;
+      color: var(--ink);
     }
     .classes-promo-text h3 span {
-      color: var(--gold);
+      color: var(--rosa);
     }
     .classes-promo-text p {
       font-family: var(--font-ui);
       font-size: 0.85rem;
-      color: rgba(240,230,208,0.5);
+      color: var(--text-muted);
       margin-top: 4px;
     }
     .classes-promo .btn-promo {
       padding: 0.8rem 2rem;
-      background: var(--gold);
-      color: #080311;
+      background: var(--rosa);
+      color: #fff;
       border: none;
       border-radius: 50px;
       font-family: var(--font-ui);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.78rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -2082,20 +2065,38 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: filter 0.3s;
+      box-shadow: 0 4px 16px rgba(228,40,124,0.3);
+      transition: background 0.3s, transform 0.2s;
     }
-    .classes-promo .btn-promo:hover { filter: brightness(1.1); }
+    .classes-promo .btn-promo:hover { background: var(--rosa-deep); transform: translateY(-2px); }
 
     #classes p > a {
-      color: var(--gold-light);
+      color: var(--rosa-deep);
       font-weight: 700;
       text-underline-offset: 3px;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       REVIEWS — Sinaloa · carnaval coral
+    ════════════════════════════════════════════════════════════ */
+    #reviews {
+      --accent: var(--terracotta);
+      background: linear-gradient(180deg, #FFEDE4 0%, #FFF7F1 100%);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       FAQ — Oaxaca · olive & sand
+    ════════════════════════════════════════════════════════════ */
+    #faq {
+      --accent: var(--olive);
+      background: linear-gradient(180deg, #F6F1DF 0%, #FBF8EE 100%);
     }
 
     /* ════════════════════════════════════════════════════════════
        CONTACT / BOOK SECTION
     ════════════════════════════════════════════════════════════ */
     #contact {
+      --accent: var(--rosa-deep);
       background: radial-gradient(1200px 600px at 50% -8%, #ffffff 0%, #fdf9f3 62%);
       padding-block: var(--section-gap);
       position: relative;
@@ -2105,8 +2106,8 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #c7295d, #c9a84c, #2a9d8f, #6b3fa0, #c7295d);
+      height: 5px;
+      background: linear-gradient(90deg, var(--rosa), var(--gold-light), var(--teal), var(--cobalt), var(--terracotta), var(--rosa));
       background-size: 200% 100%;
       animation: fiesta-bar 8s linear infinite;
     }
@@ -2115,18 +2116,8 @@
       100% { background-position: 200% 0; }
     }
 
-    #contact .section-label {
-      color: #c7295d;
-    }
-    #contact .section-label.anim-label {
-      background: linear-gradient(90deg, #c7295d 0%, #e84393 40%, #ffb6c1 50%, #e84393 60%, #c7295d 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
     #contact .section-heading {
-      color: #1a0e16;
+      color: var(--ink);
     }
 
     .book-layout {
@@ -2146,7 +2137,7 @@
       display: flex;
       flex-direction: column;
     }
-    /* gold flourish under the form heading — auto-matches the heading text width */
+    /* fiesta flourish under the form heading — auto-matches the heading text width */
     .form-flourish {
       display: block;
       width: 100%;
@@ -2154,9 +2145,9 @@
       margin-block-start: 0.6rem;
       position: relative;
       background:
-        radial-gradient(circle, rgba(201,168,76,0.7) 1.3px, transparent 1.7px) left center / 7px 100% no-repeat,
-        radial-gradient(circle, rgba(201,168,76,0.7) 1.3px, transparent 1.7px) right center / 7px 100% no-repeat,
-        linear-gradient(90deg, rgba(201,168,76,0.5), rgba(201,168,76,0.5)) center / 100% 1.5px no-repeat;
+        radial-gradient(circle, rgba(228,40,124,0.7) 1.3px, transparent 1.7px) left center / 7px 100% no-repeat,
+        radial-gradient(circle, rgba(228,40,124,0.7) 1.3px, transparent 1.7px) right center / 7px 100% no-repeat,
+        linear-gradient(90deg, rgba(228,40,124,0.5), rgba(247,168,35,0.5)) center / 100% 1.5px no-repeat;
     }
     .form-flourish::before {
       content: "";
@@ -2166,7 +2157,7 @@
       width: 8px;
       height: 8px;
       transform: translate(-50%, -50%) rotate(45deg);
-      background: #c9a84c;
+      background: var(--gold-light);
       box-shadow: 0 0 0 4px #fff;
     }
     /* lets the contact cards distribute to align their bottom with the form's bottom edge */
@@ -2209,14 +2200,14 @@
       margin-block-end: 0;
       padding: 0.75rem 1rem;
       border-radius: var(--radius);
-      background: rgba(255,255,255,0.6);
-      border: 1px solid rgba(201,168,76,0.18);
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(228,40,124,0.14);
       transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
     }
     .contact-item:hover {
       transform: translateY(-2px);
-      border-color: rgba(201,168,76,0.4);
-      box-shadow: 0 6px 18px rgba(122,90,30,0.1);
+      border-color: rgba(228,40,124,0.35);
+      box-shadow: 0 6px 18px rgba(201,23,106,0.10);
     }
     .contact-item-icon {
       flex-shrink: 0;
@@ -2229,10 +2220,10 @@
       font-size: 1.1rem;
       color: #fff;
     }
-    .contact-item-icon.loc   { background: linear-gradient(135deg, #c7295d, #e0446f); }
-    .contact-item-icon.phone { background: linear-gradient(135deg, #2a9d8f, #38c4b2); }
-    .contact-item-icon.email { background: linear-gradient(135deg, #c9a84c, #dfc06a); }
-    .contact-item-icon.social { background: linear-gradient(135deg, #c7295d, #c9a84c); }
+    .contact-item-icon.loc   { background: linear-gradient(135deg, var(--rosa-deep), var(--rosa)); }
+    .contact-item-icon.phone { background: linear-gradient(135deg, var(--teal), var(--teal-light)); }
+    .contact-item-icon.email { background: linear-gradient(135deg, var(--gold), var(--gold-light)); }
+    .contact-item-icon.social { background: linear-gradient(135deg, var(--rosa), var(--gold-light)); }
     .contact-item-text strong {
       display: block;
       font-family: var(--font-ui);
@@ -2251,24 +2242,25 @@
       font-weight: 500;
       transition: color 0.2s;
     }
-    .contact-item-text a:hover { color: #c7295d; }
+    .contact-item-text a:hover { color: var(--rosa-deep); }
 
     /* Form — light fiesta mode */
     .book-form-wrapper fieldset {
-      border: 1px solid rgba(201,168,76,0.32);
+      border: 1px solid rgba(228,40,124,0.20);
       border-radius: var(--radius-lg);
       padding: 2.25rem 2rem;
       background: #fff;
-      box-shadow: 0 10px 44px rgba(122,90,30,0.10), 0 1px 3px rgba(0,0,0,0.04);
+      box-shadow: 0 10px 44px rgba(201,23,106,0.08), 0 1px 3px rgba(0,0,0,0.04);
       position: relative;
     }
-    /* gold ornamental corners — echoes the class-card frames */
+    /* fiesta ornamental corners — echoes the photo frames */
     .form-corner {
       position: absolute;
       pointer-events: none;
       z-index: 2;
       line-height: 0;
     }
+    .form-corner svg path { fill: var(--rosa); }
     .form-corner--tl { top: 7px; left: 7px; }
     .form-corner--tr { top: 7px; right: 7px; transform: scaleX(-1); }
     .form-corner--bl { bottom: 7px; left: 7px; transform: scaleY(-1); }
@@ -2284,7 +2276,7 @@
       font-family: var(--font-ui);
       font-weight: 800;
       font-size: 0.8rem;
-      color: #c7295d;
+      color: var(--rosa-deep);
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
@@ -2336,34 +2328,20 @@
     .form-group input:hover,
     .form-group select:hover,
     .form-group textarea:hover {
-      border-color: #d4c39a;
+      border-color: #ddb9c9;
     }
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #c7295d;
+      border-color: var(--rosa);
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(199,41,93,0.13);
+      box-shadow: 0 0 0 3px rgba(228,40,124,0.13);
     }
 
     .form-group textarea { resize: vertical; min-height: 110px; }
     .form-group select { cursor: pointer; color: #2a2420; }
     .form-group select option { background: #fff; color: #2a2420; }
-
-    #contact .btn-gold {
-      background: linear-gradient(135deg, #c7295d 0%, #d44478 100%);
-      color: #fff;
-      border: none;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      box-shadow: 0 4px 16px rgba(199,41,93,0.25);
-    }
-    #contact .btn-gold:hover {
-      background: linear-gradient(135deg, #a82050 0%, #c7295d 100%);
-      box-shadow: 0 6px 24px rgba(199,41,93,0.35);
-      transform: translateY(-1px);
-    }
 
     .form-notice {
       font-family: var(--font-ui);
@@ -2375,11 +2353,11 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       FOOTER
+       FOOTER — deep plum night with a serape edge
     ════════════════════════════════════════════════════════════ */
     footer {
-      background: #050210;
-      color: var(--text-secondary);
+      background: var(--bg-deep);
+      color: rgba(255,243,235,0.72);
       padding-block: 3.5rem 1.5rem;
       position: relative;
       overflow: hidden;
@@ -2388,8 +2366,11 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--gold);
+      height: 6px;
+      background: linear-gradient(90deg,
+        var(--rosa) 0 18%, var(--gold-light) 18% 38%,
+        var(--teal) 38% 58%, var(--cobalt) 58% 78%,
+        var(--terracotta) 78% 100%);
     }
 
     .footer-inner {
@@ -2418,7 +2399,7 @@
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--gold-light);
       margin-block-end: 1rem;
     }
 
@@ -2427,13 +2408,13 @@
       font-size: 0.88rem;
       font-style: normal;
       line-height: 1.9;
-      color: var(--text-muted);
+      color: rgba(255,243,235,0.55);
     }
 
     footer ul { list-style: none; }
 
     footer a {
-      color: var(--text-secondary);
+      color: rgba(255,243,235,0.72);
       text-decoration: none;
       text-underline-offset: 3px;
       transition: color 0.2s;
@@ -2451,16 +2432,16 @@
       justify-content: center;
       width: 40px; height: 40px;
       border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-muted);
+      border: 1.5px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,243,235,0.6);
       text-decoration: none;
       transition: all 0.22s ease;
     }
     .social-icon-link:hover {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: var(--bg-deep);
+      background: var(--rosa);
+      border-color: var(--rosa);
+      color: #fff;
       transform: translateY(-2px);
       text-decoration: none;
     }
@@ -2468,11 +2449,11 @@
     .footer-bottom {
       margin-block-start: 2.5rem;
       padding-block-start: 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255,255,255,0.08);
       text-align: center;
       font-family: var(--font-ui);
       font-size: 0.75rem;
-      color: var(--text-muted);
+      color: rgba(255,243,235,0.45);
       letter-spacing: 0.04em;
     }
 
@@ -2565,7 +2546,13 @@
       100% { background-position: 200% center; }
     }
     .section-label.anim-label {
-      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 40%, #fff 50%, var(--gold-light) 60%, var(--gold) 100%);
+      color: var(--accent, var(--rosa-deep));
+      background: linear-gradient(90deg,
+        var(--accent, var(--rosa-deep)) 0%,
+        var(--accent, var(--rosa-deep)) 40%,
+        var(--gold-light) 50%,
+        var(--accent, var(--rosa-deep)) 60%,
+        var(--accent, var(--rosa-deep)) 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -2659,9 +2646,17 @@
         transition: none !important;
       }
       .section-label.anim-label,
-      .contact-dancer-art.anim-float {
+      .contact-dancer-art.anim-float,
+      .papel-picado,
+      .papel-picado .ppw {
         animation: none !important;
-        -webkit-text-fill-color: var(--gold) !important;
+        -webkit-text-fill-color: var(--accent, var(--rosa-deep)) !important;
+      }
+      .hero-photos .photo-tall,
+      .hero-photos .photo-stack-top,
+      .hero-photos .photo-stack-bottom {
+        opacity: 1 !important;
+        animation: none !important;
       }
     }
 
@@ -2685,26 +2680,19 @@
       .container { padding-inline: 1.25rem; }
 
       /* Hero */
-      #home { min-height: 100vh; }
-      .hero-content { padding: 2rem 1.5rem; align-items: center; text-align: center; flex-direction: column; }
+      #home { height: auto; min-height: 100vh; }
+      .papel-picado { width: 100%; }
+      .hero-content { padding: calc(13vw + 2rem) 1.5rem 3rem; align-items: center; text-align: center; flex-direction: column; }
       .hero-text { align-items: center; }
       .hero-cta-group { justify-content: center; }
-      .hero-photos { max-width: 420px; height: auto; max-height: none; width: 100%; gap: 0.5rem; padding-right: 0; }
+      .hero-photos { max-width: 440px; height: auto; max-height: none; width: 100%; gap: 0.85rem; padding-right: 0; }
+      .hero-photos .photo-stack { gap: 0.85rem; }
+      .hero-photos .photo-tall,
+      .hero-photos .photo-stack-item { border-width: 4px; }
+      .hero-listones { top: -38px; right: -10px; width: 130px; height: 130px; }
+      .hero-photos::after { display: none; }
       #home h1 { font-size: clamp(2rem, 7vw, 3rem); }
-      .hero-subtitle { font-size: 0.68rem; letter-spacing: 0.18em; }
-      #home .hero-gradient-placeholder {
-        background: linear-gradient(
-          to bottom,
-          #1a0a2e 0%,
-          rgba(26,10,46,0.9) 40%,
-          rgba(26,10,46,0.6) 60%,
-          rgba(26,10,46,0.3) 80%,
-          transparent 100%
-        );
-      }
-      #home .hero-dark-overlay {
-        background: rgba(5,2,16,0.45);
-      }
+      .hero-subtitle { font-size: 0.68rem; letter-spacing: 0.18em; justify-content: center; }
 
       /* About */
       .about-cards { grid-template-columns: 1fr; gap: 1.25rem; }
@@ -2737,7 +2725,7 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       RESPONSIVE — MOBILE (≤480px) — THE "DAMN SHE MADE THIS?" PASS
+       RESPONSIVE — MOBILE (≤480px)
     ════════════════════════════════════════════════════════════ */
     @media (max-width: 480px) {
       :root {
@@ -2760,37 +2748,25 @@
 
       /* ── Hero — full impact on small screens ── */
       #home { height: auto; min-height: 100svh; } /* svh = small viewport height, accounts for mobile browser chrome */
-      .hero-content { padding: 1.5rem 1.25rem; align-items: center; text-align: center; flex-direction: column; gap: 1.5rem; }
+      .papel-picado { width: 100%; }
+      .hero-content { padding: calc(13vw + 1.5rem) 1.25rem 2.5rem; align-items: center; text-align: center; flex-direction: column; gap: 1.5rem; }
       .hero-text { align-items: center; }
       .hero-cta-group { justify-content: center; }
-      .hero-photos { max-width: 340px; height: auto; max-height: none; width: 100%; gap: 0.5rem; padding-right: 0; }
-      .hero-photos .photo-stack { gap: 0.5rem; }
+      .hero-photos { max-width: 340px; height: auto; max-height: none; width: 100%; gap: 0.6rem; padding-right: 0; }
+      .hero-photos .photo-stack { gap: 0.6rem; }
       .hero-subtitle {
         font-size: 0.62rem;
         letter-spacing: 0.15em;
         margin-block-end: 0.75rem;
       }
       #home h1 {
-        font-size: 2rem;
-        line-height: 1.1;
+        font-size: 2.1rem;
+        line-height: 1.08;
         margin-block-end: 1.25rem;
       }
       .hero-desc {
         font-size: 0.85rem;
         max-width: 320px;
-      }
-      #home .hero-gradient-placeholder {
-        background: linear-gradient(
-          to bottom,
-          #1a0a2e 0%,
-          rgba(26,10,46,0.92) 35%,
-          rgba(26,10,46,0.65) 55%,
-          rgba(26,10,46,0.35) 75%,
-          transparent 100%
-        );
-      }
-      #home .hero-dark-overlay {
-        background: rgba(5,2,16,0.5);
       }
       .hero-cta-group { flex-direction: column; align-items: center; width: 100%; }
       .hero-cta-group .btn {
@@ -2828,7 +2804,7 @@
 
       /* ── Gallery — tight and clean ── */
       .gallery-strip { gap: 0.5rem; }
-      .gallery-item { border-radius: 6px; }
+      .gallery-item { border-radius: 8px; border-width: 3px; }
 
       /* ── Classes — single column ── */
       .classes-photo-strip { grid-template-columns: 1fr; gap: 0.6rem; margin-block: 1.5rem; }
@@ -2882,7 +2858,7 @@
       .nav-logo { height: 28px; }
       .wordmark-text { font-size: 10px; }
       .wordmark-text span { font-size: 14px; }
-      #home h1 { font-size: 1.6rem; }
+      #home h1 { font-size: 1.7rem; }
       .hero-subtitle { font-size: 0.56rem; }
       .hero-desc { font-size: 0.8rem; }
       .section-heading { font-size: 1.3rem; }
@@ -2898,84 +2874,19 @@
       position: relative;
     }
 
-    /* Hide featured section - replaced by cinematic hero */
-    #featured {
-      display: none;
-    }
-
-    /* ── Section dividers — Mexican-inspired ── */
+    /* ── Section dividers — regional Mexican motif bands ── */
     .section-divider {
       width: 100%;
       position: relative;
       z-index: 5;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-block: 1.25rem;
+      display: block;
+      line-height: 0;
+      padding: 0;
     }
     .section-divider svg {
       display: block;
-    }
-
-    /* Variant: ornamental line with rosette center */
-    .divider-rosette {
-      background: transparent;
-      height: auto;
-    }
-    .divider-rosette::before,
-    .divider-rosette::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-dark), var(--gold), var(--gold-dark), transparent);
-      opacity: 0.5;
-    }
-    .divider-rosette .divider-center {
-      padding-inline: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-shrink: 0;
-    }
-    .divider-rosette .divider-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0.5;
-    }
-
-    /* Variant: Papel picado style (cut paper) */
-    .divider-papel {
-      height: auto;
-      padding-block: 0;
-      flex-direction: column;
-    }
-    .divider-papel svg {
       width: 100%;
-    }
-
-    /* Variant: thin double-line with diamond */
-    .divider-filigree {
-      background: transparent;
-      height: auto;
-      gap: 0;
-    }
-    .divider-filigree::before,
-    .divider-filigree::after {
-      content: '';
-      flex: 1;
-      height: 0;
-      border-top: 1px solid rgba(201,168,76,0.25);
-      border-bottom: 1px solid rgba(201,168,76,0.12);
-    }
-    .divider-filigree .divider-center {
-      padding-inline: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-shrink: 0;
     }
   </style>
 </head>
@@ -3040,7 +2951,7 @@
       <li><a href="#classes"      data-i18n="nav.classes">Clases</a></li>
       <li><a href="#faq"          data-i18n="nav.faq">Preguntas</a></li>
       <li><a href="#contact"      data-i18n="nav.contact">Contacto</a></li>
-      <li><a href="#contact"      data-i18n="nav.cta" style="color:var(--gold-light);">Contáctanos</a></li>
+      <li><a href="#contact"      data-i18n="nav.cta" style="color:var(--rosa-deep);">Contáctanos</a></li>
     </ul>
   </nav>
 
@@ -3055,10 +2966,129 @@
       <!-- Video background (add src when video file is available) -->
       <video class="hero-video" autoplay muted loop playsinline aria-hidden="true"></video>
 
-      <!-- Cinematic placeholder backgrounds -->
-      <div class="hero-gradient-placeholder" aria-hidden="true"></div>
-      <div class="hero-texture-overlay" aria-hidden="true"></div>
-      <div class="hero-dark-overlay" aria-hidden="true"></div>
+      <!-- Papel picado — two draped swags hanging across the top, Jalisco fiesta style -->
+      <div class="papel-picado" aria-hidden="true">
+        <svg viewBox="0 0 1440 185" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Shared flag body: scalloped hem, perforation row. Five cut designs below.
+                 Cut-outs are masks, so the page truly shows through the holes. -->
+            <path id="pic-shape" d="M-55,0 H55 V64 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 Z"/>
+            <path id="pic-heart" d="M0,2.2 C0,0.6 1.6,-0.9 3,0.6 C4.4,-0.9 6,0.6 6,2.2 C6,4 3,6.2 3,6.2 C3,6.2 0,4 0,2.2 Z"/>
+            <g id="pic-fern">
+              <ellipse rx="1.7" ry="5"/>
+              <ellipse cy="-1.5" rx="1.6" ry="4.6" transform="rotate(34)"/>
+              <ellipse cy="-1.5" rx="1.6" ry="4.6" transform="rotate(-34)"/>
+            </g>
+            <g id="pic-daisy">
+              <circle r="1.7"/>
+              <circle cy="-4.4" r="1.5"/><circle cx="4.2" cy="-1.4" r="1.5"/><circle cx="2.6" cy="3.6" r="1.5"/><circle cx="-2.6" cy="3.6" r="1.5"/><circle cx="-4.2" cy="-1.4" r="1.5"/>
+            </g>
+            <g id="pic-hem">
+              <circle cx="-48" cy="58.5" r="1.3"/><circle cx="-40" cy="58.5" r="1.3"/><circle cx="-32" cy="58.5" r="1.3"/><circle cx="-24" cy="58.5" r="1.3"/><circle cx="-16" cy="58.5" r="1.3"/><circle cx="-8" cy="58.5" r="1.3"/><circle cx="0" cy="58.5" r="1.3"/><circle cx="8" cy="58.5" r="1.3"/><circle cx="16" cy="58.5" r="1.3"/><circle cx="24" cy="58.5" r="1.3"/><circle cx="32" cy="58.5" r="1.3"/><circle cx="40" cy="58.5" r="1.3"/><circle cx="48" cy="58.5" r="1.3"/>
+              <ellipse cx="-44" cy="69" rx="2.4" ry="4"/><ellipse cx="-22" cy="69" rx="2.4" ry="4"/><ellipse cx="0" cy="69" rx="2.4" ry="4"/><ellipse cx="22" cy="69" rx="2.4" ry="4"/><ellipse cx="44" cy="69" rx="2.4" ry="4"/>
+            </g>
+            <pattern id="pic-lat" x="-46" y="11" width="11" height="9.5" patternUnits="userSpaceOnUse">
+              <rect width="11" height="9.5" fill="#fff"/>
+              <path d="M5.5,1.2 L9.2,4.75 L5.5,8.3 L1.8,4.75 Z" fill="#000"/>
+            </pattern>
+
+            <!-- Design 1: flor con halo -->
+            <mask id="pic-mask-1" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+              <use href="#pic-shape" fill="#fff"/>
+              <g fill="#000">
+                <circle cx="0" cy="28" r="3.4"/>
+                <circle cx="0" cy="28" r="6.8" fill="none" stroke="#000" stroke-width="1.8"/>
+                <ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(0 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(45 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(90 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(135 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(180 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(225 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(270 0 28)"/><ellipse cx="0" cy="15.5" rx="3" ry="7" transform="rotate(315 0 28)"/>
+                <circle cx="21.0" cy="28.0" r="1.3"/><circle cx="18.2" cy="38.5" r="1.3"/><circle cx="10.5" cy="46.2" r="1.3"/><circle cx="0.0" cy="49.0" r="1.3"/><circle cx="-10.5" cy="46.2" r="1.3"/><circle cx="-18.2" cy="38.5" r="1.3"/><circle cx="-21.0" cy="28.0" r="1.3"/><circle cx="-18.2" cy="17.5" r="1.3"/><circle cx="-10.5" cy="9.8" r="1.3"/><circle cx="-0.0" cy="7.0" r="1.3"/><circle cx="10.5" cy="9.8" r="1.3"/><circle cx="18.2" cy="17.5" r="1.3"/>
+                <use href="#pic-fern" transform="translate(-42,14) rotate(-30)"/>
+                <use href="#pic-fern" transform="translate(42,14) rotate(30)"/>
+                <use href="#pic-daisy" transform="translate(-35,33)"/>
+                <use href="#pic-daisy" transform="translate(35,33)"/>
+                <use href="#pic-heart" transform="translate(-22,46.5)"/>
+                <use href="#pic-heart" transform="translate(16,46.5)"/>
+                <use href="#pic-hem"/>
+              </g>
+            </mask>
+            <!-- Design 2: palomas (facing doves) -->
+            <mask id="pic-mask-2" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+              <use href="#pic-shape" fill="#fff"/>
+              <g fill="#000">
+                <g transform="translate(-17,26)"><ellipse rx="8.5" ry="4.5" transform="rotate(-12)"/><circle cx="7.5" cy="-4" r="3"/><path d="M10,-5.2 L14.8,-3.8 L10,-2.2 Z"/><ellipse cx="-1" cy="-5" rx="4.8" ry="2.3" transform="rotate(-38 -1 -5)"/><path d="M-7,1 L-15.5,7.5 L-5.5,5.5 Z"/></g>
+                <g transform="translate(17,26) scale(-1,1)"><ellipse rx="8.5" ry="4.5" transform="rotate(-12)"/><circle cx="7.5" cy="-4" r="3"/><path d="M10,-5.2 L14.8,-3.8 L10,-2.2 Z"/><ellipse cx="-1" cy="-5" rx="4.8" ry="2.3" transform="rotate(-38 -1 -5)"/><path d="M-7,1 L-15.5,7.5 L-5.5,5.5 Z"/></g>
+                <use href="#pic-daisy" transform="translate(0,44)"/>
+                <use href="#pic-daisy" transform="translate(-40,38)"/>
+                <use href="#pic-daisy" transform="translate(40,38)"/>
+                <use href="#pic-heart" transform="translate(-3,8)"/>
+                <use href="#pic-fern" transform="translate(-42,12) rotate(-30)"/>
+                <use href="#pic-fern" transform="translate(42,12) rotate(30)"/>
+                <use href="#pic-hem"/>
+              </g>
+            </mask>
+            <!-- Design 3: sol radiante -->
+            <mask id="pic-mask-3" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+              <use href="#pic-shape" fill="#fff"/>
+              <g fill="#000">
+                <circle cx="0" cy="28" r="6.5"/>
+                <path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(0 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(45 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(90 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(135 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(180 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(225 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(270 0 28)"/><path d="M0,10 L3.6,17.5 L-3.6,17.5 Z" transform="rotate(315 0 28)"/>
+                <circle cx="18.9" cy="20.2" r="1.3"/><circle cx="7.8" cy="9.1" r="1.3"/><circle cx="-7.8" cy="9.1" r="1.3"/><circle cx="-18.9" cy="20.2" r="1.3"/><circle cx="-18.9" cy="35.8" r="1.3"/><circle cx="-7.8" cy="46.9" r="1.3"/><circle cx="7.8" cy="46.9" r="1.3"/><circle cx="18.9" cy="35.8" r="1.3"/>
+                <use href="#pic-heart" transform="translate(-43,10)"/>
+                <use href="#pic-heart" transform="translate(35,10)"/>
+                <use href="#pic-daisy" transform="translate(-38,40)"/>
+                <use href="#pic-daisy" transform="translate(38,40)"/>
+                <use href="#pic-hem"/>
+              </g>
+            </mask>
+            <!-- Design 4: sombrero charro -->
+            <mask id="pic-mask-4" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+              <use href="#pic-shape" fill="#fff"/>
+              <g fill="#000">
+                <path d="M-26,32 Q-15,28 -11,28 Q-11,15 0,15 Q11,15 11,28 Q15,28 26,32 Q13,37 0,37 Q-13,37 -26,32 Z"/>
+                <circle cx="-13" cy="17" r="1.3"/><circle cx="-6.5" cy="13.5" r="1.3"/><circle cx="0" cy="12.5" r="1.3"/><circle cx="6.5" cy="13.5" r="1.3"/><circle cx="13" cy="17" r="1.3"/>
+                <path d="M-9,0 a9,9 0 0 0 18,0 Z"/>
+                <path d="M-34,0 a6,6 0 0 0 12,0 Z"/>
+                <path d="M22,0 a6,6 0 0 0 12,0 Z"/>
+                <rect x="-39" y="23" width="6.5" height="6.5" transform="rotate(45 -35.75 26.25)"/>
+                <rect x="32.5" y="23" width="6.5" height="6.5" transform="rotate(45 35.75 26.25)"/>
+                <use href="#pic-daisy" transform="translate(-35,45)"/>
+                <use href="#pic-daisy" transform="translate(35,45)"/>
+                <use href="#pic-hem"/>
+              </g>
+            </mask>
+            <!-- Design 5: rejilla (lattice) with medallion -->
+            <mask id="pic-mask-5" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+              <use href="#pic-shape" fill="#fff"/>
+              <rect x="-46" y="11" width="92" height="38" fill="url(#pic-lat)"/>
+              <circle cx="0" cy="28" r="13" fill="#fff"/>
+              <g fill="#000">
+                <circle cx="0" cy="28" r="3"/>
+                <ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(0 0 28)"/><ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(60 0 28)"/><ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(120 0 28)"/><ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(180 0 28)"/><ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(240 0 28)"/><ellipse cx="0" cy="21" rx="2.2" ry="5.5" transform="rotate(300 0 28)"/>
+                <use href="#pic-hem"/>
+              </g>
+            </mask>
+
+            <g id="pic-flag-1" mask="url(#pic-mask-1)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+            <g id="pic-flag-2" mask="url(#pic-mask-2)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+            <g id="pic-flag-3" mask="url(#pic-mask-3)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+            <g id="pic-flag-4" mask="url(#pic-mask-4)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+            <g id="pic-flag-5" mask="url(#pic-mask-5)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+          </defs>
+
+          <!-- two small swags pinned along the bottom of the nav, top-left corner only -->
+          <path d="M-40,-6 C110,170 300,150 430,2" stroke="#4A3344" stroke-width="1.6" fill="none" opacity="0.4"/>
+          <path d="M430,2 C560,130 750,120 880,-2" stroke="#4A3344" stroke-width="1.6" fill="none" opacity="0.4"/>
+          <g class="ppw" style="animation-duration:3.80s;animation-delay:-0.00s"><use href="#pic-flag-1" transform="translate(103,101) rotate(21.4) scale(0.6)" fill="#E4287C"/></g>
+          <g class="ppw" style="animation-duration:4.25s;animation-delay:-0.70s"><use href="#pic-flag-2" transform="translate(202,120) rotate(-1.0) scale(0.6)" fill="#F7A823"/></g>
+          <g class="ppw" style="animation-duration:4.70s;animation-delay:-1.40s"><use href="#pic-flag-3" transform="translate(299,99) rotate(-22.5) scale(0.6)" fill="#0E9E8E"/></g>
+          <g class="ppw" style="animation-duration:5.15s;animation-delay:-2.10s"><use href="#pic-flag-4" transform="translate(560,81) rotate(17.0) scale(0.6)" fill="#2D5DB9"/></g>
+          <g class="ppw" style="animation-duration:3.80s;animation-delay:-2.80s"><use href="#pic-flag-5" transform="translate(655,94) rotate(-1.3) scale(0.6)" fill="#E2725B"/></g>
+          <g class="ppw" style="animation-duration:4.25s;animation-delay:-3.50s"><use href="#pic-flag-1" transform="translate(750,77) rotate(-18.7) scale(0.6)" fill="#F7A823"/></g>
+          <!-- thread re-drawn faintly over the flag folds so they read as strung on -->
+          <path d="M-40,-6 C110,170 300,150 430,2" stroke="#4A3344" stroke-width="1" fill="none" opacity="0.15"/>
+          <path d="M430,2 C560,130 750,120 880,-2" stroke="#4A3344" stroke-width="1" fill="none" opacity="0.15"/>
+          <circle cx="430" cy="3" r="2.2" fill="#4A3344" opacity="0.5"/>
+          <circle cx="878" cy="0" r="2.2" fill="#4A3344" opacity="0.5"/>
+        </svg>
+      </div>
 
       <div class="hero-content">
         <div class="hero-text">
@@ -3080,6 +3110,15 @@
         </div>
 
         <div class="hero-photos" aria-label="Photos of Ballet Folklórico Mi Herencia">
+          <!-- Listones fan — the swirl of a Jalisco ribbon skirt -->
+          <svg class="hero-listones" viewBox="0 0 300 300" aria-hidden="true">
+            <g fill="none" stroke-linecap="round">
+              <path d="M0,30 A270,270 0 0 1 270,300" stroke="#E4287C" stroke-width="5" opacity="0.8"/>
+              <path d="M0,74 A226,226 0 0 1 226,300" stroke="#F7A823" stroke-width="5" opacity="0.75"/>
+              <path d="M0,118 A182,182 0 0 1 182,300" stroke="#0E9E8E" stroke-width="5" opacity="0.7"/>
+              <path d="M0,162 A138,138 0 0 1 138,300" stroke="#2D5DB9" stroke-width="5" opacity="0.65"/>
+            </g>
+          </svg>
           <div class="photo-tall">
             <img src="images/optimized/tranchete.webp" alt="Ballet Folklórico Mi Herencia performing tranchete" loading="eager" />
           </div>
@@ -3097,41 +3136,21 @@
       </div>
     </section>
 
-    <!-- Elegant filigree border: hero → about -->
-    <div class="section-divider divider-papel" aria-hidden="true" style="background:#0c0518;">
-      <svg viewBox="0 0 1200 48" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:48px;">
+    <!-- Divider: hero → about — JALISCO: listones, the swirling ribbons of the faldeo -->
+    <div class="section-divider" aria-hidden="true" style="background:linear-gradient(180deg,#FFF9EF 0%,#FDECF4 100%);">
+      <svg width="100%" height="56" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="hero-border" x="0" y="0" width="120" height="48" patternUnits="userSpaceOnUse">
-            <!-- thin gold lines top & bottom -->
-            <line x1="0" y1="2" x2="120" y2="2" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
-            <line x1="0" y1="46" x2="120" y2="46" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
-            <!-- central flower: 8 petals -->
-            <g transform="translate(60,24)">
-              <g opacity="0.7">
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(0 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(45 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(90 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(135 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(180 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(225 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#c7295d" transform="rotate(270 0 0)"/>
-                <ellipse cx="0" cy="-8" rx="2.5" ry="6" fill="#e84393" transform="rotate(315 0 0)"/>
-              </g>
-              <circle r="3.5" fill="#c9a84c" opacity="0.9"/>
-              <circle r="1.5" fill="#e8c97a"/>
+          <pattern id="div-jalisco" x="0" y="0" width="240" height="56" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke-linecap="round">
+              <path d="M0,28 C20,8 40,8 60,28 C80,48 100,48 120,28 C140,8 160,8 180,28 C200,48 220,48 240,28" stroke="#E4287C" stroke-width="5" opacity="0.9" transform="translate(0,-7)"/>
+              <path d="M-60,28 C-40,8 -20,8 0,28 C20,48 40,48 60,28 C80,8 100,8 120,28 C140,48 160,48 180,28 C200,8 220,8 240,28 C260,48 280,48 300,28" stroke="#F7A823" stroke-width="5" opacity="0.85"/>
+              <path d="M0,28 C20,8 40,8 60,28 C80,48 100,48 120,28 C140,8 160,8 180,28 C200,48 220,48 240,28" stroke="#0E9E8E" stroke-width="5" opacity="0.9" transform="translate(0,7)"/>
             </g>
-            <!-- small leaf accents -->
-            <path d="M30,24 Q36,16 42,24" fill="none" stroke="#1a7b6a" stroke-width="1" opacity="0.4"/>
-            <path d="M78,24 Q84,32 90,24" fill="none" stroke="#1a7b6a" stroke-width="1" opacity="0.4"/>
-            <!-- small diamond accents -->
-            <polygon points="15,24 18,20 21,24 18,28" fill="#c9a84c" opacity="0.25"/>
-            <polygon points="99,24 102,20 105,24 102,28" fill="#c9a84c" opacity="0.25"/>
-            <!-- curving vine connectors -->
-            <path d="M0,24 Q15,14 30,24 Q45,34 60,24" fill="none" stroke="#c9a84c" stroke-width="0.6" opacity="0.2"/>
-            <path d="M60,24 Q75,14 90,24 Q105,34 120,24" fill="none" stroke="#c9a84c" stroke-width="0.6" opacity="0.2"/>
+            <circle cx="60" cy="28" r="2.5" fill="#2D5DB9" opacity="0.7"/>
+            <circle cx="180" cy="28" r="2.5" fill="#D65A3A" opacity="0.7"/>
           </pattern>
         </defs>
-        <rect width="100%" height="48" fill="url(#hero-border)"/>
+        <rect width="100%" height="56" fill="url(#div-jalisco)"/>
       </svg>
     </div>
 
@@ -3142,26 +3161,26 @@
           <!-- Corner ornaments -->
           <div class="frame-corner frame-corner--tl" aria-hidden="true">
             <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/>
-              <rect x="0" y="0" width="6" height="6" fill="#c9a84c"/>
+              <path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/>
+              <rect x="0" y="0" width="6" height="6" fill="#F7A823"/>
             </svg>
           </div>
           <div class="frame-corner frame-corner--tr" aria-hidden="true">
             <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/>
-              <rect x="0" y="0" width="6" height="6" fill="#c9a84c"/>
+              <path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/>
+              <rect x="0" y="0" width="6" height="6" fill="#F7A823"/>
             </svg>
           </div>
           <div class="frame-corner frame-corner--bl" aria-hidden="true">
             <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/>
-              <rect x="0" y="0" width="6" height="6" fill="#c9a84c"/>
+              <path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/>
+              <rect x="0" y="0" width="6" height="6" fill="#F7A823"/>
             </svg>
           </div>
           <div class="frame-corner frame-corner--br" aria-hidden="true">
             <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/>
-              <rect x="0" y="0" width="6" height="6" fill="#c9a84c"/>
+              <path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/>
+              <rect x="0" y="0" width="6" height="6" fill="#F7A823"/>
             </svg>
           </div>
 
@@ -3180,16 +3199,16 @@
 
           <div class="about-image-frame">
             <div class="frame-corner frame-corner--tl" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--tr" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--bl" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--br" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <img src="images/optimized/2024-fair-group.webp" alt="Ballet Folklórico Mi Herencia group photo at a fair" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;aspect-ratio:4/3;" />
           </div>
@@ -3243,16 +3262,16 @@
 
           <div class="about-image-frame">
             <div class="frame-corner frame-corner--tl" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--tr" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--bl" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <div class="frame-corner frame-corner--br" aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#c9a84c" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#c9a84c"/></svg>
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 28V2h26" stroke="#F7A823" stroke-width="2"/><rect x="0" y="0" width="6" height="6" fill="#F7A823"/></svg>
             </div>
             <img src="images/optimized/instructors.webp" alt="Angel and Mayra Ramirez, instructors of Ballet Folklórico Mi Herencia" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;aspect-ratio:3/4;" />
           </div>
@@ -3262,25 +3281,27 @@
       </div>
     </section>
 
-    <!-- Divider: about → gallery — curling vine with leaves -->
-    <div class="section-divider divider-rosette" aria-hidden="true">
-      <div class="divider-center">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.3"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.6"/></svg>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <g transform="translate(16,16)" opacity="0.6">
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(0 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(51 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(103 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(154 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(206 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(257 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(309 0 0)"/>
-          </g>
-          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.8"/>
-          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
-        </svg>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.3"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.6"/></svg>
-      </div>
+    <!-- Divider: about → gallery — VERACRUZ: white eyelet lace of the jarocha dress -->
+    <div class="section-divider" aria-hidden="true" style="background:linear-gradient(180deg,#FFF6FA 0%,#E6F6F2 100%);">
+      <svg width="100%" height="52" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="div-veracruz" x="0" y="0" width="80" height="52" patternUnits="userSpaceOnUse">
+            <rect width="80" height="12" fill="#FFFFFF"/>
+            <circle cx="0" cy="12" r="11" fill="#FFFFFF"/>
+            <circle cx="80" cy="12" r="11" fill="#FFFFFF"/>
+            <circle cx="40" cy="12" r="26" fill="#FFFFFF"/>
+            <circle cx="40" cy="12" r="7" fill="#E6F6F2"/>
+            <circle cx="22" cy="19" r="3" fill="#E6F6F2"/>
+            <circle cx="58" cy="19" r="3" fill="#E6F6F2"/>
+            <circle cx="31" cy="29" r="2" fill="#E6F6F2"/>
+            <circle cx="49" cy="29" r="2" fill="#E6F6F2"/>
+            <circle cx="40" cy="44" r="2.2" fill="#0E9E8E" opacity="0.55"/>
+            <circle cx="0" cy="30" r="1.8" fill="#E4287C" opacity="0.45"/>
+            <circle cx="80" cy="30" r="1.8" fill="#E4287C" opacity="0.45"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="52" fill="url(#div-veracruz)"/>
+      </svg>
     </div>
 
     <!-- ── GALLERY ──────────────────────────────────────────────── -->
@@ -3360,24 +3381,29 @@
       </div>
     </section>
 
-    <!-- Divider: gallery → events — gold rosette with vine lines -->
-    <div class="section-divider divider-rosette" aria-hidden="true">
-      <div class="divider-center">
-        <span class="divider-dot"></span>
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(18,18)" opacity="0.7">
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(0 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(60 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(120 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(180 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c7295d" transform="rotate(240 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e84393" transform="rotate(300 0 0)"/>
+    <!-- Divider: gallery → events — MICHOACÁN: cempasúchil (marigold) garland -->
+    <div class="section-divider" aria-hidden="true" style="background:linear-gradient(180deg,#F2FBF8 0%,#FFF2DC 100%);">
+      <svg width="100%" height="56" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <g id="div-marigold">
+            <g fill="#E08700">
+              <circle cx="0" cy="-9" r="4.5"/><circle cx="6.4" cy="-6.4" r="4.5"/><circle cx="9" cy="0" r="4.5"/><circle cx="6.4" cy="6.4" r="4.5"/>
+              <circle cx="0" cy="9" r="4.5"/><circle cx="-6.4" cy="6.4" r="4.5"/><circle cx="-9" cy="0" r="4.5"/><circle cx="-6.4" cy="-6.4" r="4.5"/>
+            </g>
+            <circle r="7" fill="#F7A823"/>
+            <circle r="3" fill="#FFD27A"/>
           </g>
-          <circle cx="18" cy="18" r="3" fill="#c9a84c" opacity="0.85"/>
-          <circle cx="18" cy="18" r="1.2" fill="#e8c97a"/>
-        </svg>
-        <span class="divider-dot"></span>
-      </div>
+          <pattern id="div-michoacan" x="0" y="0" width="120" height="56" patternUnits="userSpaceOnUse">
+            <path d="M0,28 Q30,14 60,28 Q90,42 120,28" stroke="#6D8B2F" stroke-width="2" fill="none" opacity="0.6"/>
+            <ellipse cx="30" cy="18" rx="7" ry="3" fill="#6D8B2F" opacity="0.55" transform="rotate(-24 30 18)"/>
+            <ellipse cx="90" cy="38" rx="7" ry="3" fill="#6D8B2F" opacity="0.55" transform="rotate(-24 90 38)"/>
+            <use href="#div-marigold" x="60" y="28"/>
+            <circle cx="0" cy="28" r="3.2" fill="#D65A3A" opacity="0.8"/>
+            <circle cx="120" cy="28" r="3.2" fill="#D65A3A" opacity="0.8"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="56" fill="url(#div-michoacan)"/>
+      </svg>
     </div>
 
     <!-- ── EVENTS / PERFORMANCES ──────────────────────────────── -->
@@ -3413,23 +3439,31 @@
       </div>
     </section>
 
-    <!-- Divider: performances → classes — Oaxacan diamond filigree -->
-    <div class="section-divider divider-filigree" aria-hidden="true">
-      <div class="divider-center">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,1 17,9 9,17 1,9" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.4"/><polygon points="9,4 14,9 9,14 4,9" fill="#c9a84c" opacity="0.15"/><circle cx="9" cy="9" r="2" fill="#c9a84c" opacity="0.5"/></svg>
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <g transform="translate(14,14)" opacity="0.6">
-            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(0 0 0)"/>
-            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#1a7b6a" transform="rotate(72 0 0)"/>
-            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(144 0 0)"/>
-            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#1a7b6a" transform="rotate(216 0 0)"/>
-            <ellipse cx="0" cy="-6" rx="1.8" ry="4.5" fill="#2a9d8f" transform="rotate(288 0 0)"/>
-          </g>
-          <circle cx="14" cy="14" r="2.5" fill="#c9a84c" opacity="0.7"/>
-          <circle cx="14" cy="14" r="1" fill="#e8c97a"/>
-        </svg>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,1 17,9 9,17 1,9" stroke="#c9a84c" stroke-width="1" fill="none" opacity="0.4"/><polygon points="9,4 14,9 9,14 4,9" fill="#c9a84c" opacity="0.15"/><circle cx="9" cy="9" r="2" fill="#c9a84c" opacity="0.5"/></svg>
-      </div>
+    <!-- Divider: performances → classes — PUEBLA: talavera tile band -->
+    <div class="section-divider" aria-hidden="true" style="background:linear-gradient(180deg,#FFF8EA 0%,#EAF1FB 100%);">
+      <svg width="100%" height="56" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="div-puebla" x="0" y="0" width="56" height="56" patternUnits="userSpaceOnUse">
+            <rect width="56" height="56" fill="#FFFFFF" opacity="0.55"/>
+            <circle cx="0" cy="0" r="8" fill="#2D5DB9" opacity="0.8"/>
+            <circle cx="56" cy="0" r="8" fill="#2D5DB9" opacity="0.8"/>
+            <circle cx="0" cy="56" r="8" fill="#2D5DB9" opacity="0.8"/>
+            <circle cx="56" cy="56" r="8" fill="#2D5DB9" opacity="0.8"/>
+            <g transform="translate(28,28)">
+              <ellipse rx="3.5" ry="11" fill="#2D5DB9" opacity="0.85"/>
+              <ellipse rx="3.5" ry="11" fill="#2D5DB9" opacity="0.85" transform="rotate(90)"/>
+              <ellipse rx="3.5" ry="11" fill="#7FA8E0" opacity="0.8" transform="rotate(45)"/>
+              <ellipse rx="3.5" ry="11" fill="#7FA8E0" opacity="0.8" transform="rotate(135)"/>
+              <circle r="3.5" fill="#F7A823"/>
+            </g>
+            <rect x="24.5" y="-3.5" width="7" height="7" fill="#7FA8E0" opacity="0.7" transform="rotate(45 28 0)"/>
+            <rect x="24.5" y="52.5" width="7" height="7" fill="#7FA8E0" opacity="0.7" transform="rotate(45 28 56)"/>
+            <rect x="-3.5" y="24.5" width="7" height="7" fill="#7FA8E0" opacity="0.7" transform="rotate(45 0 28)"/>
+            <rect x="52.5" y="24.5" width="7" height="7" fill="#7FA8E0" opacity="0.7" transform="rotate(45 56 28)"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="56" fill="url(#div-puebla)"/>
+      </svg>
     </div>
 
     <!-- ── CLASSES ─────────────────────────────────────────────── -->
@@ -3439,7 +3473,7 @@
         <h2 class="section-heading" id="classes-heading" data-i18n="classes.heading">Clases</h2>
         <div class="story-divider"></div>
 
-        <p style="margin-block-start:0.75rem;color:rgba(240,230,208,0.6);max-width:54rem;line-height:1.7;" data-i18n="classes.description">
+        <p style="margin-block-start:0.75rem;color:var(--text-secondary);max-width:54rem;line-height:1.7;" data-i18n="classes.description">
           Nuestra temporada está recibiendo nuevos bailarines. Ya sea que pises la pista de baile por primera vez o seas un artista experimentado, Mi Herencia es tu hogar.
         </p>
 
@@ -3450,10 +3484,10 @@
               <img src="images/optimized/Image_20260524_022800.webp" alt="Young dancers performing" loading="lazy" style="object-position:center 20%" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
-                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
               </div>
               <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class1.level">Principiante – Intermedio</span></div>
             </div>
@@ -3463,9 +3497,9 @@
                 <h3 data-i18n="class1.title">Jóvenes</h3>
                 <span class="class-card-subtitle" data-i18n="class1.ages">(6–12)</span>
               </div>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#F7A823" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#F7A823" opacity="0.6"/></svg></div>
               <p class="class-card-desc" data-i18n="class1.desc">Una divertida introducción al baile folklórico. Los niños aprenden pasos básicos, ritmo y la alegría de la música tradicional a través del movimiento y el juego.</p>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#F7A823" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#F7A823" opacity="0.6"/></svg></div>
               <div class="class-card-meta">
                 <div class="class-card-meta-row">
                   <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
@@ -3486,10 +3520,10 @@
               <img src="images/optimized/Image_20260524_023329.webp" alt="Adolescent dancers performing at a holiday event" loading="lazy" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
-                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
               </div>
               <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class2.level">Todos los niveles</span></div>
             </div>
@@ -3499,9 +3533,9 @@
                 <h3 data-i18n="class2.title">Adolescentes</h3>
                 <span class="class-card-subtitle" data-i18n="class2.ages">(13–17)</span>
               </div>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#2a9d8f" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#2a9d8f" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#0E9E8E" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#0E9E8E" opacity="0.6"/></svg></div>
               <p class="class-card-desc" data-i18n="class2.desc">Los estudiantes desarrollan habilidades técnicas en zapateado, faldeo y coreografía regional mientras ganan confianza y se conectan con su cultura.</p>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#F7A823" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#F7A823" opacity="0.6"/></svg></div>
               <div class="class-card-meta">
                 <div class="class-card-meta-row">
                   <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
@@ -3522,10 +3556,10 @@
               <img src="images/optimized/sinaloa.webp" alt="Sinaloa dance performance" loading="lazy" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
-                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
-                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--tr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--bl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
+                <div class="gold-corner gold-corner--br"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.5"/></svg></div>
               </div>
               <div class="class-card-badge"><div class="class-card-badge-dot"></div><span data-i18n="class3.level">Todos los niveles</span></div>
             </div>
@@ -3535,9 +3569,9 @@
                 <h3 data-i18n="class3.title">Adultos</h3>
                 <span class="class-card-subtitle" data-i18n="class3.ages">(18+)</span>
               </div>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c7295d" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c7295d" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#C9176A" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#C9176A" opacity="0.6"/></svg></div>
               <p class="class-card-desc" data-i18n="class3.desc">Para bailarines de todos los niveles que quieran conectar con sus raíces. Aprende danzas tradicionales de Jalisco, Veracruz, Sinaloa, Baja, Chiapas y más.</p>
-              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#c9a84c" opacity="0.6"/></svg></div>
+              <div class="class-card-divider" aria-hidden="true"><svg width="16" height="10" viewBox="0 0 16 10"><polygon points="8,1 11,5 8,9 5,5" fill="none" stroke="#F7A823" stroke-width="0.8" opacity="0.5"/><circle cx="8" cy="5" r="1.2" fill="#F7A823" opacity="0.6"/></svg></div>
               <div class="class-card-meta">
                 <div class="class-card-meta-row">
                   <div class="class-card-meta-icon"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="4.5"/><line x1="11" y1="1" x2="11" y2="4.5"/></svg></div>
@@ -3555,10 +3589,10 @@
 
         <!-- Free trial banner -->
         <div class="classes-promo">
-          <div class="gold-corner gold-corner--tl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
-          <div class="gold-corner gold-corner--tr" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
-          <div class="gold-corner gold-corner--bl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
-          <div class="gold-corner gold-corner--br" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#c9a84c" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--tl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#F7A823" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--tr" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#F7A823" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--bl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#F7A823" opacity="0.4"/></svg></div>
+          <div class="gold-corner gold-corner--br" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M0 0 L28 0 L28 3 L3 3 L3 28 L0 28 Z" fill="#F7A823" opacity="0.4"/></svg></div>
           <div class="classes-promo-inner">
             <div class="classes-promo-content">
               <div class="classes-promo-badge" aria-hidden="true">
@@ -3581,17 +3615,23 @@
       </div>
     </section>
 
-    <!-- Divider: classes → reviews — triple diamond chain -->
-    <div class="section-divider divider-filigree" aria-hidden="true">
-      <div class="divider-center">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c9a84c" stroke-width="0.8" fill="#c9a84c" opacity="0.12"/></svg>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c7295d" stroke-width="0.8" fill="#c7295d" opacity="0.15"/><circle cx="7" cy="7" r="1.5" fill="#c9a84c" opacity="0.5"/></svg>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,0 14,7 7,14 0,7" stroke="#c9a84c" stroke-width="0.8" fill="#c9a84c" opacity="0.12"/></svg>
-      </div>
+    <!-- Divider: classes → reviews — SINALOA: woven greca textile band -->
+    <div class="section-divider" aria-hidden="true" style="background:linear-gradient(180deg,#F5F8FE 0%,#FFEDE4 100%);">
+      <svg width="100%" height="44" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="div-sinaloa" x="0" y="0" width="80" height="44" patternUnits="userSpaceOnUse">
+            <path d="M0,28 L20,14 L40,28 L60,14 L80,28" stroke="#D65A3A" stroke-width="2" fill="none" opacity="0.7"/>
+            <path d="M0,34 L20,20 L40,34 L60,20 L80,34" stroke="#C9176A" stroke-width="1.3" fill="none" opacity="0.4"/>
+            <rect x="17" y="11" width="6" height="6" transform="rotate(45 20 14)" fill="#D65A3A" opacity="0.75"/>
+            <rect x="57" y="11" width="6" height="6" transform="rotate(45 60 14)" fill="#D65A3A" opacity="0.75"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="44" fill="url(#div-sinaloa)"/>
+      </svg>
     </div>
 
     <!-- ── REVIEWS ──────────────────────────────────────────────── -->
-    <section id="reviews" aria-labelledby="reviews-heading" style="background:radial-gradient(1200px 600px at 50% -8%, #241338 0%, #130a1c 62%);padding-block:var(--section-gap);">
+    <section id="reviews" aria-labelledby="reviews-heading" style="padding-block:var(--section-gap);">
       <div class="container text-center">
         <span class="section-label" data-i18n="reviews.label">Lo Que Dicen</span>
         <h2 class="section-heading" id="reviews-heading" data-i18n="reviews.heading">
@@ -3600,7 +3640,7 @@
         <div class="story-divider" style="margin-inline:auto;"></div>
         <p style="margin-block-start:0.75rem;margin-block-end:0.25rem;color:var(--text-muted);font-size:0.95rem;">
           <span style="color:#f5c518;letter-spacing:1px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <span data-i18n-html="reviews.subtitle"> 5.0 &mdash; 7 reseñas en <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--gold-light);text-decoration:underline;">GigSalad</a></span>
+          <span data-i18n-html="reviews.subtitle"> 5.0 &mdash; 7 reseñas en <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" style="color:var(--terracotta);text-decoration:underline;font-weight:600;">GigSalad</a></span>
         </p>
 
         <div class="about-cards" style="max-width:1200px;margin-inline:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;">
@@ -3612,7 +3652,7 @@
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review1.text">
               &ldquo;Los bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar, flexibles incluso con toda la locura. Contratamos a este increíble grupo para una sorpresa de cumpleaños de mi mamá y no nos decepcionaron. Mi familia y yo definitivamente los contrataríamos otra vez.&rdquo;
             </p>
-            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review1.author">
+            <p style="margin-block-start:1rem;color:var(--terracotta);font-weight:700;font-size:0.88rem;" data-i18n="review1.author">
               — Bianca B. · Fiesta de Cumpleaños
             </p>
           </article>
@@ -3625,7 +3665,7 @@
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review2.text">
               &ldquo;Todo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.&rdquo;
             </p>
-            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review2.author">
+            <p style="margin-block-start:1rem;color:var(--terracotta);font-weight:700;font-size:0.88rem;" data-i18n="review2.author">
               — Ramon A. · Boda
             </p>
           </article>
@@ -3638,7 +3678,7 @@
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review3.text">
               &ldquo;Este grupo es el mejor que he visto. Hicieron una presentación virtual para el Festival de la Herencia Hispana de mi escuela y fue mejor que nuestros grupos presenciales anteriores. Me encanta la historia que dan de cada baile y las lecciones interactivas para los estudiantes. Los recomendaría a cualquiera.&rdquo;
             </p>
-            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review3.author">
+            <p style="margin-block-start:1rem;color:var(--terracotta);font-weight:700;font-size:0.88rem;" data-i18n="review3.author">
               — Antoinette M. · Festival Escolar
             </p>
           </article>
@@ -3651,7 +3691,7 @@
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review4.text">
               &ldquo;Ballet Folklórico Mi Herencia fueron nuestros invitados especiales para nuestra celebración virtual de Cinco de Mayo en toda la empresa. Realizaron 4 bailes tradicionales seguidos de una divertida lección de baile interactiva. Fue de lejos uno de nuestros eventos más divertidos del año.&rdquo;
             </p>
-            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review4.author">
+            <p style="margin-block-start:1rem;color:var(--terracotta);font-weight:700;font-size:0.88rem;" data-i18n="review4.author">
               — Adrielle B. · Evento Corporativo
             </p>
           </article>
@@ -3664,7 +3704,7 @@
             <p style="color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;" data-i18n="review5.text">
               &ldquo;Recomendamos ampliamente a Angel y su equipo. Los participantes de nuestro 5K quedaron impresionados. Definitivamente los contrataríamos de nuevo.&rdquo;
             </p>
-            <p style="margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;" data-i18n="review5.author">
+            <p style="margin-block-start:1rem;color:var(--terracotta);font-weight:700;font-size:0.88rem;" data-i18n="review5.author">
               — Eulogio R. · Evento Comunitario
             </p>
           </article>
@@ -3681,15 +3721,15 @@
     <!-- ── FAQ ──────────────────────────────────────────────────── -->
     <style>
       .faq-list{max-width:780px;margin-inline:auto;text-align:start;}
-      .faq-item{border-block-end:1px solid rgba(201,168,76,0.22);}
-      .faq-item summary{list-style:none;cursor:pointer;padding-block:1.15rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:var(--font-display);font-size:1.18rem;color:#f3e9d6;transition:color .2s ease;}
+      .faq-item{border-block-end:1px solid rgba(109,139,47,0.30);}
+      .faq-item summary{list-style:none;cursor:pointer;padding-block:1.15rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-family:var(--font-display);font-size:1.18rem;font-weight:560;color:var(--ink);transition:color .2s ease;}
       .faq-item summary::-webkit-details-marker{display:none;}
-      .faq-item summary:hover{color:var(--gold-light);}
-      .faq-item summary::after{content:"+";font-size:1.5rem;color:var(--gold-light);line-height:1;flex:0 0 auto;transition:transform .2s ease;}
+      .faq-item summary:hover{color:var(--olive);}
+      .faq-item summary::after{content:"+";font-size:1.5rem;color:var(--olive);line-height:1;flex:0 0 auto;transition:transform .2s ease;}
       .faq-item[open] summary::after{transform:rotate(45deg);}
-      .faq-item .faq-a{padding-block:0 1.25rem;color:var(--text-muted);font-size:1rem;line-height:1.65;max-width:68ch;}
+      .faq-item .faq-a{padding-block:0 1.25rem;color:var(--text-secondary);font-size:1rem;line-height:1.65;max-width:68ch;}
     </style>
-    <section id="faq" aria-labelledby="faq-heading" style="background:radial-gradient(1200px 600px at 50% -8%, #1b1029 0%, #130a1c 62%);padding-block:var(--section-gap);">
+    <section id="faq" aria-labelledby="faq-heading" style="padding-block:var(--section-gap);">
       <div class="container text-center">
         <span class="section-label" data-i18n="faq.label">Dudas Comunes</span>
         <h2 class="section-heading" id="faq-heading" data-i18n="faq.heading">Preguntas Frecuentes</h2>
@@ -3723,26 +3763,17 @@
       </div>
     </section>
 
-    <!-- Divider: reviews → contact — gold flower rosette -->
-    <div class="section-divider divider-rosette" aria-hidden="true">
-      <div class="divider-center">
-        <span class="divider-dot"></span>
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(16,16)" opacity="0.75">
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(0 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(45 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(90 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(135 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(180 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(225 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(270 0 0)"/>
-            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(315 0 0)"/>
-          </g>
-          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.9"/>
-          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
-        </svg>
-        <span class="divider-dot"></span>
-      </div>
+    <!-- Divider: faq → contact — SALTILLO/NORTEÑO: woven serape stripes -->
+    <div class="section-divider" aria-hidden="true">
+      <svg width="100%" height="18" viewBox="0 0 100 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <rect y="0"    width="100" height="5"   fill="#C9176A"/>
+        <rect y="5"    width="100" height="3"   fill="#F7A823"/>
+        <rect y="8"    width="100" height="4.5" fill="#0E9E8E"/>
+        <rect y="12.5" width="100" height="2"   fill="#FFF9EF"/>
+        <rect y="14.5" width="100" height="4.5" fill="#2D5DB9"/>
+        <rect y="19"   width="100" height="3"   fill="#E2725B"/>
+        <rect y="22"   width="100" height="6"   fill="#E4287C"/>
+      </svg>
     </div>
 
     <!-- ── CONTACT / BOOK ─────────────────────────────────────── -->
@@ -3790,20 +3821,20 @@
           <!-- Booking form -->
           <div class="book-form-wrapper">
             <div data-fs-success style="display:none;text-align:center;padding:2rem;">
-              <p style="font-size:1.5rem;color:#2a9d8f;font-family:var(--font-display);margin-block-end:0.5rem;" data-i18n="contact.form.success.heading">&#10003; ¡Mensaje enviado!</p>
+              <p style="font-size:1.5rem;color:#0E9E8E;font-family:var(--font-display);margin-block-end:0.5rem;" data-i18n="contact.form.success.heading">&#10003; ¡Mensaje enviado!</p>
               <p style="color:#5a4e42;" data-i18n="contact.form.success.text">Gracias por contactarnos. Te responderemos en 1–2 días hábiles.</p>
             </div>
-            <div data-fs-error style="color:#c7295d;font-size:0.85rem;text-align:center;margin-block-end:1rem;"></div>
+            <div data-fs-error style="color:#C9176A;font-size:0.85rem;text-align:center;margin-block-end:1rem;"></div>
 
             <form
               id="bookingForm"
               aria-label="Formulario de solicitud de contratación"
             >
               <fieldset>
-                <span class="form-corner form-corner--tl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
-                <span class="form-corner form-corner--tr" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
-                <span class="form-corner form-corner--bl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
-                <span class="form-corner form-corner--br" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--tl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--tr" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--bl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.55"/></svg></span>
+                <span class="form-corner form-corner--br" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#F7A823" opacity="0.55"/></svg></span>
                 <legend>
                   <span data-i18n="contact.form.legend">Lleva la Fiesta a Tu Evento</span>
                   <span class="form-flourish" aria-hidden="true"></span>
@@ -4183,7 +4214,7 @@
         // Reviews
         "reviews.label":    "Lo Que Dicen",
         "reviews.heading":  "No lo decimos nosotros.",
-        "reviews.subtitle": " 5.0 — 7 reseñas en <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--gold-light);text-decoration:underline;'>GigSalad</a>",
+        "reviews.subtitle": " 5.0 — 7 reseñas en <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--terracotta);text-decoration:underline;font-weight:600;'>GigSalad</a>",
         "review1.text":     "\u201CLos bailes fueron hermosos y nuestros invitados amaron sus presentaciones. Muy fáciles y agradables para trabajar, flexibles incluso con toda la locura. Contratamos a este increíble grupo para una sorpresa de cumpleaños de mi mamá y no nos decepcionaron. Mi familia y yo definitivamente los contrataríamos otra vez.\u201D",
         "review1.author":   "— Bianca B. · Fiesta de Cumpleaños",
         "review2.text":     "\u201CTodo fue hermoso. Llegaron a tiempo, muy profesionales y comunicativos. Los contraté para mi boda y a todos les encantaron.\u201D",
@@ -4341,7 +4372,7 @@
         // Reviews
         "reviews.label":    "What People Say",
         "reviews.heading":  "Don't take our word for it.",
-        "reviews.subtitle": " 5.0 — 7 reviews on <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--gold-light);text-decoration:underline;'>GigSalad</a>",
+        "reviews.subtitle": " 5.0 — 7 reviews on <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--terracotta);text-decoration:underline;font-weight:600;'>GigSalad</a>",
         "review1.text":     "\u201CThe dances were beautiful and our guests loved their performances! Very easy and pleasant to work with and flexible. We hired this amazing group for a surprise for my mom\u2019s birthday and they did not disappoint! My family and I would definitely hire again in a heartbeat!\u201D",
         "review1.author":   "— Bianca B. · Birthday Party",
         "review2.text":     "\u201CEverything was beautiful. On time, very professional and communicative. I had them for my wedding and everyone liked them.\u201D",
