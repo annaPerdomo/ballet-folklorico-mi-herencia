@@ -419,6 +419,7 @@
     html {
       scroll-behavior: smooth;
       font-size: 16px;
+      overflow-x: hidden;
     }
 
     body {
@@ -2204,6 +2205,8 @@
 
     @media (max-width: 760px) {
       .book-layout { grid-template-columns: 1fr; }
+      .book-form-wrapper,
+      .book-form-wrapper fieldset { min-width: 0; width: 100%; }
     }
 
     .book-info {
@@ -2805,6 +2808,7 @@
 
       /* Gallery */
       .gallery-strip { gap: 0.75rem; }
+      .photo-credit { font-size: 0.58rem; padding: 2px 6px; bottom: 6px; right: 6px; }
 
       /* Classes */
       .classes-photo-strip { grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
@@ -2919,6 +2923,7 @@
       /* ── Gallery — tight and clean ── */
       .gallery-strip { gap: 0.5rem; }
       .gallery-item { border-radius: 6px; }
+      .photo-credit { font-size: 0.5rem; padding: 2px 5px; bottom: 5px; right: 5px; }
 
       /* ── Classes — single column ── */
       .classes-photo-strip { grid-template-columns: 1fr; gap: 0.6rem; margin-block: 1.5rem; }
