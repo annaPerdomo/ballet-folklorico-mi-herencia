@@ -1617,17 +1617,26 @@
     /* ════════════════════════════════════════════════════════════
        VIDEO STRIP — performance videos inside "See us in action"
     ════════════════════════════════════════════════════════════ */
-    .video-strip {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
+    .video-carousel {
+      position: relative;
       margin-block-start: 1.25rem;
     }
-    @media (max-width: 600px) {
-      .video-strip { grid-template-columns: 1fr; gap: 1rem; }
+
+    .video-strip {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;            /* Firefox */
+      padding-block-end: 0.5rem;
     }
+    .video-strip::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
 
     .video-item {
+      flex: 0 0 calc((100% - 2 * 1.25rem) / 3);   /* 3 per view on desktop */
+      scroll-snap-align: start;
       position: relative;
       aspect-ratio: 16 / 9;
       border-radius: var(--radius);
@@ -1635,6 +1644,47 @@
       border: 1px solid rgba(201,168,76,0.18);
       background: var(--bg-elevated);
       box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    }
+    @media (max-width: 900px) {
+      .video-item { flex-basis: calc((100% - 1.25rem) / 2); }  /* 2 per view */
+    }
+    @media (max-width: 600px) {
+      .video-strip { gap: 1rem; }
+      .video-item { flex-basis: 86%; }                          /* ~1 per view, peek next */
+    }
+
+    /* Carousel arrows */
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 6;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.45);
+      background: rgba(8,3,17,0.82);
+      color: var(--gold-light);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    }
+    .carousel-arrow:hover,
+    .carousel-arrow:focus-visible {
+      background: var(--gold);
+      color: #080311;
+      box-shadow: 0 4px 18px rgba(201,168,76,0.4);
+    }
+    .carousel-arrow.prev { left: -10px; }
+    .carousel-arrow.next { right: -10px; }
+    .carousel-arrow[disabled] {
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .carousel-arrow { display: none; }   /* touch swipe on mobile */
     }
 
     .video-facade {
@@ -3311,15 +3361,39 @@
           </div>
         </div>
 
-        <h3 class="events-subheading" style="margin-block-start:3rem;" data-i18n="videos.heading">Mírenos bailar</h3>
-        <div class="video-strip">
+        <h3 class="events-subheading" style="margin-block-start:3rem;" data-i18n="videos.heading">Mírenos bailar!</h3>
+        <div class="video-carousel">
+          <button type="button" class="carousel-arrow prev" data-carousel-prev aria-label="Previous videos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="video-strip">
           <div class="video-item">
-            <button type="button" class="video-facade" data-video-id="GKdhpoolSUA" aria-label="Jarabe Tapatío, Jalisco — video">
-              <img src="https://i.ytimg.com/vi/GKdhpoolSUA/maxresdefault.jpg" alt="" loading="lazy" />
+            <button type="button" class="video-facade" data-video-id="CODsFE4IqhE" aria-label="Jarabe Tapatío, Jalisco — video">
+              <img src="https://i.ytimg.com/vi/CODsFE4IqhE/maxresdefault.jpg" alt="" loading="lazy" />
               <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
               <span class="video-caption">
                 <span class="video-caption-title">Jarabe Tapatío</span>
                 <span class="video-caption-region">Jalisco</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="Ut23G8dl_Kw" aria-label="El Tranchete, Jalisco — video">
+              <img src="https://i.ytimg.com/vi/Ut23G8dl_Kw/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">El Tranchete</span>
+                <span class="video-caption-region">Jalisco</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="jyvOVG_4q1s" aria-label="La Bruja, Veracruz — video">
+              <img src="https://i.ytimg.com/vi/jyvOVG_4q1s/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">La Bruja</span>
+                <span class="video-caption-region">Veracruz</span>
               </span>
             </button>
           </div>
@@ -3334,11 +3408,11 @@
             </button>
           </div>
           <div class="video-item">
-            <button type="button" class="video-facade" data-video-id="WlxCxR4rHik" aria-label="La Llorona, Chiapas — video">
-              <img src="https://i.ytimg.com/vi/WlxCxR4rHik/maxresdefault.jpg" alt="" loading="lazy" />
+            <button type="button" class="video-facade" data-video-id="cgYNgTRamPY" aria-label="Rescapetate, Chiapas — video">
+              <img src="https://i.ytimg.com/vi/cgYNgTRamPY/maxresdefault.jpg" alt="" loading="lazy" />
               <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
               <span class="video-caption">
-                <span class="video-caption-title">La Llorona</span>
+                <span class="video-caption-title">Rescapetate</span>
                 <span class="video-caption-region">Chiapas</span>
               </span>
             </button>
@@ -3353,6 +3427,30 @@
               </span>
             </button>
           </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="Ht_SFje-iio" aria-label="El Potro, Baja California — video">
+              <img src="https://i.ytimg.com/vi/Ht_SFje-iio/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">El Potro</span>
+                <span class="video-caption-region">Baja California</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="Reg-6aUIL5Y" aria-label="Jesusita, Chihuahua — video">
+              <img src="https://i.ytimg.com/vi/Reg-6aUIL5Y/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">Jesusita</span>
+                <span class="video-caption-region">Chihuahua</span>
+              </span>
+            </button>
+          </div>
+          </div>
+          <button type="button" class="carousel-arrow next" data-carousel-next aria-label="Next videos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
         <div class="video-cta">
           <a href="https://www.youtube.com/@annaperdomo9160/videos" target="_blank" rel="noopener noreferrer" class="btn btn-gold-outline" data-i18n="videos.cta">Ver más en YouTube</a>
@@ -4137,7 +4235,7 @@
         "gallery.label":   "Galería",
         "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
-        "videos.heading":  "Mírenos bailar",
+        "videos.heading":  "Mírenos bailar!",
         "videos.cta":      "Ver más en YouTube",
 
         // Events
@@ -4295,7 +4393,7 @@
         "gallery.label":   "Gallery",
         "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
-        "videos.heading":  "Watch us dance",
+        "videos.heading":  "Watch us dance!",
         "videos.cta":      "Watch more on YouTube",
 
         // Events
@@ -4525,6 +4623,101 @@
       document.addEventListener('DOMContentLoaded', initVideoFacades);
     } else {
       initVideoFacades();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  VIDEO CAROUSEL — arrow buttons scroll the strip by one view
+    // ─────────────────────────────────────────────────────────
+    function initVideoCarousel() {
+      var carousel = document.querySelector('.video-carousel');
+      if (!carousel) return;
+      var strip = carousel.querySelector('.video-strip');
+      var prev = carousel.querySelector('[data-carousel-prev]');
+      var next = carousel.querySelector('[data-carousel-next]');
+      if (!strip || !prev || !next) return;
+
+      function page() {
+        var first = strip.querySelector('.video-item');
+        var gap = parseFloat(getComputedStyle(strip).columnGap) || 0;
+        var step = first ? first.getBoundingClientRect().width + gap : strip.clientWidth;
+        // scroll a little less than a full viewport so a card always peeks
+        return Math.max(step, strip.clientWidth - step);
+      }
+
+      function updateArrows() {
+        var maxScroll = strip.scrollWidth - strip.clientWidth - 1;
+        prev.disabled = strip.scrollLeft <= 0;
+        next.disabled = strip.scrollLeft >= maxScroll;
+      }
+
+      prev.addEventListener('click', function () {
+        strip.scrollBy({ left: -page(), behavior: 'smooth' });
+      });
+      next.addEventListener('click', function () {
+        strip.scrollBy({ left: page(), behavior: 'smooth' });
+      });
+      strip.addEventListener('scroll', updateArrows, { passive: true });
+      window.addEventListener('resize', updateArrows);
+      updateArrows();
+
+      // ── Auto-advance ──────────────────────────────────────────
+      // Gently scrolls one view every few seconds, loops back at the
+      // end, and stops for good once the visitor takes over.
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var ADVANCE_MS = 4500;
+      var timer = null;
+      var stopped = false;
+
+      function advance() {
+        var maxScroll = strip.scrollWidth - strip.clientWidth - 1;
+        if (strip.scrollLeft >= maxScroll) {
+          strip.scrollTo({ left: 0, behavior: 'smooth' });   // loop to start
+        } else {
+          strip.scrollBy({ left: page(), behavior: 'smooth' });
+        }
+      }
+
+      function start() {
+        if (stopped || timer || reduceMotion) return;
+        if (strip.scrollWidth <= strip.clientWidth + 1) return;  // nothing to scroll
+        timer = window.setInterval(advance, ADVANCE_MS);
+      }
+      function pause() {
+        if (timer) { window.clearInterval(timer); timer = null; }
+      }
+      function stop() {            // permanent: visitor has taken control
+        stopped = true;
+        pause();
+      }
+
+      // Pause on hover/focus, resume after; stop on real interaction.
+      carousel.addEventListener('mouseenter', pause);
+      carousel.addEventListener('mouseleave', start);
+      carousel.addEventListener('focusin', pause);
+      carousel.addEventListener('focusout', start);
+      prev.addEventListener('click', stop);
+      next.addEventListener('click', stop);
+      strip.addEventListener('touchstart', stop, { passive: true });
+      strip.addEventListener('wheel', stop, { passive: true });
+      // Once a video is opened, leave the carousel where it is.
+      strip.addEventListener('click', function (e) {
+        if (e.target.closest('.video-facade')) stop();
+      });
+
+      // Only auto-play while the section is on screen.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { en.isIntersecting ? start() : pause(); });
+        }, { threshold: 0.3 }).observe(carousel);
+      } else {
+        start();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initVideoCarousel);
+    } else {
+      initVideoCarousel();
     }
 
     // ─────────────────────────────────────────────────────────
