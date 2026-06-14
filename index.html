@@ -427,6 +427,7 @@
       color: var(--text-primary);
       line-height: 1.75;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     /* ── Custom scrollbar ── */
@@ -2642,6 +2643,17 @@
       animation-play-state: running;
     }
 
+    /* ── Video carousel items: staggered slide-up ── */
+    .video-item.anim-video {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.22,1,.36,1);
+    }
+    .video-item.anim-video.visible {
+      opacity: 1;
+      transform: none;
+    }
+
     /* ── Gallery items: staggered pop-in ── */
     .gallery-item.anim-gallery {
       opacity: 0;
@@ -2718,6 +2730,7 @@
       .gallery-item.anim-gallery, .review-card.anim-review,
       .service-badge.anim-badge, .story-divider.anim-divider,
       .contact-item.anim-contact,
+      .video-item.anim-video,
       .fade-in {
         opacity: 1 !important;
         transform: none !important;
@@ -3417,26 +3430,6 @@
             </button>
           </div>
           <div class="video-item">
-            <button type="button" class="video-facade" data-video-id="Ut23G8dl_Kw" aria-label="El Tranchete, Jalisco — video">
-              <img src="https://i.ytimg.com/vi/Ut23G8dl_Kw/maxresdefault.jpg" alt="" loading="lazy" />
-              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
-              <span class="video-caption">
-                <span class="video-caption-title">El Tranchete</span>
-                <span class="video-caption-region">Jalisco</span>
-              </span>
-            </button>
-          </div>
-          <div class="video-item">
-            <button type="button" class="video-facade" data-video-id="cgYNgTRamPY" aria-label="Rescapetate, Chiapas — video">
-              <img src="https://i.ytimg.com/vi/cgYNgTRamPY/maxresdefault.jpg" alt="" loading="lazy" />
-              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
-              <span class="video-caption">
-                <span class="video-caption-title">Rescapetate</span>
-                <span class="video-caption-region">Chiapas</span>
-              </span>
-            </button>
-          </div>
-          <div class="video-item">
             <button type="button" class="video-facade" data-video-id="JfjUILnEuhk" aria-label="Baile de los Viejitos, Michoacán — video">
               <img src="https://i.ytimg.com/vi/JfjUILnEuhk/maxresdefault.jpg" alt="" loading="lazy" />
               <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
@@ -3447,12 +3440,32 @@
             </button>
           </div>
           <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="Ut23G8dl_Kw" aria-label="El Tranchete, Jalisco — video">
+              <img src="https://i.ytimg.com/vi/Ut23G8dl_Kw/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">El Tranchete</span>
+                <span class="video-caption-region">Jalisco</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
             <button type="button" class="video-facade" data-video-id="Ht_SFje-iio" aria-label="El Potro, Baja California — video">
               <img src="https://i.ytimg.com/vi/Ht_SFje-iio/maxresdefault.jpg" alt="" loading="lazy" />
               <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
               <span class="video-caption">
                 <span class="video-caption-title">El Potro</span>
                 <span class="video-caption-region">Baja California</span>
+              </span>
+            </button>
+          </div>
+          <div class="video-item">
+            <button type="button" class="video-facade" data-video-id="cgYNgTRamPY" aria-label="Rescapetate, Chiapas — video">
+              <img src="https://i.ytimg.com/vi/cgYNgTRamPY/maxresdefault.jpg" alt="" loading="lazy" />
+              <span class="video-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="#080311"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="video-caption">
+                <span class="video-caption-title">Rescapetate</span>
+                <span class="video-caption-region">Chiapas</span>
               </span>
             </button>
           </div>
@@ -4953,7 +4966,26 @@
         el.style.transitionDelay = (i * 60) + 'ms';
       });
 
-      // ── Gallery: items pop in with staggered rotation ──
+      // ── Gallery: video carousel items slide up staggered ──
+      var videoItems = document.querySelectorAll('.video-item');
+      videoItems.forEach(function(el) { el.classList.add('anim-video'); });
+      var videoWrap = document.querySelector('.gallery-video-wrap');
+      if (videoWrap && videoItems.length) {
+        if ('IntersectionObserver' in window) {
+          var videoIO = new IntersectionObserver(function(entries, obs) {
+            if (entries[0].isIntersecting) {
+              videoItems.forEach(function(el, i) {
+                setTimeout(function() { el.classList.add('visible'); }, i * 100);
+              });
+              obs.disconnect();
+            }
+          }, { threshold: 0.1 });
+          videoIO.observe(videoWrap);
+        } else {
+          videoItems.forEach(function(el) { el.classList.add('visible'); });
+        }
+      }
+
       document.querySelectorAll('.gallery-item').forEach(function(el, i) {
         el.classList.add('anim-gallery');
         el.style.transitionDelay = (i * 100) + 'ms';
