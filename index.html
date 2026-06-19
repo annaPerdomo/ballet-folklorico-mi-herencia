@@ -1581,48 +1581,175 @@
       padding-block: var(--section-gap);
     }
 
+    /* Photo block spans wider than the 1200px text container — matches the
+       video strip above so the masonry fills the available width. */
+    .gallery-photos {
+      max-width: 1600px;
+      margin-inline: auto;
+      margin-block-start: 3.5rem;
+      padding-inline: 2rem;
+    }
+
+    /* Justified rows (flickr-style): every row is the same height and grows
+       to fill the full width. Each item's width tracks its aspect ratio
+       (--ar = w/h) so photos keep their shape with only minimal edge crop. */
     .gallery-strip {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
+      justify-content: center; /* centers a leftover last row instead of a lopsided gap */
+      gap: 0.6rem;
       margin-block-start: 2rem;
+      --row-h: 15rem;
+    }
+
+    @media (max-width: 1100px) {
+      .gallery-strip { --row-h: 12.5rem; }
+    }
+    @media (max-width: 760px) {
+      .gallery-photos { padding-inline: 1.25rem; }
+      .gallery-strip { --row-h: 10rem; gap: 0.5rem; }
+    }
+    @media (max-width: 420px) {
+      .gallery-photos { padding-inline: 1rem; }
+      .gallery-strip { --row-h: 8rem; gap: 0.4rem; }
     }
 
     .gallery-item {
-      width: calc(33.333% - 0.75rem);
-    }
-
-    @media (max-width: 700px) {
-      .gallery-item { width: calc(33.333% - 0.75rem); }
-    }
-    @media (max-width: 450px) {
-      .gallery-item { width: calc(50% - 0.5rem); }
-    }
-
-    .gallery-item {
-      aspect-ratio: 1;
+      box-sizing: border-box;
+      /* Fallback size (before JS justifies): true aspect ratio at row height,
+         so even without JS nothing is squashed. JS overrides width/height.
+         grow:0 keeps rows from stretching; shrink:1 absorbs sub-pixel rounding
+         so a justified row never wraps to a new line. */
+      flex: 0 1 auto;
+      height: var(--row-h);
+      width: calc(var(--ar, 1.4) * var(--row-h));
       background: var(--bg-elevated);
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,0.06);
       overflow: hidden;
       transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
       position: relative;
+      cursor: pointer;
     }
     .gallery-item:hover {
       border-color: rgba(201,168,76,0.3);
       transform: scale(1.03);
       box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+      z-index: 1;
     }
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center top;
       display: block;
       transition: transform 0.5s ease;
     }
     .gallery-item:hover img {
       transform: scale(1.08);
+    }
+    /* Zoom hint on hover (pointer devices only) */
+    .gallery-item::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0.28), transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.3-4.3M11 8v6M8 11h6'/%3E%3C/svg%3E") no-repeat center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    @media (hover: hover) {
+      .gallery-item:hover::after { opacity: 1; }
+    }
+
+    .gallery-viewall {
+      text-align: center;
+      margin-block-start: 2rem;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: rgba(8,5,18,0.94);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .lightbox[hidden] { display: none; }
+    .lightbox.open { opacity: 1; }
+    .lightbox-figure {
+      margin: 0;
+      max-width: 92vw;
+      max-height: 86vh;
+      display: flex;
+    }
+    .lightbox-figure img {
+      max-width: 92vw;
+      max-height: 86vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+      animation: lightboxIn 0.28s cubic-bezier(.2,.7,.3,1);
+    }
+    @keyframes lightboxIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lightbox-btn {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 50%;
+      background: rgba(20,14,30,0.6);
+      color: var(--gold-light);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lightbox-btn svg { width: 1.4rem; height: 1.4rem; }
+    .lightbox-btn:hover,
+    .lightbox-btn:focus-visible {
+      background: rgba(201,168,76,0.18);
+      color: #fff;
+      border-color: var(--gold);
+    }
+    .lightbox-close { top: 1.25rem; right: 1.25rem; }
+    .lightbox-prev { left: 1.25rem; top: 50%; transform: translateY(-50%); }
+    .lightbox-next { right: 1.25rem; top: 50%; transform: translateY(-50%); }
+    .lightbox-count {
+      position: absolute;
+      top: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(240,230,208,0.7);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 600px) {
+      .lightbox { padding: 0.75rem; }
+      .lightbox-figure, .lightbox-figure img { max-width: 96vw; max-height: 80vh; }
+      .lightbox-btn { width: 2.6rem; height: 2.6rem; }
+      .lightbox-btn svg { width: 1.2rem; height: 1.2rem; }
+      .lightbox-close { top: 0.75rem; right: 0.75rem; }
+      .lightbox-prev { left: 0.5rem; }
+      .lightbox-next { right: 0.5rem; }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -3516,28 +3643,81 @@
         </div>
       </div>
 
-      <div class="container text-center">
-        <h3 class="events-subheading" style="margin-block-start:3.5rem;" data-i18n="gallery.stage">Momentos dentro y fuera del escenario</h3>
-        <div class="gallery-strip" aria-label="Galería de fotos">
-          <div class="gallery-item">
+      <div class="gallery-photos">
+        <div class="gallery-strip" id="galleryStrip" aria-label="Galería de fotos">
+          <!-- Featured: special live-mariachi performance leads a larger top row -->
+          <div class="gallery-item" style="--ar:0.93">
+            <img src="images/optimized/IMG_8372.webp" alt="Ballet Folklórico Mi Herencia dancers performing with live mariachi under a tent" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:0.56">
+            <img src="images/optimized/IMG_4504.webp" alt="Young folklorico dancer in traditional Mexican attire" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:0.75">
+            <img src="images/optimized/Image_20260524_023353.webp" alt="Mexican folk dance performance outdoors by Ballet Folklórico Mi Herencia" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:0.72">
+            <img src="images/optimized/IMG_6584.webp" alt="Ballet Folklórico Mi Herencia teen dancers performing in red folklorico skirts" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.26">
+            <img src="images/optimized/sinaloa.webp" alt="Ballet Folklórico Mi Herencia performing a traditional Sinaloa dance" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.33">
+            <img src="images/optimized/2025-group.webp" alt="Folklorico group performing Día de los Muertos dance at a Southern California event" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.54">
+            <img src="images/optimized/Image_20260524_023113.webp" alt="Folklorico dancers performing traditional Norteño dance at a live event" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.20">
+            <img src="images/optimized/IMG_3119.webp" alt="Ballet Folklórico Mi Herencia full group portrait in traditional Mexican folklorico attire" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.18">
+            <img src="images/optimized/IMG_1476.webp" alt="Ballet Folklórico Mi Herencia dancers in traditional Mexican folklorico dress" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.25">
+            <img src="images/optimized/IMG_1927.webp" alt="Folklorico dancers performing traditional Mexican folk dance at a community event" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.78">
+            <img src="images/optimized/IMG_4820.webp" alt="Ballet Folklórico Mi Herencia performing on stage" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.33">
+            <img src="images/optimized/IMG_7074.webp" alt="Folklorico group portrait in colorful traditional Mexican folk dance costumes" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.33">
+            <img src="images/optimized/IMG_7076.webp" alt="Ballet Folklórico Mi Herencia dancers at a performance" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:1.50">
             <img src="images/optimized/2022-group-b.webp" alt="Ballet Folklórico Mi Herencia performing traditional Mexican folk dance on stage in Los Angeles area" loading="lazy" />
             <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
           </div>
-          <div class="gallery-item">
-            <img src="images/optimized/2025-group.webp" alt="Folklorico group performing Día de los Muertos dance at a Southern California event" loading="lazy" />
+          <div class="gallery-item" style="--ar:1.82">
+            <img src="images/optimized/IMG_8387.webp" alt="Folklorico group performance in traditional Mexican costumes" loading="lazy" />
           </div>
-          <div class="gallery-item">
-            <img src="images/optimized/Image_20260524_023113.webp" alt="Folklorico dancers performing traditional Norteño dance at a live event" loading="lazy" />
+          <div class="gallery-item" style="--ar:1.31">
+            <img src="images/optimized/IMG_9210.webp" alt="Ballet Folklórico Mi Herencia dancers gathered in traditional folklorico attire" loading="lazy" />
           </div>
-          <div class="gallery-item">
-            <img src="images/optimized/Image_20260524_023353.webp" alt="Mexican folk dance performance outdoors by Ballet Folklórico Mi Herencia" loading="lazy" />
-          </div>
-          <div class="gallery-item">
-            <img src="images/optimized/Image_20260524_022841.webp" alt="Ballet Folklórico Mi Herencia full group portrait in traditional Mexican folklorico attire" loading="lazy" />
-          </div>
+        </div>
+        <div class="gallery-viewall">
+          <button type="button" class="btn btn-gold-outline" id="galleryViewAll">Ver todas las fotos</button>
         </div>
       </div>
     </section>
+
+    <!-- Lightbox: click/tap a gallery photo to view it large -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+      <span class="lightbox-count" id="lightboxCount"></span>
+      <button type="button" class="lightbox-btn lightbox-close" id="lightboxClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <button type="button" class="lightbox-btn lightbox-prev" id="lightboxPrev" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <figure class="lightbox-figure">
+        <img id="lightboxImg" src="" alt="" />
+      </figure>
+      <button type="button" class="lightbox-btn lightbox-next" id="lightboxNext" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
 
     <!-- Divider: gallery → events — gold rosette with vine lines -->
     <div class="section-divider divider-rosette" aria-hidden="true">
@@ -3626,7 +3806,7 @@
           <!-- Youth -->
           <article class="class-card">
             <div class="class-card-photo">
-              <img src="images/optimized/Image_20260524_022800.webp" alt="Young dancers performing" loading="lazy" style="object-position:center 20%" />
+              <img src="images/optimized/IMG_7075.webp" alt="Young dancers performing" loading="lazy" style="object-position:center 20%" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
                 <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
@@ -3662,7 +3842,7 @@
           <!-- Teen -->
           <article class="class-card" data-accent="teal">
             <div class="class-card-photo">
-              <img src="images/optimized/Image_20260524_023329.webp" alt="Adolescent dancers performing at a holiday event" loading="lazy" />
+              <img src="images/optimized/IMG_9681.webp" alt="Teen folklorico dancers performing a traditional Mexican folk dance on stage" loading="lazy" style="object-position:center 20%" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
                 <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
@@ -3698,7 +3878,7 @@
           <!-- Adult -->
           <article class="class-card" data-accent="magenta">
             <div class="class-card-photo">
-              <img src="images/optimized/sinaloa.webp" alt="Sinaloa dance performance" loading="lazy" />
+              <img src="images/optimized/IMG_8384.webp" alt="Ballet Folklórico Mi Herencia adult dancers in colorful Jalisco folklorico dresses with their instructor" loading="lazy" />
               <div class="class-card-photo-gradient" aria-hidden="true"></div>
               <div class="class-card-photo-frame" aria-hidden="true">
                 <div class="gold-corner gold-corner--tl"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.5"/></svg></div>
@@ -4316,8 +4496,9 @@
         "gallery.label":   "Galería",
         "gallery.heading": "Véanos en acción.",
         "gallery.photo":   "Foto",
+        "gallery.viewAll": "Ver todas las fotos",
+        "gallery.showLess": "Ver menos",
         "videos.heading":  "Mírenos bailar!",
-        "gallery.stage":   "Momentos dentro y fuera del escenario",
         "videos.cta":      "Ver más en YouTube",
 
         // Events
@@ -4475,8 +4656,9 @@
         "gallery.label":   "Gallery",
         "gallery.heading": "See us in action.",
         "gallery.photo":   "Photo",
+        "gallery.viewAll": "View all photos",
+        "gallery.showLess": "Show less",
         "videos.heading":  "Watch us dance!",
-        "gallery.stage":   "Moments on and off the stage",
         "videos.cta":      "Watch more on YouTube",
 
         // Events
@@ -4655,6 +4837,8 @@
 
       // Re-render events for current language
       if (typeof renderEvents === 'function') renderEvents(lang);
+      // Keep the gallery toggle label in sync with the language
+      if (typeof updateGalleryButton === 'function') updateGalleryButton();
     }
 
     // ─────────────────────────────────────────────────────────
@@ -4901,6 +5085,190 @@
 
     // Render events on initial load
     renderEvents(currentLang);
+
+    // ─────────────────────────────────────────────────────────
+    //  GALLERY — justified rows + click-to-enlarge lightbox
+    // ─────────────────────────────────────────────────────────
+    // Collapsed by default to a short preview; "View all photos" reveals the
+    // rest inline (and toggles to "Show less").
+    let galleryExpanded = false;
+
+    function updateGalleryButton() {
+      const btn = document.getElementById('galleryViewAll');
+      if (!btn) return;
+      const dict = (typeof STRINGS !== 'undefined' && STRINGS[currentLang]) ? STRINGS[currentLang] : null;
+      btn.textContent = galleryExpanded
+        ? ((dict && dict['gallery.showLess']) || 'Show less')
+        : ((dict && dict['gallery.viewAll']) || 'View all photos');
+    }
+
+    // Justified-rows layout (Flickr/Google Photos style): pack photos into
+    // rows, then scale each full row's HEIGHT so its photos fit the width at
+    // their true aspect ratio. Nothing is cropped — every face stays visible.
+    function layoutGallery() {
+      const strip = document.getElementById('galleryStrip');
+      if (!strip) return;
+      const items = Array.from(strip.children).filter(el => el.classList.contains('gallery-item'));
+      if (!items.length) return;
+
+      const cs = getComputedStyle(strip);
+      const gap = parseFloat(cs.gap) || 10;
+      const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const targetH = (parseFloat(cs.getPropertyValue('--row-h')) || 15) * rootPx;
+      const containerW = strip.clientWidth;
+      if (!containerW) return;
+
+      const arOf = el => parseFloat(el.style.getPropertyValue('--ar')) || 1.4;
+
+      const rows = [];
+      let i = 0;
+
+      // Featured top row: the first photo (a special performance) leads a
+      // slightly taller row so it reads a bit bigger than the rest. Add
+      // following photos until the row is no taller than the cap, then fix it
+      // as one row. Keep the cap modest so the top row isn't overpowering.
+      const featMax = targetH * 1.55;
+      {
+        let els = [], sumAR = 0;
+        while (i < items.length) {
+          els.push(items[i]); sumAR += arOf(items[i]); i++;
+          const h = (containerW - gap * (els.length - 1)) / sumAR;
+          if (els.length >= 2 && h <= featMax) break;
+        }
+        rows.push({ els, sumAR, full: true });
+      }
+
+      // Greedily group the remaining items into normal container-wide rows.
+      let row = [], sumAR = 0;
+      for (; i < items.length; i++) {
+        row.push(items[i]);
+        sumAR += arOf(items[i]);
+        if (sumAR * targetH + gap * (row.length - 1) >= containerW) {
+          rows.push({ els: row, sumAR, full: true }); row = []; sumAR = 0;
+        }
+      }
+      if (row.length) rows.push({ els: row, sumAR, full: false });
+
+      // Preview: collapsed to the first couple of rows so the section stays
+      // short; "View all photos" reveals the rest inline.
+      const PREVIEW_ROWS = 2;
+      const collapsible = rows.length > PREVIEW_ROWS;
+      const collapsed = collapsible && !galleryExpanded;
+      const shownRows = collapsed ? rows.slice(0, PREVIEW_ROWS) : rows;
+      const shown = new Set();
+      shownRows.forEach(r => r.els.forEach(el => shown.add(el)));
+      items.forEach(el => { el.style.display = shown.has(el) ? '' : 'none'; });
+
+      shownRows.forEach(r => {
+        const gaps = gap * (r.els.length - 1);
+        const justifiedH = (containerW - gaps) / r.sumAR;
+        // When collapsed, every shown row is full (more rows follow) so it fills
+        // the width. When expanded, a sparse last row isn't blown up (centered).
+        const h = (r.full || collapsed || justifiedH <= targetH * 1.5) ? justifiedH : targetH;
+        r.els.forEach(el => {
+          el.style.height = h + 'px';
+          el.style.width = (arOf(el) * h) + 'px';
+        });
+      });
+
+      const viewAll = document.getElementById('galleryViewAll');
+      if (viewAll) viewAll.parentElement.style.display = collapsible ? '' : 'none';
+      updateGalleryButton();
+    }
+
+    (function () {
+      const strip = document.getElementById('galleryStrip');
+      if (!strip) return;
+
+      layoutGallery();
+      // Re-justify on resize (debounced) and once images/fonts have loaded.
+      let raf;
+      window.addEventListener('resize', function () {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(layoutGallery);
+      });
+      window.addEventListener('load', layoutGallery);
+
+      // ── Lightbox (click/tap a photo to view it large) ──
+      const box = document.getElementById('lightbox');
+      const boxImg = document.getElementById('lightboxImg');
+      if (!box || !boxImg) return;
+
+      const imgs = Array.from(strip.querySelectorAll('.gallery-item img'));
+      let current = -1;
+      let lastFocus = null;
+
+      const counter = document.getElementById('lightboxCount');
+      function show(i) {
+        current = (i + imgs.length) % imgs.length;
+        const src = imgs[current];
+        boxImg.src = src.currentSrc || src.src;
+        boxImg.alt = src.alt || '';
+        if (counter) counter.textContent = (current + 1) + ' / ' + imgs.length;
+        // restart the pop-in animation on each navigation
+        boxImg.style.animation = 'none';
+        void boxImg.offsetWidth;
+        boxImg.style.animation = '';
+      }
+      function open(i) {
+        lastFocus = document.activeElement;
+        show(i);
+        box.hidden = false;
+        requestAnimationFrame(() => box.classList.add('open'));
+        document.body.style.overflow = 'hidden';
+        document.getElementById('lightboxClose').focus();
+      }
+      function close() {
+        box.classList.remove('open');
+        document.body.style.overflow = '';
+        const done = () => { box.hidden = true; box.removeEventListener('transitionend', done); };
+        box.addEventListener('transitionend', done);
+        setTimeout(done, 300); // fallback if transitionend doesn't fire
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      }
+
+      strip.querySelectorAll('.gallery-item').forEach(function (item, i) {
+        const img = item.querySelector('img');
+        if (img) img.addEventListener('click', () => open(i));
+      });
+
+      const viewAllBtn = document.getElementById('galleryViewAll');
+      if (viewAllBtn) viewAllBtn.addEventListener('click', function () {
+        galleryExpanded = !galleryExpanded;
+        // Photos revealed by expanding were display:none, so the scroll-reveal
+        // observer never fired for them — force them visible.
+        if (galleryExpanded) {
+          strip.querySelectorAll('.gallery-item').forEach(function (el) {
+            el.style.transitionDelay = '0ms';
+            el.classList.add('visible');
+          });
+        }
+        layoutGallery();
+      });
+
+      document.getElementById('lightboxClose').addEventListener('click', close);
+      document.getElementById('lightboxPrev').addEventListener('click', () => show(current - 1));
+      document.getElementById('lightboxNext').addEventListener('click', () => show(current + 1));
+      // Click the dark backdrop (but not the image or buttons) to close.
+      box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('lightbox-figure')) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (box.hidden) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowLeft') show(current - 1);
+        else if (e.key === 'ArrowRight') show(current + 1);
+      });
+      // Swipe left/right on touch devices to navigate.
+      let touchX = null;
+      box.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+      box.addEventListener('touchend', function (e) {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+        touchX = null;
+      }, { passive: true });
+    })();
 
     // ─────────────────────────────────────────────────────────
     //  FOOTER YEAR
