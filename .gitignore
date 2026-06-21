@@ -5,4 +5,7 @@ SEO-OFF-PAGE-TODO.md
 images/originals/
 folklorico_pics/
 *.mp4
+# Hero background video is committed so it deploys (push-to-main → Vercel);
+# the large source (final_bfmh_hero.mp4) and promo clips stay ignored.
+!hero-bg.mp4
 settings.json

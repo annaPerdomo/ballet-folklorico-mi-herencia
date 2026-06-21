@@ -708,42 +708,36 @@
       z-index: 0;
     }
 
+    /* Left-weighted legibility scrim over the video (text sits on the left) */
     #home .hero-gradient-placeholder {
       position: absolute;
       inset: 0;
       background:
         linear-gradient(
           to right,
-          rgba(201,168,76,0.22) 0%,
-          rgba(201,168,76,0.10) 15%,
-          rgba(138,30,80,0.12) 28%,
-          #3a0e4a 45%,
-          #1e0836 60%,
-          #12042a 75%,
-          transparent 92%
+          rgba(8,3,17,0.88) 0%,
+          rgba(8,3,17,0.74) 20%,
+          rgba(8,3,17,0.45) 40%,
+          rgba(8,3,17,0.15) 62%,
+          transparent 85%
         );
       z-index: 1;
-    }
-
-    #home .hero-texture-overlay {
-      display: none;
     }
 
     #home .hero-dark-overlay {
       position: absolute;
       inset: 0;
       background:
-        /* Gold glow near the text on the left */
-        radial-gradient(ellipse at 12% 45%, rgba(201,168,76,0.2) 0%, transparent 45%),
-        /* Warm ember bloom in the mid-zone */
-        radial-gradient(ellipse at 30% 55%, rgba(180,80,50,0.15) 0%, transparent 45%),
-        /* Base darkening further right for depth */
+        /* Soft gold glow behind the headline */
+        radial-gradient(ellipse at 14% 48%, rgba(201,168,76,0.16) 0%, transparent 48%),
+        /* Vertical vignette: slight shade under the header, deeper fade into the divider below */
         linear-gradient(
-          to right,
-          transparent 0%,
-          rgba(18,4,42,0.2) 40%,
-          rgba(5,2,16,0.5) 70%,
-          rgba(5,2,16,0.4) 100%
+          to bottom,
+          rgba(5,2,16,0.35) 0%,
+          transparent 22%,
+          transparent 62%,
+          rgba(8,3,17,0.55) 90%,
+          rgba(12,5,24,0.85) 100%
         );
       z-index: 1;
     }
@@ -768,14 +762,15 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       text-align: left;
       padding: 0 2.5% 0 5%;
       gap: 2rem;
     }
 
     .hero-text {
-      flex: 1;
+      flex: 0 1 620px;
+      max-width: 620px;
       min-width: 0;
       display: flex;
       flex-direction: column;
@@ -840,24 +835,7 @@
       justify-content: flex-start;
     }
 
-    /* ── Hero Photo Collage ── */
-    .hero-photos {
-      flex: 0 0 auto;
-      width: 64%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      align-self: center;
-      height: clamp(520px, calc(100vh - var(--header-height) - 2.5rem), 920px);
-      padding-right: 0;
-    }
-
-    .hero-photos .photo-tall,
-    .hero-photos .photo-stack-item {
-      overflow: hidden;
-      position: relative;
-    }
-
+    /* ── Photo credit badge (used by gallery) ── */
     .photo-credit {
       position: absolute;
       bottom: 10px;
@@ -882,91 +860,7 @@
       color: #fff;
     }
 
-    .hero-photos .photo-tall img,
-    .hero-photos .photo-stack-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    /* Soft edge fade — left photo fades on left edge, right photos fade on left; all fade top/bottom */
-    /* Masks live on the <img> (not the container) so photo credits stay fully opaque */
-    .hero-photos .photo-tall img {
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 86%, transparent 100%),
-                          linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-      -webkit-mask-composite: destination-in;
-      mask-image: linear-gradient(to right, transparent 0%, black 18%, black 86%, transparent 100%),
-                  linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
-      mask-composite: intersect;
-    }
-    .hero-photos .photo-stack-item img {
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
-                          linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-      -webkit-mask-composite: destination-in;
-      mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%),
-                  linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
-      mask-composite: intersect;
-    }
-
-    /* Tall photo on the left */
-    .hero-photos .photo-tall {
-      opacity: 0;
-      transform: scale(0.97);
-      animation: heroReveal 5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-    }
-    .hero-photos .photo-tall img {
-      object-position: center top;
-      animation: heroDrift1 36s ease-in-out 5.3s infinite alternate;
-    }
-
-    /* Right column — two stacked photos */
-    .hero-photos .photo-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      min-height: 0;
-    }
-
-    .hero-photos .photo-stack-item {
-      flex: 1;
-      min-height: 0;
-    }
-
-    .hero-photos .photo-stack-top {
-      opacity: 0;
-      transform: scale(0.97);
-      animation: heroReveal 5s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
-    }
-    .hero-photos .photo-stack-top img {
-      animation: heroDrift2 32s ease-in-out 6.5s infinite alternate;
-    }
-    .hero-photos .photo-stack-bottom {
-      opacity: 0;
-      transform: scale(0.97);
-      animation: heroReveal 5s cubic-bezier(0.16, 1, 0.3, 1) 2.8s forwards;
-    }
-    .hero-photos .photo-stack-bottom img {
-      animation: heroDrift3 38s ease-in-out 7.8s infinite alternate;
-    }
-
-    /* Single smooth arc — no intermediate keyframes, no snapping */
-    @keyframes heroReveal {
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    /* Living breath — gentle, slow swaying like fabric at rest */
-    @keyframes heroDrift1 {
-      0%   { transform: scale(1)    translate(0, 0); }
-      100% { transform: scale(1.02) translate(-0.3%, 0.2%); }
-    }
-    @keyframes heroDrift2 {
-      0%   { transform: scale(1)    translate(0, 0); }
-      100% { transform: scale(1.02) translate(0.3%, 0.3%); }
-    }
-    @keyframes heroDrift3 {
-      0%   { transform: scale(1)    translate(0, 0); }
-      100% { transform: scale(1.02) translate(-0.3%, 0.2%); }
-    }
+    /* (Hero photo-collage styles removed — the hero now uses a full-bleed background video) */
 
     /* ════════════════════════════════════════════════════════════
        BUTTONS
@@ -2878,16 +2772,6 @@
         animation: none !important;
         -webkit-text-fill-color: var(--gold) !important;
       }
-      .hero-photos .photo-tall,
-      .hero-photos .photo-stack-top,
-      .hero-photos .photo-stack-bottom,
-      .hero-photos .photo-tall img,
-      .hero-photos .photo-stack-top img,
-      .hero-photos .photo-stack-bottom img {
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
-      }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -2910,26 +2794,24 @@
       .container { padding-inline: 1.25rem; }
       .gallery-video-wrap { padding-inline: 1.25rem; }
 
-      /* Hero */
+      /* Hero — text centered over the full-bleed video */
       #home { min-height: calc(100vh - var(--header-height)); }
-      .hero-content { padding: 2rem 1.5rem; align-items: center; text-align: center; flex-direction: column-reverse; }
-      .hero-text { align-items: center; }
+      .hero-content { padding: 2rem 1.5rem; align-items: center; justify-content: center; text-align: center; }
+      .hero-text { flex: 0 1 auto; max-width: 560px; align-items: center; }
       .hero-cta-group { justify-content: center; }
-      .hero-photos { max-width: 420px; height: auto; max-height: none; width: 100%; gap: 0.5rem; padding-right: 0; }
       #home h1 { font-size: clamp(2rem, 7vw, 3rem); }
       .hero-subtitle { font-size: 0.68rem; letter-spacing: 0.18em; }
       #home .hero-gradient-placeholder {
         background: linear-gradient(
           to bottom,
-          #1a0a2e 0%,
-          rgba(26,10,46,0.9) 40%,
-          rgba(26,10,46,0.6) 60%,
-          rgba(26,10,46,0.3) 80%,
-          transparent 100%
+          rgba(8,3,17,0.55) 0%,
+          rgba(8,3,17,0.35) 45%,
+          rgba(8,3,17,0.45) 75%,
+          rgba(12,5,24,0.82) 100%
         );
       }
       #home .hero-dark-overlay {
-        background: rgba(5,2,16,0.45);
+        background: rgba(5,2,16,0.4);
       }
 
       /* About */
@@ -2987,12 +2869,10 @@
       .lang-toggle { font-size: 0.58rem; padding: 0.25rem 0.6rem; }
 
       /* ── Hero — full impact on small screens ── */
-      #home { height: auto; }
-      .hero-content { padding: 0.5rem 1.25rem 1.25rem; align-items: center; text-align: center; flex-direction: column-reverse; gap: 0.75rem; }
-      .hero-text { align-items: center; }
+      #home { height: auto; min-height: 78vh; }
+      .hero-content { padding: 2.5rem 1.25rem; align-items: center; justify-content: center; text-align: center; gap: 0.75rem; }
+      .hero-text { flex: 0 1 auto; max-width: 100%; align-items: center; }
       .hero-cta-group { justify-content: center; }
-      .hero-photos { max-width: 340px; height: 38vh; max-height: 280px; min-height: 180px; width: 100%; gap: 0.5rem; padding-right: 0; }
-      .hero-photos .photo-stack { gap: 0.5rem; }
       .hero-subtitle {
         font-size: 0.62rem;
         letter-spacing: 0.15em;
@@ -3013,15 +2893,14 @@
       #home .hero-gradient-placeholder {
         background: linear-gradient(
           to bottom,
-          #1a0a2e 0%,
-          rgba(26,10,46,0.92) 35%,
-          rgba(26,10,46,0.65) 55%,
-          rgba(26,10,46,0.35) 75%,
-          transparent 100%
+          rgba(8,3,17,0.6) 0%,
+          rgba(8,3,17,0.4) 45%,
+          rgba(8,3,17,0.5) 75%,
+          rgba(12,5,24,0.85) 100%
         );
       }
       #home .hero-dark-overlay {
-        background: rgba(5,2,16,0.5);
+        background: rgba(5,2,16,0.45);
       }
       .hero-cta-group { flex-direction: column; align-items: center; width: 100%; }
       .hero-cta-group .btn {
@@ -3296,12 +3175,15 @@
     <!-- ── HERO ───────────────────────────────────────────────── -->
     <section id="home" aria-labelledby="hero-heading">
 
-      <!-- Video background (add src when video file is available) -->
-      <video class="hero-video" autoplay muted loop playsinline aria-hidden="true"></video>
+      <!-- Background video: seamless looping hero -->
+      <video class="hero-video" autoplay muted loop playsinline preload="auto"
+             poster="images/optimized/hero-poster.webp" aria-hidden="true">
+        <source src="hero-bg.webm" type="video/webm" />
+        <source src="hero-bg.mp4" type="video/mp4" />
+      </video>
 
-      <!-- Cinematic placeholder backgrounds -->
+      <!-- Legibility scrims layered over the video -->
       <div class="hero-gradient-placeholder" aria-hidden="true"></div>
-      <div class="hero-texture-overlay" aria-hidden="true"></div>
       <div class="hero-dark-overlay" aria-hidden="true"></div>
 
       <div class="hero-content">
@@ -3320,22 +3202,6 @@
           <div class="hero-cta-group">
             <a href="#contact" class="btn btn-gold" data-i18n="hero.cta1">Contratar Presentación</a>
             <a href="#classes" class="btn btn-outline" data-i18n="hero.cta2">Únete al Grupo</a>
-          </div>
-        </div>
-
-        <div class="hero-photos" aria-label="Photos of Ballet Folklórico Mi Herencia">
-          <div class="photo-tall">
-            <img src="images/optimized/hero-mariachi.webp" alt="Ballet Folklórico Mi Herencia performing in mariachi attire" loading="eager" />
-          </div>
-          <div class="photo-stack">
-            <div class="photo-stack-item photo-stack-top">
-              <img src="images/optimized/hero-white-dress.webp" alt="Ballet Folklórico Mi Herencia dancer in white Veracruz dress" loading="eager" style="object-position:center 36%;" />
-              <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
-            </div>
-            <div class="photo-stack-item photo-stack-bottom">
-              <img src="images/optimized/hero-jalisco.webp" alt="Ballet Folklórico Mi Herencia Jalisco dancer in red dress with partner" loading="eager" style="object-position:center 30%;" />
-              <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
-            </div>
           </div>
         </div>
       </div>
@@ -3648,6 +3514,18 @@
           <!-- Featured: special live-mariachi performance leads a larger top row -->
           <div class="gallery-item" style="--ar:0.93">
             <img src="images/optimized/IMG_8372.webp" alt="Ballet Folklórico Mi Herencia dancers performing with live mariachi under a tent" loading="lazy" />
+          </div>
+          <!-- Moved from the hero collage -->
+          <div class="gallery-item" style="--ar:0.80">
+            <img src="images/optimized/hero-mariachi.webp" alt="Ballet Folklórico Mi Herencia performing in mariachi attire" loading="lazy" />
+          </div>
+          <div class="gallery-item" style="--ar:0.58">
+            <img src="images/optimized/hero-white-dress.webp" alt="Ballet Folklórico Mi Herencia dancer in white Veracruz dress" loading="lazy" />
+            <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
+          </div>
+          <div class="gallery-item" style="--ar:0.67">
+            <img src="images/optimized/hero-jalisco.webp" alt="Ballet Folklórico Mi Herencia Jalisco dancer in red dress with partner" loading="lazy" />
+            <a href="https://www.instagram.com/mammabear.photos/" target="_blank" rel="noopener noreferrer" class="photo-credit">@mammabear.photos</a>
           </div>
           <div class="gallery-item" style="--ar:0.56">
             <img src="images/optimized/IMG_4504.webp" alt="Young folklorico dancer in traditional Mexican attire" loading="lazy" />
@@ -5486,5 +5364,26 @@
     formspree('initForm', { formElement: '#bookingForm', formId: 'mgoqzqpo' });
   </script>
   <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+  <!-- Hero background video: honor reduced-motion (hold the still poster instead of looping) -->
+  <script>
+    (function () {
+      var v = document.querySelector('.hero-video');
+      if (!v) return;
+      var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      function apply() {
+        if (mq.matches) {
+          v.removeAttribute('autoplay');
+          v.pause();
+        } else if (v.paused) {
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        }
+      }
+      apply();
+      if (mq.addEventListener) mq.addEventListener('change', apply);
+      else if (mq.addListener) mq.addListener(apply);
+    })();
+  </script>
 </body>
 </html>
