@@ -32,7 +32,11 @@
   <meta property="og:url" content="https://bfmh.dance/" />
   <meta property="og:title" content="Ballet Folklórico Mi Herencia | Hacienda Heights, CA" />
   <meta property="og:description" content="5-star rated Mexican folk dance group available for hire across Los Angeles, the San Gabriel Valley, Inland Empire, and Orange County. Festivals, quinceañeras, weddings, corporate events, and school assemblies. We travel!" />
-  <meta property="og:image" content="https://bfmh.dance/og-image.jpg" />
+  <meta property="og:image" content="https://bfmh.dance/og-image.jpg?v=6" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="The dancers of Ballet Folklórico Mi Herencia together in colorful traditional Mexican costumes and sombreros — a 5-star rated folk dance group for hire in Los Angeles and Southern California." />
   <meta property="og:locale" content="es_MX" />
   <meta property="og:locale:alternate" content="en_US" />
   <meta property="og:site_name" content="Ballet Folklórico Mi Herencia" />
@@ -41,7 +45,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Ballet Folklórico Mi Herencia | Hacienda Heights, CA" />
   <meta name="twitter:description" content="5-star rated Mexican folk dance group available for hire across Los Angeles, the San Gabriel Valley, Inland Empire, and Orange County. Festivals, quinceañeras, weddings, corporate events, and school assemblies. We travel!" />
-  <meta name="twitter:image" content="https://bfmh.dance/og-image.jpg" />
+  <meta name="twitter:image" content="https://bfmh.dance/og-image.jpg?v=6" />
+  <meta name="twitter:image:alt" content="The dancers of Ballet Folklórico Mi Herencia together in colorful traditional Mexican costumes and sombreros — a 5-star rated folk dance group for hire in Los Angeles and Southern California." />
 
   <!-- ═══════════════════════════════════════════════
        GEO META TAGS — LOCAL SEO
@@ -1970,7 +1975,7 @@
     .class-card-title-row {
       display: flex;
       align-items: baseline;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 8px;
       margin-bottom: 0.15rem;
     }
@@ -2292,6 +2297,13 @@
     }
     @media (max-width: 760px) {
       .contact-dancer-art { display: none; }
+      /* On mobile the contact column stacks above the form, so center the
+         heading group to match every other section title (the desktop split
+         layout keeps it left-aligned). */
+      .book-info > .section-label,
+      .book-info > .section-heading,
+      .book-info > .contact-intro { text-align: center; }
+      .book-info > .story-divider { margin-inline: auto; }
     }
 
     .contact-item {
@@ -2386,7 +2398,7 @@
       text-transform: uppercase;
     }
     .book-form-wrapper legend > span[data-i18n] { display: block; }
-    .book-form-wrapper legend + .form-row { clear: both; }
+    .book-form-wrapper legend + .form-fields { clear: both; }
 
     .form-row {
       display: grid;
@@ -2444,6 +2456,24 @@
       box-shadow: 0 0 0 3px rgba(199,41,93,0.13);
     }
 
+    /* Inline field validation (e.g. live email error on blur) */
+    .form-group [data-fs-error]:not(:empty) {
+      display: block;
+      margin-block-start: 0.4rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    .form-group input[aria-invalid="true"],
+    .form-group textarea[aria-invalid="true"] {
+      border-color: #e74c3c;
+      background: #fff;
+    }
+    .form-group input[aria-invalid="true"]:focus,
+    .form-group textarea[aria-invalid="true"]:focus {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 3px rgba(231,76,60,0.15);
+    }
+
     .form-group textarea { resize: vertical; min-height: 110px; }
     .form-group select { cursor: pointer; color: #2a2420; }
     .form-group select option { background: #fff; color: #2a2420; }
@@ -2469,6 +2499,151 @@
       font-style: italic;
       margin-block-start: 1rem;
       text-align: center;
+    }
+
+    /* ── Submission success — fiesta confetti celebration ──────────
+       On success the form gets `.is-sent`: the fields collapse and this
+       celebration takes their place inside the same framed card. */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    /* Hide the fields with visibility (not display) so they keep their
+       footprint — the card stays the exact same size and the celebration
+       overlays the same area, avoiding any layout shift. */
+    .book-form-wrapper form.is-sent legend,
+    .book-form-wrapper form.is-sent .form-fields {
+      visibility: hidden;
+    }
+    .book-form-wrapper form.is-sent .form-success {
+      display: flex;
+      position: absolute;
+      inset: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      animation: success-in 0.5s ease both;
+    }
+    @keyframes success-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .form-success-stage {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+    }
+
+    .form-success-medallion {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2ecda7 0%, #1a7b6a 100%);
+      box-shadow: 0 12px 30px rgba(26,123,106,0.38), inset 0 0 0 4px rgba(255,255,255,0.22);
+      animation: medallion-pop 0.6s 0.05s cubic-bezier(.18,1.3,.4,1) both;
+    }
+    @keyframes medallion-pop {
+      0%   { transform: scale(0) rotate(-30deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+    .form-success-medallion svg { display: block; }
+    .form-success-medallion .ring {
+      fill: none;
+      stroke: rgba(255,255,255,0.55);
+      stroke-width: 1.5;
+    }
+    .form-success-medallion .check {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 36;
+      stroke-dashoffset: 36;
+      animation: check-draw 0.45s 0.4s cubic-bezier(.6,0,.3,1) forwards;
+    }
+    @keyframes check-draw { to { stroke-dashoffset: 0; } }
+
+    .form-success-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 130px; height: 130px;
+      margin: -65px 0 0 -65px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,205,167,0.40) 0%, transparent 68%);
+      z-index: 0;
+      animation: success-glow 2.6s ease-in-out infinite;
+    }
+    @keyframes success-glow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%      { opacity: 0.95; transform: scale(1.12); }
+    }
+
+    .form-success .confetti {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 9px; height: 9px;
+      margin: -4.5px 0 0 -4.5px;
+      background: var(--c, #c9a84c);
+      border-radius: 1px;
+      opacity: 0;
+      z-index: 1;
+      transform: translate(0,0) scale(.2) rotate(0);
+      animation: confetti-pop 1.05s var(--d, 0s) cubic-bezier(.2,.7,.3,1) forwards;
+    }
+    .form-success .confetti:nth-child(3n) { border-radius: 50%; }
+    .form-success .confetti:nth-child(4n) { width: 6px; height: 13px; margin: -6.5px 0 0 -3px; }
+    @keyframes confetti-pop {
+      0%   { opacity: 0; transform: translate(0,0) scale(.2) rotate(0); }
+      18%  { opacity: 1; }
+      72%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--r)); }
+    }
+
+    .form-success-heading {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-block: 1.15rem 0;
+      /* WCAG AA: every stop clears 4.5:1 on the white card
+         (#c7295d 5.4:1 · #b8285a 6.0:1 · #8a6d1f 4.9:1). */
+      background: linear-gradient(90deg, #c7295d 0%, #b8285a 42%, #8a6d1f 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #c7295d;
+    }
+    .form-success-flourish {
+      width: 150px;
+      margin: 0.7rem auto 1.1rem;
+    }
+    .form-success-text {
+      color: #5a4e42;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      max-width: 360px;
+      margin-inline: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .form-success.is-shown,
+      .form-success-medallion,
+      .form-success-glow,
+      .form-success-medallion .check { animation: none; }
+      .form-success .confetti { display: none; }
+      .form-success-medallion .check { stroke-dashoffset: 0; }
     }
 
     /* ════════════════════════════════════════════════════════════
@@ -3625,7 +3800,7 @@
       <div class="container text-center">
         <span class="section-label" data-i18n="performances.label">Nuestras Presentaciones</span>
         <h2 class="section-heading" id="performances-heading" data-i18n="performances.heading">
-          Únete a nuestra celebración
+          Únete a nuestra celebración.
         </h2>
         <div class="story-divider" style="margin-inline:auto;"></div>
 
@@ -3993,7 +4168,7 @@
           <!-- Contact info sidebar -->
           <aside class="book-info" aria-label="Información de contacto">
             <span class="section-label" data-i18n="contact.label">Contacto</span>
-            <h2 class="section-heading" id="contact-heading" style="text-align:left;" data-i18n="contact.heading">Hablemos.</h2>
+            <h2 class="section-heading" id="contact-heading" data-i18n="contact.heading">Hablemos.</h2>
             <div class="story-divider"></div>
             <p class="contact-intro" data-i18n="contact.intro">
               Nos encantaría saber de ti. Ya sea que tengas preguntas sobre nuestras clases, próximos eventos, o quieras contratar una presentación, envíanos un mensaje y te responderemos lo antes posible. Únete a nuestra familia — sé parte de nuestra tradición, nuestra cultura y nuestra comunidad.
@@ -4029,14 +4204,13 @@
 
           <!-- Booking form -->
           <div class="book-form-wrapper">
-            <div data-fs-success style="display:none;text-align:center;padding:2rem;">
-              <p style="font-size:1.5rem;color:#2a9d8f;font-family:var(--font-display);margin-block-end:0.5rem;" data-i18n="contact.form.success.heading">&#10003; ¡Mensaje enviado!</p>
-              <p style="color:#5a4e42;" data-i18n="contact.form.success.text">Gracias por contactarnos. Te responderemos en 1–2 días hábiles.</p>
-            </div>
-            <div data-fs-error style="color:#c7295d;font-size:0.85rem;text-align:center;margin-block-end:1rem;"></div>
+            <div data-fs-error role="alert" style="display:none;color:#c7295d;font-size:0.85rem;text-align:center;margin-block-end:1rem;"></div>
 
             <form
               id="bookingForm"
+              action="https://formspree.io/f/mgoqzqpo"
+              method="POST"
+              novalidate
               aria-label="Formulario de solicitud de contratación"
             >
               <fieldset>
@@ -4049,52 +4223,84 @@
                   <span class="form-flourish" aria-hidden="true"></span>
                 </legend>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="contact-name" data-i18n="contact.form.name">Nombre Completo</label>
-                    <input type="text" id="contact-name" name="name" autocomplete="name" required data-fs-field data-placeholder-i18n="contact.form.name.placeholder" placeholder="Tu nombre completo" />
-                    <span data-fs-error="name" style="color:#e74c3c;font-size:0.78rem;"></span>
+                <div class="form-fields">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="contact-name" data-i18n="contact.form.name">Nombre Completo</label>
+                      <input type="text" id="contact-name" name="name" autocomplete="name" required data-fs-field data-placeholder-i18n="contact.form.name.placeholder" placeholder="Tu nombre completo" />
+                      <span data-fs-error="name" style="color:#e74c3c;font-size:0.78rem;"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="contact-email" data-i18n="contact.form.email">Correo Electrónico</label>
+                      <input type="email" id="contact-email" name="email" autocomplete="email" required data-fs-field placeholder="correo@ejemplo.com" />
+                      <span data-fs-error="email" style="color:#e74c3c;font-size:0.78rem;"></span>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="contact-email" data-i18n="contact.form.email">Correo Electrónico</label>
-                    <input type="email" id="contact-email" name="email" autocomplete="email" required data-fs-field placeholder="correo@ejemplo.com" />
-                    <span data-fs-error="email" style="color:#e74c3c;font-size:0.78rem;"></span>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="contact-phone" data-i18n="contact.form.phone">Número de Teléfono</label>
+                      <input type="tel" id="contact-phone" name="phone" autocomplete="tel" data-fs-field placeholder="(626) 000-0000" />
+                    </div>
+                    <div class="form-group">
+                      <label for="event-type" data-i18n="contact.form.eventType">Asunto</label>
+                      <select id="event-type" name="subject" data-fs-field>
+                        <option value="" data-i18n="contact.form.eventType.placeholder">— Seleccionar —</option>
+                        <option value="festival"    data-i18n="contact.form.eventType.festival">Festival Cultural</option>
+                        <option value="school"      data-i18n="contact.form.eventType.school">Escuela / Universidad</option>
+                        <option value="quinceanera" data-i18n="contact.form.eventType.quince">Quinceañera</option>
+                        <option value="private"     data-i18n="contact.form.eventType.private">Evento Privado</option>
+                        <option value="corporate"   data-i18n="contact.form.eventType.corporate">Evento Corporativo</option>
+                        <option value="classes"     data-i18n="contact.form.eventType.classes">Clases</option>
+                        <option value="other"       data-i18n="contact.form.eventType.other">Otro</option>
+                      </select>
+                    </div>
                   </div>
+
+                  <div class="form-group">
+                    <label for="message" data-i18n="contact.form.message">Mensaje (opcional)</label>
+                    <textarea id="message" name="message" rows="5" data-fs-field data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntanos cómo podemos ayudarte…"></textarea>
+                  </div>
+
+                  <button type="submit" class="btn btn-gold" style="width:100%;text-align:center;justify-content:center;" data-fs-submit-btn data-i18n="contact.form.submit">
+                    Enviar Mensaje
+                  </button>
+
+                  <p class="form-notice" data-i18n="contact.form.notice">
+                    Normalmente respondemos en 1–2 días hábiles.
+                  </p>
                 </div>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="contact-phone" data-i18n="contact.form.phone">Número de Teléfono</label>
-                    <input type="tel" id="contact-phone" name="phone" autocomplete="tel" data-fs-field placeholder="(626) 000-0000" />
+                <!-- On success the fields above are hidden and this celebration
+                     replaces them, keeping the framed card and gold corners. -->
+                <div data-fs-success class="form-success" role="status">
+                  <div class="form-success-stage" aria-hidden="true">
+                    <span class="confetti" style="--tx:-90px;--ty:-30px;--r:320deg;--c:#e84393;--d:.02s"></span>
+                    <span class="confetti" style="--tx:-70px;--ty:-70px;--r:-280deg;--c:#c9a84c;--d:.10s"></span>
+                    <span class="confetti" style="--tx:-30px;--ty:-92px;--r:260deg;--c:#2ecda7;--d:.04s"></span>
+                    <span class="confetti" style="--tx:12px;--ty:-98px;--r:-300deg;--c:#6c5ce7;--d:.14s"></span>
+                    <span class="confetti" style="--tx:48px;--ty:-84px;--r:340deg;--c:#fdcb6e;--d:.07s"></span>
+                    <span class="confetti" style="--tx:82px;--ty:-52px;--r:-260deg;--c:#c7295d;--d:.12s"></span>
+                    <span class="confetti" style="--tx:96px;--ty:-12px;--r:300deg;--c:#0097a7;--d:.03s"></span>
+                    <span class="confetti" style="--tx:92px;--ty:30px;--r:-320deg;--c:#e17055;--d:.16s"></span>
+                    <span class="confetti" style="--tx:-96px;--ty:8px;--r:280deg;--c:#fdcb6e;--d:.09s"></span>
+                    <span class="confetti" style="--tx:-84px;--ty:46px;--r:-300deg;--c:#00b894;--d:.18s"></span>
+                    <span class="confetti" style="--tx:-52px;--ty:80px;--r:320deg;--c:#e84393;--d:.06s"></span>
+                    <span class="confetti" style="--tx:-14px;--ty:96px;--r:-280deg;--c:#6c5ce7;--d:.20s"></span>
+                    <span class="confetti" style="--tx:40px;--ty:86px;--r:300deg;--c:#c9a84c;--d:.11s"></span>
+                    <span class="confetti" style="--tx:74px;--ty:64px;--r:-260deg;--c:#0984e3;--d:.22s"></span>
+                    <span class="form-success-glow"></span>
+                    <span class="form-success-medallion">
+                      <svg viewBox="0 0 52 52" width="84" height="84" role="img" aria-hidden="true">
+                        <circle class="ring" cx="26" cy="26" r="23" />
+                        <path class="check" d="M15 27 l7 7 l15 -16" />
+                      </svg>
+                    </span>
                   </div>
-                  <div class="form-group">
-                    <label for="event-type" data-i18n="contact.form.eventType">Asunto</label>
-                    <select id="event-type" name="subject" data-fs-field>
-                      <option value="" data-i18n="contact.form.eventType.placeholder">— Seleccionar —</option>
-                      <option value="festival"    data-i18n="contact.form.eventType.festival">Festival Cultural</option>
-                      <option value="school"      data-i18n="contact.form.eventType.school">Escuela / Universidad</option>
-                      <option value="quinceanera" data-i18n="contact.form.eventType.quince">Quinceañera</option>
-                      <option value="private"     data-i18n="contact.form.eventType.private">Evento Privado</option>
-                      <option value="corporate"   data-i18n="contact.form.eventType.corporate">Evento Corporativo</option>
-                      <option value="classes"     data-i18n="contact.form.eventType.classes">Clases</option>
-                      <option value="other"       data-i18n="contact.form.eventType.other">Otro</option>
-                    </select>
-                  </div>
+                  <p class="form-success-heading" data-i18n="contact.form.success.heading">¡Mensaje enviado!</p>
+                  <span class="form-flourish form-success-flourish" aria-hidden="true"></span>
+                  <p class="form-success-text" data-i18n="contact.form.success.text">Gracias por escribirnos. Pronto serás parte de nuestra familia — te responderemos en 1–2 días hábiles.</p>
                 </div>
-
-                <div class="form-group">
-                  <label for="message" data-i18n="contact.form.message">Mensaje</label>
-                  <textarea id="message" name="message" rows="5" required data-fs-field data-placeholder-i18n="contact.form.message.placeholder" placeholder="Cuéntanos cómo podemos ayudarte…"></textarea>
-                  <span data-fs-error="message" style="color:#e74c3c;font-size:0.78rem;"></span>
-                </div>
-
-                <button type="submit" class="btn btn-gold" style="width:100%;text-align:center;justify-content:center;" data-fs-submit-btn data-i18n="contact.form.submit">
-                  Enviar Mensaje
-                </button>
-
-                <p class="form-notice" data-i18n="contact.form.notice">
-                  Normalmente respondemos en 1–2 días hábiles.
-                </p>
 
               </fieldset>
             </form>
@@ -4384,7 +4590,7 @@
 
         // Events
         "performances.label":   "Nuestras Presentaciones",
-        "performances.heading": "Únete a nuestra celebración",
+        "performances.heading": "Únete a nuestra celebración.",
         "performances.cta":     "Haz tu evento inolvidable",
         "performances.interactiveNote": "¿Buscas algo más? También ofrecemos sesiones interactivas donde sus invitados aprenden algunos de nuestros bailes folklóricos.",
         "events.upcoming":      "Próximos Eventos",
@@ -4478,12 +4684,12 @@
         "contact.form.eventType.corporate":   "Evento Corporativo",
         "contact.form.eventType.classes":     "Clases",
         "contact.form.eventType.other":       "Otro",
-        "contact.form.message":       "Mensaje",
+        "contact.form.message":       "Mensaje (opcional)",
         "contact.form.message.placeholder": "Cuéntanos cómo podemos ayudarte…",
         "contact.form.submit":        "Enviar Mensaje",
         "contact.form.notice":        "Normalmente respondemos en 1–2 días hábiles.",
-        "contact.form.success.heading": "✓ ¡Mensaje enviado!",
-        "contact.form.success.text":  "Gracias por contactarnos. Te responderemos en 1–2 días hábiles.",
+        "contact.form.success.heading": "¡Mensaje enviado!",
+        "contact.form.success.text":  "Gracias por escribirnos. Pronto serás parte de nuestra familia — te responderemos en 1–2 días hábiles.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -4544,7 +4750,7 @@
 
         // Events
         "performances.label":   "Our Performances",
-        "performances.heading": "Join our celebration",
+        "performances.heading": "Join our celebration.",
         "performances.cta":     "Make Your Event Unforgettable",
         "performances.interactiveNote": "Looking for something extra? We also offer interactive sessions where your guests learn some of our folklórico dances.",
         "events.upcoming":      "Upcoming Events",
@@ -4638,12 +4844,12 @@
         "contact.form.eventType.corporate":   "Corporate Event",
         "contact.form.eventType.classes":     "Classes",
         "contact.form.eventType.other":       "Other",
-        "contact.form.message":       "Message",
+        "contact.form.message":       "Message (optional)",
         "contact.form.message.placeholder": "Tell us how we can help you…",
         "contact.form.submit":        "Send Message",
         "contact.form.notice":        "We typically respond within 1–2 business days.",
-        "contact.form.success.heading": "✓ Message sent!",
-        "contact.form.success.text":  "Thanks for reaching out. We'll get back to you within 1–2 business days.",
+        "contact.form.success.heading": "Message sent!",
+        "contact.form.success.text":  "Thank you for reaching out. You're about to be part of our familia — we'll get back to you within 1–2 business days.",
 
         // Footer
         "footer.brand":         "Ballet Folklórico Mi Herencia",
@@ -5361,12 +5567,145 @@
 
   </script>
 
-  <!-- Formspree Ajax -->
+  <!-- Contact form: phone masking, live email validation, AJAX submit + feedback -->
   <script>
-    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
-    formspree('initForm', { formElement: '#bookingForm', formId: 'mgoqzqpo' });
+    (function () {
+      var form = document.getElementById('bookingForm');
+      if (!form) return;
+
+      var wrapper     = form.closest('.book-form-wrapper');
+      var successBox  = wrapper.querySelector('[data-fs-success]');
+      var errorBox    = wrapper.querySelector('[data-fs-error]');
+      var submitBtn   = form.querySelector('[data-fs-submit-btn]');
+      var emailInput  = document.getElementById('contact-email');
+      var phoneInput  = document.getElementById('contact-phone');
+      var emailError  = form.querySelector('[data-fs-error="email"]');
+
+      // Bilingual micro-copy for messages this script generates.
+      var MSG = {
+        es: {
+          invalidEmail: 'Por favor ingresa un correo electrónico válido.',
+          sending:      'Enviando…',
+          error:        'Algo salió mal. Inténtalo de nuevo o escríbenos a balletfolkloricomiherencia@gmail.com.'
+        },
+        en: {
+          invalidEmail: 'Please enter a valid email address.',
+          sending:      'Sending…',
+          error:        'Something went wrong. Please try again or email us at balletfolkloricomiherencia@gmail.com.'
+        }
+      };
+      function lang() { return document.documentElement.lang === 'en' ? 'en' : 'es'; }
+      function t(key) { return MSG[lang()][key]; }
+
+      /* ── Phone number masking → (XXX) XXX-XXXX ──────────────── */
+      function formatPhone(raw) {
+        var d = raw.replace(/\D/g, '').slice(0, 10);
+        if (d.length === 0) return '';
+        if (d.length < 4)  return '(' + d;
+        if (d.length < 7)  return '(' + d.slice(0, 3) + ') ' + d.slice(3);
+        return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      }
+      function digitsBefore(str, pos) { return str.slice(0, pos).replace(/\D/g, '').length; }
+      function caretForDigits(str, count) {
+        if (count <= 0) return 0;
+        var seen = 0;
+        for (var i = 0; i < str.length; i++) {
+          if (/\d/.test(str[i]) && ++seen === count) return i + 1;
+        }
+        return str.length;
+      }
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function () {
+          var wanted = digitsBefore(this.value, this.selectionStart);
+          this.value = formatPhone(this.value);
+          var caret = caretForDigits(this.value, wanted);
+          try { this.setSelectionRange(caret, caret); } catch (e) {}
+        });
+      }
+
+      /* ── Live email validation (errors on blur, not just submit) ── */
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      function showEmailError() {
+        if (emailError) emailError.textContent = t('invalidEmail');
+        emailInput.setAttribute('aria-invalid', 'true');
+      }
+      function clearEmailError() {
+        if (emailError) emailError.textContent = '';
+        emailInput.removeAttribute('aria-invalid');
+      }
+      function emailIsValid() {
+        var v = emailInput.value.trim();
+        return v !== '' && EMAIL_RE.test(v);
+      }
+      if (emailInput) {
+        emailInput.addEventListener('blur', function () {
+          if (this.value.trim() === '') { clearEmailError(); return; }
+          if (emailIsValid()) clearEmailError(); else showEmailError();
+        });
+        // Clear the error as soon as the visitor corrects it.
+        emailInput.addEventListener('input', function () {
+          if (emailInput.getAttribute('aria-invalid') === 'true' && emailIsValid()) clearEmailError();
+        });
+      }
+
+      /* ── Submit feedback ─────────────────────────────────────── */
+      function hideError() { if (errorBox) { errorBox.textContent = ''; errorBox.style.display = 'none'; } }
+      function showError(msg) {
+        if (!errorBox) return;
+        errorBox.textContent = msg;
+        errorBox.style.display = 'block';
+        try { errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+      }
+      function onSuccess() {
+        hideError();
+        // Keep the framed card + gold corners; just swap fields for the celebration.
+        form.classList.add('is-sent');
+        if (successBox) {
+          try { successBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+        }
+        form.reset();
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        hideError();
+
+        // Surface our friendlier email message before the native check.
+        if (emailInput && !emailIsValid() && emailInput.value.trim() !== '') showEmailError();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        if (emailInput && !emailIsValid()) { showEmailError(); emailInput.focus(); return; }
+
+        var labelBefore = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-busy', 'true');
+        submitBtn.textContent = t('sending');
+
+        function restoreBtn() {
+          submitBtn.disabled = false;
+          submitBtn.removeAttribute('aria-busy');
+          submitBtn.textContent = labelBefore;
+        }
+
+        fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function (res) {
+          if (res.ok) { onSuccess(); return; }
+          return res.json().then(function (data) {
+            var msg = (data && data.errors && data.errors.length)
+              ? data.errors.map(function (er) { return er.message; }).join(' ')
+              : t('error');
+            restoreBtn();
+            showError(msg);
+          });
+        }).catch(function () {
+          restoreBtn();
+          showError(t('error'));
+        });
+      });
+    })();
   </script>
-  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
   <!-- Hero background video: honor reduced-motion (hold the still poster instead of looping) -->
   <script>
