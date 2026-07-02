@@ -22,10 +22,11 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 
 ## Highlights
 
-- **Fully bilingual (ES/EN)** — a client-side i18n layer swaps every string via `data-i18n` attributes and a language toggle, with `hreflang` (`es`, `en`, `x-default`) tags so search engines serve the right language.
-- **Local SEO, done properly** — descriptive `<title>`, rich meta description and keywords targeting "folklorico for hire" across dozens of SoCal cities, Open Graph image, `robots.txt`, and a `sitemap.xml`.
+- **Multilingual (EN · ES · JA · ZH)** — every language is a real, pre-rendered URL (`/`, `/es/`, `/ja/`, `/zh/`) with its own `<html lang>`, localized `<title>`/meta, self-referential canonical, and reciprocal `hreflang` tags — the proper way to do multilingual SEO. A language dropdown of real links lets visitors (and crawlers) switch.
+- **Safe language auto-detect** — visitors landing on the root `/` are sent to their browser's language automatically; an explicit switcher choice is remembered and always wins, the language sub-pages are never auto-redirected (shared links stay intact), and crawlers (en-US) stay on `/`, so SEO is unaffected.
+- **Local SEO, done properly** — descriptive `<title>`, rich meta description and keywords targeting "folklorico for hire" across dozens of SoCal cities, per-language Open Graph + JSON-LD (`DanceGroup`, `FAQPage`, `DanceEvent`), `robots.txt`, and a `sitemap.xml` with `hreflang` alternates.
 - **Booking & contact** — an inquiry form wired to [Formspree](https://formspree.io/) so the group can take performance requests without a backend.
-- **Performance-first** — a single hand-built static page (no framework, no build step) that loads instantly and is trivial to host.
+- **Performance-first** — hand-built static pages (no framework). Shared CSS (`styles.css`) and JS (`app.js`) are linked once and cached across pages; the language pages are generated from a single source by a tiny dependency-free build script.
 - **Analytics** — Vercel Web Analytics to understand where visitors and inquiries come from.
 - **Booking CTAs** — clear "Book a Performance" and "Join the Group" calls to action, plus sections for About, Events, and Classes.
 
@@ -34,20 +35,53 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 | Concern        | Approach                                                                 |
 | -------------- | ------------------------------------------------------------------------ |
 | Markup/Styles  | Hand-authored, framework-free **HTML / CSS / JavaScript**                |
-| Localization   | Custom `data-i18n` dictionary + language toggle, with `hreflang` tags    |
-| SEO            | Targeted meta tags, Open Graph, `robots.txt`, `sitemap.xml`              |
+| Localization   | `data-i18n` template + `i18n-data.js` dictionary, pre-rendered per URL   |
+| SEO            | Per-language meta, Open Graph, JSON-LD, `hreflang`, `robots.txt`, `sitemap.xml` |
 | Forms          | Formspree AJAX submissions (no server required)                          |
 | Analytics      | Vercel Web Analytics                                                     |
 | Hosting        | Vercel — static deploy, instant cache, push-to-deploy                    |
 
-## Local development
+## Where to edit what
 
-No build tooling required — it's a static site.
+Everything shared lives in **one file each** — no styling or behavior is duplicated
+across the language pages:
+
+| Edit this…        | …to change                                                       | Rebuild needed? |
+| ----------------- | ---------------------------------------------------------------- | --------------- |
+| **`styles.css`**  | any styling (shared by all pages, linked not embedded)           | No — refresh    |
+| **`app.js`**      | any behavior/JS (shared by all pages)                            | No — refresh    |
+| **`i18n-data.js`**| copy & translations + per-language SEO meta (EN/ES/JA/ZH)        | **Yes**         |
+| **`index.html`**  | page **structure** (the template; also the English page)         | **Yes**         |
+
+The language pages (`/es/ /ja/ /zh/` and the English `index.html`) carry baked-in
+translated text for SEO, so they're **generated** — they begin with a
+`DO NOT EDIT` banner. Pure CSS or JS changes need no rebuild (those files are
+linked); copy or structure changes do.
+
+**`build.mjs`** reads `index.html` + `i18n-data.js` and writes four fully-localized pages:
+
+| URL                    | Lang         | File              |
+| ---------------------- | ------------ | ----------------- |
+| `https://bfmh.dance/`  | English (x-default) | `index.html` |
+| `https://bfmh.dance/es/` | Español    | `es/index.html`   |
+| `https://bfmh.dance/ja/` | 日本語      | `ja/index.html`   |
+| `https://bfmh.dance/zh/` | 简体中文    | `zh/index.html`   |
+
+> ⚠️ The `/es/`, `/ja/`, `/zh/` pages **and** the English `index.html` are
+> generated. After editing copy in `i18n-data.js` or structure in `index.html`,
+> **re-run the build** or those pages go stale:
+>
+> ```bash
+> node build.mjs        # no dependencies — pure Node, regenerates all 4 pages
+> ```
+
+To preview locally, build first, then serve the folder so the absolute paths and
+`/es/` `/ja/` `/zh/` routes resolve:
 
 ```bash
-# Serve the folder so relative paths resolve correctly:
-python3 -m http.server 8000
-# then visit http://localhost:8000
+node build.mjs
+python3 -m http.server 8000   # then visit http://localhost:8000
 ```
 
-Deployment is push-to-`main` on Vercel; every file is served as-is.
+Deployment is push-to-`main` on Vercel; the generated pages are committed and
+served as-is (no build step runs on Vercel).
