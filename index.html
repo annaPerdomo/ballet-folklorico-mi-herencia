@@ -2232,6 +2232,10 @@
     @media (max-width: 900px) {
       #contact { padding-block-start: max(6rem, 19vw); }
     }
+    @media (max-width: 700px) {
+      /* the mobile string is proportionally taller (150/480 viewBox ≈ 31vw) */
+      #contact { padding-block-start: max(7.5rem, 36vw); }
+    }
     .papel-picado {
       position: absolute;
       top: 0;
@@ -2247,6 +2251,16 @@
       display: block;
       width: 100%;
       height: auto;
+    }
+    .papel-picado .pp-mobile { display: none; }
+    @media (max-width: 700px) {
+      /* phones get their own string: fewer, larger flags on one gentle drape
+         so the cut-out designs stay legible. The desktop svg collapses to
+         0×0 rather than display:none so its <defs> (flag shapes + cut-out
+         masks) keep resolving for the mobile string's <use> references —
+         display:none on the defs' svg breaks those in Safari. */
+      .papel-picado .pp-desktop { width: 0; height: 0; }
+      .papel-picado .pp-mobile { display: block; }
     }
     @keyframes papelSway {
       0%   { transform: translateY(0) rotate(0deg); }
@@ -4214,7 +4228,7 @@
       <!-- Papel picado — one string draped across the section top: a swag from
            the left edge up to a pinned peak, then a long drape to the right edge -->
       <div class="papel-picado" aria-hidden="true">
-        <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
+        <svg class="pp-desktop" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <!-- Shared flag body: scalloped hem, perforation row. Six cut designs below.
                  Cut-outs are masks, so the page truly shows through the holes. -->
@@ -4373,6 +4387,20 @@
           <path d="M-24,128 Q190,102 403,6" stroke="#4A3344" stroke-width="1" fill="none" opacity="0.15"/>
           <path d="M403,6 Q920,186 1444,214" stroke="#4A3344" stroke-width="1" fill="none" opacity="0.15"/>
           <circle cx="403" cy="6" r="2.2" fill="#4A3344" opacity="0.5"/>
+        </svg>
+
+        <!-- Mobile string — the same six cut designs, fewer and larger so the
+             cut-outs stay legible, hung on one gentle drape. Reuses the
+             desktop svg's <defs> via same-document <use> references. -->
+        <svg class="pp-mobile" viewBox="0 0 480 150" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg">
+          <path d="M-10,28 Q240,150 490,40" stroke="#4A3344" stroke-width="1.6" fill="none" opacity="0.4"/>
+          <g class="ppw" style="animation-duration:3.80s;animation-delay:0.00s"><use href="#pic-flag-1" transform="translate(46,52.5) rotate(18) translate(0,-2) scale(0.62)" fill="#e84393"/></g>
+          <g class="ppw" style="animation-duration:4.25s;animation-delay:-0.70s"><use href="#pic-flag-2" transform="translate(120,75.8) rotate(13.9) translate(0,-2) scale(0.62)" fill="#1e9ce0"/></g>
+          <g class="ppw" style="animation-duration:4.70s;animation-delay:-1.40s"><use href="#pic-flag-3" transform="translate(200,89.6) rotate(5.6) translate(0,-2) scale(0.62)" fill="#fdc53a"/></g>
+          <g class="ppw" style="animation-duration:5.15s;animation-delay:-2.10s"><use href="#pic-flag-4" transform="translate(280,91.5) rotate(-2.9) translate(0,-2) scale(0.62)" fill="#8c4be0"/></g>
+          <g class="ppw" style="animation-duration:3.80s;animation-delay:-2.80s"><use href="#pic-flag-5" transform="translate(360,81.5) rotate(-11.2) translate(0,-2) scale(0.62)" fill="#f0832e"/></g>
+          <g class="ppw" style="animation-duration:4.25s;animation-delay:-3.50s"><use href="#pic-flag-6" transform="translate(434,61.7) rotate(-16.5) translate(0,-2) scale(0.62)" fill="#1cc09e"/></g>
+          <path d="M-10,28 Q240,150 490,40" stroke="#4A3344" stroke-width="1" fill="none" opacity="0.15"/>
         </svg>
       </div>
 
