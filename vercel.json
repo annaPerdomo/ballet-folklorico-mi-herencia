@@ -1,5 +1,4 @@
 {
-  "$comment": "Language auto-detect at the CDN edge — pure routing config, no functions, no Fluid Compute usage. Redirects only ever fire from the root URL. An explicit switcher choice (bfmh-lang cookie, set in app.js) always wins over the Accept-Language header; the header rules match the PRIMARY browser language only (header must start with it), so crawlers and multilingual users whose first choice is English stay on /. permanent:false → 307, never cached by browsers. The inline script in index.html remains as a fallback for local dev / non-Vercel hosting.",
   "redirects": [
     {
       "source": "/",
