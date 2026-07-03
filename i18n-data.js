@@ -1,11 +1,11 @@
 /* ════════════════════════════════════════════════════════════════════
-   i18n-data.js — single source of truth for all four languages.
+   i18n-data.js — single source of truth for all five languages.
 
    Used in TWO places:
      • the browser  — exposed as window.__I18N__ for the runtime
        (dynamic events, {year}/{season}, form placeholders, button labels)
      • build.mjs    — read at build time to pre-render localized static
-       pages (/  = en, /es/, /ja/, /zh/) with baked-in text + SEO head.
+       pages (/  = en, /es/, /ja/, /zh/, /zh-hant/) with baked-in text + SEO head.
 
    To add/edit copy: change it HERE, then run `npm run build`.
    ════════════════════════════════════════════════════════════════════ */
@@ -371,6 +371,96 @@
       "footer.social.heading": "在线找到我们", "footer.social.gigsalad": "GigSalad 主页",
       "footer.rights": "版权所有。", "footer.made_with": "用心制作", "footer.by": "制作方",
       "aria.openMenu": "打开导航菜单", "aria.langMenu": "选择语言"
+    },
+
+    zht: {
+      "skipLink": "跳至主要內容",
+      "nav.home": "首頁", "nav.about": "關於我們", "nav.gallery": "精彩瞬間",
+      "nav.events": "活動", "nav.contact": "聯絡我們", "nav.classes": "舞蹈課程",
+      "nav.faq": "常見問題", "nav.cta": "預訂演出",
+      "hero.subtitle": "Ballet Folklórico Mi Herencia",
+      "hero.heading1": "舞動", "hero.heading2": "傳統。",
+      "hero.description": "我們是一支扎根社區的墨西哥民俗舞蹈（folklórico）團體，位於 Hacienda Heights, CA。可受邀於洛杉磯、內陸帝國及橙縣地區的節慶、企業活動、成人禮（quinceañera）、婚禮和學校等場合演出。",
+      "hero.cta1": "預訂演出", "hero.cta2": "加入舞團",
+      "placeholder.featured": "此處放置舞團主照片", "placeholder.about": "舞團合影",
+      "about.label": "關於我們", "about.heading": "不只是一支舞團。",
+      "about.text1": "Ballet Folklórico Mi Herencia 是一支扎根社區的墨西哥民俗舞蹈團體，成員涵蓋各個年齡層——從6歲孩童到成年人。我們當中有人已登台多年，也有人剛剛踏出第一步。在這裡，每個人都有屬於自己的位置。",
+      "about.text2": "我們曾在洛杉磯、聖蓋博谷、內陸帝國和橙縣各地的縣博覽會、企業活動、婚禮、成人禮（quinceañera）、主題樂園、媒體活動和學校集會上演出。我們的足跡遍及整個南加州——再大的舞台我們也能駕馭，再小的活動我們也用心對待。",
+      "about.instructors.label": "我們的指導老師", "about.instructors.heading": "代代相傳的家族傳統。",
+      "about.instructors.text": "Mi Herencia 由夫妻檔負責人 Jorge 與 Francisca Diaz，以及指導老師 Angel 和 Mayra Ramirez 共同創立並帶領，是一個名副其實的大家庭。每場演出由 Jorge 擔任主持報幕，Francisca 則在幕後悉心打點，確保每一套舞衣都合身得體。Angel 與 Mayra 的三個孩子——Tatiana、Natalia 和 Sebastian——也與舞團其他成員並肩起舞，用一個個踢踏舞步（zapateado）詮釋著墨西哥文化之美。",
+      "gallery.label": "精彩瞬間", "gallery.heading": "看我們翩翩起舞。", "gallery.photo": "照片",
+      "gallery.viewAll": "查看全部照片", "gallery.showLess": "收起",
+      "videos.heading": "看我們盡情起舞！", "videos.cta": "在 YouTube 觀看更多",
+      "performances.label": "我們的演出", "performances.heading": "與我們一同歡慶。",
+      "performances.cta": "讓您的活動難忘非凡",
+      "performances.interactiveNote": "想要更特別的體驗？我們還提供互動環節，讓您的賓客親身學跳幾支我們的墨西哥民俗舞蹈。",
+      "events.upcoming": "近期活動", "events.pastHeading": "過往活動",
+      "events.noUpcoming": "目前暫無近期活動安排。", "events.past": "過往活動",
+      "events.showMore": "查看過往活動", "events.showLess": "收起",
+      "classes.label": "跟我們一起學", "classes.heading": "舞蹈課程",
+      "classes.description": "{year}年{season}現正招收新學員。無論您是初次踏上舞池，還是經驗豐富的表演者，Mi Herencia 都是您溫暖的家。",
+      "classes.register": "立即報名", "classes.getstarted": "開始學習",
+      "class1.title": "兒童班", "class1.ages": "（5–12歲）", "class1.level": "初級 – 中級",
+      "class1.desc": "趣味十足的墨西哥民俗舞蹈入門課程。孩子們在律動與遊戲中學習基礎舞步、節奏感，感受傳統音樂的快樂。",
+      "class1.schedule": "每週二", "class1.location": "Hacienda Heights, CA",
+      "class2.title": "青少年班", "class2.ages": "（13–17歲）", "class2.level": "適合各程度",
+      "class2.desc": "學員將循序掌握踢踏舞步（zapateado）、裙襬技巧（faldeo）及各地區編舞，在提升技藝的同時建立自信，與自身文化建立連結。",
+      "class2.schedule": "每週二", "class2.location": "Hacienda Heights, CA",
+      "class3.title": "成人班", "class3.ages": "（18歲以上）", "class3.level": "適合各程度",
+      "class3.desc": "為所有希望與文化根源連結的舞者而設，不限程度皆可參加。學習來自 Jalisco、Veracruz、Sinaloa、Baja、Chiapas 等地區的傳統舞蹈。",
+      "class3.schedule": "每週二", "class3.location": "Hacienda Heights, CA",
+      "class4.name": "前4堂課 — <span>免費</span>", "class4.who": "所有6歲及以上的新學員",
+      "classes.contact": "有興趣或有疑問？傳個訊息給我們吧——我們很樂意與您聊聊，並誠摯邀請您參加即將到來的排練。",
+      "reviews.label": "大家怎麼說", "reviews.heading": "好不好，聽他們說。",
+      "reviews.subtitle": " 5.0 — <a href='https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w' target='_blank' rel='noopener noreferrer' style='color:var(--gold-light);text-decoration:underline;'>GigSalad</a> 上7則評價",
+      "review1.text": "「舞蹈美極了，我們的賓客都非常喜歡他們的演出！合作起來輕鬆愉快，而且配合度很高。我們請這支了不起的舞團為我媽媽的生日製造了一個驚喜，他們沒有讓我們失望！我和家人一定會毫不猶豫地再次邀請他們！」",
+      "review1.author": "—— Bianca B. · 生日派對",
+      "review2.text": "「一切都很完美。準時、專業、溝通順暢。我的婚禮請了他們，所有人都很喜歡。」",
+      "review2.author": "—— Ramon A. · 婚禮",
+      "review3.text": "「這是我見過最棒的舞團。他們為我們學校的西語裔傳統文化節做了一場線上演出，比我們以往請的現場團隊還要精彩。我特別喜歡他們為每支舞蹈講解的歷史背景，以及為學生設計的互動教學環節。我願意把這支舞團推薦給任何人。」",
+      "review3.author": "—— Antoinette M. · 學校文化節",
+      "review4.text": "「Ballet Folklórico Mi Herencia 是我們公司線上五月五日節（Cinco de Mayo）慶典的特邀嘉賓。他們表演了4支傳統舞蹈，隨後還帶來了一場妙趣橫生的互動舞蹈教學。這無疑是我們今年最有趣、最精彩的活動之一。」",
+      "review4.author": "—— Adrielle B. · 企業活動",
+      "review5.text": "「我們強烈推薦 Angel 和他的團隊。我們5公里路跑活動的參與者都讚不絕口！我們一定會再次邀請他們！」",
+      "review5.author": "—— Eulogio R. · 社區活動",
+      "reviews.cta": "在 GigSalad 查看全部評價",
+      "faq.label": "常見疑問", "faq.heading": "常見問題解答",
+      "faq.q1": "在洛杉磯邀請一支墨西哥民俗舞蹈（folklórico）團體演出要多少錢？",
+      "faq.a1": "費用取決於活動類型、演出時長和舞者人數。我們可在節慶、成人禮（quinceañera）、婚禮、企業活動和學校等場合演出。歡迎聯絡我們，獲取免費的客製化報價。",
+      "faq.q2": "你們會到哪些地區演出？",
+      "faq.a2": "我們位於 Hacienda Heights, CA，演出足跡遍及整個南加州，包括洛杉磯、聖蓋博谷、內陸帝國和橙縣。",
+      "faq.q3": "你們會在成人禮和婚禮上演出嗎？",
+      "faq.a3": "當然！我們尤其擅長成人禮（quinceañera）、婚禮、文化節慶、企業活動、學校集會及私人慶典。",
+      "faq.q4": "你們位於哪裡？",
+      "faq.a4": "我們是一支扎根社區的墨西哥民俗舞蹈團體，位於加州的 Hacienda Heights。",
+      "faq.q5": "你們提供墨西哥民俗舞蹈課程嗎？我該如何加入？",
+      "faq.a5": "有的。我們在 Hacienda Heights 開設兒童（6–12歲）、青少年（13–17歲）和成人（18歲以上）墨西哥民俗舞蹈課程。前4堂課免費。傳訊息給我們即可報名。",
+      "faq.q6": "我應該提前多久預訂？",
+      "faq.a6": "我們建議至少提前3–4週預訂，旺季檔期尤其如此。如需臨時預約，也請隨時聯絡我們——我們會盡力為您安排。",
+      "contact.label": "聯絡我們", "contact.heading": "與我們聯絡。",
+      "contact.intro": "我們期待您的來信！無論您是想了解我們的課程、近期活動，還是希望預訂一場演出，都請傳訊息給我們，我們會盡快回覆您。加入我們的大家庭（familia）——成為我們的傳統、文化與社區的一份子。",
+      "contact.info.location.label": "所在地", "contact.info.location.value": "Hacienda Heights, CA",
+      "contact.info.email.label": "電子郵件", "contact.info.email.value": "balletfolkloricomiherencia@gmail.com",
+      "contact.area.heading": "服務區域",
+      "contact.area.value": "我們的足跡遍及整個南加州——洛杉磯、聖蓋博谷、內陸帝國及橙縣。",
+      "contact.form.legend": "把歡慶帶到您的活動現場",
+      "contact.form.name": "姓名", "contact.form.name.placeholder": "請填寫您的姓名",
+      "contact.form.email": "電子郵件", "contact.form.phone": "電話號碼",
+      "contact.form.eventType": "主題", "contact.form.eventType.placeholder": "— 請選擇主題 —",
+      "contact.form.eventType.festival": "文化節慶", "contact.form.eventType.school": "學校 / 大學",
+      "contact.form.eventType.quince": "成人禮（quinceañera）", "contact.form.eventType.private": "私人活動",
+      "contact.form.eventType.corporate": "企業活動", "contact.form.eventType.classes": "舞蹈課程",
+      "contact.form.eventType.other": "其他", "contact.form.message": "留言（選填）",
+      "contact.form.message.placeholder": "請告訴我們能為您做些什麼……",
+      "contact.form.submit": "傳送訊息", "contact.form.notice": "我們通常會在1–2個工作天內回覆。",
+      "contact.form.success.heading": "訊息已送出！",
+      "contact.form.success.text": "感謝您的來信。您即將成為我們大家庭（familia）的一員——我們會在1–2個工作天內回覆您。",
+      "footer.brand": "Ballet Folklórico Mi Herencia",
+      "footer.location": "位於 Hacienda Heights, CA\n服務洛杉磯、聖蓋博谷、內陸帝國及橙縣",
+      "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "快速連結",
+      "footer.social.heading": "線上找到我們", "footer.social.gigsalad": "GigSalad 主頁",
+      "footer.rights": "版權所有。", "footer.made_with": "用心製作", "footer.by": "製作方",
+      "aria.openMenu": "開啟導覽選單", "aria.langMenu": "選擇語言"
     }
   };
 
@@ -415,6 +505,16 @@
       ogDescription: "扎根社区的墨西哥民俗舞蹈团体，足迹遍及南加州。可受邀于节庆、成人礼、婚礼、企业活动和学校演出，并开设各年龄段舞蹈课程。",
       ogImageAlt: "Ballet Folklórico Mi Herencia 的舞者们身着色彩绚丽的墨西哥传统舞服翩翩起舞",
       schemaDescription: "专业墨西哥民俗舞蹈（folklórico）团体，位于加州 Hacienda Heights，可受邀于洛杉矶、圣盖博谷、内陆帝国及橙县各地演出。我们在节庆、成人礼（quinceañera）、婚礼、企业活动、学校集会和文化庆典等场合表演。在 GigSalad 上获五星好评。我们的足迹遍及整个南加州。"
+    },
+    zht: {
+      lang: "zht", htmlLang: "zh-Hant", path: "/zh-hant/", hreflang: "zh-Hant", ogLocale: "zh_TW",
+      title: "墨西哥民俗舞蹈表演 | 洛杉磯 Ballet Folklórico Mi Herencia",
+      description: "Ballet Folklórico Mi Herencia 是位於 Hacienda Heights 的墨西哥民俗舞蹈團體，為洛杉磯、聖蓋博谷、內陸帝國及橙縣的節慶、婚禮、成人禮和企業活動提供演出，並開設兒童、青少年及成人舞蹈課程。",
+      keywords: "墨西哥民俗舞蹈, folklórico, 洛杉磯, 聖蓋博谷, 民俗舞表演, 演出預訂, 墨西哥舞蹈課程, 婚禮表演, 成人禮表演, 企業活動表演, Mexican folk dance Los Angeles",
+      ogTitle: "墨西哥民俗舞蹈表演與課程 | Ballet Folklórico Mi Herencia",
+      ogDescription: "扎根社區的墨西哥民俗舞蹈團體，足跡遍及南加州。可受邀於節慶、成人禮、婚禮、企業活動和學校演出，並開設各年齡層舞蹈課程。",
+      ogImageAlt: "Ballet Folklórico Mi Herencia 的舞者們身著色彩絢麗的墨西哥傳統舞衣翩翩起舞",
+      schemaDescription: "專業墨西哥民俗舞蹈（folklórico）團體，位於加州 Hacienda Heights，可受邀於洛杉磯、聖蓋博谷、內陸帝國及橙縣各地演出。我們在節慶、成人禮（quinceañera）、婚禮、企業活動、學校集會和文化慶典等場合表演。在 GigSalad 上獲五星好評。我們的足跡遍及整個南加州。"
     }
   };
 
@@ -423,25 +523,28 @@
     en: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
     es: ["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"],
     ja: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
-    zh: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
+    zh: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
+    zht: ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
   };
 
   var seasons = {
     en: ["Winter","Spring","Summer","Fall"],
     es: ["invierno","primavera","verano","otoño"],
     ja: ["冬","春","夏","秋"],
-    zh: ["冬季","春季","夏季","秋季"]
+    zh: ["冬季","春季","夏季","秋季"],
+    zht: ["冬季","春季","夏季","秋季"]
   };
 
   // Native language names (for the language switcher menu).
-  var native = { en: "English", es: "Español", ja: "日本語", zh: "中文" };
+  var native = { en: "English", es: "Español", ja: "日本語", zh: "简体中文", zht: "繁體中文" };
 
   // "View this site in <language>" prompts for the SEO-safe suggestion bar.
   var suggest = {
     en: "View this site in English",
     es: "Ver este sitio en español",
     ja: "このサイトを日本語で見る",
-    zh: "查看本网站的中文版"
+    zh: "查看本网站的简体中文版",
+    zht: "以繁體中文瀏覽本網站"
   };
 
   // ── Performances. Edit this array to update the events on the site. ──
@@ -470,7 +573,7 @@
   ];
 
   // Order in which the switcher lists languages.
-  var order = ["en", "es", "ja", "zh"];
+  var order = ["en", "es", "ja", "zh", "zht"];
 
   root.__I18N__ = {
     strings: strings, meta: meta, months: months, seasons: seasons,

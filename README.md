@@ -22,8 +22,8 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 
 ## Highlights
 
-- **Multilingual (EN · ES · JA · ZH)** — every language is a real, pre-rendered URL (`/`, `/es/`, `/ja/`, `/zh/`) with its own `<html lang>`, localized `<title>`/meta, self-referential canonical, and reciprocal `hreflang` tags — the proper way to do multilingual SEO. A language dropdown of real links lets visitors (and crawlers) switch.
-- **Safe language auto-detect** — visitors landing on the root `/` are sent to their browser's language automatically; an explicit switcher choice is remembered and always wins, the language sub-pages are never auto-redirected (shared links stay intact), and crawlers (en-US) stay on `/`, so SEO is unaffected.
+- **Multilingual (EN · ES · JA · 简体 · 繁體)** — every language is a real, pre-rendered URL (`/`, `/es/`, `/ja/`, `/zh/`, `/zh-hant/`) with its own `<html lang>`, localized `<title>`/meta, self-referential canonical, and reciprocal `hreflang` tags — the proper way to do multilingual SEO. A language dropdown of real links lets visitors (and crawlers) switch — with JS enabled the swap happens in place (no reload, URL updated via `pushState`); without it the links still work as plain navigation.
+- **Safe language auto-detect at the CDN edge** — `vercel.json` redirects first-time visitors on the root `/` to their browser's language before any HTML downloads (zero function invocations — pure routing config, free on Hobby). An explicit switcher choice is remembered (cookie + localStorage) and always wins, the language sub-pages are never auto-redirected (shared links stay intact), and crawlers (en-US) stay on `/`, so SEO is unaffected. An inline script on `/` provides the same detection as a fallback for local dev or non-Vercel hosting.
 - **Local SEO, done properly** — descriptive `<title>`, rich meta description and keywords targeting "folklorico for hire" across dozens of SoCal cities, per-language Open Graph + JSON-LD (`DanceGroup`, `FAQPage`, `DanceEvent`), `robots.txt`, and a `sitemap.xml` with `hreflang` alternates.
 - **Booking & contact** — an inquiry form wired to [Formspree](https://formspree.io/) so the group can take performance requests without a backend.
 - **Performance-first** — hand-built static pages (no framework). Shared CSS (`styles.css`) and JS (`app.js`) are linked once and cached across pages; the language pages are generated from a single source by a tiny dependency-free build script.
@@ -50,15 +50,15 @@ across the language pages:
 | ----------------- | ---------------------------------------------------------------- | --------------- |
 | **`styles.css`**  | any styling (shared by all pages, linked not embedded)           | No — refresh    |
 | **`app.js`**      | any behavior/JS (shared by all pages)                            | No — refresh    |
-| **`i18n-data.js`**| copy & translations + per-language SEO meta (EN/ES/JA/ZH)        | **Yes**         |
+| **`i18n-data.js`**| copy & translations + per-language SEO meta (EN/ES/JA/简体/繁體)  | **Yes**         |
 | **`index.html`**  | page **structure** (the template; also the English page)         | **Yes**         |
 
-The language pages (`/es/ /ja/ /zh/` and the English `index.html`) carry baked-in
-translated text for SEO, so they're **generated** — they begin with a
+The language pages (`/es/ /ja/ /zh/ /zh-hant/` and the English `index.html`) carry
+baked-in translated text for SEO, so they're **generated** — they begin with a
 `DO NOT EDIT` banner. Pure CSS or JS changes need no rebuild (those files are
 linked); copy or structure changes do.
 
-**`build.mjs`** reads `index.html` + `i18n-data.js` and writes four fully-localized pages:
+**`build.mjs`** reads `index.html` + `i18n-data.js` and writes five fully-localized pages:
 
 | URL                    | Lang         | File              |
 | ---------------------- | ------------ | ----------------- |
@@ -66,17 +66,18 @@ linked); copy or structure changes do.
 | `https://bfmh.dance/es/` | Español    | `es/index.html`   |
 | `https://bfmh.dance/ja/` | 日本語      | `ja/index.html`   |
 | `https://bfmh.dance/zh/` | 简体中文    | `zh/index.html`   |
+| `https://bfmh.dance/zh-hant/` | 繁體中文 | `zh-hant/index.html` |
 
-> ⚠️ The `/es/`, `/ja/`, `/zh/` pages **and** the English `index.html` are
-> generated. After editing copy in `i18n-data.js` or structure in `index.html`,
+> ⚠️ The `/es/`, `/ja/`, `/zh/`, `/zh-hant/` pages **and** the English `index.html`
+> are generated. After editing copy in `i18n-data.js` or structure in `index.html`,
 > **re-run the build** or those pages go stale:
 >
 > ```bash
-> node build.mjs        # no dependencies — pure Node, regenerates all 4 pages
+> node build.mjs        # no dependencies — pure Node, regenerates all 5 pages
 > ```
 
 To preview locally, build first, then serve the folder so the absolute paths and
-`/es/` `/ja/` `/zh/` routes resolve:
+`/es/` `/ja/` `/zh/` `/zh-hant/` routes resolve:
 
 ```bash
 node build.mjs

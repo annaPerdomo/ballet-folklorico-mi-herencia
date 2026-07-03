@@ -33,7 +33,11 @@
     // ─────────────────────────────────────────────────────────
     function normalizeLang(code) {
       var c = (code || '').toLowerCase();
-      if (c.indexOf('zh') === 0) return 'zh';
+      if (c === 'zht') return 'zht';
+      if (c.indexOf('zh') === 0) {
+        // Traditional-script regions/tags → zht; everything else Chinese → zh.
+        return /hant|-tw|-hk|-mo/.test(c) ? 'zht' : 'zh';
+      }
       if (c.indexOf('ja') === 0) return 'ja';
       if (c.indexOf('es') === 0) return 'es';
       return 'en';
@@ -69,7 +73,9 @@
         }
       });
 
-      document.documentElement.lang = lang;
+      // Use the full BCP 47 tag (zh-Hans / zh-Hant) so :lang() CSS keeps matching.
+      var metaInfo = window.__I18N__ && window.__I18N__.meta && window.__I18N__.meta[lang];
+      document.documentElement.lang = (metaInfo && metaInfo.htmlLang) || lang;
 
       const switchCurrent = document.getElementById('langSwitchCurrent');
       const native = (window.__I18N__ && window.__I18N__.native) || {};
@@ -103,9 +109,40 @@
       document.addEventListener('click', function (e) { if (!sw.contains(e.target)) close(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
       // Remember an explicit language choice so auto-detect honors it next time.
+      // The cookie lets Vercel's edge redirect (vercel.json) skip auto-detection too.
       menu.addEventListener('click', function (e) {
         var a = e.target.closest('[data-lang]');
-        if (a) { try { localStorage.setItem('bfmh-lang', a.getAttribute('data-lang')); } catch (e2) {} }
+        if (!a) return;
+        var chosen = a.getAttribute('data-lang');
+        try { localStorage.setItem('bfmh-lang', chosen); } catch (e2) {}
+        document.cookie = 'bfmh-lang=' + chosen + '; Max-Age=31536000; Path=/; SameSite=Lax';
+        // Progressive enhancement: swap the language in place instead of a full
+        // page load. The href stays real for crawlers, no-JS, and open-in-new-tab.
+        var I = window.__I18N__;
+        if (I && I.strings[chosen] && I.meta[chosen] && history.pushState) {
+          e.preventDefault();
+          applyLanguage(chosen);
+          currentLang = chosen;
+          document.title = I.meta[chosen].title;
+          history.pushState({ lang: chosen }, '', a.getAttribute('href') + location.hash);
+          close();
+        }
+      });
+      // Back/forward across in-place switches: re-apply the language for the URL.
+      window.addEventListener('popstate', function () {
+        var I = window.__I18N__;
+        if (!I) return;
+        var p = location.pathname;
+        var lang = 'en';
+        for (var key in I.meta) {
+          if (I.meta[key].path !== '/' && p.indexOf(I.meta[key].path) === 0 &&
+              I.meta[key].path.length > I.meta[lang].path.length) lang = key; // longest match wins (/zh-hant/ over /zh/)
+        }
+        if (I.strings[lang]) {
+          applyLanguage(lang);
+          currentLang = lang;
+          document.title = I.meta[lang].title;
+        }
       });
     }
 
@@ -913,7 +950,10 @@
       if (!I) return;
       function norm(c) {
         c = (c || '').toLowerCase();
-        if (c.indexOf('zh') === 0) return 'zh';
+        if (c === 'zht') return 'zht';
+        if (c.indexOf('zh') === 0) {
+          return /hant|-tw|-hk|-mo/.test(c) ? 'zht' : 'zh';
+        }
         if (c.indexOf('ja') === 0) return 'ja';
         if (c.indexOf('es') === 0) return 'es';
         return 'en';
@@ -933,7 +973,7 @@
       var close = document.getElementById('langSuggestClose');
       if (close) close.addEventListener('click', function () {
         bar.hidden = true;
-        try { localStorage.setItem('bfmh-lang', '1'); } catch (e) {}
+        try { localStorage.setItem('bfmh-suggest-dismissed', '1'); } catch (e) {}
       });
     })();
   
