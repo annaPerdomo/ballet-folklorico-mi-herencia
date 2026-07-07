@@ -38,6 +38,29 @@
   <script defer src="/_vercel/insights/script.js"></script>
 
   <!-- ═══════════════════════════════════════════════
+       ANALYTICS — Microsoft Clarity (heatmaps, scroll, session
+       recordings) + Google Analytics 4 (scroll depth, engagement time,
+       trends). Both free. Replace the two placeholder IDs below.
+       These pass through build.mjs untouched into every language page.
+  ═══════════════════════════════════════════════ -->
+  <!-- Microsoft Clarity -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xiy5zi7mqw");
+  </script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9QH42X2S4F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9QH42X2S4F');
+  </script>
+
+  <!-- ═══════════════════════════════════════════════
        PRIMARY SEO TAGS
   ═══════════════════════════════════════════════ -->
   <title>Folklorico for Hire Los Angeles | Ballet Folklórico Mi Herencia — Hacienda Heights, SGV, Inland Empire &amp; OC</title>
@@ -1894,5 +1917,58 @@ Serving Los Angeles, SGV, Inland Empire &amp; Orange County</p>
 
   <!-- Offer the visitor their browser language (SEO-safe: no auto-redirect) -->
   <script src="/app.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ANALYTICS EVENTS — the things pageviews can't show you:
+       which language the page is in, how far into the page people
+       get (per section), in-page language switches, and Book-Us
+       clicks. Safely no-ops until Clarity/GA4 IDs are set above.
+  ═══════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      var lang = document.documentElement.lang || 'en';
+
+      // Fire an event to whichever tools are loaded. Both are optional.
+      function track(name, params) {
+        params = params || {};
+        params.language = lang;
+        if (typeof gtag === 'function') gtag('event', name, params);
+        if (typeof window.clarity === 'function') {
+          window.clarity('event', name);
+          for (var k in params) window.clarity('set', k, String(params[k]));
+        }
+      }
+
+      // 1. Tag every session with its page language (Clarity dimension + GA).
+      if (typeof window.clarity === 'function') window.clarity('set', 'language', lang);
+      track('page_language', { page_language: lang });
+
+      // 2. In-page language-switch clicks (which language people jump TO).
+      document.querySelectorAll('#langSwitchMenu [data-lang]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          track('language_switch', { from: lang, to: a.getAttribute('data-lang') });
+        });
+      });
+
+      // 3. How far people scroll — fire once when each section first appears.
+      var sections = document.querySelectorAll('main section[id]');
+      if ('IntersectionObserver' in window && sections.length) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              track('section_view', { section: entry.target.id });
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        sections.forEach(function (s) { io.observe(s); });
+      }
+
+      // 4. Book-Us / contact intent — the closest thing to a conversion.
+      document.querySelectorAll('.header-cta, a[href="#contact"], a[href$="#contact"]').forEach(function (el) {
+        el.addEventListener('click', function () { track('contact_cta_click', {}); });
+      });
+    })();
+  </script>
 </body>
 </html>
