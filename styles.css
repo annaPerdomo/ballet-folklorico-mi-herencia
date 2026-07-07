@@ -1961,6 +1961,65 @@
       color: #1a0e16;
     }
 
+    /* Papel picado — strung across the top of the contact section: a swag from
+       the left edge up to a pinned peak, then a long drape to the right edge.
+       The banner hangs in front of the layout so the drape overlaps the form
+       card; the top padding keeps the text (not the card) clear of the flags. */
+    #contact { padding-block-start: max(6rem, 12.5vw); }
+    @media (max-width: 900px) {
+      #contact { padding-block-start: max(6rem, 19vw); }
+    }
+    @media (max-width: 700px) {
+      /* the mobile string is proportionally taller (150/480 viewBox ≈ 31vw) */
+      #contact { padding-block-start: max(7.5rem, 36vw); }
+    }
+    .papel-picado {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      line-height: 0;
+      pointer-events: none;
+      z-index: 2;
+      animation: papelSway 7s ease-in-out infinite alternate;
+      transform-origin: 50% 0;
+    }
+    .papel-picado svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .papel-picado .pp-mobile { display: none; }
+    @media (max-width: 700px) {
+      /* phones get their own string: fewer, larger flags on one gentle drape
+         so the cut-out designs stay legible. The desktop svg collapses to
+         0×0 rather than display:none so its <defs> (flag shapes + cut-out
+         masks) keep resolving for the mobile string's <use> references —
+         display:none on the defs' svg breaks those in Safari. */
+      .papel-picado .pp-desktop { width: 0; height: 0; }
+      .papel-picado .pp-mobile { display: block; }
+    }
+    @keyframes papelSway {
+      0%   { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(3px) rotate(0.2deg); }
+    }
+    /* each flag swings gently on the string — no-JS fallback breeze; the
+       script takes over per-flag transforms and adds cursor-driven gusts */
+    .papel-picado .ppw {
+      transform-box: fill-box;
+      transform-origin: 50% 0%;
+      animation: ppWind 4.5s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes ppWind {
+      0%   { transform: rotate(-1.7deg); }
+      100% { transform: rotate(2deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .papel-picado,
+      .papel-picado .ppw { animation: none; }
+    }
+
     .book-layout {
       display: grid;
       grid-template-columns: 1fr 1.2fr;

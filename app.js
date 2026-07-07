@@ -764,7 +764,104 @@
       }
     })();
 
-  
+    /* ── Papel picado: breeze + cursor gusts ──────────────────────
+       Flags are pinned to the string along their whole top edge, like real
+       papel picado glued to the thread: the wind is a skewX applied inside
+       each flag's local frame (after its rotation onto the string), so the
+       top edge never leaves the line while the body and hem sway. Moving
+       the mouse near the banner strengthens the wind locally — sway and
+       speed swell with a gaussian falloff around the cursor, then ease
+       back down as the mouse moves on. */
+    (function () {
+      var banner = document.querySelector('#contact .papel-picado');
+      if (!banner || !window.requestAnimationFrame) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var svg = banner.querySelector('svg');
+      var VIEW_W = 1440;                 // svg viewBox width
+      var SIGMA = 140;                   // gust radius, in viewBox units
+      var flags = Array.prototype.map.call(banner.querySelectorAll('.ppw'), function (el, i) {
+        var use = el.querySelector('use');
+        var t = use.getAttribute('transform');
+        var m = /translate\(([-\d.]+)[ ,]([-\d.]+)\)/.exec(t);
+        var rm = /rotate\((-?[\d.]+)\)/.exec(t);
+        el.style.animation = 'none';     // take over from the CSS fallback breeze
+        return {
+          use: use,
+          x: m ? parseFloat(m[1]) : 0,   // hang point on the string (viewBox units)
+          y: m ? parseFloat(m[2]) : 0,
+          angle: rm ? parseFloat(rm[1]) : 0,          // resting tilt along the string
+          pre: rm ? t.slice(0, rm.index) : t + ' ',   // transform up to rotate(...)
+          post: rm ? t.slice(rm.index + rm[0].length) : '',
+          speed: 1.05 + (i % 5) * 0.16,  // rad/s, varied so the wave ripples along the string
+          phase: i * 1.9,
+          phase2: i * 0.8 + 2.3,
+          gust: 0
+        };
+      });
+
+      var mouse = null;
+      window.addEventListener('mousemove', function (e) {
+        mouse = { x: e.clientX, y: e.clientY };
+      }, { passive: true });
+      window.addEventListener('mouseout', function (e) {
+        if (!e.relatedTarget) mouse = null;  // pointer left the window
+      });
+
+      var running = false, rafId = 0, last = 0;
+
+      function frame(now) {
+        var dt = Math.min((now - last) / 1000, 0.05) || 0.016;
+        last = now;
+        var rect = svg.getBoundingClientRect();
+        var scale = rect.width / VIEW_W || 1;
+        for (var i = 0; i < flags.length; i++) {
+          var f = flags[i];
+          var target = 0;
+          if (mouse) {
+            var dx = (mouse.x - rect.left) / scale - f.x;
+            var dy = (mouse.y - rect.top) / scale - f.y;
+            target = Math.exp(-(dx * dx + dy * dy) / (2 * SIGMA * SIGMA));
+          }
+          // ease toward the target so gusts swell and die down smoothly
+          f.gust += (target - f.gust) * Math.min(1, dt * 5);
+          var wind = 1 + 2 * f.gust;     // local wind-speed factor
+          f.phase += dt * f.speed * wind;
+          f.phase2 += dt * f.speed * 0.63 * wind;
+          var amp = 2 + 3.8 * f.gust;    // sway (skew) amplitude, degrees — kept
+                                         // small so flags flutter, not warp
+          var a = Math.sin(f.phase) * amp + Math.sin(f.phase2) * amp * 0.35;
+          // skewX in the flag's local frame keeps the glued top edge on the
+          // string; the whisper of extra rotation stays hidden by the tuck
+          f.use.setAttribute('transform',
+            f.pre + 'rotate(' + (f.angle + a * 0.08).toFixed(2) + ')' + f.post +
+            ' skewX(' + a.toFixed(2) + ')');
+        }
+        if (running) rafId = requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        last = performance.now();
+        rafId = requestAnimationFrame(frame);
+      }
+      function stop() {
+        running = false;
+        if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+      }
+
+      // only run the loop while the banner is on screen
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) { start(); } else { stop(); }
+        }).observe(banner);
+      } else {
+        start();
+      }
+    })();
+
+
 
 /* ───────────────────────────────────────────────────────── */
 
