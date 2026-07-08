@@ -14,6 +14,8 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![Formspree](https://img.shields.io/badge/Formspree-E5122E?style=flat&logo=maildotru&logoColor=white)
+![Google Analytics 4](https://img.shields.io/badge/GA4-E37400?style=flat&logo=googleanalytics&logoColor=white)
+![Microsoft Clarity](https://img.shields.io/badge/Microsoft_Clarity-2C6EF2?style=flat&logo=microsoftedge&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
 
 <img src="docs/screenshot.png" alt="Ballet Folklórico Mi Herencia — Tradition in Motion" width="100%" />
@@ -27,7 +29,7 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 - **Local SEO, done properly** — descriptive `<title>`, rich meta description and keywords targeting "folklorico for hire" across dozens of SoCal cities, per-language Open Graph + JSON-LD (`DanceGroup`, `FAQPage`, `DanceEvent`), `robots.txt`, and a `sitemap.xml` with `hreflang` alternates.
 - **Booking & contact** — an inquiry form wired to [Formspree](https://formspree.io/) so the group can take performance requests without a backend.
 - **Performance-first** — hand-built static pages (no framework). Shared CSS (`styles.css`) and JS (`app.js`) are linked once and cached across pages; the language pages are generated from a single source by a tiny dependency-free build script.
-- **Analytics** — Vercel Web Analytics to understand where visitors and inquiries come from.
+- **Analytics, three layers** — Vercel Web Analytics for traffic, Google Analytics 4 for engagement (scroll depth, engagement time, and custom events), and Microsoft Clarity for heatmaps and session recordings. A single shared event helper fires each interaction to both GA4 and Clarity at once, and tags every hit with the visitor's language — so I can see which locales convert and where inquiries actually come from.
 - **Booking CTAs** — clear "Book a Performance" and "Join the Group" calls to action, plus sections for About, Events, and Classes.
 
 ## Tech & approach
@@ -38,7 +40,7 @@ Built as a fast, fully bilingual marketing site with serious local-SEO so the gr
 | Localization   | `data-i18n` template + `i18n-data.js` dictionary, pre-rendered per URL   |
 | SEO            | Per-language meta, Open Graph, JSON-LD, `hreflang`, `robots.txt`, `sitemap.xml` |
 | Forms          | Formspree AJAX submissions (no server required)                          |
-| Analytics      | Vercel Web Analytics                                                     |
+| Analytics      | Vercel Web Analytics + Google Analytics 4 + Microsoft Clarity (one shared event helper) |
 | Hosting        | Vercel — static deploy, instant cache, push-to-deploy                    |
 
 ## Where to edit what
