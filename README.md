@@ -1,6 +1,6 @@
 <div align="center">
 
-# 💃 Ballet Folklórico Mi Herencia
+# Ballet Folklórico Mi Herencia
 
 ### Tradition in Motion.
 
