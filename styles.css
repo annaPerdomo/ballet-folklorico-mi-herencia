@@ -2451,7 +2451,7 @@
     footer {
       background: #050210;
       color: var(--text-secondary);
-      padding-block: 3.5rem 1.5rem;
+      padding-block: 2.25rem 1.25rem;
       position: relative;
       overflow: hidden;
     }
@@ -2465,12 +2465,19 @@
 
     .footer-inner {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: 2fr 1.2fr 1fr;
+      gap: 2rem;
     }
 
+    /* Quick Links flow into two tight columns so the list stays short */
+    footer nav ul {
+      columns: 2;
+      column-gap: 2rem;
+    }
+    footer nav li { break-inside: avoid; }
+
     @media (max-width: 700px) {
-      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.75rem; }
     }
 
     .footer-brand-name {
@@ -2497,7 +2504,7 @@
       font-family: var(--font-body);
       font-size: 0.88rem;
       font-style: normal;
-      line-height: 1.9;
+      line-height: 1.7;
       color: var(--text-muted);
     }
 
@@ -2537,8 +2544,8 @@
     }
 
     .footer-bottom {
-      margin-block-start: 2.5rem;
-      padding-block-start: 1.5rem;
+      margin-block-start: 1.5rem;
+      padding-block-start: 1rem;
       border-top: 1px solid rgba(255,255,255,0.06);
       text-align: center;
       font-family: var(--font-ui);
