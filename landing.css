@@ -1,0 +1,222 @@
+/* ════════════════════════════════════════════════════════════
+   LANDING PAGES — shared styles layered on top of styles.css
+   Used by /quinceaneras/ /weddings/ /school-assemblies/ /pricing/
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Hero (gradient + a faint brand photo behind the type) ── */
+.lp-hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: 4.5rem 4rem;
+  text-align: center;
+  background:
+    radial-gradient(1100px 540px at 50% -12%, #2a1740 0%, var(--bg-secondary) 55%, var(--bg-primary) 100%);
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+/* Photo layer — same trick as the homepage video hero: image + dark scrim */
+.lp-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+  opacity: 0.35;
+}
+.lp-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12,5,20,0.55) 0%, rgba(12,5,20,0.72) 60%, var(--bg-primary) 100%);
+}
+.lp-hero > .container { position: relative; z-index: 1; }
+.lp-breadcrumb {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-block-end: 1.75rem;
+}
+.lp-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+.lp-breadcrumb a:hover { color: var(--gold-light); }
+.lp-breadcrumb span[aria-hidden] { margin-inline: 0.5rem; color: rgba(201,168,76,0.5); }
+.lp-hero h1 {
+  font-family: var(--font-hero);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.2vw, 3.4rem);
+  line-height: 1.12;
+  color: var(--text-primary);
+  max-width: 22ch;
+  margin-inline: auto;
+}
+.lp-hero h1 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.lp-lede {
+  max-width: 46rem;
+  margin: 1.4rem auto 0;
+  color: var(--text-secondary);
+  font-size: 1.06rem;
+  line-height: 1.8;
+}
+.lp-trust {
+  margin-block-start: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+.lp-trust .stars { color: #f5c518; letter-spacing: 1px; margin-inline-end: 0.4rem; }
+.lp-trust a { color: var(--gold-light); }
+.lp-hero .hero-cta-group,
+.lp-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-block-start: 2rem;
+}
+
+/* ── Sections ── */
+.lp-section { padding-block: var(--section-gap); }
+.lp-section--alt {
+  background: radial-gradient(1200px 600px at 50% -8%, #1b1029 0%, #130a1c 62%);
+}
+.lp-prose {
+  max-width: 50rem;
+  margin-inline: auto;
+  color: var(--text-secondary);
+  text-align: start;
+}
+.lp-prose p + p { margin-block-start: 1.1rem; }
+.lp-prose h3 {
+  font-family: var(--font-display);
+  color: #f3e9d6;
+  font-size: 1.3rem;
+  margin-block: 2rem 0.6rem;
+}
+.lp-prose a { color: var(--gold-light); }
+.lp-prose strong { color: var(--text-primary); }
+
+/* ── Split layout: prose beside a gold-framed brand photo ── */
+.lp-split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3.5rem;
+  align-items: center;
+  max-width: 1100px;
+  margin: 2.5rem auto 0;
+  text-align: start;
+}
+.lp-split .lp-prose,
+.lp-split .lp-check { margin-inline: 0; max-width: none; }
+.lp-split .about-image-frame { width: 100%; max-width: 430px; margin-inline: auto; }
+@media (max-width: 860px) {
+  .lp-split { grid-template-columns: 1fr; gap: 2.5rem; max-width: 34rem; }
+}
+
+/* ── Gold-diamond checklist ── */
+.lp-check {
+  list-style: none;
+  max-width: 50rem;
+  margin: 1.25rem auto 0;
+  text-align: start;
+}
+.lp-check li {
+  position: relative;
+  padding-inline-start: 1.9rem;
+  margin-block-start: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.lp-check li::before {
+  content: "\2726";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.05em;
+  color: var(--gold);
+}
+.lp-check li strong { color: var(--text-primary); }
+
+/* ── Card grid (occasions, cost factors, repertoire) ──
+   Flex + justify-center so an incomplete last row (e.g. 6 cards → 4 + 2)
+   stays centered under the row above instead of being left-justified. */
+.lp-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 2.5rem auto 0;
+  text-align: start;
+}
+.lp-card {
+  flex: 0 1 224px;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+.lp-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--gold-light);
+  margin-block-end: 0.5rem;
+}
+.lp-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+
+/* ── Pull-quote review ── */
+.lp-review {
+  max-width: 44rem;
+  margin: 2.5rem auto 0;
+  padding: 1.75rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+.lp-review .stars { color: #f5c518; letter-spacing: 1px; font-size: 0.9rem; }
+.lp-review blockquote {
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-block-start: 0.75rem;
+}
+.lp-review figcaption {
+  margin-block-start: 1rem;
+  color: var(--gold-light);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.lp-review figcaption a { color: var(--text-muted); font-weight: 400; font-size: 0.8rem; }
+
+/* ── Cross-links to sibling pages ── */
+.lp-crosslinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block-start: 1.75rem;
+}
+.lp-crosslinks a {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 999px;
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.lp-crosslinks a:hover {
+  background: var(--gold);
+  color: var(--bg-deep);
+}
+
+/* ── Quote form section ── */
+.lp-form-wrap { max-width: 640px; margin: 2.5rem auto 0; }
+
+@media (max-width: 640px) {
+  .lp-hero { padding-block: 3rem 2.75rem; }
+  .lp-card { padding: 1.3rem 1.2rem; }
+}

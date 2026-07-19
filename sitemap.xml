@@ -61,4 +61,244 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://bfmh.dance/quinceaneras/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/quinceaneras/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/quinceaneras/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/quinceaneras/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/ja/quinceaneras/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/quinceaneras/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh/quinceaneras/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/quinceaneras/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh-hant/quinceaneras/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/quinceaneras/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/quinceaneras/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/weddings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/weddings/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/weddings/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/weddings/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/weddings/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/weddings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/weddings/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/weddings/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/weddings/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/weddings/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/ja/weddings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/weddings/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/weddings/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/weddings/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/weddings/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh/weddings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/weddings/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/weddings/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/weddings/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/weddings/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh-hant/weddings/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/weddings/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/weddings/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/weddings/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/weddings/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/weddings/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/school-assemblies/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/school-assemblies/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/school-assemblies/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/school-assemblies/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/ja/school-assemblies/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/school-assemblies/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh/school-assemblies/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/school-assemblies/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh-hant/school-assemblies/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/school-assemblies/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/school-assemblies/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/pricing/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/pricing/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/pricing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/pricing/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/pricing/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/pricing/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/pricing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/pricing/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/ja/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/pricing/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/pricing/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/pricing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/pricing/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/pricing/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/pricing/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/pricing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/pricing/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh-hant/pricing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/pricing/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/pricing/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/pricing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/pricing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/pricing/" />
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

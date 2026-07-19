@@ -98,6 +98,8 @@
       "footer.brand": "Ballet Folklórico Mi Herencia",
       "footer.location": "Based in Hacienda Heights, CA\nServing Los Angeles, SGV, Inland Empire & Orange County",
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "Quick Links",
+      "footer.svc.quince": "Quinceañeras", "footer.svc.weddings": "Weddings",
+      "footer.svc.schools": "School Assemblies", "footer.svc.pricing": "Pricing",
       "footer.social.heading": "Find Us Online", "footer.social.gigsalad": "GigSalad Profile",
       "footer.rights": "All rights reserved.", "footer.made_with": "Made with", "footer.by": "by",
       "aria.openMenu": "Open navigation menu", "aria.langMenu": "Choose language"
@@ -188,6 +190,8 @@
       "footer.brand": "Ballet Folklórico Mi Herencia",
       "footer.location": "Con sede en Hacienda Heights, CA\nServimos a Los Ángeles, SGV, Inland Empire y Condado de Orange",
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "Accesos Rápidos",
+      "footer.svc.quince": "Quinceañeras", "footer.svc.weddings": "Bodas",
+      "footer.svc.schools": "Asambleas Escolares", "footer.svc.pricing": "Precios",
       "footer.social.heading": "Encuéntranos en Línea", "footer.social.gigsalad": "Perfil en GigSalad",
       "footer.rights": "Todos los derechos reservados.", "footer.made_with": "Hecho con", "footer.by": "por",
       "aria.openMenu": "Abrir menú de navegación", "aria.langMenu": "Elegir idioma"
@@ -278,6 +282,8 @@
       "footer.brand": "Ballet Folklórico Mi Herencia",
       "footer.location": "Hacienda Heights, CA を拠点に\nロサンゼルス、SGV、インランド・エンパイア、オレンジ郡に対応",
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "クイックリンク",
+      "footer.svc.quince": "キンセアニェーラ", "footer.svc.weddings": "結婚式",
+      "footer.svc.schools": "学校公演", "footer.svc.pricing": "料金",
       "footer.social.heading": "オンラインで見つける", "footer.social.gigsalad": "GigSalad プロフィール",
       "footer.rights": "All rights reserved.", "footer.made_with": "Made with", "footer.by": "by",
       "aria.openMenu": "ナビゲーションメニューを開く", "aria.langMenu": "言語を選択"
@@ -368,6 +374,8 @@
       "footer.brand": "Ballet Folklórico Mi Herencia",
       "footer.location": "位于 Hacienda Heights, CA\n服务洛杉矶、圣盖博谷、内陆帝国及橙县",
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "快速链接",
+      "footer.svc.quince": "十五岁成人礼", "footer.svc.weddings": "婚礼",
+      "footer.svc.schools": "学校演出", "footer.svc.pricing": "价格",
       "footer.social.heading": "在线找到我们", "footer.social.gigsalad": "GigSalad 主页",
       "footer.rights": "版权所有。", "footer.made_with": "用心制作", "footer.by": "制作方",
       "aria.openMenu": "打开导航菜单", "aria.langMenu": "选择语言"
@@ -458,6 +466,8 @@
       "footer.brand": "Ballet Folklórico Mi Herencia",
       "footer.location": "位於 Hacienda Heights, CA\n服務洛杉磯、聖蓋博谷、內陸帝國及橙縣",
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "快速連結",
+      "footer.svc.quince": "十五歲成人禮", "footer.svc.weddings": "婚禮",
+      "footer.svc.schools": "學校演出", "footer.svc.pricing": "價格",
       "footer.social.heading": "線上找到我們", "footer.social.gigsalad": "GigSalad 主頁",
       "footer.rights": "版權所有。", "footer.made_with": "用心製作", "footer.by": "製作方",
       "aria.openMenu": "開啟導覽選單", "aria.langMenu": "選擇語言"
