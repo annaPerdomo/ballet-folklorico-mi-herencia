@@ -301,4 +301,64 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://bfmh.dance/dance-classes/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/dance-classes/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/ja/dance-classes/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh/dance-classes/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/zh-hant/dance-classes/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bfmh.dance/ja/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
