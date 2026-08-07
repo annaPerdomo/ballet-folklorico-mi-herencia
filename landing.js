@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════
    LANDING PAGES — shared behavior (subset of app.js the landing
    pages need: no gallery/lightbox/i18n/event feeds).
-   Used by /quinceaneras/ /weddings/ /school-assemblies/ /pricing/
+   Used by /quinceaneras/ /weddings/ /pricing/ /dance-classes/
    ════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';

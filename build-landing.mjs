@@ -1,6 +1,6 @@
 /* ════════════════════════════════════════════════════════════════════
    build-landing.mjs — pre-render localized copies of the standalone
-   landing pages (quinceañeras / weddings / school-assemblies / pricing).
+   landing pages (quinceañeras / weddings / pricing / dance-classes).
 
    The English page in each folder is BOTH the template and the served
    English page (it carries data-i18n markup + the full hreflang block).

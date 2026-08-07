@@ -1,54 +1,172 @@
 {
   "redirects": [
     {
+      "source": "/school-assemblies",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/school-assemblies/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/es/school-assemblies",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/es/school-assemblies/",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/ja/school-assemblies",
+      "destination": "/ja/",
+      "permanent": true
+    },
+    {
+      "source": "/ja/school-assemblies/",
+      "destination": "/ja/",
+      "permanent": true
+    },
+    {
+      "source": "/zh/school-assemblies",
+      "destination": "/zh/",
+      "permanent": true
+    },
+    {
+      "source": "/zh/school-assemblies/",
+      "destination": "/zh/",
+      "permanent": true
+    },
+    {
+      "source": "/zh-hant/school-assemblies",
+      "destination": "/zh-hant/",
+      "permanent": true
+    },
+    {
+      "source": "/zh-hant/school-assemblies/",
+      "destination": "/zh-hant/",
+      "permanent": true
+    },
+    {
       "source": "/",
-      "has": [{ "type": "cookie", "key": "bfmh-lang", "value": "zht" }],
+      "has": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang",
+          "value": "zht"
+        }
+      ],
       "destination": "/zh-hant/",
       "permanent": false
     },
     {
       "source": "/",
-      "has": [{ "type": "cookie", "key": "bfmh-lang", "value": "zh" }],
+      "has": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang",
+          "value": "zh"
+        }
+      ],
       "destination": "/zh/",
       "permanent": false
     },
     {
       "source": "/",
-      "has": [{ "type": "cookie", "key": "bfmh-lang", "value": "ja" }],
+      "has": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang",
+          "value": "ja"
+        }
+      ],
       "destination": "/ja/",
       "permanent": false
     },
     {
       "source": "/",
-      "has": [{ "type": "cookie", "key": "bfmh-lang", "value": "es" }],
+      "has": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang",
+          "value": "es"
+        }
+      ],
       "destination": "/es/",
       "permanent": false
     },
     {
       "source": "/",
-      "missing": [{ "type": "cookie", "key": "bfmh-lang" }],
-      "has": [{ "type": "header", "key": "accept-language", "value": "(?i)zh-(?:Hant|TW|HK|MO).*" }],
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang"
+        }
+      ],
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?i)zh-(?:Hant|TW|HK|MO).*"
+        }
+      ],
       "destination": "/zh-hant/",
       "permanent": false
     },
     {
       "source": "/",
-      "missing": [{ "type": "cookie", "key": "bfmh-lang" }],
-      "has": [{ "type": "header", "key": "accept-language", "value": "(?i)zh.*" }],
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang"
+        }
+      ],
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?i)zh.*"
+        }
+      ],
       "destination": "/zh/",
       "permanent": false
     },
     {
       "source": "/",
-      "missing": [{ "type": "cookie", "key": "bfmh-lang" }],
-      "has": [{ "type": "header", "key": "accept-language", "value": "(?i)ja.*" }],
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang"
+        }
+      ],
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?i)ja.*"
+        }
+      ],
       "destination": "/ja/",
       "permanent": false
     },
     {
       "source": "/",
-      "missing": [{ "type": "cookie", "key": "bfmh-lang" }],
-      "has": [{ "type": "header", "key": "accept-language", "value": "(?i)es.*" }],
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "bfmh-lang"
+        }
+      ],
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "(?i)es.*"
+        }
+      ],
       "destination": "/es/",
       "permanent": false
     }

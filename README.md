@@ -4,7 +4,7 @@
 
 ### Tradition in Motion.
 
-The official site for **Ballet Folklórico Mi Herencia** — the community-rooted Mexican folk dance group I perform with, based in Hacienda Heights, CA. I built and maintain this site for my group, which is available for festivals, quinceañeras, weddings, corporate events, and school assemblies across LA, the San Gabriel Valley, the Inland Empire, and Orange County.
+The official site for **Ballet Folklórico Mi Herencia** — the community-rooted Mexican folk dance group I perform with, based in Hacienda Heights, CA. I built and maintain this site for my group, which is available for festivals, quinceañeras, weddings, and corporate events across LA, the San Gabriel Valley, the Inland Empire, and Orange County.
 
 Built as a fast, fully bilingual marketing site with serious local-SEO so the group gets found by people searching "folklorico for hire" in Southern California.
 
