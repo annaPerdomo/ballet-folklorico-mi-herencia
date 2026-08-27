@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/school-assemblies",
       "destination": "/",
       "permanent": true
@@ -104,6 +109,11 @@
         {
           "type": "cookie",
           "key": "bfmh-lang"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse|chatgpt-user|google-inspectiontool|duckduckgo|headlesschrome).*"
         }
       ],
       "has": [
@@ -122,6 +132,11 @@
         {
           "type": "cookie",
           "key": "bfmh-lang"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse|chatgpt-user|google-inspectiontool|duckduckgo|headlesschrome).*"
         }
       ],
       "has": [
@@ -140,6 +155,11 @@
         {
           "type": "cookie",
           "key": "bfmh-lang"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse|chatgpt-user|google-inspectiontool|duckduckgo|headlesschrome).*"
         }
       ],
       "has": [
@@ -158,6 +178,11 @@
         {
           "type": "cookie",
           "key": "bfmh-lang"
+        },
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawl|spider|slurp|facebookexternalhit|whatsapp|lighthouse|chatgpt-user|google-inspectiontool|duckduckgo|headlesschrome).*"
         }
       ],
       "has": [
