@@ -35,7 +35,7 @@
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '🙋 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', copyAsk: 'Copy the question', postTally: 'Post tally to GroupMe',
-      askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askedCopy: 'Gig opened — the bot is not connected, so the question was copied for you to paste',
+      askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askedCopy: 'GroupMe post failed — gig opened, question copied for you to paste', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team…', edit: 'Edit', decline: 'Decline', rosterDetails: 'Roster & details', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe', emailCh: 'email', and: ' and ',
@@ -92,7 +92,7 @@
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '🙋 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', copyAsk: 'Copiar la pregunta', postTally: 'Publicar el conteo en GroupMe',
-      askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askedCopy: 'Evento abierto — el bot no está conectado, así que se copió la pregunta para pegarla',
+      askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askedCopy: 'Falló la publicación en GroupMe — evento abierto, pregunta copiada para pegarla', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo…', edit: 'Editar', decline: 'Rechazar', rosterDetails: 'Lista y detalles', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe', emailCh: 'correo', and: ' y ',
@@ -184,15 +184,19 @@
   function askedLine(ev) {
     if (!(state.me.channels && state.me.channels.groupme)) return null;
     if (!ev.asked_at) return h('p', { class: 'hint', text: t('askedNever') });
-    var total = 0; (state.families || []).forEach(function (f) { f.dancers.forEach(function (d) { if (d.active !== false) total++; }); });
-    return h('p', { class: 'hint', text: t('askedLine', { when: timeAgo(ev.asked_at), n: (ev.availability || []).length, total: total }) });
+    var active = {}; (state.families || []).forEach(function (f) { f.dancers.forEach(function (d) { if (d.active !== false) active[d.id] = true; }); });
+    var n = (ev.availability || []).filter(function (a) { return active[a.dancer_id]; }).length;
+    return h('p', { class: 'hint', text: t('askedLine', { when: timeAgo(ev.asked_at), n: n, total: Object.keys(active).length }) });
   }
-  function askGroup(ev, after) {
+  function askGroup(ev, after, btn) {
+    if (!ev.event_date) { toast(t('askNeedsDate'), true); if (after) after(); openEventModal(ev); return Promise.resolve(); }
+    if (btn) btn.disabled = true;
     return api('/api/events/' + ev.id, { method: 'PATCH', body: { action: 'ask' } }).then(function (d) {
-      if (d.notified && d.notified.groupme) toast(t('askedToast')); else { copyText(d.notified.text); toast(t('askedCopy')); }
+      var shown = d.notified && d.notified.groupme ? Promise.resolve(toast(t('askedToast')))
+        : copyText(d.notified.text).then(function () { toast(t('askedCopy')); });
       if (ev.status === 'inquiry') state.tab = 'gigs';
-      return refresh().then(after || null);
-    }).catch(function (e) { toast(e.message, true); });
+      return shown.then(refresh).then(after || null);
+    }).catch(function (e) { toast(e.message, true); if (btn) btn.disabled = false; });
   }
   function evTitle(ev) { return ev.title || (ev.event_type ? typeLabel(ev.event_type) : t('performance')); }
 
@@ -502,13 +506,13 @@
     var actions = h('div', { class: 'card-actions' });
     var hasBot = state.me.channels && state.me.channels.groupme;
     if (ev.status === 'inquiry') {
-      if (hasBot) actions.appendChild(h('button', { class: 'btn btn-gold', text: t('askGroup'), onclick: function () { askGroup(ev); } }));
+      if (hasBot) actions.appendChild(h('button', { class: 'btn btn-gold', text: t('askGroup'), onclick: function (e) { askGroup(ev, null, e.currentTarget); } }));
       actions.appendChild(h('button', { class: 'btn' + (hasBot ? '' : ' btn-gold'), text: t('postToTeam'), onclick: function () { openEventModal(ev, 'publish'); } }));
       actions.appendChild(h('button', { class: 'btn', text: t('edit'), onclick: function () { openEventModal(ev); } }));
       actions.appendChild(h('button', { class: 'btn btn-danger', text: t('decline'), onclick: function () { doAction(ev, 'decline'); } }));
     } else if (ev.status === 'open' || ev.status === 'confirmed') {
       actions.appendChild(h('button', { class: 'btn btn-gold', text: t('rosterDetails'), onclick: function () { openEventDetail(ev.id); } }));
-      if (hasBot && ev.status === 'open') actions.appendChild(h('button', { class: 'btn', text: ev.asked_at ? t('askAgain') : t('askGroup'), onclick: function () { askGroup(ev); } }));
+      if (hasBot && ev.status === 'open') actions.appendChild(h('button', { class: 'btn', text: ev.asked_at ? t('askAgain') : t('askGroup'), onclick: function (e) { askGroup(ev, null, e.currentTarget); } }));
       if (ev.status === 'confirmed' || ev.status === 'done') actions.appendChild(websiteBtn(ev));
     } else {
       actions.appendChild(h('button', { class: 'btn', text: t('reopen'), onclick: function () { doAction(ev, 'reopen'); } }));
@@ -691,7 +695,7 @@
       if (ev.status === 'open') {
         actions.appendChild(h('button', { class: 'btn', text: t('copyAnnouncement'), onclick: function () { copyText(announcementText(ev)); } }));
         if (hasBot) {
-          actions.appendChild(h('button', { class: 'btn', text: ev.asked_at ? t('askAgain') : t('askGroup'), onclick: function () { askGroup(ev, closeModal); } }));
+          actions.appendChild(h('button', { class: 'btn', text: ev.asked_at ? t('askAgain') : t('askGroup'), onclick: function (e) { askGroup(ev, closeModal, e.currentTarget); } }));
           actions.appendChild(h('button', { class: 'btn', text: t('postTally'), onclick: function () { doAction(ev, 'tally').then(closeModal); } }));
         }
         actions.appendChild(reminderBtn());
