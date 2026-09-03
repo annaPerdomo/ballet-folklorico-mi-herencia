@@ -13,7 +13,7 @@
     //  • image:    path to a photo (or null for placeholder)
     //  • link:     URL for "More info" (or null → links to contact form)
     // ─────────────────────────────────────────────────────────
-    const EVENTS = window.__I18N__.events;
+    const EVENTS = window.__I18N__.events.slice();
 
     // ─────────────────────────────────────────────────────────
     //  TRANSLATION STRINGS
@@ -284,14 +284,16 @@
     const EVENTS_VISIBLE = 4;
     let eventsExpanded = false;
 
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function buildEventCard(ev, lang, now) {
       const d = new Date(ev.date + 'T00:00:00');
       const day = d.getDate();
       const month = MONTH_NAMES[lang][d.getMonth()];
       const year = d.getFullYear();
       const isPast = d < now;
-      const name = ev.name[lang] || ev.name.en || ev.name.es;
-      const loc = ev.location[lang] || ev.location.en || ev.location.es;
+      const name = esc(ev.name[lang] || ev.name.en || ev.name.es);
+      const loc = esc(ev.location[lang] || ev.location.en || ev.location.es);
+      const time = esc(ev.time);
 
       return '<article class="event-card' + (isPast ? ' is-past' : '') + '" role="listitem">'
         + '<div class="event-date-badge"><span class="day">' + day + '</span><span class="month">' + month + '</span><span class="year">' + year + '</span></div>'
@@ -299,7 +301,7 @@
         + '<h3>' + name + '</h3>'
         + '<div class="event-meta">'
         + '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + loc + '</span>'
-        + (ev.time ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + ev.time + '</span>' : '')
+        + (ev.time ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + time + '</span>' : '')
         + '</div>'
         + '</div>'
         + '</article>';
@@ -371,6 +373,22 @@
 
     // Render events on initial load
     renderEvents(currentLang);
+
+    // Gigs flagged "Show on website" in /team/; a static i18n-data.js entry on the same date + name wins.
+    if (window.fetch) {
+      fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (!d || !d.events || !d.events.length) return;
+        var have = {};
+        EVENTS.forEach(function (ev) { have[ev.date + '|' + (ev.name.en || '').toLowerCase()] = true; });
+        var added = 0;
+        d.events.forEach(function (ev) {
+          var k = ev.date + '|' + (ev.name.en || '').toLowerCase();
+          if (have[k]) return;
+          have[k] = true; EVENTS.push(ev); added++;
+        });
+        if (added) renderEvents(currentLang);
+      }).catch(function () {});
+    }
 
     // ─────────────────────────────────────────────────────────
     //  GALLERY — justified rows + click-to-enlarge lightbox
