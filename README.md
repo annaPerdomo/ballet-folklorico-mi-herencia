@@ -93,7 +93,9 @@ served as-is (no build step runs on Vercel).
 
 Private page for the owners and the dancer families. Replaces the "who is available?" GroupMe thread.
 
-**Flow:** website form → `events` row (status `inquiry`) → owner clicks **Post to team** → families open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
+**Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or **Post to team…** (edit details first, then announce) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
+
+**Ask in GroupMe** (`PATCH /api/events/:id {action:"ask"}`, needs `GROUPME_BOT_ID`): opens the gig if it was still an inquiry, posts a bilingual question that shows the reply shapes the reader understands, and stamps `asked_at` / `ask_count`. A bare "yes" or "we can't" with no date goes to the gig the bot asked about most recently. The card shows "Bot asked 2 h ago · 5 of 17 answered"; **Ask again** re-posts with "still looking for answers" wording and **Post tally** puts the current ✓ / ? / ✗ / waiting-on list into the chat.
 
 **Pieces**
 
@@ -110,7 +112,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 | `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. |
 | `SESSION_SECRET` | recommended | Random string used to sign owner sessions (falls back to the password). |
 | `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
-| `GROUPME_BOT_ID` | no | Create a bot at https://dev.groupme.com/bots for the team group; when set, "Post to team", "Confirm", and "Send reminder" post into GroupMe automatically. Without it, use the **Copy …** buttons and paste. |
+| `GROUPME_BOT_ID` | no | Create a bot at https://dev.groupme.com/bots for the team group; when set, "Ask GroupMe", "Post to team", "Confirm", "Send reminder", and "Post tally" post into GroupMe automatically. Without it, use the **Copy …** buttons and paste. |
 | `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
 | `GROUPME_GROUP_ID`, `GROUPME_BOT_ACK` | no | Reader options: only accept messages from this group id; set `GROUPME_BOT_ACK=0` to stop the "🤖 Noted…" replies. |
 | `RESEND_API_KEY`, `NOTIFY_FROM` | no | Email notifications to families via Resend. |

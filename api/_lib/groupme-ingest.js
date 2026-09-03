@@ -6,7 +6,7 @@ export async function ingestMessage({ text, senderName, senderUserId, sentAt }) 
   const [dancers, families, events] = await Promise.all([
     sql('SELECT id, family_id, name, active FROM dancers WHERE active'),
     sql('SELECT id, name, groupme_user_id FROM families'),
-    sql(`SELECT id, title, status, event_type, event_date, venue, city, client_name, published_at FROM events
+    sql(`SELECT id, title, status, event_type, event_date, venue, city, client_name, published_at, asked_at FROM events
           WHERE status IN ('open','confirmed') AND (event_date IS NULL OR event_date >= current_date - 1)`),
   ]);
   const r = parseMessage({ text, senderName, senderUserId }, { dancers, families, events });

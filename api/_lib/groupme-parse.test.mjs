@@ -114,6 +114,13 @@ test('no dates: short message goes to the latest gig, named by title if possible
   assert.deepEqual(Object.keys(st(r2)), ['Kiley:11-04']); assert.equal(r2.eventGuessed, true);
 });
 
+test('no dates: the gig the bot asked about most recently wins over the newest post', () => {
+  const evs = [E(1, '2026-09-19', 'Fiesta', 'festival', 'Norwalk', 'open', '2026-08-20'), E(2, '2026-10-13', 'Paramount', 'festival', 'Paramount', 'open', '2026-08-14')];
+  evs[1].asked_at = '2026-09-01T18:00:00Z';
+  const r = parseMessage({ text: 'Kiley is a yes!', senderName: 'Folk-Johanna Aceves (Kiley)', senderUserId: '65115438' }, { dancers, families, events: evs });
+  assert.deepEqual(Object.keys(st(r)), ['Kiley:10-13']); assert.equal(r.eventGuessed, true);
+});
+
 test('chit-chat with a date is not an answer', () => {
   for (const [t, n, u] of [
     ['Ok, what time is call on the 19th?', 'Folk-Claudia Marin (DT & Lia)', '64889724'],

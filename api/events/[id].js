@@ -3,7 +3,7 @@ import { whoami, requireAdmin } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, sendEmail, eventSummary, siteUrl, fmtDate } from '../_lib/notify.js';
+import { postGroupMe, sendEmail, eventSummary, siteUrl, fmtDate, askText, tallyText } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -77,6 +77,18 @@ export default route({
     if (action === 'remind') {
       const ev = await getEvent(id, { admin: true });
       const text = reminderText(ev, await rosterFor(id));
+      notified = { groupme: await postGroupMe(text), text };
+    } else if (action === 'ask') {
+      // One tap from the inbox: open the gig (so replies have something to land on) and have the bot ask the group.
+      if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
+      if (current.status === 'inquiry') await sql(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]);
+      const text = askText(await getEvent(id, { admin: true }), { again: current.ask_count > 0 });
+      const posted = await postGroupMe(text);
+      if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
+      notified = { groupme: posted, text };
+    } else if (action === 'tally') {
+      const ev = await getEvent(id, { admin: true });
+      const text = tallyText(ev, await rosterFor(id));
       notified = { groupme: await postGroupMe(text), text };
     } else if (action) {
       const t = TRANSITIONS[action];
