@@ -56,8 +56,7 @@ export function eventSummary(ev) {
 
 const shortDate = (d) => fmtDate(d).replace(/, \d{4}$/, '');
 
-// The question the bot posts in the group. Replies are read by api/webhooks/groupme.js, so the
-// example shows the shape the parser understands. Keep it to a glance.
+// The sample reply must stay in a shape api/_lib/groupme-parse.js understands.
 export function askText(ev, { again = false } = {}) {
   const when = ev.event_date ? shortDate(ev.event_date) : (ev.date_text || 'date TBD');
   const where = [ev.venue, ev.city].filter(Boolean).join(', ');

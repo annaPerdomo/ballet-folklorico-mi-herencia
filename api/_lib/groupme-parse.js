@@ -178,7 +178,6 @@ export function pickEvent(text, events) {
   }
   if (best && !tie) return { event: best, guessed: false, how: 'title' };
   if (events.length === 1) return { event: events[0], guessed: false, how: 'only' };
-  // A bare "yes" answers whatever the bot asked about most recently, else the newest post.
   const ms = (v) => (v ? new Date(v).getTime() || 0 : 0);
   const stamp = (e) => Math.max(ms(e.asked_at), ms(e.published_at));
   const sorted = events.slice().sort((a, b) => stamp(b) - stamp(a) || b.id - a.id);
