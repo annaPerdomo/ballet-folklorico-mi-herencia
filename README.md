@@ -95,7 +95,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 
 **Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or **Post to team…** (edit details first, then announce) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
 
-**Ask in GroupMe** (`PATCH /api/events/:id {action:"ask"}`, needs `GROUPME_BOT_ID`): opens the gig if it was still an inquiry, posts a bilingual question that shows the reply shapes the reader understands, and stamps `asked_at` / `ask_count`. A bare "yes" or "we can't" with no date goes to the gig the bot asked about most recently. The card shows "Bot asked 2 h ago · 5 of 17 answered"; **Ask again** re-posts with "still looking for answers" wording and **Post tally** puts the current ✓ / ? / ✗ / waiting-on list into the chat.
+**Ask in GroupMe** (`PATCH /api/events/:id {action:"ask"}`, needs `GROUPME_BOT_ID`): opens the gig if it was still an inquiry, posts a three-line question with a sample reply the reader understands, and stamps `asked_at` / `ask_count`. It needs an event date (replies are matched by date). A bare "yes" or "we can't" with no date goes to the gig with the latest activity: the most recent ask or post. The card shows "Bot asked 2 h ago · 5 of 17 answered"; **Ask again** re-posts with "still looking for answers" wording and **Post tally** puts the current ✓ / ? / ✗ / waiting-on list into the chat.
 
 **Pieces**
 
