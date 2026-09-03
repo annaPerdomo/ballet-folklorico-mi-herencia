@@ -1,0 +1,12 @@
+{
+  "name": "bfmh",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:site": "node build.mjs && node build-landing.mjs",
+    "dev": "node dev-server.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}

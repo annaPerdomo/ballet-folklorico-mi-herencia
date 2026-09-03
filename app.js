@@ -998,6 +998,19 @@
           submitBtn.textContent = labelBefore;
         }
 
+        // Best-effort copy to /team/; Formspree still sends the email.
+        try {
+          var payload = {};
+          new FormData(form).forEach(function (v, k) { payload[k] = v; });
+          payload.page = location.pathname;
+          fetch('/api/inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            keepalive: true
+          }).catch(function () {});
+        } catch (e) {}
+
         fetch(form.action, {
           method: 'POST',
           body: new FormData(form),

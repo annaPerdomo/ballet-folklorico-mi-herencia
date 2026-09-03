@@ -159,6 +159,18 @@
   });
   var form = document.getElementById('quoteForm');
   if (form) {
-    form.addEventListener('submit', function () { track('quote_form_submit', {}); });
+    form.addEventListener('submit', function () {
+      track('quote_form_submit', {});
+      // Must fire before the form navigates to Formspree.
+      try {
+        var payload = {};
+        new FormData(form).forEach(function (v, k) { payload[k] = v; });
+        payload.page = location.pathname;
+        var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+        if (!(navigator.sendBeacon && navigator.sendBeacon('/api/inquiry', blob))) {
+          fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function () {});
+        }
+      } catch (e) {}
+    });
   }
 })();

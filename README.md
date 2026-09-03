@@ -88,3 +88,64 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 
 Deployment is push-to-`main` on Vercel; the generated pages are committed and
 served as-is (no build step runs on Vercel).
+
+## Team availability app (`/team/`)
+
+Private page for the owners and the dancer families. Replaces the "who is available?" GroupMe thread.
+
+**Flow:** website form → `events` row (status `inquiry`) → owner clicks **Post to team** → families open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
+
+**Pieces**
+
+- `api/` — Vercel Functions (plain Node, Postgres via `pg`). Schema is created automatically on first request (`api/_lib/db.js`).
+- `team/` — the app (vanilla JS, no build step).
+- `api/inquiry.js` — the contact form and the landing-page quote forms post a copy of every submission here (see `app.js` / `landing.js`). Formspree still sends the email.
+- `api/webhooks/formspree.js` — optional Formspree webhook target (dedupes against the direct post).
+
+**Environment variables** (Vercel → Project → Settings → Environment Variables)
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | yes | Postgres connection string. Easiest: `vercel integration add neon` (sets it automatically). |
+| `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. |
+| `SESSION_SECRET` | recommended | Random string used to sign owner sessions (falls back to the password). |
+| `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
+| `GROUPME_BOT_ID` | no | Create a bot at https://dev.groupme.com/bots for the team group; when set, "Post to team", "Confirm", and "Send reminder" post into GroupMe automatically. Without it, use the **Copy …** buttons and paste. |
+| `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
+| `GROUPME_GROUP_ID`, `GROUPME_BOT_ACK` | no | Reader options: only accept messages from this group id; set `GROUPME_BOT_ACK=0` to stop the "🤖 Noted…" replies. |
+| `RESEND_API_KEY`, `NOTIFY_FROM` | no | Email notifications to families via Resend. |
+| `FORMSPREE_WEBHOOK_SECRET` | no | If you enable the Formspree webhook plugin, point it at `/api/webhooks/formspree?secret=<value>`. |
+
+**GroupMe reader (the bot reads the chat and fills in availability)**
+
+Families keep answering in the group chat the way they always have; the bot turns those replies into Yes / Maybe / No per dancer.
+
+1. Create the bot at https://dev.groupme.com/bots in the team group. Copy its **Bot ID** into `GROUPME_BOT_ID`.
+2. Pick a random string for `GROUPME_WEBHOOK_SECRET` and set the bot's **Callback URL** to
+   `https://bfmh.dance/api/webhooks/groupme?secret=<that string>`.
+3. Redeploy. The **Team** tab in `/team/` shows every message the bot read and what it did with it.
+
+How it reads a message (`api/_lib/groupme-parse.js`, English and Spanish; the tests use real replies from the group):
+
+- **Each line is one answer.** "No for 19th / Yes for 26th / No for 10/13" records three answers. Dates can be "9/19", "Sept 19", "the 19th", "Sep 25&26", "September 12 ,19 ,25", "el 4 de octubre". A bare day number matches the open gig on that day.
+- **Who:** dancer names in the text ("Yes for Lia and Donatien"), carried forward to later lines ("Isabella" on its own line, then one date per line). A first name that two dancers share is resolved to the sender's family. With no names ("we can't", "yes!", "My girls are yes on all") it applies to the sender: the family linked to that GroupMe account, else a family/dancer whose name matches the sender's GroupMe name ("Folk-…" prefixes and "(…)" suffixes are ignored). The first time a family answers this way their GroupMe account is linked for next time (owners can clear it via `PATCH /api/families?id=… {groupme_user_id:null}`). Owners' own accounts should stay unlinked so announcements are never read as answers.
+- **What:** maybe ("not sure", "no sé", "tal vez") beats no ("can't", "no puede") beats yes ("can go", "yes", "sí", "available"). "all" means every open gig.
+- **Which gig:** the dates in the message. If a message names dates anywhere, lines without a date are ignored rather than guessed. A short message with no date at all ("Kiley is a yes!") goes to the gig named in it ("…perform at Paramount!") or else the most recently posted one, and the bot's reply says it assumed.
+- Messages with no yes/no/maybe are ignored. Everything is logged to `groupme_messages` (visible in the Team tab); nothing is ever deleted, and owners can override any answer by tapping the chips in the gig roster.
+- **New families:** a reply from someone not in the roster is logged as "Unknown sender" with an **Add this family** button that pre-fills the family and dancer names from their GroupMe display name ("Folk-Maricela Orozco (Ashley Emily & Sharlene)" → Orozco: Ashley, Emily, Sharlene) and then re-reads the message. **Read again** re-runs any logged message against the current roster.
+
+Run the parser tests with `node --test "api/_lib/*.test.mjs"`.
+
+**Show on website.** On a confirmed gig, **Show on website** lists it under Upcoming Events on bfmh.dance within about five minutes, using the venue as the name and the city as the location. `api/public-events.js` serves the flagged gigs and `app.js` merges them with the static list in `i18n-data.js` (no rebuild). Hide it again with the same button. The static list is still the place for past years and for the JSON-LD event schema.
+
+**Local development**
+
+```bash
+npm install
+vercel env pull .env.local        # pulls DATABASE_URL etc. from Vercel (or copy .env.example and use a local Postgres)
+npm run dev                       # reads .env.local, serves http://localhost:3456/team/
+```
+
+`.env.local` must contain `DATABASE_URL` and `ADMIN_PASSWORD`; the server warns at startup if either is missing, and API errors name the missing variable.
+
+**First-time setup for the owners:** sign in at `/team/` with the password → **Team** tab → add each family with their dancers → **Copy invite link** and send it to that family once (DM or text). The link is their login; **New link** revokes an old one.

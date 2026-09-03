@@ -1,0 +1,55 @@
+
+export const siteUrl = () => (process.env.SITE_URL || 'https://bfmh.dance').replace(/\/$/, '');
+
+export function channels() {
+  return { groupme: Boolean(process.env.GROUPME_BOT_ID), groupme_listen: Boolean(process.env.GROUPME_WEBHOOK_SECRET), email: Boolean(process.env.RESEND_API_KEY) };
+}
+
+export async function postGroupMe(text) {
+  const bot_id = process.env.GROUPME_BOT_ID;
+  if (!bot_id || !text) return false;
+  try {
+    const r = await fetch('https://api.groupme.com/v3/bots/post', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bot_id, text: text.slice(0, 990) }),
+    });
+    return r.ok;
+  } catch (e) { console.error('groupme', e); return false; }
+}
+
+export async function sendEmail({ to, subject, text }) {
+  const key = process.env.RESEND_API_KEY;
+  const list = (Array.isArray(to) ? to : [to]).filter(Boolean);
+  if (!key || !list.length) return false;
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: process.env.NOTIFY_FROM || 'Ballet Folklórico Mi Herencia <team@bfmh.dance>',
+        to: list.slice(0, 50), subject, text,
+      }),
+    });
+    return r.ok;
+  } catch (e) { console.error('resend', e); return false; }
+}
+
+export function fmtDate(d) {
+  if (!d) return 'Date TBD';
+  const dt = typeof d === 'string' ? new Date(d + 'T12:00:00') : d;
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export function eventSummary(ev) {
+  const lines = [
+    `${ev.title || ev.event_type || 'Performance'} — ${fmtDate(ev.event_date)}`,
+  ];
+  const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
+  if (time) lines.push(`Time: ${time}`);
+  if (ev.call_time) lines.push(`Call time: ${ev.call_time}`);
+  const where = [ev.venue, ev.address, ev.city].filter(Boolean).join(', ');
+  if (where) lines.push(`Where: ${where}`);
+  if (ev.dancers_needed) lines.push(`Dancers needed: ${ev.dancers_needed}`);
+  if (ev.details) lines.push(ev.details);
+  return lines.join('\n');
+}

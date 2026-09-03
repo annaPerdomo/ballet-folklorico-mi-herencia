@@ -9,3 +9,9 @@ folklorico_pics/
 # the large source (final_bfmh_hero.mp4) and promo clips stay ignored.
 !hero-bg.mp4
 settings.json
+node_modules/
+.env
+.env.local
+.env*.local
+
+feedback-images/
