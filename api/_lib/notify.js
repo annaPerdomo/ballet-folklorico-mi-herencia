@@ -54,25 +54,20 @@ export function eventSummary(ev) {
   return lines.join('\n');
 }
 
-const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const shortDate = (d) => fmtDate(d).replace(/, \d{4}$/, '');
 
 // The question the bot posts in the group. Replies are read by api/webhooks/groupme.js, so the
-// wording shows exactly the shapes the parser understands (name + yes/no/maybe, one gig per line).
+// example shows the shape the parser understands. Keep it to a glance.
 export function askText(ev, { again = false } = {}) {
   const when = ev.event_date ? shortDate(ev.event_date) : (ev.date_text || 'date TBD');
   const where = [ev.venue, ev.city].filter(Boolean).join(', ');
-  const head = again ? '🙋 Still looking for answers / Todavía faltan respuestas:' : '🙋 Who is available? / ¿Quién está disponible?';
-  const lines = [head, `${ev.title || ev.event_type || 'Performance'} — ${when}${where ? ' · ' + where : ''}`];
   const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
-  if (time) lines.push(`Time / Hora: ${time}`);
-  if (ev.dancers_needed) lines.push(`Dancers needed / Bailarines: ${ev.dancers_needed}`);
-  if (ev.details && !again) lines.push(ev.details.slice(0, 200));
-  const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : when;
-  const dEs = ev.event_date ? `el ${+ev.event_date.slice(8, 10)} de ${MESES[+ev.event_date.slice(5, 7) - 1]}` : 'para esa fecha';
-  lines.push('', `Reply here with the dancer's name + yes / no / maybe, e.g. "Sofia yes for ${d}", "Mateo no puede ${dEs}", "we can go".`,
-    `Responde aquí con el nombre + sí / no / tal vez. O marca en ${siteUrl()}/team/#event-${ev.id}`);
-  return lines.join('\n');
+  const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
+  return [
+    `${again ? '🙋 Still need answers' : '🙋 Who can dance'}: ${ev.title || ev.event_type || 'Performance'}`,
+    [when, time, where].filter(Boolean).join(' · '),
+    `Reply "Sofia yes for ${d}" or "we can't".`,
+  ].join('\n');
 }
 
 export function tallyText(ev, roster) {
@@ -80,5 +75,5 @@ export function tallyText(ev, roster) {
   for (const f of roster) for (const d of f.dancers) g[d.status || 'pending'].push(d.name.split(' ')[0]);
   const line = (k, mark) => g[k].length ? `${mark} ${g[k].join(', ')}` : null;
   return [`📊 ${ev.title || 'Gig'} — ${shortDate(ev.event_date)}`, line('yes', '✓'), line('maybe', '?'), line('no', '✗'),
-    g.pending.length ? `Waiting on / Faltan: ${g.pending.join(', ')}` : 'Everyone has answered / Ya respondieron todos 🎉'].filter(Boolean).join('\n');
+    g.pending.length ? `Waiting on: ${g.pending.join(', ')}` : 'Everyone answered 🎉'].filter(Boolean).join('\n');
 }
