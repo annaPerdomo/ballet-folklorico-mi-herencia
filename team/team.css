@@ -144,7 +144,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .btn-main, .foot-btns .btn { min-height: 52px; font-size: 0.78rem; border-radius: 14px; }
 .btn-icon { padding: 0; width: 44px; flex: none; }
 .btn-icon.btn-sm { width: 36px; }
-.foot-btns .btn-icon { width: 52px; }
+.foot-btns .btn-icon, .card-actions .btn-main + .btn-icon { width: 52px; }
 .btn-link { background: none; border: 0; color: var(--gold-light); text-decoration: underline; padding: 0; min-height: 0; font-size: 0.8rem; text-transform: none; letter-spacing: 0; font-weight: 600; }
 .lang-toggle { border-color: var(--gold-dark); color: var(--gold-light); text-transform: none; letter-spacing: 0.02em; }
 
@@ -522,7 +522,6 @@ details[open] > .summary::before { transform: rotate(45deg); }
 
   .btn { min-height: var(--tap); }
   .card { padding: 0.9rem; border-radius: 14px; }
-  .card-actions .btn-main { flex-basis: 100%; }
   .modal-back { align-items: flex-end; padding: 0; }
   .modal { max-width: none; max-height: 94dvh; border-radius: 22px 22px 0 0; border-bottom: 0; animation: rise 0.22s ease-out; }
   .modal-body { padding: 0.9rem 0.9rem 1.2rem; }
