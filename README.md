@@ -133,7 +133,7 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | Link | Who holds it | What it opens |
 | --- | --- | --- |
 | `/team/?k=<invite token>` | one family, sent to them once | Full member sign-in: answer, and edit the household's dancers. **New link** revokes it. |
-| `/team/?e=<id>&s=<sig>` | anyone in the GroupMe chat | The gig, then a family picker. Picking one gives an answer-only session (30 days) that cannot add, rename or delete dancers, and only while the gig is still open or confirmed. |
+| `/team/?e=<id>&s=<sig>` | anyone in the GroupMe chat | The gig, then a family picker. Picking one gives an answer-only session that cannot add, rename or delete dancers, and only while the gig is still open or confirmed. It lasts until they sign out or the owners tap **New link**. |
 | `/api/calendar?f=<id>&k=<sig>` | whoever the family subscribes with | That family's calendar feed. Never a sign-in. Rotates with the invite link. |
 
 **Environment variables** (Vercel → Project → Settings → Environment Variables)

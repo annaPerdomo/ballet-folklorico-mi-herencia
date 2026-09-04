@@ -5,7 +5,6 @@ import { parseCookies, httpError } from './http.js';
 export const ADMIN_COOKIE = 'bfmh_admin';
 export const FAMILY_COOKIE = 'bfmh_family';
 const ADMIN_TTL = 60 * 60 * 24 * 30; // 30 days
-const MEMBER_TTL = 60 * 60 * 24 * 30;
 
 function secret() {
   const s = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;
@@ -57,22 +56,21 @@ export function verifyCalendarSig(eventId, sig) {
 }
 
 // Given instead of the family's access_token so a picker session is not itself a forwardable
-// login. The epoch pins it to the current invite token, so "New link" logs the old phone out.
+// login. No expiry — a phone stays signed in until someone signs out, or until the owners tap
+// "New link", which rotates the access_token this epoch is taken from.
 const epochOf = (accessToken) => String(accessToken || '').slice(0, 8) || 'none';
 
 export function memberToken(familyId, accessToken, scope = 'pick') {
-  const exp = Math.floor(Date.now() / 1000) + MEMBER_TTL;
-  const payload = `${scope}.${familyId}.${exp}.${epochOf(accessToken)}`;
+  const payload = `${scope}.${familyId}.${epochOf(accessToken)}`;
   return `${payload}.${sign(payload)}`;
 }
 
 export function verifyMemberToken(token) {
   const p = String(token || '').split('.');
-  if (p.length !== 5) return null;
-  const [scope, id, exp, epoch, sig] = p;
+  if (p.length !== 4) return null;
+  const [scope, id, epoch, sig] = p;
   if (scope !== 'pick' && scope !== 'fam') return null;
-  if (!safeEqual(sign(`${scope}.${id}.${exp}.${epoch}`), sig)) return null;
-  if (!(parseInt(exp, 10) > Math.floor(Date.now() / 1000))) return null;
+  if (!safeEqual(sign(`${scope}.${id}.${epoch}`), sig)) return null;
   const familyId = parseInt(id, 10);
   return familyId ? { familyId, scope, epoch } : null;
 }

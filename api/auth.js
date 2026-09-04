@@ -3,7 +3,9 @@ import { checkAdminPassword, makeAdminToken, memberToken, verifyCalendarSig, ADM
 import { one } from './_lib/db.js';
 
 const ANSWERABLE = ['open', 'confirmed'];
-const MEMBER_MAX_AGE = 60 * 60 * 24 * 30;
+// Browsers cap cookie lifetime near 400 days, so this is as close to "until you sign out" as a
+// cookie gets; the token behind it never expires on its own.
+const MEMBER_MAX_AGE = 60 * 60 * 24 * 400;
 
 export default route({
   async POST(req, res) {
