@@ -93,7 +93,7 @@ served as-is (no build step runs on Vercel).
 
 Private page for the owners and the dancer families. Replaces the "who is available?" GroupMe thread.
 
-**Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or **Post to team…** (edit details first, then announce) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
+**Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or, for a gig with no date yet, **Post to team** (publishes it and announces it in the group) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
 
 **Everything is posted from the site.** There is no copy-and-paste path any more: each button below is one `PATCH /api/events/:id` and La Chona says it in the group. Her posts are English (one message for everyone) with bilingual tap lines; the wording lives in `api/_lib/notify.js`.
 
@@ -131,7 +131,7 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 - `api/webhooks/[source].js` — the Formspree webhook target (optional; dedupes against the direct post) and the GroupMe bot callback, in one function.
 
   The Hobby plan allows 12 Vercel Functions per deployment, so a few endpoints share a file. `api/families.js` also serves `/api/dancers` and `/api/availability`, which `vercel.json` rewrites to it with `?r=`; `dev-server.mjs` mirrors those rewrites. Every public URL is unchanged — split them back out on a plan with more room.
-- `api/calendar.js` + `api/_lib/ics.js` — calendar files. One gig at a time (`?e=&s=` from a GroupMe post, or `?event=` with a session cookie — the **Add to my calendar** button on every gig card, the gig detail sheet and the family picker), a family's subscribable feed (`?f=&k=`, the link under **My family**), or the owners' feed of every gig (`?a=<sig>`, the link under the **Gigs** list).
+- `api/calendar.js` + `api/_lib/ics.js` — calendar files. One gig at a time (`?e=&s=` from a GroupMe post, or `?event=` with a session cookie — the **Add to my calendar** button on every gig card, the gig detail sheet and the family picker), a family's subscribable feed (`?f=&k=`, the Calendar card at the foot of the family's home tab), or the owners' feed of every gig (`?a=<sig>`, the Calendar card at the foot of the **Gigs** tab).
 - `api/gig.js` — the "who's answering?" screen behind that same signed link, readable with no cookie.
 
   The generated `.ics` is plain RFC 5545 — CRLF endings, folded at 75 octets, times resolved to UTC — so Apple Calendar, Google Calendar and Outlook all read it. Subscribing is where they differ: only Apple answers a `webcal:` link, so **Add every gig to your calendar** opens a sheet that hands the same feed URL to Google (`calendar.google.com/calendar/r?cid=`) and Outlook (`outlook.live.com/calendar/0/addfromweb?url=`) by their own add-by-URL pages, with the raw link to copy for anything else.

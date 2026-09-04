@@ -27,7 +27,9 @@
       badLink: 'That link is not valid anymore. Ask the owners for a new one.',
       needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Recent', myFamily: 'My family',
       subscribe: 'Add our gigs to your calendar', subscribeHint: 'Keeps updating on its own as dates change.',
-      subscribeOwner: 'Add every gig to your calendar', addToCal: 'Add to my calendar',
+      subscribeOwner: 'Add every gig to your calendar', addToCal: 'Add to my calendar', calSection: 'Calendar',
+      subscribeWhat: 'Every gig posted to the team lands in your calendar until you turn it down — the ones your family answers no to drop off on their own. It keeps updating as dates and details change.',
+      subscribeWhatOwner: 'Every gig on the board — open, confirmed and finished — with the pay line, which only owners can see. It keeps updating on its own as dates and details change.',
       addToCalHint: 'Saves the call time, the address, and a reminder the day before.',
       subscribePick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Copy the link instead',
@@ -46,17 +48,18 @@
       askGroup: '🙋 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
       askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
-      postToTeam: 'Post to team…', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
+      postToTeam: 'Post to team', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
+      requiredTag: 'required', optionalHead: 'Optional — fill in what you know',
+      payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
       title: 'Title', titlePh: 'e.g. Quinceañera — Lopez family', typeLabel: 'Type', typePh: '— type —', dateLabel: 'Date', startTime: 'Start time', endTime: 'End time',
-      dancersNeededLabel: 'Dancers needed', venue: 'Venue', city: 'City', address: 'Address', payLabel: 'Pay (shown to team, optional)', payPh: '$50 per dancer',
+      dancersNeededLabel: 'Dancers needed', venue: 'Venue', city: 'City', address: 'Address',
       clientWrote: 'Client wrote (date & city)', detailsForTeam: 'Details for the team', detailsPh: 'Costume, dances, parking, what to bring…',
       rehearsalsLabel: 'Rehearsals (shown to the team)', rehearsalDate: 'Rehearsal date', time: 'Time', locationNote: 'Location / note', addRehearsal: '+ Add rehearsal',
       clientSection: 'Client contact & private notes', clientName: 'Client name', clientEmail: 'Client email', clientPhone: 'Client phone', clientMessage: 'Client message',
-      privateNotes: 'Private notes (owners only)', notifyNow: ' Notify the team now (GroupMe bot, if connected)',
+      privateNotes: 'Private notes (owners only)',
       needTitle: 'Give the gig a title.', create: 'Create', save: 'Save', cancel: 'Cancel', close: 'Close',
-      modalPost: 'Post to the team', modalNew: 'New gig', modalEdit: 'Edit gig',
-      postedGroupme: 'Posted to the team and GroupMe',
+      modalNew: 'New gig', modalEdit: 'Edit gig',
       tapToChange: 'Tap to change',
       editDetails: 'Edit details', postAnnouncement: 'Post the announcement', sendReminder: 'Send reminder', confirmGig: 'Confirm gig',
       confirmAsk: 'Confirm this gig? Families who said yes will be notified (if a channel is connected).', cancelGig: 'Cancel gig', cancelAsk: 'Cancel this gig?',
@@ -87,7 +90,7 @@
       guideM4: 'Post anything on her own — she only speaks when you tap a button here.',
       guideFix: 'She got it wrong? Tap the chips in the gig roster. You always have the last word.',
       showOnWebsite: 'Show on website', hideFromWebsite: 'Hide from website', websiteOn: 'Now listed on bfmh.dance', websiteOff: 'Removed from bfmh.dance',
-      familiesTitle: 'Families & dancers', familiesSub: 'Each family gets one private link. Send it to them once (GroupMe DM or text); they tap it and can answer for every dancer in their household.',
+      familiesTitle: 'Families & dancers', familiesSub: 'Each family gets one private link that signs them in — no password, no account to make. “Send link” shares it by GroupMe DM or text; they tap it and can mark who is available for every dancer in their household, on every gig you post. The link keeps working, so you only send it once. If it ever reaches someone outside the family, “New link” replaces it and the old one stops working.',
       familyNamePh: 'Family name (e.g. Garcia)', dancersPh: 'Dancers, comma separated (e.g. Luis, Elena)',
       newFamily: 'New family', addFamily: 'Add family', familyAdded: 'Family added', noFamilies: 'No families yet.',
       removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link',
@@ -103,7 +106,7 @@
       going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
       remindWaiting: 'Remind {n} with no answer', moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
       waitingOn: 'No response received', tapGigHint: 'Tap a gig to see who’s in and nudge who isn’t.',
-      goingAre: 'Going:', andMore: '+{n} more',
+      goingAre: 'Going:',
       everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
       shareInvite: 'Send link', inviteMsg: 'Your family’s link for Ballet Folklórico Mi Herencia gigs — tap it to mark who can dance:',
       refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
@@ -126,7 +129,9 @@
       badLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
       needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Recientes', myFamily: 'Mi familia',
       subscribe: 'Agrega nuestros eventos a tu calendario', subscribeHint: 'Se actualiza solo cuando cambian las fechas.',
-      subscribeOwner: 'Agrega todos los eventos a tu calendario', addToCal: 'Agregar a mi calendario',
+      subscribeOwner: 'Agrega todos los eventos a tu calendario', addToCal: 'Agregar a mi calendario', calSection: 'Calendario',
+      subscribeWhat: 'Cada evento publicado al equipo aparece en tu calendario hasta que lo rechazas — los que tu familia contesta que no desaparecen solos. Se actualiza cuando cambian las fechas y los detalles.',
+      subscribeWhatOwner: 'Todos los eventos del tablero — abiertos, confirmados y terminados — con el pago, que solo ven los dueños. Se actualiza solo cuando cambian las fechas y los detalles.',
       addToCalHint: 'Guarda la hora de llegada, la dirección y un recordatorio el día anterior.',
       subscribePick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace',
@@ -145,17 +150,18 @@
       askGroup: '🙋 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
       askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
-      postToTeam: 'Publicar al equipo…', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
+      postToTeam: 'Publicar al equipo', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
+      requiredTag: 'obligatorio', optionalHead: 'Opcional — llena lo que sepas',
+      payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
       title: 'Título', titlePh: 'p. ej. Quinceañera — familia López', typeLabel: 'Tipo', typePh: '— tipo —', dateLabel: 'Fecha', startTime: 'Hora de inicio', endTime: 'Hora de fin',
-      dancersNeededLabel: 'Bailarines necesarios', venue: 'Lugar', city: 'Ciudad', address: 'Dirección', payLabel: 'Pago (visible al equipo, opcional)', payPh: '$50 por bailarín',
+      dancersNeededLabel: 'Bailarines necesarios', venue: 'Lugar', city: 'Ciudad', address: 'Dirección',
       clientWrote: 'El cliente escribió (fecha y ciudad)', detailsForTeam: 'Detalles para el equipo', detailsPh: 'Vestuario, bailes, estacionamiento, qué traer…',
       rehearsalsLabel: 'Ensayos (visibles al equipo)', rehearsalDate: 'Fecha del ensayo', time: 'Hora', locationNote: 'Lugar / nota', addRehearsal: '+ Agregar ensayo',
       clientSection: 'Contacto del cliente y notas privadas', clientName: 'Nombre del cliente', clientEmail: 'Correo del cliente', clientPhone: 'Teléfono del cliente', clientMessage: 'Mensaje del cliente',
-      privateNotes: 'Notas privadas (solo dueños)', notifyNow: ' Avisar al equipo ahora (bot de GroupMe, si está conectado)',
+      privateNotes: 'Notas privadas (solo dueños)',
       needTitle: 'Ponle un título al evento.', create: 'Crear', save: 'Guardar', cancel: 'Cancelar', close: 'Cerrar',
-      modalPost: 'Publicar al equipo', modalNew: 'Nuevo evento', modalEdit: 'Editar evento',
-      postedGroupme: 'Publicado al equipo y en GroupMe',
+      modalNew: 'Nuevo evento', modalEdit: 'Editar evento',
       tapToChange: 'Toca para cambiar',
       editDetails: 'Editar detalles', postAnnouncement: 'Publicar el anuncio', sendReminder: 'Enviar recordatorio', confirmGig: 'Confirmar evento',
       confirmAsk: '¿Confirmar este evento? Se avisará a las familias que dijeron que sí (si hay un canal conectado).', cancelGig: 'Cancelar evento', cancelAsk: '¿Cancelar este evento?',
@@ -186,7 +192,7 @@
       guideM4: 'Publicar por su cuenta — solo habla cuando tocas un botón aquí.',
       guideFix: '¿Se equivocó? Toca las fichas en la lista del evento. La última palabra siempre es tuya.',
       showOnWebsite: 'Mostrar en el sitio web', hideFromWebsite: 'Quitar del sitio web', websiteOn: 'Ya aparece en bfmh.dance', websiteOff: 'Quitado de bfmh.dance',
-      familiesTitle: 'Familias y bailarines', familiesSub: 'Cada familia recibe un enlace privado. Envíaselo una vez (mensaje directo de GroupMe o texto); al abrirlo pueden responder por todos los bailarines de su casa.',
+      familiesTitle: 'Familias y bailarines', familiesSub: 'Cada familia recibe un enlace privado que la identifica — sin contraseña y sin crear cuenta. “Enviar enlace” lo comparte por mensaje directo de GroupMe o texto; al abrirlo pueden marcar quién está disponible por cada bailarín de su casa, en cada evento que publiques. El enlace sigue funcionando, así que solo se envía una vez. Si llega a alguien fuera de la familia, “Nuevo enlace” lo reemplaza y el anterior deja de servir.',
       familyNamePh: 'Apellido de la familia (p. ej. García)', dancersPh: 'Bailarines separados por comas (p. ej. Luis, Elena)',
       newFamily: 'Nueva familia', addFamily: 'Agregar familia', familyAdded: 'Familia agregada', noFamilies: 'Todavía no hay familias.',
       removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace',
@@ -202,7 +208,7 @@
       going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
       remindWaiting: 'Recordar a {n} sin respuesta', moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
       waitingOn: 'Sin respuesta', tapGigHint: 'Toca un evento para ver quién va y avisar a quien falta.',
-      goingAre: 'Van:', andMore: '+{n} más',
+      goingAre: 'Van:',
       everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
       shareInvite: 'Enviar enlace', inviteMsg: 'El enlace de tu familia para los eventos de Ballet Folklórico Mi Herencia — tócalo para marcar quién puede bailar:',
       refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
@@ -267,14 +273,18 @@
     if (m < 2) return t('justNow'); if (m < 60) return t('minsAgo', { n: m });
     if (m < 48 * 60) return t('hoursAgo', { n: Math.round(m / 60) }); return t('daysAgo', { n: Math.round(m / 1440) });
   }
+  // asked_at is only recorded by the "Ask the group" flow, which shipped on this date. Older gigs
+  // were asked by hand, so "Never asked" would be a lie about them - say nothing instead.
+  var ASK_TRACKED_FROM = '2026-09-05';
+  function askTracked(ev) { return String(ev.created_at || '') >= ASK_TRACKED_FROM; }
   function askedLine(ev) {
     var c = tallyOf(ev);
     if (c.known && !c.pending && (c.yes || c.maybe || c.no)) return h('span', { class: 'askline settled' }, icon('yes', 2), t('rosterSettled'));
-    if (!ev.asked_at) return ev.status === 'open' || ev.status === 'inquiry' ? h('span', { class: 'askline never' }, icon('clock', 2), t('neverAsked')) : null;
+    if (!ev.asked_at) return askTracked(ev) && (ev.status === 'open' || ev.status === 'inquiry') ? h('span', { class: 'askline never' }, icon('clock', 2), t('neverAsked')) : null;
     return h('span', { class: 'askline' }, icon('chat', 2), t('askedAgo', { when: '' }).trim() + ' ', h('b', { text: timeAgo(ev.asked_at) }));
   }
   function askedDetail(ev) {
-    if (!ev.asked_at) return h('p', { class: 'hint', text: t('askedNever') });
+    if (!ev.asked_at) return askTracked(ev) ? h('p', { class: 'hint', text: t('askedNever') }) : null;
     var c = tallyOf(ev), total = c.yes + c.maybe + c.no + c.pending;
     return h('p', { class: 'hint', style: 'margin:0', text: t('askedLine', { when: timeAgo(ev.asked_at), n: total - c.pending, total: total }) });
   }
@@ -477,6 +487,7 @@
     trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
     globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     home: '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/>',
+    chevron: '<path d="m9 5 7 7-7 7"/>',
   };
   function icon(name, width) {
     var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -541,14 +552,11 @@
     else if (c.known) row.appendChild(h('em', { text: t('everyoneAnswered') }));
     return row;
   }
-  var NAMES_SHOWN = 8;
   function goingNames(ev) {
     var yes = (ev.availability || []).filter(function (a) { return a.status === 'yes'; })
       .map(function (a) { return a.dancer_name; }).sort(function (a, b) { return a.localeCompare(b); });
     if (!yes.length) return null;
-    var shown = yes.slice(0, NAMES_SHOWN).join(', ');
-    if (yes.length > NAMES_SHOWN) shown += '  ·  ' + t('andMore', { n: yes.length - NAMES_SHOWN });
-    return h('div', { class: 'goingnames' }, h('b', { text: t('goingAre') }), h('span', { text: shown }));
+    return h('div', { class: 'goingnames' }, h('b', { text: t('goingAre') }), h('span', { text: yes.join(', ') }));
   }
 
   function calHref(ev) {
@@ -585,11 +593,14 @@
     pop.body.appendChild(h('p', { class: 'hint', text: t('calGoogleNote') }));
     pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
   }
-  function subscribeLine(label) {
+  function subscribeCard(owner) {
     if (!state.me || !state.me.calendar_feed) return null;
-    return h('p', { class: 'hint sub-cal' },
-      h('button', { type: 'button', class: 'linkish', text: '📅 ' + t(label || 'subscribe'), onclick: subscribeSheet }),
-      h('span', { text: ' ' + t('subscribeHint') }));
+    return h('button', { type: 'button', class: 'calsub', onclick: subscribeSheet },
+      h('span', { class: 'calsub-ico' }, icon('calendar', 2)),
+      h('span', { class: 'calsub-main' },
+        h('b', { class: 'calsub-title', text: t(owner ? 'subscribeOwner' : 'subscribe') }),
+        h('span', { class: 'calsub-desc', text: t(owner ? 'subscribeWhatOwner' : 'subscribeWhat') })),
+      h('span', { class: 'calsub-go' }, icon('chevron', 2.5)));
   }
 
   /* ── headcount ring ───────────────────────────────────── */
@@ -716,13 +727,13 @@
     upcoming.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
     if (past.length) { app.appendChild(section(t('recent'))); past.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev), true)); }); }
 
+    var famCal = subscribeCard();
+    if (famCal) { app.appendChild(section(t('calSection'))); app.appendChild(famCal); }
+
     /* A picker session may answer but not edit the household: don't offer what the server refuses. */
     if (me.scope !== 'pick') {
       app.appendChild(section(t('myFamily')));
       app.appendChild(familyEditor(me));
-    } else {
-      var sub = subscribeLine();
-      if (sub) app.appendChild(sub);
     }
     focusIfNeeded();
   }
@@ -811,8 +822,6 @@
     } }, nameIn, h('button', { class: 'btn btn-sm btn-gold', type: 'submit', text: t('add') }));
     card.appendChild(h('span', { class: 'tm-label', text: t('dancers') }));
     card.appendChild(h('div', { style: 'margin-top:0.5rem' }, chips, h('div', { style: 'margin-top:0.5rem' }, add)));
-    var sub = subscribeLine();
-    if (sub) card.appendChild(sub);
     return card;
   }
 
@@ -884,8 +893,8 @@
       app.appendChild(gigList(live));
     }
     if (past.length) { app.appendChild(section(t('past'), past.length)); app.appendChild(gigList(past)); }
-    var sub = subscribeLine('subscribeOwner');
-    if (sub) app.appendChild(sub);
+    var ownerCal = subscribeCard(true);
+    if (ownerCal) { app.appendChild(section(t('calSection'))); app.appendChild(ownerCal); }
   }
 
   function gigList(events) {
@@ -900,7 +909,8 @@
           h('p', { class: 'card-meta', text: [fmtTime(ev), fmtWhere(ev)].filter(Boolean).join('  ·  ') || fmtDate(ev.event_date) }),
           askedLine(ev)),
         headcount(ev, c),
-        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c), goingNames(ev)));
+        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c), goingNames(ev)),
+        h('span', { class: 'giggo' }, icon('chevron', 2.5)));
       list.appendChild(row);
     });
     return list;
@@ -919,7 +929,9 @@
     }
     var actions = h('div', { class: 'card-actions' });
     if (ev.status === 'inquiry') {
-      actions.appendChild(h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^🙋\s*/, '')));
+      actions.appendChild(ev.event_date
+        ? h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^🙋\s*/, ''))
+        : h('button', { class: 'btn btn-gold btn-main', onclick: function () { doAction(ev, 'publish'); } }, icon('chat', 2), t('postToTeam')));
       actions.appendChild(h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(evTitle(ev), inquiryActions(ev)); } }, icon('more', 2)));
     } else {
       actions.appendChild(h('button', { class: 'btn', text: t('reopen'), onclick: function () { doAction(ev, 'reopen'); } }));
@@ -1024,10 +1036,13 @@
   }
 
   /* ── event form (create / edit / publish) ──────────────── */
-  function field(label, input, full) { return h('label', { class: 'f' + (full ? ' full' : '') }, label, input); }
+  function field(label, input, full, required) {
+    return h('label', { class: 'f' + (full ? ' full' : '') },
+      h('span', { class: 'f-label' }, label, required ? h('i', { class: 'req', text: t('requiredTag') }) : null), input);
+  }
   function inp(name, ev, attrs) { return h('input', Object.assign({ name: name, value: ev && ev[name] != null ? ev[name] : '' }, attrs || {})); }
 
-  function openEventModal(ev, intent) {
+  function openEventModal(ev) {
     ev = ev || {};
     var isNew = !ev.id;
     var back = state.detail; state.detail = null;   // the sheet comes back when the form closes
@@ -1051,7 +1066,6 @@
       rehBox.appendChild(h('button', { type: 'button', class: 'btn btn-sm', text: t('addRehearsal'), onclick: function () { rehearsals.push({}); renderReh(); } }));
     }
     renderReh();
-    var notify = h('input', { type: 'checkbox', checked: true });
     var err = h('p', { class: 'error' });
     var form = h('form', { class: 'form-grid', id: 'event-form', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
@@ -1061,27 +1075,22 @@
       if (!body.title) { err.textContent = t('needTitle'); return; }
       var p;
       if (isNew) {
-        body.status = intent === 'publish' ? 'open' : 'inquiry';
-        p = api('/api/events', { method: 'POST', body: body }).then(function (d) {
-          if (intent === 'publish') return api('/api/events/' + d.id, { method: 'PATCH', body: { action: 'publish', notify: notify.checked } });
-        });
+        body.status = 'inquiry';
+        p = api('/api/events', { method: 'POST', body: body });
       } else {
-        if (intent === 'publish') { body.action = 'publish'; body.notify = notify.checked; }
         p = api('/api/events/' + ev.id, { method: 'PATCH', body: body });
       }
-      p.then(function (d) {
+      p.then(function () {
         closeModal();
-        if (intent === 'publish') {
-          var n = d && d.notified;
-          toast(n && n.groupme ? t('postedGroupme') : t('postFailed'), !(n && n.groupme));
-          state.tab = 'gigs';
-        } else { toast(t('saved')); if (back) state.detail = back; }
+        toast(t('saved'));
+        if (back) state.detail = back;
         return refresh();
       }).catch(function (x) { err.textContent = x.message; });
     } },
-      field(t('title'), inp('title', ev, { placeholder: t('titlePh'), required: true }), true),
-      field(t('typeLabel'), typeSel),
+      field(t('title'), inp('title', ev, { placeholder: t('titlePh'), required: true }), true, true),
+      h('div', { class: 'form-sep full' }, h('span', { class: 'tm-label', text: t('optionalHead') })),
       field(t('dateLabel'), inp('event_date', ev, { type: 'date' })),
+      field(t('typeLabel'), typeSel),
       field(t('startTime'), inp('start_time', ev, { placeholder: '7:00 PM' })),
       field(t('endTime'), inp('end_time', ev, { placeholder: '7:30 PM' })),
       field(t('callTime'), inp('call_time', ev, { placeholder: '6:15 PM' })),
@@ -1098,21 +1107,23 @@
           field(t('clientName'), inp('client_name', ev)), field(t('clientEmail'), inp('client_email', ev, { type: 'email' })), field(t('clientPhone'), inp('client_phone', ev, { type: 'tel' })),
           field(t('clientMessage'), h('textarea', { name: 'message', text: ev.message || '' }), true),
           field(t('privateNotes'), h('textarea', { name: 'notes', text: ev.notes || '' }), true))),
-      intent === 'publish' ? h('label', { class: 'check full' }, notify, t('notifyNow')) : null,
       h('div', { class: 'full' }, err));
     var foot = h('div', { class: 'foot-btns' },
-      h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'event-form', text: intent === 'publish' ? t('modalPost') : isNew ? t('create') : t('save') }),
+      h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'event-form', text: isNew ? t('create') : t('save') }),
       h('button', { class: 'btn', type: 'button', text: t('cancel'), onclick: done }));
-    modal(intent === 'publish' ? t('modalPost') : isNew ? t('modalNew') : t('modalEdit'), form, foot, { onclose: done });
+    modal(isNew ? t('modalNew') : t('modalEdit'), form, foot, { onclose: done });
   }
 
   /* ── gig detail sheet (owner) ──────────────────────────── */
   function openDetail(id) { state.detail = id; render(); }
   function closeDetail() { state.detail = null; closeModal(); }
 
+  // Publishing takes no date, so it is the only way a "date TBD" gig reaches the families:
+  // askGroup and the server's 'ask' both refuse an event with no event_date.
+  function postToTeam(ev) { return { label: t('postToTeam'), icon: 'chat', onclick: function () { doAction(ev, 'publish'); } }; }
   function inquiryActions(ev) {
     return [
-      { label: t('postToTeam'), icon: 'chat', onclick: function () { openEventModal(ev, 'publish'); } },
+      ev.event_date ? postToTeam(ev) : null,
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } },
@@ -1130,7 +1141,9 @@
     var edit = { label: t('editDetails'), icon: 'edit', onclick: function () { openEventModal(ev); } };
     var out = { primary: null, more: [] };
     if (s === 'inquiry') {
-      out.primary = { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      out.primary = ev.event_date
+        ? { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }
+        : postToTeam(ev);
       out.more = inquiryActions(ev);
     } else if (s === 'open') {
       if (!ev.asked_at) out.primary = { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
@@ -1160,9 +1173,9 @@
       out.more = [edit, { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
         { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
     } else {
-      out.primary = { label: t('postToTeam'), icon: 'chat', onclick: function () { openEventModal(ev, 'publish'); } };
-      out.more = [edit, { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
-        { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
+      // 'ask' is rejected server-side for a declined/cancelled gig, so reopening is the only way forward.
+      out.primary = { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } };
+      out.more = [edit, { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
     }
     return out;
   }
@@ -1186,7 +1199,7 @@
       facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: 'https://maps.apple.com/?q=' + q, target: '_blank', rel: 'noopener', text: [fmtWhere(ev), ev.address].filter(Boolean).join(' · ') })));
     }
     if (ev.dancers_needed) facts.appendChild(h('div', { class: 'fact' }, icon('people', 2), h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
-    if (ev.pay) facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
+    if (ev.pay && state.me && state.me.role === 'admin') facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
     if (facts.childNodes.length) body.appendChild(facts);
     var detailCal = calButton(ev);
     if (detailCal) body.appendChild(h('div', { class: 'card-actions' }, detailCal));
