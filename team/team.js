@@ -21,11 +21,9 @@
       yes: 'yes', maybe: 'maybe', no: 'no', noAnswer: 'no answer',
       btnYes: '✓ Yes', btnMaybe: '? Maybe', btnNo: '✗ No', availabilityFor: 'Availability for {name}',
       signOut: 'Sign out', familia: 'Familia', owner: 'Owner', newGig: '+ New gig',
-      loginTitle: 'Owner sign-in', loginText: 'This is the owners’ door: gigs, families, and La Chona. Enter your password to come in.',
-      loginFamilyHint: 'Dancers and families never come here — they answer from their own link.',
+      loginTitle: 'Owner sign-in', loginText: 'Enter your password to manage events.',
       ownerPassword: 'Owner password', signIn: 'Sign in', notConfigured: 'ADMIN_PASSWORD is not set on the server yet.',
-      signInAs: 'Your name', signInAsPh: 'Owner',
-      signInAsHint: 'The name is only so your iPhone offers to save the password — then Face ID fills it in next time. Any name works; it is not checked.',
+      signInAs: 'Your name',
       badLink: 'That link is not valid anymore. Ask the owners for a new one.',
       needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Recent', myFamily: 'My family',
       subscribe: 'Add our gigs to your calendar', subscribeHint: 'Keeps updating on its own as dates change.',
@@ -122,11 +120,9 @@
       yes: 'sí', maybe: 'tal vez', no: 'no', noAnswer: 'sin respuesta',
       btnYes: '✓ Sí', btnMaybe: '? Tal vez', btnNo: '✗ No', availabilityFor: 'Disponibilidad de {name}',
       signOut: 'Salir', familia: 'Familia', owner: 'Dueño', newGig: '+ Nuevo evento',
-      loginTitle: 'Acceso de dueños', loginText: 'Esta es la puerta de los dueños: eventos, familias y La Chona. Escribe tu contraseña para entrar.',
-      loginFamilyHint: 'Los bailarines y las familias nunca entran por aquí — responden desde su propio enlace.',
+      loginTitle: 'Acceso de dueños', loginText: 'Escribe tu contraseña para administrar eventos.',
       ownerPassword: 'Contraseña de dueño', signIn: 'Entrar', notConfigured: 'ADMIN_PASSWORD todavía no está configurado en el servidor.',
-      signInAs: 'Tu nombre', signInAsPh: 'Dueño',
-      signInAsHint: 'El nombre es solo para que tu iPhone te ofrezca guardar la contraseña — luego Face ID la llena sola. Cualquier nombre sirve; no se revisa.',
+      signInAs: 'Tu nombre',
       badLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
       needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Recientes', myFamily: 'Mi familia',
       subscribe: 'Agrega nuestros eventos a tu calendario', subscribeHint: 'Se actualiza solo cuando cambian las fechas.',
@@ -388,31 +384,26 @@
   /* ── login ──────────────────────────────────────────────── */
   /* A lone password box is a credential a password manager cannot finish: iOS keeps asking for
      "the user name for this account", never saves it, and so never autofills — which is why the
-     owners were retyping this on every launch. The name is inert here (one shared password opens
-     the door); it exists so Face ID has a credential to fill. */
+     owners were retyping this on every launch. The name is inert (one shared password opens the
+     door) and fixed, so it's kept off-screen (.f-hidden) — it exists only so Face ID has a
+     credential to fill, not for anyone to type into. */
   function renderLogin() {
     tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
     var err = h('p', { class: 'error' });
-    var saved = '';
-    try { saved = localStorage.getItem('bfmh_team_who') || ''; } catch (e) {}
-    var who = h('input', { type: 'text', name: 'username', autocomplete: 'username', value: saved,
-      placeholder: t('signInAsPh'), autocapitalize: 'words', autocorrect: 'off', spellcheck: 'false' });
+    var who = h('input', { type: 'text', name: 'username', autocomplete: 'username', value: 'Owner', 'aria-hidden': 'true', tabindex: '-1' });
     var pw = h('input', { type: 'password', name: 'password', autocomplete: 'current-password', placeholder: t('ownerPassword') });
     var form = h('form', { class: 'login', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
-      try { localStorage.setItem('bfmh_team_who', who.value.trim()); } catch (x) {}
       api('/api/auth', { method: 'POST', body: { password: pw.value } }).then(function () { location.reload(); })
         .catch(function (x) { err.textContent = x.message; });
     } },
       h('h1', { text: t('loginTitle') }),
       h('p', { text: t('loginText') }),
-      h('label', { class: 'f' }, t('signInAs'), who),
+      h('label', { class: 'f f-hidden' }, t('signInAs'), who),
       h('label', { class: 'f' }, t('ownerPassword'), pw),
       h('div', { class: 'card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('signIn') })),
       err,
-      h('p', { class: 'hint', text: t('signInAsHint') }),
-      h('p', { class: 'hint', text: t('loginFamilyHint') }),
       state.me && state.me.configured === false ? h('p', { class: 'hint', text: t('notConfigured') }) : null
     );
     app.appendChild(form);

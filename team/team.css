@@ -436,6 +436,9 @@ input[type=date] { color-scheme: dark; }
 .inline-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.45rem; }
 
 .login { max-width: 400px; margin: 3rem auto; }
+/* Present for password managers, invisible to people: a lone password field can't be saved/autofilled
+   without a username field alongside it, but nobody needs to see or fill it in. */
+.login .f-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .login h1 { font-family: var(--font-display); font-weight: 600; font-size: 1.7rem; margin: 0 0 0.4rem; color: var(--gold-light); }
 .login p { color: var(--text-2); font-size: 0.9rem; }
 .login .hint { color: var(--muted); font-size: 0.76rem; }
