@@ -1,6 +1,6 @@
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -22,14 +22,19 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.
   '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
   '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.webm': 'video/webm', '.xml': 'application/xml', '.txt': 'text/plain' };
 
+// Mirrors the rewrites in vercel.json, so dev and production route these the same way.
+const REWRITES = { '/api/dancers': ['/api/families', { r: 'dancers' }], '/api/availability': ['/api/families', { r: 'availability' }] };
+
 async function resolveApi(pathname) {
-  const rel = pathname.replace(/^\/api\//, '');
+  const [target, extra] = REWRITES[pathname] || [pathname, {}];
+  const rel = target.replace(/^\/api\//, '');
   const direct = path.join(ROOT, 'api', rel + '.js');
-  if (existsSync(direct)) return { file: direct, params: {} };
+  if (existsSync(direct)) return { file: direct, params: extra };
   const parts = rel.split('/');
   const last = parts.pop();
-  const dyn = path.join(ROOT, 'api', ...parts, '[id].js');
-  if (existsSync(dyn)) return { file: dyn, params: { id: last } };
+  const dir = path.join(ROOT, 'api', ...parts);
+  const dyn = existsSync(dir) && readdirSync(dir).find((f) => /^\[.+\]\.js$/.test(f));
+  if (dyn) return { file: path.join(dir, dyn), params: { ...extra, [dyn.slice(1, -4).replace(/\]$/, '')]: last } };
   return null;
 }
 
