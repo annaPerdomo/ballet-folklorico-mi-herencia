@@ -11,7 +11,10 @@ export default route({
       const name = e.venue || e.title || 'Performance';
       const loc = e.city ? `${e.city}, CA` : '';
       const time = [e.start_time, e.end_time].filter(Boolean).join(' – ') || null;
-      return { id: e.id, name: { en: name, es: name }, date: e.event_date, time, location: { en: loc, es: loc } };
+      return {
+        id: e.id, name: { en: name, es: name }, date: e.event_date, time, location: { en: loc, es: loc },
+        venue: e.venue || null, city: e.city || null, startTime: e.start_time || null, endTime: e.end_time || null,
+      };
     });
     ok(res, { events }, { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' });
   },

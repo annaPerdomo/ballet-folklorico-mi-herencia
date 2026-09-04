@@ -375,19 +375,79 @@
     renderEvents(currentLang);
 
     // Gigs flagged "Show on website" in /team/; a static i18n-data.js entry on the same date + name wins.
+    // Also merged into the page's Event JSON-LD ItemList (addEventsToJsonLd below) for rich results.
     if (window.fetch) {
       fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
         if (!d || !d.events || !d.events.length) return;
         var have = {};
         EVENTS.forEach(function (ev) { have[ev.date + '|' + (ev.name.en || '').toLowerCase()] = true; });
-        var added = 0;
+        var added = 0, newlyAdded = [];
         d.events.forEach(function (ev) {
           var k = ev.date + '|' + (ev.name.en || '').toLowerCase();
           if (have[k]) return;
-          have[k] = true; EVENTS.push(ev); added++;
+          have[k] = true; EVENTS.push(ev); newlyAdded.push(ev); added++;
         });
         if (added) renderEvents(currentLang);
+        if (newlyAdded.length) addEventsToJsonLd(newlyAdded);
       }).catch(function () {});
+    }
+
+    // Pacific-time UTC offset ("-07:00" / "-08:00") for a given YYYY-MM-DD, DST-aware.
+    function pacificOffset(dateStr) {
+      try {
+        var d = new Date(dateStr + 'T12:00:00Z');
+        var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', timeZoneName: 'shortOffset' }).formatToParts(d);
+        var tz = parts.find(function (p) { return p.type === 'timeZoneName'; });
+        var m = tz && tz.value.match(/GMT([+-]\d+)/);
+        if (m) return (m[1][0] === '-' ? '-' : '+') + String(Math.abs(m[1])).padStart(2, '0') + ':00';
+      } catch (e) {}
+      return '-08:00';
+    }
+
+    // Mirrors the schema build.mjs bakes in for the static list, so team-published gigs are
+    // also eligible for Google's Event rich results.
+    function addEventsToJsonLd(events) {
+      var scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      var target = null, data = null;
+      for (var i = 0; i < scripts.length; i++) {
+        try {
+          var parsed = JSON.parse(scripts[i].textContent);
+          if (parsed['@type'] === 'ItemList' && Array.isArray(parsed.itemListElement)) { target = scripts[i]; data = parsed; break; }
+        } catch (e) {}
+      }
+      if (!target) return;
+      var pos = data.itemListElement.length;
+      events.forEach(function (ev) {
+        var offset = pacificOffset(ev.date);
+        var startDate = ev.startTime ? ev.date + 'T' + ev.startTime + offset : ev.date;
+        var endDate = ev.endTime ? ev.date + 'T' + ev.endTime + offset : startDate;
+        var placeName = ev.venue || ev.name.en;
+        pos += 1;
+        data.itemListElement.push({
+          '@type': 'ListItem',
+          position: pos,
+          item: {
+            '@type': 'DanceEvent',
+            name: 'Ballet Folklórico Mi Herencia at ' + placeName,
+            startDate: startDate,
+            endDate: endDate,
+            eventStatus: 'https://schema.org/EventScheduled',
+            image: 'https://bfmh.dance/og-image.jpg',
+            organizer: { '@type': 'DanceGroup', name: 'Ballet Folklórico Mi Herencia', url: 'https://bfmh.dance/' },
+            offers: {
+              '@type': 'Offer', url: 'https://bfmh.dance/', availability: 'https://schema.org/InStock',
+              price: '0', priceCurrency: 'USD', validFrom: '2026-01-01T00:00:00-08:00'
+            },
+            location: {
+              '@type': 'Place', name: placeName,
+              address: { '@type': 'PostalAddress', addressLocality: ev.city || '', addressRegion: 'CA' }
+            },
+            performer: { '@type': 'DanceGroup', name: 'Ballet Folklórico Mi Herencia' },
+            description: 'Live folklorico performance by Ballet Folklórico Mi Herencia' + (ev.city ? ' in ' + ev.city + ', CA.' : '.')
+          }
+        });
+      });
+      target.textContent = JSON.stringify(data, null, 2);
     }
 
     // ─────────────────────────────────────────────────────────
