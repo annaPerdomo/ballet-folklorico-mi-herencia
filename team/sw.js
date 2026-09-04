@@ -1,7 +1,7 @@
 /* Offline shell: the installed app has no address bar, so a cold start with no signal is
    otherwise a dead end. Network first — a deploy must never be served stale.
    /api/ is never cached: a stale roster is worse than an honest error. */
-var CACHE = 'bfmh-team-v3';
+var CACHE = 'bfmh-team-v6';
 var SHELL = ['/team/', '/team/team.js', '/team/team.css', '/team/manifest.webmanifest',
   '/team/icons/icon-192.png', '/team/icons/icon-512.png', '/team/icons/icon-180.png',
   '/images/optimized/la-chona-badge.webp', '/images/optimized/la-chona-sm.webp'];

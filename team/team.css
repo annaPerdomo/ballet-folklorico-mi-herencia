@@ -16,7 +16,7 @@ html { color-scheme: dark; }
    so there is nothing to drag up, down or sideways — no rubber-banding on a phone either. */
 html, body { height: 100%; width: 100%; max-width: 100%; margin: 0; overflow: hidden; overscroll-behavior: none;
   touch-action: pan-y pinch-zoom; }
-body { position: fixed; inset: 0; height: 100dvh; display: flex; flex-direction: column;
+body { position: fixed; inset: 0; display: flex; flex-direction: column;
   background: radial-gradient(1200px 600px at 50% -10%, #241236 0%, var(--bg-primary) 60%); color: var(--text);
   font-family: var(--font-ui); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent; }
@@ -47,7 +47,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tm-who-name { font-size: 13px; font-weight: 600; color: var(--gold-light); max-width: 9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── tabs: top strip on a laptop, thumb bar on a phone ───── */
-.tm-tabs { order: 1; display: flex; gap: 0.25rem; padding: 0 0.8rem; flex-shrink: 0; overflow-x: auto; overscroll-behavior: contain;
+.tm-tabs { order: 1; display: flex; gap: 0.25rem; padding: 0 0.8rem; flex-shrink: 0; overflow-x: auto; overscroll-behavior: none;
   border-bottom: 1px solid var(--line); background: rgba(8,3,17,0.5); z-index: 20; }
 .tm-tab { position: relative; display: inline-flex; align-items: center; gap: 0.45rem; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted);
   padding: 0.85rem 0.85rem 0.7rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
@@ -59,7 +59,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tm-tab-dot { position: absolute; right: -2px; bottom: -2px; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); border: 2px solid var(--bg-primary); }
 .tm-tab-dot.on { background: var(--teal-light); }
 
-.tm-main { order: 2; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+.tm-main { order: 2; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: none; touch-action: pan-y;
   -webkit-overflow-scrolling: touch; padding: 1.1rem max(1rem, calc((100% - 1180px) / 2)) 3rem; }
 .tm-loading { color: var(--muted); text-align: center; padding: 3rem 1rem; }
 .tm-boot { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; padding: 4rem 1rem; }
@@ -347,7 +347,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 
 /* ── modal → sheet ──────────────────────────────────────── */
 .modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 30; display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem 0.8rem; overscroll-behavior: contain; }
+  padding: 1.5rem 0.8rem; overscroll-behavior: none; }
 .modal { background: var(--bg-card); border: 1px solid var(--gold-dark); border-radius: 18px; width: 100%; max-width: 720px; max-height: min(92dvh, 100%);
   display: flex; flex-direction: column; box-shadow: 0 30px 80px rgba(0,0,0,0.6); overflow: hidden; }
 .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.85rem 1rem 0.7rem; border-bottom: 1px solid var(--hair); flex-shrink: 0; }
@@ -355,14 +355,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .modal-x { all: unset; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: var(--muted); flex-shrink: 0; }
 .modal-x:hover { background: rgba(255,255,255,0.06); color: var(--text); }
 .modal-x svg { width: 20px; height: 20px; }
-.modal-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 1rem 1.1rem 1.2rem; }
+.modal-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: none; touch-action: pan-y; padding: 1rem 1.1rem 1.2rem; }
 .modal-foot { flex-shrink: 0; padding: 0.7rem 1rem calc(0.7rem + var(--safe-b)); border-top: 1px solid var(--hair); background: rgba(8,3,17,0.6); backdrop-filter: blur(8px); }
 .foot-btns { display: flex; gap: 0.5rem; }
 
 .pop-back { align-items: flex-end; z-index: 40; padding: 0; }
 .pop { width: 100%; max-width: 480px; background: var(--bg-card); border: 1px solid var(--gold-dark); border-bottom: 0; border-radius: 22px 22px 0 0;
   padding: 0.5rem 1rem calc(1.5rem + var(--safe-b)); box-shadow: 0 -20px 60px rgba(0,0,0,0.6); animation: rise 0.22s ease-out;
-  max-height: 86dvh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  max-height: 86dvh; overflow-y: auto; overscroll-behavior: none; -webkit-overflow-scrolling: touch; }
 @keyframes rise { from { transform: translateY(40px); opacity: 0.4; } to { transform: none; opacity: 1; } }
 .pop-grip { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); margin: 0.2rem auto 0.8rem; }
 .pop-head h3 { margin: 0; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
@@ -473,7 +473,9 @@ input[type=date] { color-scheme: dark; }
   .tm-who-name { max-width: 5.5rem; }
   .tm-main { padding: 0.9rem 0.8rem 4.5rem; }
 
-  .tm-tabs { order: 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 0.3rem 0.3rem calc(0.35rem + var(--safe-b)); overflow: visible;
+  /* Half the safe inset: the bar's ground runs to the true bottom of the screen and the
+     tabs sit just above the home indicator, rather than a full 34px clear of it. */
+  .tm-tabs { order: 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 0.3rem 0.3rem calc(var(--safe-b) * 0.5); overflow: visible;
     border-bottom: 0; border-top: 1px solid var(--line); background: rgba(8,3,17,0.92); backdrop-filter: blur(14px); }
   .tm-tab { flex-direction: column; justify-content: center; gap: 3px; padding: 0.45rem 0.2rem 0.3rem; border-bottom: 0; border-radius: 12px;
     font-size: 0.58rem; letter-spacing: 0.08em; min-height: 54px; }
@@ -481,9 +483,9 @@ input[type=date] { color-scheme: dark; }
   .tm-tab-ico svg { width: 22px; height: 22px; }
   .tm-tab-face { width: 22px; height: 22px; }
   .tm-tab .count { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 17px; height: 17px; line-height: 17px; padding: 0 5px; font-size: 0.62rem; }
-  .fab { display: flex; bottom: calc(76px + var(--safe-b)); }
+  .fab { display: flex; bottom: calc(70px + var(--safe-b) * 0.5); }
   /* Must clear the tab bar: a toast may not sit on the thumb targets. */
-  .tm-toast { bottom: calc(76px + var(--safe-b)); }
+  .tm-toast { bottom: calc(70px + var(--safe-b) * 0.5); }
 
   .btn { min-height: var(--tap); }
   .card { padding: 0.9rem; border-radius: 14px; }
