@@ -131,16 +131,19 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 - `api/webhooks/[source].js` — the Formspree webhook target (optional; dedupes against the direct post) and the GroupMe bot callback, in one function.
 
   The Hobby plan allows 12 Vercel Functions per deployment, so a few endpoints share a file. `api/families.js` also serves `/api/dancers` and `/api/availability`, which `vercel.json` rewrites to it with `?r=`; `dev-server.mjs` mirrors those rewrites. Every public URL is unchanged — split them back out on a plan with more room.
-- `api/calendar.js` + `api/_lib/ics.js` — calendar files. One gig at a time from the signed link in a GroupMe post (`?e=&s=`), or a family's subscribable feed (`?f=&k=`, the link under **My family**) that calendar apps re-fetch on their own.
+- `api/calendar.js` + `api/_lib/ics.js` — calendar files. One gig at a time (`?e=&s=` from a GroupMe post, or `?event=` with a session cookie — the **Add to my calendar** button on every gig card, the gig detail sheet and the family picker), a family's subscribable feed (`?f=&k=`, the link under **My family**), or the owners' feed of every gig (`?a=<sig>`, the link under the **Gigs** list).
 - `api/gig.js` — the "who's answering?" screen behind that same signed link, readable with no cookie.
 
-**Links and who they let in.** Three different things are signed with `SESSION_SECRET`, and they are deliberately not interchangeable:
+  The generated `.ics` is plain RFC 5545 — CRLF endings, folded at 75 octets, times resolved to UTC — so Apple Calendar, Google Calendar and Outlook all read it. Subscribing is where they differ: only Apple answers a `webcal:` link, so **Add every gig to your calendar** opens a sheet that hands the same feed URL to Google (`calendar.google.com/calendar/r?cid=`) and Outlook (`outlook.live.com/calendar/0/addfromweb?url=`) by their own add-by-URL pages, with the raw link to copy for anything else.
+
+**Links and who they let in.** Four different things are signed with `SESSION_SECRET`, and they are deliberately not interchangeable:
 
 | Link | Who holds it | What it opens |
 | --- | --- | --- |
 | `/team/?k=<invite token>` | one family, sent to them once | Full member sign-in: answer, and edit the household's dancers. **New link** revokes it. |
 | `/team/?e=<id>&s=<sig>` | anyone in the GroupMe chat | The gig, then a family picker. Picking one gives an answer-only session that cannot add, rename or delete dancers, and only while the gig is still open or confirmed. It lasts until they sign out or the owners tap **New link**. |
 | `/api/calendar?f=<id>&k=<sig>` | whoever the family subscribes with | That family's calendar feed. Never a sign-in. Rotates with the invite link. |
+| `/api/calendar?a=<sig>` | the owners, in their own calendar app | Every gig, pay line included. Never a sign-in. Changing `ADMIN_PASSWORD` retires it. |
 
 **Environment variables** (Vercel → Project → Settings → Environment Variables)
 
@@ -175,7 +178,7 @@ How it reads a message (`api/_lib/groupme-parse.js`, English and Spanish; the te
 
 Run the parser tests with `node --test "api/_lib/*.test.mjs"`.
 
-**Show on website.** On a confirmed gig, **Show on website** lists it under Upcoming Events on bfmh.dance within about five minutes, using the venue as the name and the city as the location. `api/public-events.js` serves the flagged gigs and `app.js` merges them with the static list in `i18n-data.js` (no rebuild). Hide it again with the same button. The static list is still the place for past years and for the JSON-LD event schema.
+**Show on website.** On a confirmed gig, **Show on website** lists it under Upcoming Events on bfmh.dance within about five minutes, using the venue as the name and the city as the location. `api/public-events.js` serves the flagged gigs and `app.js` merges them with the static list in `i18n-data.js` (no rebuild); it also appends a matching `DanceEvent` entry to the page's Event JSON-LD (`addEventsToJsonLd` in `app.js`), so these gigs are eligible for the same Google Event rich results as the static list. Hide it again with the same button. The static list is still the place for past years, and it's the only source hand-tuned per language by `build.mjs` (localized descriptions etc.) — team-published entries reuse a generic English description regardless of page language.
 
 **Local development**
 
