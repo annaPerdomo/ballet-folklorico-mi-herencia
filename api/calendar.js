@@ -73,8 +73,18 @@ export default route({
     const events = admin
       ? await sql(`SELECT ${cols(true)} FROM events WHERE status IN ('open','confirmed','done')
                      AND event_date IS NOT NULL AND event_date >= current_date - 120 ORDER BY event_date`)
-      : await sql(`SELECT ${cols(false)} FROM events WHERE status = ANY($1)
-                     AND event_date IS NOT NULL AND event_date >= current_date - 120 ORDER BY event_date`, [MEMBER_VISIBLE]);
+      // Drops only when every active dancer in the household answered 'no'. One sibling's 'no', or
+      // silence, is not enough: an unanswered gig is exactly what the subscription is for.
+      : await sql(`SELECT ${cols(false)} FROM events e WHERE status = ANY($1)
+                     AND event_date IS NOT NULL AND event_date >= current_date - 120
+                     AND NOT (EXISTS (SELECT 1 FROM dancers d WHERE d.family_id = $2 AND d.active)
+                              AND NOT EXISTS (
+                                SELECT 1 FROM dancers d
+                                 WHERE d.family_id = $2 AND d.active
+                                   AND NOT EXISTS (SELECT 1 FROM availability a
+                                                    WHERE a.event_id = e.id AND a.dancer_id = d.id
+                                                      AND a.status = 'no')))
+                     ORDER BY event_date`, [MEMBER_VISIBLE, me.family.id]);
 
     const name = admin ? 'Mi Herencia · All gigs' : `Mi Herencia · ${me.family.name}`;
     sendIcs(res, buildCalendar(events, { name, feed: true }));
