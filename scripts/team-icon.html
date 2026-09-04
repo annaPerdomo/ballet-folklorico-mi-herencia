@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- 512px master for the /team/ home-screen icon, from the "App Icon Final" design:
+     full-color dancers logo on the site's plum, BFMH in DM Serif Display gold.
+     Rendered to PNG by scripts/team-icon.sh with headless Chrome; the OS applies its own corner mask. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; width: 512px; height: 512px; overflow: hidden; background: #080311; }
+#icon { width: 512px; height: 512px; position: relative; background: radial-gradient(circle at 50% 35%, #2a1440, #080311 75%); }
+#icon img { position: absolute; display: block; width: 340px; left: 86px; top: 26px; }
+#icon .word { position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; font: 400 80px 'DM Serif Display', serif; color: #c9a84c; letter-spacing: .08em; line-height: 1; }
+/* Android's adaptive mask keeps only the middle ~80%: same art, pulled in. */
+body.maskable #icon img { width: 272px; left: 120px; top: 72px; }
+body.maskable #icon .word { font-size: 64px; bottom: 74px; }
+</style>
+</head>
+<body>
+<div id="icon"><img src="../images/optimized/logo-dancers-color.webp" alt=""><div class="word">BFMH</div></div>
+<script>if (location.hash === '#maskable') document.body.classList.add('maskable');</script>
+</body>
+</html>
