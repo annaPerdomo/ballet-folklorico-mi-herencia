@@ -95,7 +95,29 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 
 **Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or **Post to team…** (edit details first, then announce) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
 
-**Ask in GroupMe** (`PATCH /api/events/:id {action:"ask"}`, needs `GROUPME_BOT_ID`): opens the gig if it was still an inquiry, posts a three-line question with a sample reply the reader understands, and stamps `asked_at` / `ask_count`. It needs an event date (replies are matched by date). A bare "yes" or "we can't" with no date goes to the gig with the latest activity: the most recent ask or post. The card shows "Bot asked 2 h ago · 5 of 17 answered"; **Ask again** re-posts with "still looking for answers" wording and **Post tally** puts the current ✓ / ? / ✗ / waiting-on list into the chat.
+**Everything is posted from the site.** There is no copy-and-paste path any more: each button below is one `PATCH /api/events/:id` and La Chona says it in the group. Her posts are English (one message for everyone) with bilingual tap lines; the wording lives in `api/_lib/notify.js`.
+
+| Button | Action | What lands in GroupMe |
+| --- | --- | --- |
+| Ask GroupMe who's available | `ask` | `🙋 Who can dance: <gig>` + date · time · place, a sample reply, the signed gig link, and a 📅 calendar link |
+| Post the announcement | `announce` | `📣 New gig: are you available?` + the full summary, calendar link, and "Mark your availability" link |
+| Post tally to GroupMe | `tally` | `📊 <gig> — <date>` then ✓ / ? / ✗ names and "Waiting on: …" |
+| Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
+| Confirm gig / Post the confirmation | `confirm` / `reconfirm` | `✅ CONFIRMED:` + summary, calendar link, the dancer list, rehearsals, and the details link |
+
+`ask` also opens the gig if it was still an inquiry and stamps `asked_at` / `ask_count`. It needs an event date — replies are matched by date. A bare "yes" or "we can't" with no date goes to the gig with the latest activity: the most recent ask or post. The card shows "Bot asked 2 h ago · 5 of 17 answered", and **Ask again** re-posts with "still looking for answers" wording. `announce` and `reconfirm` re-send the publish and confirm messages without changing the gig's status.
+
+Sample ask, exactly as it arrives:
+
+```
+🙋 Who can dance: Quinceañera — Ramirez
+Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina
+Reply "Sofia yes for Nov 4" or "we can't".
+Or tap / O toca: https://bfmh.dance/team/?e=42&s=…
+📅 Save the date / Guardar la fecha: https://bfmh.dance/api/calendar?e=42&s=…
+```
+
+The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners can see what the group will get before they tap.
 
 **Pieces**
 
@@ -103,6 +125,16 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 - `team/` — the app (vanilla JS, no build step).
 - `api/inquiry.js` — the contact form and the landing-page quote forms post a copy of every submission here (see `app.js` / `landing.js`). Formspree still sends the email.
 - `api/webhooks/formspree.js` — optional Formspree webhook target (dedupes against the direct post).
+- `api/calendar.js` + `api/_lib/ics.js` — calendar files. One gig at a time from the signed link in a GroupMe post (`?e=&s=`), or a family's subscribable feed (`?f=&k=`, the link under **My family**) that calendar apps re-fetch on their own.
+- `api/gig.js` — the "who's answering?" screen behind that same signed link, readable with no cookie.
+
+**Links and who they let in.** Three different things are signed with `SESSION_SECRET`, and they are deliberately not interchangeable:
+
+| Link | Who holds it | What it opens |
+| --- | --- | --- |
+| `/team/?k=<invite token>` | one family, sent to them once | Full member sign-in: answer, and edit the household's dancers. **New link** revokes it. |
+| `/team/?e=<id>&s=<sig>` | anyone in the GroupMe chat | The gig, then a family picker. Picking one gives an answer-only session (30 days) that cannot add, rename or delete dancers, and only while the gig is still open or confirmed. |
+| `/api/calendar?f=<id>&k=<sig>` | whoever the family subscribes with | That family's calendar feed. Never a sign-in. Rotates with the invite link. |
 
 **Environment variables** (Vercel → Project → Settings → Environment Variables)
 
@@ -110,12 +142,11 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 | --- | --- | --- |
 | `DATABASE_URL` | yes | Postgres connection string. Easiest: `vercel integration add neon` (sets it automatically). |
 | `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. |
-| `SESSION_SECRET` | recommended | Random string used to sign owner sessions (falls back to the password). |
+| `SESSION_SECRET` | yes | Random string used to sign owner sessions, gig links and calendar feeds. It falls back to `ADMIN_PASSWORD`, but then changing the password invalidates every gig and calendar link already sitting in the GroupMe chat ("That link is not valid"). Set it once and leave it. |
 | `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
-| `GROUPME_BOT_ID` | no | Create a bot at https://dev.groupme.com/bots for the team group; when set, "Ask GroupMe", "Post to team", "Confirm", "Send reminder", and "Post tally" post into GroupMe automatically. Without it, use the **Copy …** buttons and paste. |
+| `GROUPME_BOT_ID` | **yes, in practice** | Create a bot at https://dev.groupme.com/bots for the team group. Every message the app sends goes out as La Chona; without it the buttons report "La Chona is not connected" and nothing reaches the chat. |
 | `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
 | `GROUPME_GROUP_ID`, `GROUPME_BOT_ACK` | no | Reader options: only accept messages from this group id; set `GROUPME_BOT_ACK=0` to stop the "🤖 Noted…" replies. |
-| `RESEND_API_KEY`, `NOTIFY_FROM` | no | Email notifications to families via Resend. |
 | `FORMSPREE_WEBHOOK_SECRET` | no | If you enable the Formspree webhook plugin, point it at `/api/webhooks/formspree?secret=<value>`. |
 
 **GroupMe reader (the bot reads the chat and fills in availability)**
@@ -125,7 +156,7 @@ Families keep answering in the group chat the way they always have; the bot turn
 1. Create the bot at https://dev.groupme.com/bots in the team group. Copy its **Bot ID** into `GROUPME_BOT_ID`.
 2. Pick a random string for `GROUPME_WEBHOOK_SECRET` and set the bot's **Callback URL** to
    `https://bfmh.dance/api/webhooks/groupme?secret=<that string>`.
-3. Redeploy. The **Team** tab in `/team/` shows every message the bot read and what it did with it.
+3. Redeploy. The **La Chona** tab in `/team/` shows every message the bot read and what it did with it.
 
 How it reads a message (`api/_lib/groupme-parse.js`, English and Spanish; the tests use real replies from the group):
 
@@ -150,4 +181,4 @@ npm run dev                       # reads .env.local, serves http://localhost:34
 
 `.env.local` must contain `DATABASE_URL` and `ADMIN_PASSWORD`; the server warns at startup if either is missing, and API errors name the missing variable.
 
-**First-time setup for the owners:** sign in at `/team/` with the password → **Team** tab → add each family with their dancers → **Copy invite link** and send it to that family once (DM or text). The link is their login; **New link** revokes an old one.
+**First-time setup for the owners:** sign in at `/team/` with the password → **Team** tab → add each family with their dancers → **Copy invite link** and send it to that family once (DM or text). The link is their login; **New link** revokes an old one — including any answer-only sessions and calendar feeds minted from it.
