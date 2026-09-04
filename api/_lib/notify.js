@@ -1,4 +1,6 @@
 
+import { calendarSig } from './auth.js';
+
 export const siteUrl = () => (process.env.SITE_URL || 'https://bfmh.dance').replace(/\/$/, '');
 
 export function channels() {
@@ -23,6 +25,12 @@ export function fmtDate(d) {
   return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+// Downloads one .ics straight to the phone's calendar app, so saving a gig never needs the site.
+export function calLink(ev) {
+  if (!ev || !ev.id || !ev.event_date) return null;
+  return `${siteUrl()}/api/calendar?e=${ev.id}&s=${calendarSig(ev.id)}`;
+}
+
 export function eventSummary(ev) {
   const lines = [
     `${ev.title || ev.event_type || 'Performance'} — ${fmtDate(ev.event_date)}`,
@@ -45,11 +53,14 @@ export function askText(ev, { again = false } = {}) {
   const where = [ev.venue, ev.city].filter(Boolean).join(', ');
   const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
   const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
+  const cal = calLink(ev);
   return [
     `${again ? '🙋 Still need answers' : '🙋 Who can dance'}: ${ev.title || ev.event_type || 'Performance'}`,
     [when, time, where].filter(Boolean).join(' · '),
     `Reply "Sofia yes for ${d}" or "we can't".`,
-  ].join('\n');
+    `Or tap / O toca: ${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}`,
+    cal ? `📅 Save the date / Guardar la fecha: ${cal}` : null,
+  ].filter(Boolean).join('\n');
 }
 
 export function tallyText(ev, roster) {

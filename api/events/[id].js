@@ -1,9 +1,9 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
-import { whoami, requireAdmin } from '../_lib/auth.js';
+import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, sendEmail, eventSummary, siteUrl, fmtDate, askText, tallyText } from '../_lib/notify.js';
+import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -14,16 +14,15 @@ const TRANSITIONS = {
   reopen:   { to: 'inquiry',   from: ['declined', 'cancelled', 'done'] },
 };
 
-function teamLink(id) { return `${siteUrl()}/team/#event-${id}`; }
+// Signed, so tapping it out of GroupMe reaches the gig and the picker with no password.
+function teamLink(id) { return `${siteUrl()}/team/?e=${id}&s=${calendarSig(id)}`; }
 
 async function notifyPublish(ev) {
-  const text = `📣 New gig: are you available?\n${eventSummary(ev)}\n\nMark your availability: ${teamLink(ev.id)}`;
-  const fams = await sql('SELECT email FROM families WHERE email IS NOT NULL');
-  const [g, m] = await Promise.all([
-    postGroupMe(text),
-    sendEmail({ to: fams.map((f) => f.email), subject: `Are you available? ${ev.title} · ${fmtDate(ev.event_date)}`, text }),
-  ]);
-  return { groupme: g, email: m };
+  const cal = calLink(ev);
+  const text = `📣 New gig: are you available?\n${eventSummary(ev)}` +
+    (cal ? `\n\n📅 Save the date / Guardar la fecha:\n${cal}` : '') +
+    `\n\nMark your availability: ${teamLink(ev.id)}`;
+  return { groupme: await postGroupMe(text) };
 }
 
 async function notifyConfirm(ev) {
@@ -31,15 +30,15 @@ async function notifyConfirm(ev) {
   const going = roster.filter((f) => f.dancers.some((d) => d.status === 'yes'));
   const names = going.flatMap((f) => f.dancers.filter((d) => d.status === 'yes').map((d) => d.name));
   const reh = (ev.rehearsals || []).map((r) => `• ${fmtDate(r.date)}${r.time ? ' ' + r.time : ''}${r.location ? ' @ ' + r.location : ''}${r.note ? ' — ' + r.note : ''}`).join('\n');
+  const cal = calLink(ev);
+  // The calendar link sits high in the message: postGroupMe truncates at 990 chars and a long
+  // roster must not be what pushes the link off the end.
   const text = `✅ CONFIRMED: ${eventSummary(ev)}` +
+    (cal ? `\n\n📅 Save to your calendar / Guardar en tu calendario:\n${cal}` : '') +
     (names.length ? `\n\nDancers: ${names.join(', ')}` : '') +
     (reh ? `\n\nRehearsals:\n${reh}` : '') +
     `\n\nDetails: ${teamLink(ev.id)}`;
-  const [g, m] = await Promise.all([
-    postGroupMe(text),
-    sendEmail({ to: going.map((f) => f.email), subject: `Confirmed: ${ev.title} · ${fmtDate(ev.event_date)}`, text }),
-  ]);
-  return { groupme: g, email: m };
+  return { groupme: await postGroupMe(text) };
 }
 
 export function reminderText(ev, roster) {
@@ -77,7 +76,7 @@ export default route({
     if (action === 'remind') {
       const ev = await getEvent(id, { admin: true });
       const text = reminderText(ev, await rosterFor(id));
-      notified = { groupme: await postGroupMe(text), text };
+      notified = { groupme: await postGroupMe(text) };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
@@ -85,11 +84,16 @@ export default route({
       const text = askText(await getEvent(id, { admin: true }), { again: current.ask_count > 0 });
       const posted = await postGroupMe(text);
       if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
-      notified = { groupme: posted, text };
+      notified = { groupme: posted };
+    } else if (action === 'announce') {
+      if (!['open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot announce an event that is ${current.status}`);
+      notified = await notifyPublish(await getEvent(id, { admin: true }));
+    } else if (action === 'reconfirm') {
+      if (current.status !== 'confirmed') throw httpError(400, `Cannot re-post the confirmation for an event that is ${current.status}`);
+      notified = await notifyConfirm(await getEvent(id, { admin: true }));
     } else if (action === 'tally') {
       const ev = await getEvent(id, { admin: true });
-      const text = tallyText(ev, await rosterFor(id));
-      notified = { groupme: await postGroupMe(text), text };
+      notified = { groupme: await postGroupMe(tallyText(ev, await rosterFor(id))) };
     } else if (action) {
       const t = TRANSITIONS[action];
       if (!t) throw httpError(400, 'Unknown action');
