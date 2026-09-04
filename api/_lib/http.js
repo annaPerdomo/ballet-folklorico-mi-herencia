@@ -44,8 +44,10 @@ export function parseCookies(req) {
   return out;
 }
 
+// NODE_ENV alone isn't reliable across build configs; VERCEL is set on every deployment.
+const secureByDefault = () => process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
+
 export function cookie(name, value, { maxAge = 60 * 60 * 24 * 365, secure } = {}) {
-  const isSecure = secure ?? (process.env.NODE_ENV === 'production');
   const parts = [
     `${name}=${encodeURIComponent(value)}`,
     'Path=/',
@@ -53,12 +55,13 @@ export function cookie(name, value, { maxAge = 60 * 60 * 24 * 365, secure } = {}
     'SameSite=Lax',
     `Max-Age=${maxAge}`,
   ];
-  if (isSecure) parts.push('Secure');
+  if (secure ?? secureByDefault()) parts.push('Secure');
   return parts.join('; ');
 }
 
+// Must share attributes with the cookie it clears, or a strict browser won't match them.
 export function clearCookie(name) {
-  return `${name}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`;
+  return `${name}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secureByDefault() ? '; Secure' : ''}`;
 }
 
 export function route(handlers) {
