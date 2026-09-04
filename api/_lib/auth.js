@@ -88,6 +88,16 @@ export function verifyFeedSig(familyId, accessToken, sig) {
   return Boolean(sig) && safeEqual(feedSig(familyId, accessToken), sig);
 }
 
+// Owners' subscription URL, fetched with no cookie. Rides the admin epoch, so an
+// ADMIN_PASSWORD rotation retires it along with every owner session.
+export function adminFeedSig() {
+  return sign(`feed.admin.${adminEpoch()}`).slice(0, 20);
+}
+
+export function verifyAdminFeedSig(sig) {
+  return Boolean(sig) && safeEqual(adminFeedSig(), sig);
+}
+
 async function asMember(family, scope) {
   if (!family) return null;
   const dancers = await sql('SELECT id, name FROM dancers WHERE family_id = $1 AND active ORDER BY name', [family.id]);

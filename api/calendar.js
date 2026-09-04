@@ -1,5 +1,5 @@
 import { route, query, int, str, httpError } from './_lib/http.js';
-import { whoami, verifyCalendarSig, verifyFeedSig } from './_lib/auth.js';
+import { whoami, verifyCalendarSig, verifyFeedSig, verifyAdminFeedSig } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 import { buildCalendar } from './_lib/ics.js';
 import { MEMBER_VISIBLE } from './_lib/events.js';
@@ -13,6 +13,11 @@ const cols = (admin) => (admin ? COLS + ', pay' : COLS);
 // (see feedSig) — a leaked subscription URL exposes the family's gigs, never their sign-in.
 async function viewer(req) {
   const q = query(req);
+  const adminKey = str(q.a, 40);
+  if (adminKey) {
+    if (!verifyAdminFeedSig(adminKey)) throw httpError(404, 'That calendar link is no longer valid');
+    return { role: 'admin', scope: 'admin' };
+  }
   const famId = int(q.f);
   const k = str(q.k, 40);
   if (famId || k) {
