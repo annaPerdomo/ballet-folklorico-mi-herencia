@@ -3,9 +3,11 @@
   'use strict';
 
   var app = document.getElementById('app');
+  var painted = null;
   var tabsEl = document.getElementById('tabs');
   var headerRight = document.getElementById('header-right');
-  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, openGig: null, gigLink: null, lang: 'en' };
+  var fabRoot = document.getElementById('fab-root');
+  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0, installPrompt: null };
 
   /* ── i18n ───────────────────────────────────────────────── */
   var STR = {
@@ -32,13 +34,13 @@
       tabInbox: 'Inbox', tabGigs: 'Gigs', tabTeam: 'Team', tabChona: 'La Chona',
       groupmeOn: 'La Chona is connected', groupmeOff: 'La Chona is not connected — set GROUPME_BOT_ID',
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
-      archived: 'Declined / cancelled', posted: 'Posted to the team', gigsSub: 'Open a gig to see who answered, send a reminder, add rehearsals, and confirm.',
+      archived: 'Declined / cancelled', posted: 'Posted to the team',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '🙋 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
       askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
-      postToTeam: 'Post to team…', edit: 'Edit', decline: 'Decline', rosterDetails: 'Roster & details', reopen: 'Reopen as inquiry', del: 'Delete',
+      postToTeam: 'Post to team…', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
       title: 'Title', titlePh: 'e.g. Quinceañera — Lopez family', typeLabel: 'Type', typePh: '— type —', dateLabel: 'Date', startTime: 'Start time', endTime: 'End time',
       dancersNeededLabel: 'Dancers needed', venue: 'Venue', city: 'City', address: 'Address', payLabel: 'Pay (shown to team, optional)', payPh: '$50 per dancer',
@@ -49,14 +51,14 @@
       needTitle: 'Give the gig a title.', create: 'Create', save: 'Save', cancel: 'Cancel', close: 'Close',
       modalPost: 'Post to the team', modalNew: 'New gig', modalEdit: 'Edit gig',
       postedGroupme: 'Posted to the team and GroupMe',
-      rosterByFamily: 'Roster by family', tapToChange: 'Tap to change', tapHint: 'Tap a name to set it on their behalf (yes → maybe → no → clear).',
+      tapToChange: 'Tap to change',
       editDetails: 'Edit details', postAnnouncement: 'Post the announcement', sendReminder: 'Send reminder', confirmGig: 'Confirm gig',
       confirmAsk: 'Confirm this gig? Families who said yes will be notified (if a channel is connected).', cancelGig: 'Cancel gig', cancelAsk: 'Cancel this gig?',
       postConfirmation: 'Post the confirmation', markDone: 'Mark done', gig: 'Gig',
       botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied',
       addFamilyFrom: 'Add this family', reread: 'Read again', addFamilyHint: 'From GroupMe name “{name}”. Check the spelling of each dancer — the bot matches these names in the chat.',
       pickWho: 'Who’s answering?', pickHint: 'Tap your family. We’ll remember you on this phone.', pickNotListed: 'Don’t see your family? Just reply in GroupMe and the owners will add you.',
-      pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.', notYou: 'Not you?',
+      pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.',
       chonaAlt: 'La Chona, a little gold robot in a red and green folklorico dress with braided ribbons',
       chonaOn: 'Listening to the chat', chonaOff: 'Not listening yet',
       botSubOff: 'Not listening yet. Set GROUPME_WEBHOOK_SECRET on the server and point the bot’s callback URL at /api/webhooks/groupme?secret=… (see README).',
@@ -76,11 +78,11 @@
       guideM3: 'Let an old message overwrite a newer answer.',
       guideM4: 'Post anything on her own — she only speaks when you tap a button here.',
       guideFix: 'She got it wrong? Tap the chips in the gig roster. You always have the last word.',
-      onWebsite: 'On website', showOnWebsite: 'Show on website', hideFromWebsite: 'Hide from website', websiteOn: 'Now listed on bfmh.dance', websiteOff: 'Removed from bfmh.dance',
+      showOnWebsite: 'Show on website', hideFromWebsite: 'Hide from website', websiteOn: 'Now listed on bfmh.dance', websiteOff: 'Removed from bfmh.dance',
       familiesTitle: 'Families & dancers', familiesSub: 'Each family gets one private link. Send it to them once (GroupMe DM or text); they tap it and can answer for every dancer in their household.',
       familyNamePh: 'Family name (e.g. Garcia)', dancersPh: 'Dancers, comma separated (e.g. Luis, Elena)',
       newFamily: 'New family', addFamily: 'Add family', familyAdded: 'Family added', noFamilies: 'No families yet.',
-      removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link', newLinkTitle: 'Invalidates the old link',
+      removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link',
       newLinkAsk: 'Create a new link for {name}? The old one will stop working.', removeFamily: 'Remove family', removeFamilyAsk: 'Remove the {name} family and their dancers?',
       roleTeam: 'Team', stateNone: 'Not answered', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going',
       waiting: 'waiting', plusWaiting: '+{n} waiting', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
@@ -89,7 +91,17 @@
       inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No gigs posted yet. When the owners post one you’ll hear about it in GroupMe.',
       checkMyDancers: 'Check my dancers', allAnsweredText: 'Everything is answered. ¡Gracias! We’ll let you know when the next one is posted.',
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
-      openGig: 'Open gig', closeGig: 'Close gig', addRehearsalShort: 'Add rehearsal',
+      openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
+      going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
+      remindWaiting: 'Remind {n} waiting', moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
+      waitingOn: 'Waiting', tapGigHint: 'Tap a gig to see who’s in and nudge who isn’t.',
+      everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
+      installTitle: 'Put the team app on your home screen', installIos: 'Tap Share, then “Add to Home Screen”. Opens like an app, one tap from the headcount.',
+      installAndroid: 'One tap and it opens like an app.', installBtn: 'Install', later: 'Later',
+      shareInvite: 'Send link', inviteMsg: 'Your family’s link for Ballet Folklórico Mi Herencia gigs — tap it to mark who can dance:',
+      refresh: 'Refresh', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
+      when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
+      chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -114,13 +126,13 @@
       tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabTeam: 'Equipo', tabChona: 'La Chona',
       groupmeOn: 'La Chona está conectada', groupmeOff: 'La Chona no está conectada — falta GROUPME_BOT_ID',
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
-      archived: 'Rechazados / cancelados', posted: 'Publicados al equipo', gigsSub: 'Abre un evento para ver quién respondió, enviar un recordatorio, agregar ensayos y confirmar.',
+      archived: 'Rechazados / cancelados', posted: 'Publicados al equipo',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '🙋 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
       askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
-      postToTeam: 'Publicar al equipo…', edit: 'Editar', decline: 'Rechazar', rosterDetails: 'Lista y detalles', reopen: 'Reabrir como solicitud', del: 'Eliminar',
+      postToTeam: 'Publicar al equipo…', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
       title: 'Título', titlePh: 'p. ej. Quinceañera — familia López', typeLabel: 'Tipo', typePh: '— tipo —', dateLabel: 'Fecha', startTime: 'Hora de inicio', endTime: 'Hora de fin',
       dancersNeededLabel: 'Bailarines necesarios', venue: 'Lugar', city: 'Ciudad', address: 'Dirección', payLabel: 'Pago (visible al equipo, opcional)', payPh: '$50 por bailarín',
@@ -131,14 +143,14 @@
       needTitle: 'Ponle un título al evento.', create: 'Crear', save: 'Guardar', cancel: 'Cancelar', close: 'Cerrar',
       modalPost: 'Publicar al equipo', modalNew: 'Nuevo evento', modalEdit: 'Editar evento',
       postedGroupme: 'Publicado al equipo y en GroupMe',
-      rosterByFamily: 'Lista por familia', tapToChange: 'Toca para cambiar', tapHint: 'Toca un nombre para responder por esa persona (sí → tal vez → no → borrar).',
+      tapToChange: 'Toca para cambiar',
       editDetails: 'Editar detalles', postAnnouncement: 'Publicar el anuncio', sendReminder: 'Enviar recordatorio', confirmGig: 'Confirmar evento',
       confirmAsk: '¿Confirmar este evento? Se avisará a las familias que dijeron que sí (si hay un canal conectado).', cancelGig: 'Cancelar evento', cancelAsk: '¿Cancelar este evento?',
       postConfirmation: 'Publicar la confirmación', markDone: 'Marcar terminado', gig: 'Evento',
       botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó',
       addFamilyFrom: 'Agregar esta familia', reread: 'Leer de nuevo', addFamilyHint: 'Del nombre de GroupMe “{name}”. Revisa cómo se escribe cada bailarín — el bot busca esos nombres en el chat.',
       pickWho: '¿Quién responde?', pickHint: 'Toca tu familia. Te recordaremos en este teléfono.', pickNotListed: '¿No ves a tu familia? Responde en GroupMe y los dueños te agregan.',
-      pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.', notYou: '¿No eres tú?',
+      pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
       chonaAlt: 'La Chona, una robotita dorada con vestido folclórico rojo y verde y trenzas con listones',
       chonaOn: 'Escuchando el chat', chonaOff: 'Todavía no escucha',
       botSubOff: 'Todavía no escucha. Configura GROUPME_WEBHOOK_SECRET en el servidor y apunta la URL de callback del bot a /api/webhooks/groupme?secret=… (ver README).',
@@ -158,11 +170,11 @@
       guideM3: 'Dejar que un mensaje viejo reemplace una respuesta más nueva.',
       guideM4: 'Publicar por su cuenta — solo habla cuando tocas un botón aquí.',
       guideFix: '¿Se equivocó? Toca las fichas en la lista del evento. La última palabra siempre es tuya.',
-      onWebsite: 'En el sitio web', showOnWebsite: 'Mostrar en el sitio web', hideFromWebsite: 'Quitar del sitio web', websiteOn: 'Ya aparece en bfmh.dance', websiteOff: 'Quitado de bfmh.dance',
+      showOnWebsite: 'Mostrar en el sitio web', hideFromWebsite: 'Quitar del sitio web', websiteOn: 'Ya aparece en bfmh.dance', websiteOff: 'Quitado de bfmh.dance',
       familiesTitle: 'Familias y bailarines', familiesSub: 'Cada familia recibe un enlace privado. Envíaselo una vez (mensaje directo de GroupMe o texto); al abrirlo pueden responder por todos los bailarines de su casa.',
       familyNamePh: 'Apellido de la familia (p. ej. García)', dancersPh: 'Bailarines separados por comas (p. ej. Luis, Elena)',
       newFamily: 'Nueva familia', addFamily: 'Agregar familia', familyAdded: 'Familia agregada', noFamilies: 'Todavía no hay familias.',
-      removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace', newLinkTitle: 'Invalida el enlace anterior',
+      removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace',
       newLinkAsk: '¿Crear un nuevo enlace para {name}? El anterior dejará de funcionar.', removeFamily: 'Quitar familia', removeFamilyAsk: '¿Quitar a la familia {name} y a sus bailarines?',
       roleTeam: 'Equipo', stateNone: 'Sin responder', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va',
       waiting: 'faltan', plusWaiting: '+{n} sin responder', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
@@ -171,7 +183,17 @@
       inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay eventos publicados. Cuando los dueños publiquen uno, avisarán en GroupMe.',
       checkMyDancers: 'Ver mis bailarines', allAnsweredText: 'Todo está respondido. ¡Gracias! Te avisamos cuando se publique el próximo.',
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
-      openGig: 'Abrir evento', closeGig: 'Cerrar evento', addRehearsalShort: 'Agregar ensayo',
+      openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
+      going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
+      remindWaiting: 'Recordar a {n} sin responder', moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
+      waitingOn: 'Faltan', tapGigHint: 'Toca un evento para ver quién va y avisar a quien falta.',
+      everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
+      installTitle: 'Pon la app del equipo en tu pantalla de inicio', installIos: 'Toca Compartir y luego “Agregar a pantalla de inicio”. Se abre como una app, a un toque del conteo.',
+      installAndroid: 'Un toque y se abre como una app.', installBtn: 'Instalar', later: 'Después',
+      shareInvite: 'Enviar enlace', inviteMsg: 'El enlace de tu familia para los eventos de Ballet Folklórico Mi Herencia — tócalo para marcar quién puede bailar:',
+      refresh: 'Actualizar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
+      when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
+      chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
     },
   };
   function t(key, vars) {
@@ -234,7 +256,7 @@
   function askedLine(ev) {
     var c = tallyOf(ev);
     if (c.known && !c.pending && (c.yes || c.maybe || c.no)) return h('span', { class: 'askline settled' }, icon('yes', 2), t('rosterSettled'));
-    if (!ev.asked_at) return h('span', { class: 'askline never' }, icon('clock', 2), t('neverAsked'));
+    if (!ev.asked_at) return ev.status === 'open' || ev.status === 'inquiry' ? h('span', { class: 'askline never' }, icon('clock', 2), t('neverAsked')) : null;
     return h('span', { class: 'askline' }, icon('chat', 2), t('askedAgo', { when: '' }).trim() + ' ', h('b', { text: timeAgo(ev.asked_at) }));
   }
   function askedDetail(ev) {
@@ -284,10 +306,27 @@
   function loadFamilies() { return api('/api/families').then(function (d) { state.families = d.families; }); }
   function loadBotLog() { return api('/api/groupme?limit=40').then(function (d) { state.botLog = d.messages; }).catch(function () { state.botLog = []; }); }
   function refresh() {
+    state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
     if (state.me.role === 'admin') { jobs.push(loadFamilies()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
-    return Promise.all(jobs).then(render, function (e) { toast(e.message, true); });
+    return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
   }
+  function refreshIfStale() {
+    if (!state.me || state.me.role === 'anon' || document.hidden) return;
+    if (Date.now() - state.loadedAt < 20000) return;
+    if (isEditing()) return;
+    refresh();
+  }
+  /* Never yank a half-typed form or an open sheet out from under a thumb. */
+  function isEditing() {
+    if (document.querySelector('.modal-back form, .pop-back')) return true;
+    var el = document.activeElement;
+    return !!el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+  }
+  document.addEventListener('visibilitychange', refreshIfStale);
+  window.addEventListener('focus', refreshIfStale);
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); state.installPrompt = e; if (state.me && state.me.role === 'admin') render(); });
+  function isStandalone() { return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
 
   /* ── boot ───────────────────────────────────────────────── */
   function boot() {
@@ -320,7 +359,7 @@
 
   /* ── login ──────────────────────────────────────────────── */
   function renderLogin() {
-    tabsEl.hidden = true; document.getElementById('channels').hidden = true; paintBrandRole();
+    tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
     var err = h('p', { class: 'error' });
     var pw = h('input', { type: 'password', autocomplete: 'current-password', placeholder: t('ownerPassword') });
@@ -347,7 +386,7 @@
 
   /* No password here — being in the GroupMe chat is the guest list. */
   function renderPicker(gig) {
-    tabsEl.hidden = true; document.getElementById('channels').hidden = true; paintBrandRole();
+    tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
 
     var ev = gig.event;
@@ -387,7 +426,20 @@
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',
     allDone: '<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>',
-    up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    people: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 5.5 5.5"/>',
+    more: '<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
+    share: '<path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/>',
+    refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',
+    close: '<path d="M18 6 6 18M6 6l12 12"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    pin: '<path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
+    phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21a2 2 0 0 0 4 0"/>',
+    edit: '<path d="M4 20h4l10-10-4-4L4 16z"/><path d="m13 7 4 4"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    home: '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/>',
   };
   function icon(name, width) {
     var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -419,7 +471,7 @@
       f.dancers.forEach(function (d) {
         if (d.active === false) return;
         var a = answered[d.id];
-        out.push({ id: d.id, name: d.name, family: f.name, status: a ? a.status : null, note: a ? a.note : null });
+        out.push({ id: d.id, name: d.name, family: f.name, family_id: f.id, status: a ? a.status : null, note: a ? a.note : null });
       });
     });
     return out;
@@ -452,6 +504,49 @@
     else if (c.known) row.appendChild(h('em', { text: t('everyoneAnswered') }));
     return row;
   }
+  /* ── headcount ring ───────────────────────────────────── */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function ring(pct, color) {
+    var r = 44, circ = 2 * Math.PI * r;
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('class', 'ring'); svg.setAttribute('aria-hidden', 'true');
+    var bg = document.createElementNS(SVG_NS, 'circle');
+    bg.setAttribute('cx', 50); bg.setAttribute('cy', 50); bg.setAttribute('r', r); bg.setAttribute('class', 'ring-bg');
+    var fg = document.createElementNS(SVG_NS, 'circle');
+    fg.setAttribute('cx', 50); fg.setAttribute('cy', 50); fg.setAttribute('r', r); fg.setAttribute('class', 'ring-fg');
+    fg.setAttribute('stroke', color); fg.setAttribute('stroke-dasharray', circ.toFixed(2));
+    fg.setAttribute('stroke-dashoffset', (circ * (1 - Math.max(0, Math.min(1, pct)))).toFixed(2));
+    svg.appendChild(bg); svg.appendChild(fg);
+    return svg;
+  }
+  function headState(ev, c) {
+    var need = +ev.dancers_needed || 0, total = c.yes + c.maybe + c.no + c.pending;
+    if (need) return { pct: c.yes / need, full: c.yes >= need, color: c.yes >= need ? 'var(--teal-light)' : 'var(--gold-light)', sub: t('ofNeeded', { n: need }), need: need };
+    return { pct: total ? (total - c.pending) / total : 0, full: false, color: c.yes ? 'var(--teal-light)' : 'rgba(255,255,255,0.35)', sub: t('going'), need: 0 };
+  }
+  function headcount(ev, c) {
+    var s = headState(ev, c);
+    return h('div', { class: 'hc' + (s.full ? ' is-full' : ''), 'aria-label': c.yes + ' ' + s.sub },
+      h('div', { class: 'hc-ring' }, ring(s.pct, s.color), h('b', { text: c.yes })),
+      h('span', { class: 'hc-sub', text: s.need ? '/ ' + s.need : t('going') }));
+  }
+  function hero(ev, c) {
+    var s = headState(ev, c);
+    var total = c.yes + c.maybe + c.no + c.pending;
+    var line;
+    if (s.full) line = t('full');
+    else if (s.need) line = t('moreNeeded', { n: s.need - c.yes });
+    else if (!total || total === c.pending) line = t('noneYet');
+    else line = t('answeredLine', { n: total - c.pending, total: total });
+    return h('div', { class: 'hero' + (s.full ? ' is-full' : '') },
+      h('div', { class: 'hero-ring' }, ring(s.pct, s.color), h('div', { class: 'hero-num' }, h('b', { text: c.yes }), h('span', { text: s.need ? '/ ' + s.need : t('going') }))),
+      h('div', { class: 'hero-side' },
+        h('p', { class: 'hero-line', text: line }),
+        h('div', { class: 'hero-legend' },
+          h('em', { class: 'maybe' }, icon('maybe', 3), h('b', { text: c.maybe }), ' ' + t('maybe')),
+          h('em', { class: 'no' }, icon('no', 3), h('b', { text: c.no }), ' ' + t('no')),
+          h('em', { class: 'pending' }, icon('clock', 2.5), h('b', { text: c.pending }), ' ' + t('waiting')))));
+  }
   function pill(status) { return h('span', { class: 'pill pill-' + status, text: t('status')[status] || status }); }
   function metaLine(ev) {
     var parts = [];
@@ -471,39 +566,33 @@
     return h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('rehearsals') }),
       h('ul', { class: 'rehearsals' }, list.map(function (r) { return h('li', { text: rehearsalLine(r) }); })));
   }
-  function breakdown(ev, roster, onTap) {
-    var groups = { yes: [], maybe: [], no: [], pending: [] };
-    var answered = {};
-    (ev.availability || []).forEach(function (a) { answered[a.dancer_id] = true; groups[a.status].push({ id: a.dancer_id, name: a.dancer_name, status: a.status, note: a.note }); });
-    var fams = roster || state.families;
-    (fams || []).forEach(function (f) { f.dancers.forEach(function (d) { if (d.active !== false && !answered[d.id]) groups.pending.push({ id: d.id, name: d.name, status: null }); }); });
-    var box = h('div', { class: 'breakdown' + (onTap ? ' tappable' : '') });
-    [['yes', 'yes'], ['maybe', 'maybe'], ['no', 'no'], ['pending', 'noAnswer']].forEach(function (g) {
-      var people = groups[g[0]].slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
-      var names = h('span', { class: 'bd-names' });
-      if (!people.length) names.textContent = '—';
-      people.forEach(function (p, i) {
-        if (i) names.appendChild(document.createTextNode(', '));
-        names.appendChild(onTap
-          ? h('button', { class: 'bd-name', text: p.name, title: p.note || t('tapToChange'), onclick: function () { onTap(p); } })
-          : h('span', { text: p.name, title: p.note || '' }));
-      });
-      box.appendChild(h('div', { class: 'bd-row ' + g[0] }, h('span', { class: 'bd-label' }, h('b', { text: people.length }), ' ' + t(g[1])), names));
-    });
-    return box;
+  function applyLocal(ev, dancer, status) {
+    var av = ev.availability = (ev.availability || []).filter(function (a) { return a.dancer_id !== dancer.id; });
+    if (status) av.push({ dancer_id: dancer.id, dancer_name: dancer.name, family_id: dancer.family_id, family_name: dancer.family, status: status, note: null });
+    av.sort(function (a, b) { return a.dancer_name.localeCompare(b.dancer_name); });
   }
-  function tapCycle(ev, p) {
-    var next = { yes: 'maybe', maybe: 'no', no: null }; var s = p.status ? next[p.status] : 'yes';
-    api('/api/availability', { method: 'POST', body: { event_id: ev.id, dancer_id: p.id, status: s } })
-      .then(function () { toast(s ? p.name + ': ' + t(s) : t('answerCleared')); return loadEvents(); }).then(render)
-      .catch(function (e) { toast(e.message, true); });
+  function setAvail(ev, dancer, status) {
+    applyLocal(ev, dancer, status); render();
+    toast(status ? dancer.name + ': ' + t(status) : t('answerCleared'));
+    return api('/api/availability', { method: 'POST', body: { event_id: ev.id, dancer_id: dancer.id, status: status } })
+      .then(function () { return loadEvents(); }).then(render)
+      .catch(function (e) { toast(e.message, true); return loadEvents().then(render); });
+  }
+  function answerSheet(ev, p) {
+    var pop = popSheet(t('setAnswerFor', { name: p.name }), p.family || '');
+    var grid = h('div', { class: 'ansgrid' });
+    [['yes', 'stateYes'], ['maybe', 'stateMaybe'], ['no', 'stateNo']].forEach(function (sk) {
+      grid.appendChild(h('button', { type: 'button', class: 'ansbtn ' + sk[0] + (p.status === sk[0] ? ' is-on' : ''),
+        onclick: function () { pop.close(); setAvail(ev, p, sk[0]); } }, icon(sk[0], 3), h('span', { text: t(sk[1]) })));
+    });
+    pop.body.appendChild(grid);
+    if (p.status) pop.body.appendChild(h('button', { class: 'btn btn-wide', style: 'margin-top:0.6rem', text: t('clearAnswer'), onclick: function () { pop.close(); setAvail(ev, p, null); } }));
   }
 
   /* ── member view ───────────────────────────────────────── */
   function renderMember() {
     var me = state.me;
-    tabsEl.hidden = true;
-    document.getElementById('channels').hidden = true;
+    tabsEl.hidden = true; fabRoot.innerHTML = '';
     paintBrandRole();
     headerRight.innerHTML = '';
     headerRight.appendChild(h('span', { class: 'tm-who' },
@@ -511,6 +600,7 @@
     headerRight.appendChild(langToggle());
     headerRight.appendChild(h('button', { class: 'btn btn-sm', text: t('signOut'), onclick: signOut }));
     app.innerHTML = '';
+    me.dancers.forEach(function (d) { d.family = me.family.name; d.family_id = me.family.id; });
 
     var mine = {}; me.dancers.forEach(function (d) { mine[d.id] = d; });
     function myAnswers(ev) { var out = {}; (ev.availability || []).forEach(function (a) { if (mine[a.dancer_id]) out[a.dancer_id] = a; }); return out; }
@@ -563,12 +653,19 @@
     }
 
     if (!readOnly && ['open', 'confirmed'].includes(ev.status) && me.dancers.length) {
+      if (me.dancers.length > 1 && me.dancers.some(function (d) { return !answers[d.id]; })) {
+        card.appendChild(h('div', { class: 'avrow allrow' },
+          h('div', { class: 'avname' }, h('b', { text: t('everyone') })),
+          h('div', { class: 'seg seg-2' },
+            h('button', { type: 'button', onclick: function () { setAllAvailability(ev, 'yes'); } }, icon('yes'), t('allYes')),
+            h('button', { type: 'button', onclick: function () { setAllAvailability(ev, 'no'); } }, icon('no'), t('allNo')))));
+      }
       me.dancers.forEach(function (d) {
         var cur = answers[d.id] ? answers[d.id].status : null;
         var seg = h('div', { class: 'seg', role: 'group', 'aria-label': t('availabilityFor', { name: d.name }) });
         [['yes', 'btnYes'], ['maybe', 'btnMaybe'], ['no', 'btnNo']].forEach(function (sk) {
           seg.appendChild(h('button', { type: 'button', class: cur === sk[0] ? 'on-' + sk[0] : '', 'aria-pressed': cur === sk[0] ? 'true' : 'false',
-            onclick: function () { setAvailability(ev, d, cur === sk[0] ? null : sk[0]); } },
+            onclick: function () { setAvail(ev, d, cur === sk[0] ? null : sk[0]); } },
             icon(sk[0]), t(sk[1]).replace(/^[^\s]+\s/, '')));
         });
         card.appendChild(h('div', { class: 'avrow' },
@@ -596,18 +693,22 @@
     return h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('whosIn') }), meterBar(c), chips);
   }
 
-  function setAvailability(ev, dancer, status) {
-    api('/api/availability', { method: 'POST', body: { event_id: ev.id, dancer_id: dancer.id, status: status } })
-      .then(function () { toast(status ? dancer.name + ': ' + t(status) : t('answerCleared')); return loadEvents(); }).then(render)
-      .catch(function (e) { toast(e.message, true); });
+  function setAllAvailability(ev, status) {
+    var me = state.me;
+    me.dancers.forEach(function (d) { applyLocal(ev, d, status); });
+    render(); toast(t('everyone') + ': ' + t(status));
+    Promise.all(me.dancers.map(function (d) {
+      return api('/api/availability', { method: 'POST', body: { event_id: ev.id, dancer_id: d.id, status: status } });
+    })).then(loadEvents).then(render).catch(function (e) { toast(e.message, true); loadEvents().then(render); });
   }
 
   function familyEditor(me) {
     var card = h('div', { class: 'card family-card', id: 'my-family' });
     var chips = h('div', { class: 'chips' }, me.dancers.map(function (d) {
       return h('span', { class: 'chip' }, d.name, h('button', { title: t('remove') + ' ' + d.name, text: '✕', onclick: function () {
-        if (!confirm(t('removeDancer', { name: d.name }))) return;
-        api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(loadMe).then(refresh).catch(function (e) { toast(e.message, true); });
+        confirmSheet(t('removeDancer', { name: d.name }), t('remove'), true).then(function (yes) {
+          if (yes) api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(loadMe).then(refresh).catch(function (e) { toast(e.message, true); });
+        });
       } }));
     }));
     var nameIn = h('input', { placeholder: t('addDancerPh'), 'aria-label': t('dancerName') });
@@ -626,33 +727,66 @@
   }
 
   /* ── admin view ────────────────────────────────────────── */
-  var TABS = [['inbox', 'tabInbox'], ['gigs', 'tabGigs'], ['team', 'tabTeam'], ['chona', 'tabChona']];
+  var TABS = [['inbox', 'tabInbox', 'mail'], ['gigs', 'tabGigs', 'calendar'], ['team', 'tabTeam', 'people'], ['chona', 'tabChona', null]];
   function renderAdmin() {
     paintBrandRole();
     headerRight.innerHTML = '';
-    headerRight.appendChild(h('button', { class: 'btn btn-sm btn-gold', text: t('newGig'), onclick: function () { openEventModal(null); } }));
+    headerRight.appendChild(h('button', { class: 'btn btn-sm btn-gold hdr-newgig', text: t('newGig'), onclick: function () { openEventModal(null); } }));
     headerRight.appendChild(langToggle());
+    headerRight.appendChild(h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('refresh'), title: t('refresh'), onclick: function () {
+      refresh().then(function () { toast(t('refreshed')); }); } }, icon('refresh', 2.2)));
     headerRight.appendChild(h('button', { class: 'btn btn-sm', text: t('signOut'), onclick: signOut }));
-    tabsEl.hidden = false; tabsEl.innerHTML = '';
+
     var inquiries = state.events.filter(function (e) { return e.status === 'inquiry'; });
-    if (state.focusEvent) { var f = state.events.find(function (e) { return e.id === state.focusEvent; }); if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') state.openGig = f.id; } }
+    if (state.focusEvent) {
+      var f = state.events.find(function (e) { return e.id === state.focusEvent; });
+      if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') { state.detail = f.id; state.focusEvent = null; } }
+    }
+    var listening = state.me.channels && state.me.channels.groupme_listen;
+    tabsEl.hidden = false; tabsEl.innerHTML = '';
     TABS.forEach(function (tb) {
-      tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), onclick: function () { state.tab = tb[0]; render(); } },
-        tb[0] === 'chona' ? h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }) : null,
-        t(tb[1]), tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null));
+      tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'aria-current': state.tab === tb[0] ? 'page' : false,
+        onclick: function () { state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
+        tb[0] === 'chona'
+          ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
+          : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
+        h('span', { class: 'tm-tab-label', text: t(tb[1]) }),
+        tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null));
     });
 
-    var ch = state.me.channels || {};
-    var chanEl = document.getElementById('channels');
-    chanEl.hidden = false; chanEl.innerHTML = '';
-    chanEl.appendChild(h('span', { class: ch.groupme ? 'on' : '' }, h('i', { class: 'dot' }), t(ch.groupme ? 'groupmeOn' : 'groupmeOff')));
+    fabRoot.innerHTML = '';
+    if (state.tab === 'inbox' || state.tab === 'gigs') {
+      fabRoot.appendChild(h('button', { class: 'fab', 'aria-label': t('newGig'), onclick: function () { openEventModal(null); } }, icon('plus', 2.5)));
+    }
 
     app.innerHTML = '';
+    var banner = installBanner(); if (banner) app.appendChild(banner);
     if (state.tab === 'inbox') renderInbox(inquiries);
     else if (state.tab === 'gigs') renderGigs();
     else if (state.tab === 'chona') renderChona();
     else renderTeam();
     focusIfNeeded();
+  }
+
+  /* iOS fires no beforeinstallprompt, so iPhone gets the Add-to-Home-Screen recipe instead. */
+  function installBanner() {
+    if (isStandalone()) return null;
+    try { if (localStorage.getItem('bfmh_team_install') === 'no') return null; } catch (e) {}
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+    var canPrompt = Boolean(state.installPrompt);
+    if (!ios && !canPrompt) return null;
+    if (!('ontouchstart' in window)) return null;
+    var box = h('div', { class: 'install' },
+      h('img', { src: '/team/icons/icon-192.png', alt: '', width: 48, height: 48 }),
+      h('div', { class: 'install-text' }, h('b', { text: t('installTitle') }), h('span', { text: ios ? t('installIos') : t('installAndroid') })),
+      h('div', { class: 'install-btns' },
+        canPrompt ? h('button', { class: 'btn btn-sm btn-gold', text: t('installBtn'), onclick: function () {
+          var p = state.installPrompt; state.installPrompt = null; p.prompt(); p.userChoice.then(function () { render(); });
+        } }) : null,
+        h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('later'), onclick: function () {
+          try { localStorage.setItem('bfmh_team_install', 'no'); } catch (e) {} box.remove();
+        } }, icon('close', 2.2))));
+    return box;
   }
 
   function renderInbox(inquiries) {
@@ -674,7 +808,7 @@
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
     var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); });
     app.appendChild(section(t('posted'), live.length));
-    app.appendChild(h('p', { class: 'tm-sub', text: t('gigsSub') }));
+    app.appendChild(h('p', { class: 'tm-sub', text: t('tapGigHint') }));
     if (!live.length) {
       app.appendChild(emptyState('calendar', t('nothingPosted'),
         h('button', { class: 'btn btn-sm btn-gold', text: t('newGig'), onclick: function () { openEventModal(null); } })));
@@ -687,85 +821,37 @@
   function gigList(events) {
     var list = h('div', { class: 'giglist' });
     events.forEach(function (ev) {
-      var expanded = state.openGig === ev.id;
       var c = tallyOf(ev);
-      var row = h('button', { type: 'button', class: 'gigrow' + (ev.status === 'open' ? ' is-open' : '') + (expanded ? ' is-expanded' : ''),
-        id: 'event-' + ev.id, 'aria-expanded': expanded ? 'true' : 'false', 'aria-label': (expanded ? t('closeGig') : t('openGig')) + ': ' + evTitle(ev),
-        onclick: function () { state.openGig = expanded ? null : ev.id; render(); } },
+      var row = h('button', { type: 'button', class: 'gigrow' + (ev.status === 'open' ? ' is-open' : ''), id: 'event-' + ev.id,
+        'aria-label': t('openGig') + ': ' + evTitle(ev), onclick: function () { openDetail(ev.id); } },
         dateBox(ev),
         h('div', { class: 'gigmain' },
           h('div', { class: 'gigmain-top' }, h('span', { class: 'card-title sm', text: evTitle(ev) }), pill(ev.status)),
-          metaLine(ev) || h('p', { class: 'card-meta', text: fmtDate(ev.event_date) })),
-        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c)),
-        askedLine(ev) || h('span', { class: 'askline' }),
-        h('span', { class: 'chev' }, icon(expanded ? 'up' : 'down', 2)));
+          h('p', { class: 'card-meta', text: [fmtTime(ev), fmtWhere(ev)].filter(Boolean).join('  ·  ') || fmtDate(ev.event_date) }),
+          askedLine(ev)),
+        headcount(ev, c),
+        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c)));
       list.appendChild(row);
-      if (expanded) list.appendChild(gigExpansion(ev));
     });
     return list;
-  }
-
-  function gigExpansion(ev) {
-    var box = h('div', { class: 'expand' });
-    var roster = h('div', { class: 'roster' });
-    var order = { yes: 0, maybe: 1, no: 2, pending: 3 };
-    rosterFor(ev).sort(function (a, b) {
-      return order[a.status || 'pending'] - order[b.status || 'pending'] || a.name.localeCompare(b.name);
-    }).forEach(function (p) {
-      roster.appendChild(h('button', { type: 'button', class: 'rosteritem' + (p.status ? '' : ' is-waiting'), title: p.note || t('tapToChange'),
-        onclick: function () { tapCycle(ev, p); } },
-        p.status ? icon(p.status, 3) : h('i', { class: 'tick', style: 'background:rgba(255,255,255,0.18)' }),
-        p.name, h('span', { text: ' · ' + (p.status ? p.family : t('waiting')) })));
-    });
-    if (roster.childNodes.length) { box.appendChild(roster); box.appendChild(h('p', { class: 'hint', style: 'margin:0', text: t('tapHint') })); }
-    if (ev.details) box.appendChild(h('p', { class: 'card-text', style: 'margin:0', text: ev.details }));
-    var reh = rehearsalList(ev); if (reh) box.appendChild(reh);
-    var detail = askedDetail(ev); if (detail) box.appendChild(detail);
-
-    var actions = h('div', { class: 'card-actions', style: 'margin:0' });
-    if (ev.status === 'open') {
-      actions.appendChild(h('button', { class: 'btn btn-gold', onclick: function (e) { askGroup(ev, null, e.currentTarget); } },
-        icon('chat', 2), ev.asked_at ? t('askAgain') : t('askGroup')));
-      actions.appendChild(h('button', { class: 'btn', text: t('postTally'), onclick: function () { doAction(ev, 'tally'); } }));
-    }
-    actions.appendChild(h('button', { class: 'btn', text: t('rosterDetails'), onclick: function () { openEventDetail(ev.id); } }));
-    actions.appendChild(h('button', { class: 'btn', text: t('edit'), onclick: function () { openEventModal(ev); } }));
-    if (ev.status === 'open') {
-      actions.appendChild(h('button', { class: 'btn btn-teal', text: t('confirmGig'), onclick: function () {
-        if (confirm(t('confirmAsk'))) doAction(ev, 'confirm');
-      } }));
-    }
-    if (ev.status === 'confirmed' || ev.status === 'done') actions.appendChild(websiteBtn(ev));
-    if (ev.status !== 'done') {
-      actions.appendChild(h('button', { class: 'btn btn-danger', text: t('cancelGig'), onclick: function () { if (confirm(t('cancelAsk'))) doAction(ev, 'cancel'); } }));
-    }
-    box.appendChild(actions);
-    return box;
   }
 
   function adminCard(ev) {
     var card = h('div', { class: 'card', id: 'event-' + ev.id });
     card.appendChild(h('div', { class: 'card-head' },
       h('div', { class: 'card-headmain' }, pill(ev.status),
-        h('h3', { class: 'card-title sm' }, h('button', { text: ev.title || t('untitled'), onclick: function () { openEventDetail(ev.id); } })),
+        h('h3', { class: 'card-title sm' }, h('button', { text: ev.title || t('untitled'), onclick: function () { openDetail(ev.id); } })),
         h('p', { class: 'card-meta', text: fmtDate(ev.event_date) + (ev.date_text ? '  ·  “' + ev.date_text + '”' : '') }), metaLine(ev)),
       dateBox(ev)));
     if (ev.status === 'inquiry' || ev.client_name) {
-      card.appendChild(h('dl', { class: 'kv' },
-        ev.client_name ? [h('dt', { text: t('from') }), h('dd', { text: ev.client_name })] : null,
-        ev.client_email ? [h('dt', { text: t('email') }), h('dd', {}, h('a', { href: 'mailto:' + ev.client_email, text: ev.client_email }))] : null,
-        ev.client_phone ? [h('dt', { text: t('phone') }), h('dd', {}, h('a', { href: 'tel:' + ev.client_phone.replace(/\D/g, ''), text: ev.client_phone }))] : null,
-        ev.event_type ? [h('dt', { text: t('type') }), h('dd', { text: typeLabel(ev.event_type) })] : null,
-        [h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + ev.source : '') })]));
+      card.appendChild(clientBlock(ev));
       if (ev.message) card.appendChild(h('p', { class: 'card-text', text: ev.message }));
     }
     var actions = h('div', { class: 'card-actions' });
     if (ev.status === 'inquiry') {
-      actions.appendChild(h('button', { class: 'btn btn-gold', text: t('askGroup'), onclick: function (e) { askGroup(ev, null, e.currentTarget); } }));
+      actions.appendChild(h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^🙋\s*/, '')));
       actions.appendChild(h('button', { class: 'btn', text: t('postToTeam'), onclick: function () { openEventModal(ev, 'publish'); } }));
-      actions.appendChild(h('button', { class: 'btn', text: t('edit'), onclick: function () { openEventModal(ev); } }));
-      actions.appendChild(h('button', { class: 'btn btn-danger', text: t('decline'), onclick: function () { doAction(ev, 'decline'); } }));
-      actions.appendChild(h('button', { class: 'btn btn-danger', text: t('del'), onclick: function () { deleteEvent(ev); } }));
+      actions.appendChild(h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(evTitle(ev), inquiryActions(ev)); } }, icon('more', 2)));
     } else {
       actions.appendChild(h('button', { class: 'btn', text: t('reopen'), onclick: function () { doAction(ev, 'reopen'); } }));
       actions.appendChild(h('button', { class: 'btn btn-danger', text: t('del'), onclick: function () { deleteEvent(ev); } }));
@@ -774,12 +860,29 @@
     return card;
   }
 
-  function websiteBtn(ev) {
-    return h('button', { class: 'btn' + (ev.website ? ' btn-teal' : ''), text: ev.website ? '✓ ' + t('onWebsite') : t('showOnWebsite'),
-      title: ev.website ? t('hideFromWebsite') : t('showOnWebsite'), onclick: function () {
-        api('/api/events/' + ev.id, { method: 'PATCH', body: { website: !ev.website } })
-          .then(function () { toast(ev.website ? t('websiteOff') : t('websiteOn')); return refresh(); }).catch(function (e) { toast(e.message, true); });
-      } });
+  function clientBlock(ev) {
+    var dl = h('dl', { class: 'kv' });
+    if (ev.client_name) dl.appendChild(h('div', {}, h('dt', { text: t('from') }), h('dd', { text: ev.client_name })));
+    if (ev.client_email) dl.appendChild(h('div', {}, h('dt', { text: t('email') }), h('dd', {}, h('a', { href: 'mailto:' + ev.client_email, text: ev.client_email }))));
+    if (ev.client_phone) {
+      var digits = ev.client_phone.replace(/\D/g, '');
+      dl.appendChild(h('div', {}, h('dt', { text: t('phone') }), h('dd', { class: 'kv-phone' },
+        h('a', { href: 'tel:' + digits, text: ev.client_phone }),
+        h('span', { class: 'kv-btns' },
+          h('a', { class: 'btn btn-sm', href: 'tel:' + digits }, icon('phone', 2.2), t('call')),
+          h('a', { class: 'btn btn-sm', href: 'sms:' + digits }, icon('chat', 2.2), t('text'))))));
+    }
+    if (ev.event_type) dl.appendChild(h('div', {}, h('dt', { text: t('type') }), h('dd', { text: typeLabel(ev.event_type) })));
+    dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + ev.source : '') })));
+    return dl;
+  }
+
+  function websiteAction(ev) {
+    return { label: ev.website ? t('hideFromWebsite') : t('showOnWebsite'), icon: 'globe', onclick: function () {
+      api('/api/events/' + ev.id, { method: 'PATCH', body: { website: !ev.website } })
+        .then(function () { toast(ev.website ? t('websiteOff') : t('websiteOn')); return refresh(); })
+        .catch(function (e) { toast(e.message, true); });
+    } };
   }
   function doAction(ev, action, extra) {
     var body = Object.assign({ action: action }, extra || {});
@@ -792,27 +895,72 @@
     }).then(function (d) { return refresh().then(function () { return d; }); }).catch(function (e) { toast(e.message, true); });
   }
   function deleteEvent(ev) {
-    if (!confirm(t('deleteConfirm', { title: ev.title || t('thisEvent') }))) return;
-    api('/api/events/' + ev.id, { method: 'DELETE' }).then(refresh).catch(function (e) { toast(e.message, true); });
+    confirmSheet(t('deleteConfirm', { title: ev.title || t('thisEvent') }), t('del'), true).then(function (yes) {
+      if (!yes) return;
+      state.detail = null;
+      api('/api/events/' + ev.id, { method: 'DELETE' }).then(refresh).catch(function (e) { toast(e.message, true); });
+    });
   }
 
-  /* ── event modal (create / edit / publish) ─────────────── */
+  /* ── sheets ────────────────────────────────────────────── */
   function closeModal() { document.getElementById('modal-root').innerHTML = ''; }
-  function modal(title, body) {
+  function modal(title, body, footer, opts) {
+    opts = opts || {};
     var root = document.getElementById('modal-root');
     root.innerHTML = '';
-    var box = h('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true' }, h('h2', { text: title }), body);
-    root.appendChild(h('div', { class: 'modal-back', onclick: function (e) { if (e.target === e.currentTarget) closeModal(); } }, box));
-    var first = box.querySelector('input, select, textarea, button'); if (first) first.focus();
+    var box = h('div', { class: 'modal' + (opts.cls ? ' ' + opts.cls : ''), role: 'dialog', 'aria-modal': 'true' },
+      h('div', { class: 'modal-head' }, h('h2', {}, title), h('button', { class: 'modal-x', 'aria-label': t('close'), onclick: opts.onclose || closeModal }, icon('close', 2.2))),
+      h('div', { class: 'modal-body' }, body),
+      footer ? h('div', { class: 'modal-foot' }, footer) : null);
+    root.appendChild(h('div', { class: 'modal-back', onclick: function (e) { if (e.target === e.currentTarget) (opts.onclose || closeModal)(); } }, box));
+    if (!opts.noFocus) { var first = box.querySelector('.modal-body input, .modal-body select, .modal-body textarea'); if (first) first.focus(); }
     return box;
   }
+  function popSheet(title, sub) {
+    var body = h('div', { class: 'pop-body' });
+    var back = h('div', { class: 'modal-back pop-back', onclick: function (e) { if (e.target === e.currentTarget) close(); } },
+      h('div', { class: 'pop', role: 'dialog', 'aria-modal': 'true' },
+        h('div', { class: 'pop-grip' }),
+        title ? h('div', { class: 'pop-head' }, h('h3', { text: title }), sub ? h('p', { text: sub }) : null) : null,
+        body));
+    function close() { back.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(back);
+    return { el: back, body: body, close: close };
+  }
+  function confirmSheet(message, okLabel, danger) {
+    return new Promise(function (resolve) {
+      var pop = popSheet(null);
+      pop.body.appendChild(h('p', { class: 'pop-msg', text: message }));
+      pop.body.appendChild(h('div', { class: 'pop-btns' },
+        h('button', { class: 'btn btn-wide ' + (danger ? 'btn-danger-fill' : 'btn-gold'), text: okLabel || t('done'), onclick: function () { pop.close(); resolve(true); } }),
+        h('button', { class: 'btn btn-wide', text: t('cancel'), onclick: function () { pop.close(); resolve(false); } })));
+      pop.el.addEventListener('click', function (e) { if (e.target === pop.el) resolve(false); });
+    });
+  }
+  /* items: [{ label, icon, cls, onclick }] — null entries are skipped. */
+  function actionSheet(title, items) {
+    var pop = popSheet(title);
+    var list = h('div', { class: 'acts' });
+    items.forEach(function (it) {
+      if (!it) return;
+      list.appendChild(h('button', { class: 'act' + (it.cls ? ' ' + it.cls : ''), onclick: function () { pop.close(); it.onclick(); } },
+        h('span', { class: 'act-ico' }, it.icon ? icon(it.icon, 2) : null), h('span', { text: it.label })));
+    });
+    pop.body.appendChild(list);
+    return pop;
+  }
 
+  /* ── event form (create / edit / publish) ──────────────── */
   function field(label, input, full) { return h('label', { class: 'f' + (full ? ' full' : '') }, label, input); }
   function inp(name, ev, attrs) { return h('input', Object.assign({ name: name, value: ev && ev[name] != null ? ev[name] : '' }, attrs || {})); }
 
   function openEventModal(ev, intent) {
     ev = ev || {};
     var isNew = !ev.id;
+    var back = state.detail; state.detail = null;   // the sheet comes back when the form closes
+    function done() { closeModal(); if (back) openDetail(back); }
     var types = t('types');
     var typeSel = h('select', { name: 'event_type' }, h('option', { value: '', text: t('typePh') }), Object.keys(types).map(function (k) {
       return h('option', { value: k, text: types[k], selected: ev.event_type === k });
@@ -821,20 +969,20 @@
     var rehBox = h('div', { class: 'full' });
     function renderReh() {
       rehBox.innerHTML = '';
-      rehBox.appendChild(h('b', { text: t('rehearsalsLabel') }));
+      rehBox.appendChild(h('span', { class: 'tm-label', text: t('rehearsalsLabel') }));
       rehearsals.forEach(function (r, i) {
-        rehBox.appendChild(h('div', { class: 'form-grid', style: 'margin:0.4rem 0;grid-template-columns:1fr 1fr 1.4fr auto;gap:0.4rem' },
+        rehBox.appendChild(h('div', { class: 'rehrow' },
           h('input', { type: 'date', value: r.date || '', 'aria-label': t('rehearsalDate'), oninput: function (e) { r.date = e.target.value; } }),
           h('input', { placeholder: t('time'), value: r.time || '', oninput: function (e) { r.time = e.target.value; } }),
           h('input', { placeholder: t('locationNote'), value: r.location || '', oninput: function (e) { r.location = e.target.value; } }),
-          h('button', { type: 'button', class: 'btn btn-sm btn-danger', text: '✕', onclick: function () { rehearsals.splice(i, 1); renderReh(); } })));
+          h('button', { type: 'button', class: 'btn btn-sm btn-danger btn-icon', 'aria-label': t('remove'), onclick: function () { rehearsals.splice(i, 1); renderReh(); } }, icon('close', 2.2))));
       });
       rehBox.appendChild(h('button', { type: 'button', class: 'btn btn-sm', text: t('addRehearsal'), onclick: function () { rehearsals.push({}); renderReh(); } }));
     }
     renderReh();
     var notify = h('input', { type: 'checkbox', checked: true });
     var err = h('p', { class: 'error' });
-    var form = h('form', { class: 'form-grid', onsubmit: function (e) {
+    var form = h('form', { class: 'form-grid', id: 'event-form', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
       var fd = new FormData(form); var body = {};
       fd.forEach(function (v, k) { body[k] = v; });
@@ -856,7 +1004,7 @@
           var n = d && d.notified;
           toast(n && n.groupme ? t('postedGroupme') : t('postFailed'), !(n && n.groupme));
           state.tab = 'gigs';
-        } else toast(t('saved'));
+        } else { toast(t('saved')); if (back) state.detail = back; }
         return refresh();
       }).catch(function (x) { err.textContent = x.message; });
     } },
@@ -866,7 +1014,7 @@
       field(t('startTime'), inp('start_time', ev, { placeholder: '7:00 PM' })),
       field(t('endTime'), inp('end_time', ev, { placeholder: '7:30 PM' })),
       field(t('callTime'), inp('call_time', ev, { placeholder: '6:15 PM' })),
-      field(t('dancersNeededLabel'), inp('dancers_needed', ev, { type: 'number', min: 0 })),
+      field(t('dancersNeededLabel'), inp('dancers_needed', ev, { type: 'number', min: 0, inputmode: 'numeric' })),
       field(t('venue'), inp('venue', ev, { placeholder: 'Grand Ballroom' })),
       field(t('city'), inp('city', ev, { placeholder: 'West Covina' })),
       field(t('address'), inp('address', ev, {}), true),
@@ -874,78 +1022,140 @@
       ev.date_text ? field(t('clientWrote'), h('input', { value: ev.date_text, disabled: true })) : null,
       field(t('detailsForTeam'), h('textarea', { name: 'details', text: ev.details || '', placeholder: t('detailsPh') }), true),
       rehBox,
-      h('details', { class: 'full' }, h('summary', { style: 'cursor:pointer;color:var(--muted);font-size:0.85rem' }, t('clientSection')),
+      h('details', { class: 'full' }, h('summary', { class: 'summary' }, t('clientSection')),
         h('div', { class: 'form-grid', style: 'margin-top:0.6rem' },
           field(t('clientName'), inp('client_name', ev)), field(t('clientEmail'), inp('client_email', ev, { type: 'email' })), field(t('clientPhone'), inp('client_phone', ev, { type: 'tel' })),
           field(t('clientMessage'), h('textarea', { name: 'message', text: ev.message || '' }), true),
           field(t('privateNotes'), h('textarea', { name: 'notes', text: ev.notes || '' }), true))),
       intent === 'publish' ? h('label', { class: 'check full' }, notify, t('notifyNow')) : null,
-      h('div', { class: 'full card-actions' },
-        h('button', { class: 'btn btn-gold', type: 'submit', text: intent === 'publish' ? t('modalPost') : isNew ? t('create') : t('save') }),
-        h('button', { class: 'btn', type: 'button', text: t('cancel'), onclick: closeModal })),
       h('div', { class: 'full' }, err));
-    modal(intent === 'publish' ? t('modalPost') : isNew ? t('modalNew') : t('modalEdit'), form);
+    var foot = h('div', { class: 'foot-btns' },
+      h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'event-form', text: intent === 'publish' ? t('modalPost') : isNew ? t('create') : t('save') }),
+      h('button', { class: 'btn', type: 'button', text: t('cancel'), onclick: done }));
+    modal(intent === 'publish' ? t('modalPost') : isNew ? t('modalNew') : t('modalEdit'), form, foot, { onclose: done });
   }
 
-  /* ── event detail (roster) ─────────────────────────────── */
-  function openEventDetail(id) {
-    api('/api/events/' + id).then(function (d) {
-      var ev = d.event, roster = d.roster || [];
-      var body = h('div', {});
-      body.appendChild(h('div', { class: 'card-head' },
-        h('div', {}, pill(ev.status), h('p', { class: 'card-meta', text: fmtDate(ev.event_date) }), metaLine(ev)), dateBox(ev)));
-      if (ev.details) body.appendChild(h('p', { class: 'card-text', text: ev.details }));
-      var reh = rehearsalList(ev); if (reh) body.appendChild(reh);
-      body.appendChild(breakdown(ev, roster));
-      var rosterBox = h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('rosterByFamily') }));
-      roster.forEach(function (f) {
-        rosterBox.appendChild(h('div', { class: 'dancer-row' },
-          h('span', {}, h('span', { class: 'dancer-name', text: f.name })),
-          h('span', { class: 'who', style: 'margin:0' }, f.dancers.map(function (dn) {
-            return h('span', { class: 'chip ' + (dn.status || 'pending'), text: dn.name + (dn.status ? '' : ' ?'), title: t('tapToChange'), style: 'cursor:pointer',
-              onclick: function () { cycleAdminAvailability(ev, dn, id); } });
-          }))));
-      });
-      body.appendChild(rosterBox);
-      body.appendChild(h('p', { class: 'hint', text: t('tapHint') }));
-      var al = askedDetail(ev); if (al) body.appendChild(al);
-      var actions = h('div', { class: 'card-actions' });
-      function reminderBtn() {
-        return h('button', { class: 'btn', text: t('sendReminder'), onclick: function () { doAction(ev, 'remind').then(closeModal); } });
-      }
-      function cancelBtn() { return h('button', { class: 'btn btn-danger', text: t('cancelGig'), onclick: function () { if (confirm(t('cancelAsk'))) doAction(ev, 'cancel').then(closeModal); } }); }
-      actions.appendChild(h('button', { class: 'btn', text: t('editDetails'), onclick: function () { closeModal(); openEventModal(ev); } }));
-      if (ev.status === 'open') {
-        actions.appendChild(h('button', { class: 'btn', text: t('postAnnouncement'), onclick: function () { doAction(ev, 'announce').then(closeModal); } }));
-        actions.appendChild(h('button', { class: 'btn', text: ev.asked_at ? t('askAgain') : t('askGroup'), onclick: function (e) { askGroup(ev, closeModal, e.currentTarget); } }));
-        actions.appendChild(h('button', { class: 'btn', text: t('postTally'), onclick: function () { doAction(ev, 'tally').then(closeModal); } }));
-        actions.appendChild(reminderBtn());
-        actions.appendChild(h('button', { class: 'btn btn-teal', text: t('confirmGig'), onclick: function () {
-          if (!confirm(t('confirmAsk'))) return;
-          doAction(ev, 'confirm').then(function () { openEventDetail(id); });
-        } }));
-        actions.appendChild(cancelBtn());
-      } else if (ev.status === 'confirmed') {
-        actions.appendChild(h('button', { class: 'btn', text: t('postConfirmation'), onclick: function () { doAction(ev, 'reconfirm').then(closeModal); } }));
-        actions.appendChild(reminderBtn());
-        actions.appendChild(h('button', { class: 'btn btn-teal', text: t('markDone'), onclick: function () { doAction(ev, 'done').then(closeModal); } }));
-        actions.appendChild(h('button', { class: 'btn', text: ev.website ? t('hideFromWebsite') : t('showOnWebsite'), onclick: function () {
-          api('/api/events/' + id, { method: 'PATCH', body: { website: !ev.website } }).then(function () { toast(ev.website ? t('websiteOff') : t('websiteOn')); return refresh(); }).then(function () { openEventDetail(id); }).catch(function (e) { toast(e.message, true); });
-        } }));
-        actions.appendChild(cancelBtn());
-      } else {
-        actions.appendChild(h('button', { class: 'btn', text: t('postToTeam'), onclick: function () { closeModal(); openEventModal(ev, 'publish'); } }));
-        actions.appendChild(h('button', { class: 'btn btn-danger', text: t('del'), onclick: function () { closeModal(); deleteEvent(ev); } }));
-      }
-      actions.appendChild(h('button', { class: 'btn', text: t('close'), onclick: closeModal }));
-      body.appendChild(actions);
-      modal(ev.title || t('gig'), body);
-    }).catch(function (e) { toast(e.message, true); });
+  /* ── gig detail sheet (owner) ──────────────────────────── */
+  function openDetail(id) { state.detail = id; render(); }
+  function closeDetail() { state.detail = null; closeModal(); }
+
+  function inquiryActions(ev) {
+    return [
+      { label: t('postToTeam'), icon: 'chat', onclick: function () { openEventModal(ev, 'publish'); } },
+      { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
+      { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
+      { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } },
+    ];
   }
-  function cycleAdminAvailability(ev, dn, id) {
-    var next = { yes: 'maybe', maybe: 'no', no: null }; var s = dn.status ? next[dn.status] : 'yes';
-    api('/api/availability', { method: 'POST', body: { event_id: ev.id, dancer_id: dn.id, status: s } })
-      .then(function () { return loadEvents(); }).then(function () { openEventDetail(id); }).catch(function (e) { toast(e.message, true); });
+  function primaryFor(ev, c) {
+    var s = ev.status;
+    var confirmIt = function () {
+      confirmSheet(t('confirmAsk'), t('confirmGig')).then(function (yes) { if (yes) doAction(ev, 'confirm'); });
+    };
+    var cancelIt = function () {
+      confirmSheet(t('cancelAsk'), t('cancelGig'), true).then(function (yes) { if (yes) doAction(ev, 'cancel').then(closeDetail); });
+    };
+    var remind = { label: t('sendReminder'), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
+    var edit = { label: t('editDetails'), icon: 'edit', onclick: function () { openEventModal(ev); } };
+    var out = { primary: null, more: [] };
+    if (s === 'inquiry') {
+      out.primary = { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      out.more = inquiryActions(ev);
+    } else if (s === 'open') {
+      if (!ev.asked_at) out.primary = { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      else if (c.pending) out.primary = { label: t('remindWaiting', { n: c.pending }), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
+      else out.primary = { label: t('confirmGig'), icon: 'yes', cls: 'btn-teal', onclick: confirmIt };
+      out.more = [
+        { label: ev.asked_at ? t('askAgain') : t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function () { askGroup(ev); } },
+        { label: t('postTally'), icon: 'people', onclick: function () { doAction(ev, 'tally'); } },
+        { label: t('postAnnouncement'), icon: 'mail', onclick: function () { doAction(ev, 'announce'); } },
+        remind, edit,
+        { label: t('confirmGig'), icon: 'yes', onclick: confirmIt },
+        { label: t('cancelGig'), icon: 'no', cls: 'danger', onclick: cancelIt },
+      ];
+    } else if (s === 'confirmed') {
+      out.primary = isPast(ev)
+        ? { label: t('markDone'), icon: 'allDone', cls: 'btn-teal', onclick: function () { doAction(ev, 'done'); } }
+        : { label: t('postConfirmation'), icon: 'chat', onclick: function () { doAction(ev, 'reconfirm'); } };
+      out.more = [
+        remind,
+        websiteAction(ev),
+        edit,
+        { label: t('markDone'), icon: 'allDone', onclick: function () { doAction(ev, 'done'); } },
+        { label: t('cancelGig'), icon: 'no', cls: 'danger', onclick: cancelIt },
+      ];
+    } else if (s === 'done') {
+      out.primary = websiteAction(ev);
+      out.more = [edit, { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
+        { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
+    } else {
+      out.primary = { label: t('postToTeam'), icon: 'chat', onclick: function () { openEventModal(ev, 'publish'); } };
+      out.more = [edit, { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
+        { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
+    }
+    return out;
+  }
+
+  function renderDetailSheet() {
+    var ev = state.events.find(function (e) { return e.id === state.detail; });
+    if (!ev) { state.detail = null; closeModal(); return; }
+    var c = tallyOf(ev);
+    var body = h('div', { class: 'detail' });
+
+    body.appendChild(h('div', { class: 'detail-top' },
+      dateBox(ev),
+      h('div', { class: 'detail-title' }, h('h3', { class: 'card-title', text: evTitle(ev) }), h('p', { class: 'card-meta', text: fmtDate(ev.event_date) }))));
+
+    body.appendChild(hero(ev, c));
+
+    var facts = h('div', { class: 'facts' });
+    if (fmtTime(ev) || ev.call_time) facts.appendChild(h('div', { class: 'fact' }, icon('clock', 2), h('span', {}, fmtTime(ev) ? h('b', { text: fmtTime(ev) }) : null, ev.call_time ? ' · ' + t('callTime') + ' ' + ev.call_time : '')));
+    if (fmtWhere(ev) || ev.address) {
+      var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
+      facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: 'https://maps.apple.com/?q=' + q, target: '_blank', rel: 'noopener', text: [fmtWhere(ev), ev.address].filter(Boolean).join(' · ') })));
+    }
+    if (ev.dancers_needed) facts.appendChild(h('div', { class: 'fact' }, icon('people', 2), h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
+    if (ev.pay) facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
+    if (facts.childNodes.length) body.appendChild(facts);
+
+    var roster = rosterFor(ev);
+    if (roster.length) {
+      var groups = { yes: [], maybe: [], no: [], pending: [] };
+      roster.forEach(function (p) { groups[p.status || 'pending'].push(p); });
+      var box = h('div', { class: 'groups' });
+      [['yes', 'stateYes'], ['maybe', 'stateMaybe'], ['no', 'stateNo'], ['pending', 'waitingOn']].forEach(function (g) {
+        var people = groups[g[0]].sort(function (a, b) { return a.name.localeCompare(b.name); });
+        if (!people.length) return;
+        var grp = h('div', { class: 'group ' + g[0] },
+          h('div', { class: 'group-head' }, h('span', { class: 'group-title' }, g[0] === 'pending' ? icon('clock', 2.5) : icon(g[0], 3), t(g[1])), h('b', { text: people.length })));
+        var names = h('div', { class: 'names' });
+        people.forEach(function (p) {
+          names.appendChild(h('button', { type: 'button', class: 'name', title: p.note || t('tapToChange'), onclick: function () { answerSheet(ev, p); } },
+            h('span', { class: 'name-n', text: p.name }), h('span', { class: 'name-f', text: p.family })));
+        });
+        grp.appendChild(names);
+        box.appendChild(grp);
+      });
+      body.appendChild(box);
+      body.appendChild(h('p', { class: 'hint', text: t('tapName') }));
+    }
+
+    if (ev.details) body.appendChild(h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('detailsForTeam') }), h('p', { class: 'card-text', style: 'margin:0', text: ev.details })));
+    var reh = rehearsalList(ev); if (reh) body.appendChild(reh);
+    if (ev.client_name || ev.client_phone || ev.client_email) body.appendChild(h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('client') }), clientBlock(ev)));
+    if (ev.message) body.appendChild(h('p', { class: 'card-text', text: '“' + ev.message + '”' }));
+    if (ev.notes) body.appendChild(h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('privateNotes') }), h('p', { class: 'card-text', style: 'margin:0', text: ev.notes })));
+    var asked = askedDetail(ev); if (asked) body.appendChild(asked);
+
+    var acts = primaryFor(ev, c);
+    var foot = h('div', { class: 'foot-btns' },
+      h('button', { class: 'btn btn-main ' + (acts.primary.cls || 'btn-gold'), onclick: acts.primary.onclick }, icon(acts.primary.icon, 2), acts.primary.label),
+      h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(evTitle(ev), acts.more); } }, icon('more', 2)));
+
+    var title = h('span', { class: 'modal-title' }, pill(ev.status));
+    var prev = document.querySelector('#modal-root .modal-body'); var scrollTop = prev ? prev.scrollTop : 0;
+    modal(title, body, foot, { cls: 'modal-detail', onclose: closeDetail, noFocus: true });
+    var nb = document.querySelector('#modal-root .modal-body'); if (nb && scrollTop) nb.scrollTop = scrollTop;
   }
 
   /* ── team (families) ───────────────────────────────────── */
@@ -973,7 +1183,7 @@
         f.groupme_user_id ? h('span', { class: 'chip yes' }, icon('yes', 3), t('botLinkedChip')) : h('span', { class: 'chip none', text: t('notLinked') })));
       card.appendChild(h('div', { class: 'chips' }, f.dancers.map(function (d) {
         return h('span', { class: 'chip' + (d.active ? '' : ' is-off') }, d.name, h('button', { text: '✕', title: t('remove') + ' ' + d.name, onclick: function () {
-          if (confirm(t('removeAsk', { name: d.name }))) api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(refresh);
+          confirmSheet(t('removeAsk', { name: d.name }), t('remove'), true).then(function (yes) { if (yes) api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(refresh); });
         } }));
       })));
       var dn = h('input', { placeholder: t('addDancer'), 'aria-label': t('addDancer') });
@@ -982,17 +1192,31 @@
         api('/api/dancers', { method: 'POST', body: { family_id: f.id, name: dn.value } }).then(refresh).catch(function (x) { toast(x.message, true); });
       } }, dn, h('button', { class: 'btn btn-sm', type: 'submit', text: t('add') })));
       card.appendChild(h('div', { class: 'card-actions', style: 'margin:0' },
-        h('button', { class: 'btn btn-sm btn-gold', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }),
-        h('button', { class: 'btn btn-sm', text: t('newLink'), title: t('newLinkTitle'), onclick: function () {
-          if (!confirm(t('newLinkAsk', { name: f.name }))) return;
-          api('/api/families?id=' + f.id, { method: 'PATCH', body: { action: 'rotate' } }).then(function (d) { copyText(d.invite_link); return refresh(); });
-        } }),
-        h('button', { class: 'btn btn-sm btn-danger', text: t('removeFamily'), onclick: function () {
-          if (confirm(t('removeFamilyAsk', { name: f.name }))) api('/api/families?id=' + f.id, { method: 'DELETE' }).then(refresh);
-        } })));
+        navigator.share
+          ? h('button', { class: 'btn btn-sm btn-gold', onclick: function () { shareInvite(f); } }, icon('share', 2.2), t('shareInvite'))
+          : h('button', { class: 'btn btn-sm btn-gold', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }),
+        navigator.share ? h('button', { class: 'btn btn-sm', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }) : null,
+        h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () {
+          actionSheet(f.name, [
+            { label: t('newLink'), icon: 'refresh', onclick: function () {
+              confirmSheet(t('newLinkAsk', { name: f.name }), t('newLink')).then(function (yes) {
+                if (!yes) return;
+                api('/api/families?id=' + f.id, { method: 'PATCH', body: { action: 'rotate' } }).then(function (d) { copyText(d.invite_link); return refresh(); });
+              }); } },
+            { label: t('removeFamily'), icon: 'trash', cls: 'danger', onclick: function () {
+              confirmSheet(t('removeFamilyAsk', { name: f.name }), t('removeFamily'), true).then(function (yes) {
+                if (yes) api('/api/families?id=' + f.id, { method: 'DELETE' }).then(refresh);
+              }); } },
+          ]);
+        } }, icon('more', 2))));
       grid.appendChild(card);
     });
     app.appendChild(grid);
+  }
+
+  function shareInvite(f) {
+    navigator.share({ title: 'Ballet Folklórico Mi Herencia', text: t('inviteMsg'), url: f.invite_link })
+      .catch(function (e) { if (e && e.name !== 'AbortError') copyText(f.invite_link); });
   }
 
   var MARK = { yes: '✓', maybe: '?', no: '✗' };
@@ -1083,14 +1307,19 @@
 
   function renderChona() {
     var listening = state.me.channels && state.me.channels.groupme_listen;
+    /* Posting and listening are separate secrets: one can be green while the other is dark. */
+    var posting = state.me.channels && state.me.channels.groupme;
 
     app.appendChild(h('div', { class: 'chona-hero' },
-      h('img', { class: 'chona-portrait', src: '/images/optimized/la-chona.webp', width: 160, height: 160,
+      h('img', { class: 'chona-portrait', src: '/images/optimized/la-chona-badge.webp', width: 256, height: 256,
         alt: t('chonaAlt') }),
       h('div', { class: 'chona-intro' },
         h('h2', { class: 'chona-name', text: 'La Chona' }),
-        h('span', { class: 'chona-state ' + (listening ? 'on' : 'off') },
-          h('i', { class: 'dot' }), t(listening ? 'chonaOn' : 'chonaOff')),
+        h('div', { class: 'chona-states' },
+          h('span', { class: 'chona-state ' + (posting ? 'on' : 'off') },
+            h('i', { class: 'dot' }), t(posting ? 'groupmeOn' : 'groupmeOff')),
+          h('span', { class: 'chona-state ' + (listening ? 'on' : 'off') },
+            h('i', { class: 'dot' }), t(listening ? 'chonaOn' : 'chonaOff'))),
         h('p', { class: 'guide-who', text: t('guideWho') }))));
 
     if (!listening) app.appendChild(h('p', { class: 'tm-sub', text: t('botSubOff') }));
@@ -1193,13 +1422,22 @@
   /* ── render dispatch ───────────────────────────────────── */
   function render() {
     if (!state.me || state.me.role === 'anon') return renderLogin();
+    /* #app is the scroller (team.css): a background repaint must not throw the list back to
+       the top, but a tab change is a fresh view, so only the same tab keeps its place. */
+    var scrollTop = app.scrollTop; var sameTab = painted === state.tab; painted = state.tab;
     if (state.me.role === 'admin') renderAdmin(); else renderMember();
+    if (sameTab && scrollTop) app.scrollTop = scrollTop;
+    if (state.me.role === 'admin') { if (state.detail) renderDetailSheet(); else if (document.querySelector('#modal-root .modal-detail')) closeModal(); }
   }
   function focusIfNeeded() {
     if (!state.focusEvent) return;
     var el = document.getElementById('event-' + state.focusEvent);
     state.focusEvent = null;
     if (el) { el.classList.add('is-flash'); setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); }
+  }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('/team/sw.js').catch(function () {}); });
   }
 
   boot();
