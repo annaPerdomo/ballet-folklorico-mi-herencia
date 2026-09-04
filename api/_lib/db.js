@@ -32,8 +32,6 @@ const SCHEMA = `
 CREATE TABLE IF NOT EXISTS families (
   id serial PRIMARY KEY,
   name text NOT NULL,
-  email text,
-  phone text,
   access_token text UNIQUE NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );

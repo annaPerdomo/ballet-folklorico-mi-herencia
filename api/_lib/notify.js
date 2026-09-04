@@ -2,7 +2,7 @@
 export const siteUrl = () => (process.env.SITE_URL || 'https://bfmh.dance').replace(/\/$/, '');
 
 export function channels() {
-  return { groupme: Boolean(process.env.GROUPME_BOT_ID), groupme_listen: Boolean(process.env.GROUPME_WEBHOOK_SECRET), email: Boolean(process.env.RESEND_API_KEY) };
+  return { groupme: Boolean(process.env.GROUPME_BOT_ID), groupme_listen: Boolean(process.env.GROUPME_WEBHOOK_SECRET) };
 }
 
 export async function postGroupMe(text) {
@@ -15,23 +15,6 @@ export async function postGroupMe(text) {
     });
     return r.ok;
   } catch (e) { console.error('groupme', e); return false; }
-}
-
-export async function sendEmail({ to, subject, text }) {
-  const key = process.env.RESEND_API_KEY;
-  const list = (Array.isArray(to) ? to : [to]).filter(Boolean);
-  if (!key || !list.length) return false;
-  try {
-    const r = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: process.env.NOTIFY_FROM || 'Ballet Folklórico Mi Herencia <team@bfmh.dance>',
-        to: list.slice(0, 50), subject, text,
-      }),
-    });
-    return r.ok;
-  } catch (e) { console.error('resend', e); return false; }
 }
 
 export function fmtDate(d) {
