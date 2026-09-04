@@ -1512,7 +1512,7 @@
        the top, but a tab change is a fresh view, so only the same tab keeps its place. */
     var scrollTop = app.scrollTop; var sameTab = painted === state.tab; painted = state.tab;
     if (state.me.role === 'admin') renderAdmin(); else renderMember();
-    if (sameTab && scrollTop) app.scrollTop = scrollTop;
+    if (sameTab) { if (scrollTop) app.scrollTop = scrollTop; } else app.scrollTop = 0;
     if (state.me.role === 'admin') { if (state.detail) renderDetailSheet(); else if (document.querySelector('#modal-root .modal-detail')) closeModal(); }
   }
   function focusIfNeeded() {

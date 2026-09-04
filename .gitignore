@@ -15,3 +15,6 @@ node_modules/
 .env*.local
 
 feedback-images/
+
+# Tutorial-video recording tooling (kept locally only)
+scripts/team-tour/
