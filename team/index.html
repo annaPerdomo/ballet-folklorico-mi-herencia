@@ -33,7 +33,15 @@
     <div class="tm-header-right" id="header-right"></div>
   </header>
   <main class="tm-main" id="app" aria-live="polite">
-    <p class="tm-loading">Loading… / Cargando…</p>
+    <div class="tm-boot" role="status" aria-label="Loading">
+      <svg class="tm-twirl" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <circle class="tw tw-3" cx="50" cy="50" r="42" />
+        <circle class="tw tw-2" cx="50" cy="50" r="31" />
+        <circle class="tw tw-1" cx="50" cy="50" r="20" />
+        <circle class="tw-core" cx="50" cy="50" r="6" />
+      </svg>
+      <p class="tm-boot-text">Loading…</p>
+    </div>
   </main>
   <nav class="tm-tabs" id="tabs" aria-label="Sections" hidden></nav>
   <div id="fab-root"></div>

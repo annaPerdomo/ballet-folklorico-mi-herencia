@@ -7,7 +7,7 @@
   var tabsEl = document.getElementById('tabs');
   var headerRight = document.getElementById('header-right');
   var fabRoot = document.getElementById('fab-root');
-  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0, installPrompt: null };
+  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0 };
 
   /* ── i18n ───────────────────────────────────────────────── */
   var STR = {
@@ -21,11 +21,19 @@
       yes: 'yes', maybe: 'maybe', no: 'no', noAnswer: 'no answer',
       btnYes: '✓ Yes', btnMaybe: '? Maybe', btnNo: '✗ No', availabilityFor: 'Availability for {name}',
       signOut: 'Sign out', familia: 'Familia', owner: 'Owner', newGig: '+ New gig',
-      loginTitle: 'Team sign-in', loginText: 'Dancers and families: open the personal link the owners sent you — no password needed. Owners: sign in below.',
+      loginTitle: 'Owner sign-in', loginText: 'This is the owners’ door: gigs, families, and La Chona. Enter your password to come in.',
+      loginFamilyHint: 'Dancers and families never come here — they answer from their own link.',
       ownerPassword: 'Owner password', signIn: 'Sign in', notConfigured: 'ADMIN_PASSWORD is not set on the server yet.',
+      signInAs: 'Your name', signInAsPh: 'Owner',
+      signInAsHint: 'The name is only so your iPhone offers to save the password — then Face ID fills it in next time. Any name works; it is not checked.',
       badLink: 'That link is not valid anymore. Ask the owners for a new one.',
       needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Recent', myFamily: 'My family',
       subscribe: 'Add our gigs to your calendar', subscribeHint: 'Keeps updating on its own as dates change.',
+      subscribeOwner: 'Add every gig to your calendar', addToCal: 'Add to my calendar',
+      addToCalHint: 'Saves the call time, the address, and a reminder the day before.',
+      subscribePick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
+      calOutlook: 'Outlook', calCopy: 'Copy the link instead',
+      calGoogleNote: 'Google checks for changes once a day or so, Apple and Outlook every few hours. If a date just moved, open the gig and add it again to get it right away.',
       addDancersFirst: 'Add the dancers in your family below so you can mark availability for each of them.',
       allAnswered: 'Everything else is answered. ¡Gracias!', noGigs: 'No gigs posted yet. The owners will post here when an inquiry comes in.',
       answerCleared: 'Answer cleared', dancers: 'Dancers', addDancerPh: 'Add a dancer (e.g. Sofia)', dancerName: 'Dancer name', add: 'Add',
@@ -61,6 +69,8 @@
       pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.',
       chonaAlt: 'La Chona, a little gold robot in a red and green folklorico dress with braided ribbons',
       chonaOn: 'Listening to the chat', chonaOff: 'Not listening yet',
+      chonaLive: 'Connected · listening to the chat', chonaPostOnly: 'Connected · not listening yet',
+      chonaListenOnly: 'Listening · can’t post yet', chonaDown: 'Not connected',
       botSubOff: 'Not listening yet. Set GROUPME_WEBHOOK_SECRET on the server and point the bot’s callback URL at /api/webhooks/groupme?secret=… (see README).',
       postFailed: 'GroupMe did not take the message — try again',
       guideWho: 'La Chona sits in the GroupMe chat, reads what the families write, and marks the roster for you — so nobody counts yeses by hand at midnight.',
@@ -85,7 +95,7 @@
       removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link',
       newLinkAsk: 'Create a new link for {name}? The old one will stop working.', removeFamily: 'Remove family', removeFamilyAsk: 'Remove the {name} family and their dancers?',
       roleTeam: 'Team', stateNone: 'Not answered', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going',
-      waiting: 'waiting', plusWaiting: '+{n} waiting', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
+      waiting: 'no response received', plusWaiting: '+{n} with no response', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
       inboxEmptyText: 'Nothing new from the website. Inquiries from the contact and quote forms show up here on their own.',
       inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No gigs posted yet. When the owners post one you’ll hear about it in GroupMe.',
@@ -93,13 +103,12 @@
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
       openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
       going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
-      remindWaiting: 'Remind {n} waiting', moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
-      waitingOn: 'Waiting', tapGigHint: 'Tap a gig to see who’s in and nudge who isn’t.',
+      remindWaiting: 'Remind {n} with no answer', moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
+      waitingOn: 'No response received', tapGigHint: 'Tap a gig to see who’s in and nudge who isn’t.',
+      goingAre: 'Going:', andMore: '+{n} more',
       everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
-      installTitle: 'Put the team app on your home screen', installIos: 'Tap Share, then “Add to Home Screen”. Opens like an app, one tap from the headcount.',
-      installAndroid: 'One tap and it opens like an app.', installBtn: 'Install', later: 'Later',
       shareInvite: 'Send link', inviteMsg: 'Your family’s link for Ballet Folklórico Mi Herencia gigs — tap it to mark who can dance:',
-      refresh: 'Refresh', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
+      refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
       when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
       chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
     },
@@ -113,11 +122,19 @@
       yes: 'sí', maybe: 'tal vez', no: 'no', noAnswer: 'sin respuesta',
       btnYes: '✓ Sí', btnMaybe: '? Tal vez', btnNo: '✗ No', availabilityFor: 'Disponibilidad de {name}',
       signOut: 'Salir', familia: 'Familia', owner: 'Dueño', newGig: '+ Nuevo evento',
-      loginTitle: 'Acceso del equipo', loginText: 'Bailarines y familias: abran el enlace personal que les enviaron los dueños — no necesitan contraseña. Dueños: inicien sesión abajo.',
+      loginTitle: 'Acceso de dueños', loginText: 'Esta es la puerta de los dueños: eventos, familias y La Chona. Escribe tu contraseña para entrar.',
+      loginFamilyHint: 'Los bailarines y las familias nunca entran por aquí — responden desde su propio enlace.',
       ownerPassword: 'Contraseña de dueño', signIn: 'Entrar', notConfigured: 'ADMIN_PASSWORD todavía no está configurado en el servidor.',
+      signInAs: 'Tu nombre', signInAsPh: 'Dueño',
+      signInAsHint: 'El nombre es solo para que tu iPhone te ofrezca guardar la contraseña — luego Face ID la llena sola. Cualquier nombre sirve; no se revisa.',
       badLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
       needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Recientes', myFamily: 'Mi familia',
       subscribe: 'Agrega nuestros eventos a tu calendario', subscribeHint: 'Se actualiza solo cuando cambian las fechas.',
+      subscribeOwner: 'Agrega todos los eventos a tu calendario', addToCal: 'Agregar a mi calendario',
+      addToCalHint: 'Guarda la hora de llegada, la dirección y un recordatorio el día anterior.',
+      subscribePick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
+      calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace',
+      calGoogleNote: 'Google busca cambios una vez al día; Apple y Outlook cada pocas horas. Si una fecha acaba de cambiar, abre el evento y agrégalo de nuevo para tenerlo al instante.',
       addDancersFirst: 'Agrega abajo a los bailarines de tu familia para marcar la disponibilidad de cada uno.',
       allAnswered: 'Todo lo demás ya está respondido. ¡Gracias!', noGigs: 'Aún no hay eventos publicados. Los dueños publicarán aquí cuando llegue una solicitud.',
       answerCleared: 'Respuesta borrada', dancers: 'Bailarines', addDancerPh: 'Agregar bailarín (p. ej. Sofía)', dancerName: 'Nombre del bailarín', add: 'Agregar',
@@ -153,6 +170,8 @@
       pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
       chonaAlt: 'La Chona, una robotita dorada con vestido folclórico rojo y verde y trenzas con listones',
       chonaOn: 'Escuchando el chat', chonaOff: 'Todavía no escucha',
+      chonaLive: 'Conectada · escuchando el chat', chonaPostOnly: 'Conectada · todavía no escucha',
+      chonaListenOnly: 'Escuchando · no puede publicar', chonaDown: 'No conectada',
       botSubOff: 'Todavía no escucha. Configura GROUPME_WEBHOOK_SECRET en el servidor y apunta la URL de callback del bot a /api/webhooks/groupme?secret=… (ver README).',
       postFailed: 'GroupMe no aceptó el mensaje — inténtalo de nuevo',
       guideWho: 'La Chona está en el chat de GroupMe, lee lo que escriben las familias y marca la lista por ti — para que nadie ande contando los “sí” a medianoche.',
@@ -177,7 +196,7 @@
       removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace',
       newLinkAsk: '¿Crear un nuevo enlace para {name}? El anterior dejará de funcionar.', removeFamily: 'Quitar familia', removeFamilyAsk: '¿Quitar a la familia {name} y a sus bailarines?',
       roleTeam: 'Equipo', stateNone: 'Sin responder', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va',
-      waiting: 'faltan', plusWaiting: '+{n} sin responder', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
+      waiting: 'sin respuesta', plusWaiting: '+{n} sin respuesta', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
       inboxEmptyText: 'Nada nuevo del sitio web. Las solicitudes de los formularios de contacto y cotización aparecen aquí solas.',
       inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay eventos publicados. Cuando los dueños publiquen uno, avisarán en GroupMe.',
@@ -185,13 +204,12 @@
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
       openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
       going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
-      remindWaiting: 'Recordar a {n} sin responder', moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
-      waitingOn: 'Faltan', tapGigHint: 'Toca un evento para ver quién va y avisar a quien falta.',
+      remindWaiting: 'Recordar a {n} sin respuesta', moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
+      waitingOn: 'Sin respuesta', tapGigHint: 'Toca un evento para ver quién va y avisar a quien falta.',
+      goingAre: 'Van:', andMore: '+{n} más',
       everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
-      installTitle: 'Pon la app del equipo en tu pantalla de inicio', installIos: 'Toca Compartir y luego “Agregar a pantalla de inicio”. Se abre como una app, a un toque del conteo.',
-      installAndroid: 'Un toque y se abre como una app.', installBtn: 'Instalar', later: 'Después',
       shareInvite: 'Enviar enlace', inviteMsg: 'El enlace de tu familia para los eventos de Ballet Folklórico Mi Herencia — tócalo para marcar quién puede bailar:',
-      refresh: 'Actualizar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
+      refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
       when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
       chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
     },
@@ -288,16 +306,24 @@
     ta.remove(); return Promise.resolve();
   }
 
+  // A cold function/database wake can time out the first request; GETs are safe to retry.
   function api(path, opts) {
     opts = opts || {};
     var init = { method: opts.method || 'GET', headers: {}, credentials: 'same-origin' };
     if (opts.body !== undefined) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(opts.body); }
-    return fetch(path, init).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (data) {
-        if (!r.ok) { var e = new Error(data.error || ('Request failed (' + r.status + ')')); e.status = r.status; throw e; }
-        return data;
+    var retries = init.method === 'GET' ? 2 : 0;
+    function attempt(left) {
+      return fetch(path, init).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (data) {
+          if (!r.ok) { var e = new Error(data.error || ('Request failed (' + r.status + ')')); e.status = r.status; throw e; }
+          return data;
+        });
+      }).catch(function (e) {
+        if (!left || (e.status && e.status < 500)) throw e;
+        return new Promise(function (go) { setTimeout(go, 900); }).then(function () { return attempt(left - 1); });
       });
-    });
+    }
+    return attempt(retries);
   }
 
   /* ── data loading ──────────────────────────────────────── */
@@ -325,8 +351,6 @@
   }
   document.addEventListener('visibilitychange', refreshIfStale);
   window.addEventListener('focus', refreshIfStale);
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); state.installPrompt = e; if (state.me && state.me.role === 'admin') render(); });
-  function isStandalone() { return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
 
   /* ── boot ───────────────────────────────────────────────── */
   function boot() {
@@ -352,27 +376,43 @@
       if (state.gigLink) { state.focusEvent = +state.gigLink.e; history.replaceState(null, '', location.pathname + '#event-' + state.gigLink.e); }
       if (me.role === 'admin') state.tab = 'inbox';
       return refresh();
-    }).catch(function (e) { app.innerHTML = ''; app.appendChild(h('p', { class: 'tm-loading', text: e.message })); });
+    }).catch(function (e) {
+      app.innerHTML = '';
+      app.appendChild(emptyState('refresh', e.message,
+        h('button', { class: 'btn btn-sm btn-gold', text: t('tryAgain'), onclick: function () { location.reload(); } })));
+    });
   }
   function setLangSilently(l) { state.lang = l; document.documentElement.lang = l; try { localStorage.setItem('bfmh_team_lang', l); } catch (e) {} }
   function paintBrandRole() { var el = document.getElementById('brand-role'); if (el) el.textContent = t('roleTeam'); }
 
   /* ── login ──────────────────────────────────────────────── */
+  /* A lone password box is a credential a password manager cannot finish: iOS keeps asking for
+     "the user name for this account", never saves it, and so never autofills — which is why the
+     owners were retyping this on every launch. The name is inert here (one shared password opens
+     the door); it exists so Face ID has a credential to fill. */
   function renderLogin() {
     tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
     var err = h('p', { class: 'error' });
-    var pw = h('input', { type: 'password', autocomplete: 'current-password', placeholder: t('ownerPassword') });
+    var saved = '';
+    try { saved = localStorage.getItem('bfmh_team_who') || ''; } catch (e) {}
+    var who = h('input', { type: 'text', name: 'username', autocomplete: 'username', value: saved,
+      placeholder: t('signInAsPh'), autocapitalize: 'words', autocorrect: 'off', spellcheck: 'false' });
+    var pw = h('input', { type: 'password', name: 'password', autocomplete: 'current-password', placeholder: t('ownerPassword') });
     var form = h('form', { class: 'login', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
+      try { localStorage.setItem('bfmh_team_who', who.value.trim()); } catch (x) {}
       api('/api/auth', { method: 'POST', body: { password: pw.value } }).then(function () { location.reload(); })
         .catch(function (x) { err.textContent = x.message; });
     } },
       h('h1', { text: t('loginTitle') }),
       h('p', { text: t('loginText') }),
+      h('label', { class: 'f' }, t('signInAs'), who),
       h('label', { class: 'f' }, t('ownerPassword'), pw),
       h('div', { class: 'card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('signIn') })),
       err,
+      h('p', { class: 'hint', text: t('signInAsHint') }),
+      h('p', { class: 'hint', text: t('loginFamilyHint') }),
       state.me && state.me.configured === false ? h('p', { class: 'hint', text: t('notConfigured') }) : null
     );
     app.appendChild(form);
@@ -396,6 +436,12 @@
           h('p', { class: 'card-meta', text: fmtDate(ev.event_date) }), metaLine(ev)),
         dateBox(ev)),
       ev.details ? h('p', { class: 'card-text', text: ev.details }) : null));
+
+    var pickCal = calButton(ev);
+    if (pickCal) {
+      app.appendChild(h('div', { class: 'card cal-card' }, h('div', { class: 'card-actions' }, pickCal),
+        h('p', { class: 'hint', text: t('addToCalHint') })));
+    }
 
     if (!gig.answering) { app.appendChild(h('p', { class: 'hint', text: t('pickClosed') })); return; }
 
@@ -504,6 +550,57 @@
     else if (c.known) row.appendChild(h('em', { text: t('everyoneAnswered') }));
     return row;
   }
+  var NAMES_SHOWN = 8;
+  function goingNames(ev) {
+    var yes = (ev.availability || []).filter(function (a) { return a.status === 'yes'; })
+      .map(function (a) { return a.dancer_name; }).sort(function (a, b) { return a.localeCompare(b); });
+    if (!yes.length) return null;
+    var shown = yes.slice(0, NAMES_SHOWN).join(', ');
+    if (yes.length > NAMES_SHOWN) shown += '  ·  ' + t('andMore', { n: yes.length - NAMES_SHOWN });
+    return h('div', { class: 'goingnames' }, h('b', { text: t('goingAre') }), h('span', { text: shown }));
+  }
+
+  function calHref(ev) {
+    if (!ev.event_date) return null;
+    if (state.me && state.me.role !== 'anon') return '/api/calendar?event=' + ev.id;
+    if (state.gigLink && +state.gigLink.e === +ev.id) {
+      return '/api/calendar?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s);
+    }
+    return null;
+  }
+  function calButton(ev) {
+    var href = calHref(ev);
+    return href ? h('a', { class: 'btn btn-sm cal-btn', href: href }, icon('calendar', 2.2), t('addToCal')) : null;
+  }
+  // Only Apple honors webcal:; Google and Outlook need the feed URL handed to their own "add by URL" page.
+  function feedName() {
+    return state.me.role === 'admin' ? 'Mi Herencia · All gigs' : 'Mi Herencia · ' + state.me.family.name;
+  }
+  function subscribeSheet() {
+    var url = state.me.calendar_feed;
+    var pop = popSheet(t('subscribePick'), t('subscribeHint'));
+    var list = h('div', { class: 'acts' });
+    [
+      [t('calApple'), url.replace(/^https?:/, 'webcal:')],
+      [t('calGoogle'), 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(url)],
+      [t('calOutlook'), 'https://outlook.live.com/calendar/0/addfromweb?url=' + encodeURIComponent(url) + '&name=' + encodeURIComponent(feedName())],
+    ].forEach(function (row) {
+      list.appendChild(h('a', { class: 'act', href: row[1], target: '_blank', rel: 'noopener', onclick: function () { pop.close(); } },
+        h('span', { class: 'act-ico' }, icon('calendar', 2)), h('span', { text: row[0] })));
+    });
+    list.appendChild(h('button', { type: 'button', class: 'act', onclick: function () { pop.close(); copyText(url); } },
+      h('span', { class: 'act-ico' }, icon('share', 2)), h('span', { text: t('calCopy') })));
+    pop.body.appendChild(list);
+    pop.body.appendChild(h('p', { class: 'hint', text: t('calGoogleNote') }));
+    pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
+  }
+  function subscribeLine(label) {
+    if (!state.me || !state.me.calendar_feed) return null;
+    return h('p', { class: 'hint sub-cal' },
+      h('button', { type: 'button', class: 'linkish', text: '📅 ' + t(label || 'subscribe'), onclick: subscribeSheet }),
+      h('span', { text: ' ' + t('subscribeHint') }));
+  }
+
   /* ── headcount ring ───────────────────────────────────── */
   var SVG_NS = 'http://www.w3.org/2000/svg';
   function ring(pct, color) {
@@ -632,6 +729,9 @@
     if (me.scope !== 'pick') {
       app.appendChild(section(t('myFamily')));
       app.appendChild(familyEditor(me));
+    } else {
+      var sub = subscribeLine();
+      if (sub) app.appendChild(sub);
     }
     focusIfNeeded();
   }
@@ -677,6 +777,8 @@
 
     var whoBlock = whosIn(ev);
     if (whoBlock) card.appendChild(whoBlock);
+    var cal = calButton(ev);
+    if (cal) card.appendChild(h('div', { class: 'card-actions' }, cal));
     return card;
   }
 
@@ -718,11 +820,8 @@
     } }, nameIn, h('button', { class: 'btn btn-sm btn-gold', type: 'submit', text: t('add') }));
     card.appendChild(h('span', { class: 'tm-label', text: t('dancers') }));
     card.appendChild(h('div', { style: 'margin-top:0.5rem' }, chips, h('div', { style: 'margin-top:0.5rem' }, add)));
-    if (me.calendar_feed) {
-      card.appendChild(h('p', { class: 'hint sub-cal' },
-        h('a', { href: me.calendar_feed.replace(/^https?:/, 'webcal:'), text: '📅 ' + t('subscribe') }),
-        h('span', { text: ' ' + t('subscribeHint') })));
-    }
+    var sub = subscribeLine();
+    if (sub) card.appendChild(sub);
     return card;
   }
 
@@ -760,33 +859,11 @@
     }
 
     app.innerHTML = '';
-    var banner = installBanner(); if (banner) app.appendChild(banner);
     if (state.tab === 'inbox') renderInbox(inquiries);
     else if (state.tab === 'gigs') renderGigs();
     else if (state.tab === 'chona') renderChona();
     else renderTeam();
     focusIfNeeded();
-  }
-
-  /* iOS fires no beforeinstallprompt, so iPhone gets the Add-to-Home-Screen recipe instead. */
-  function installBanner() {
-    if (isStandalone()) return null;
-    try { if (localStorage.getItem('bfmh_team_install') === 'no') return null; } catch (e) {}
-    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-    var canPrompt = Boolean(state.installPrompt);
-    if (!ios && !canPrompt) return null;
-    if (!('ontouchstart' in window)) return null;
-    var box = h('div', { class: 'install' },
-      h('img', { src: '/team/icons/icon-192.png', alt: '', width: 48, height: 48 }),
-      h('div', { class: 'install-text' }, h('b', { text: t('installTitle') }), h('span', { text: ios ? t('installIos') : t('installAndroid') })),
-      h('div', { class: 'install-btns' },
-        canPrompt ? h('button', { class: 'btn btn-sm btn-gold', text: t('installBtn'), onclick: function () {
-          var p = state.installPrompt; state.installPrompt = null; p.prompt(); p.userChoice.then(function () { render(); });
-        } }) : null,
-        h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('later'), onclick: function () {
-          try { localStorage.setItem('bfmh_team_install', 'no'); } catch (e) {} box.remove();
-        } }, icon('close', 2.2))));
-    return box;
   }
 
   function renderInbox(inquiries) {
@@ -816,6 +893,8 @@
       app.appendChild(gigList(live));
     }
     if (past.length) { app.appendChild(section(t('past'), past.length)); app.appendChild(gigList(past)); }
+    var sub = subscribeLine('subscribeOwner');
+    if (sub) app.appendChild(sub);
   }
 
   function gigList(events) {
@@ -830,7 +909,7 @@
           h('p', { class: 'card-meta', text: [fmtTime(ev), fmtWhere(ev)].filter(Boolean).join('  ·  ') || fmtDate(ev.event_date) }),
           askedLine(ev)),
         headcount(ev, c),
-        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c)));
+        h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c), goingNames(ev)));
       list.appendChild(row);
     });
     return list;
@@ -850,7 +929,6 @@
     var actions = h('div', { class: 'card-actions' });
     if (ev.status === 'inquiry') {
       actions.appendChild(h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^🙋\s*/, '')));
-      actions.appendChild(h('button', { class: 'btn', text: t('postToTeam'), onclick: function () { openEventModal(ev, 'publish'); } }));
       actions.appendChild(h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(evTitle(ev), inquiryActions(ev)); } }, icon('more', 2)));
     } else {
       actions.appendChild(h('button', { class: 'btn', text: t('reopen'), onclick: function () { doAction(ev, 'reopen'); } }));
@@ -949,6 +1027,8 @@
         h('span', { class: 'act-ico' }, it.icon ? icon(it.icon, 2) : null), h('span', { text: it.label })));
     });
     pop.body.appendChild(list);
+    // Without this, the last action reads as a list clipped by the browser toolbar.
+    pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
     return pop;
   }
 
@@ -1117,6 +1197,8 @@
     if (ev.dancers_needed) facts.appendChild(h('div', { class: 'fact' }, icon('people', 2), h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
     if (ev.pay) facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
     if (facts.childNodes.length) body.appendChild(facts);
+    var detailCal = calButton(ev);
+    if (detailCal) body.appendChild(h('div', { class: 'card-actions' }, detailCal));
 
     var roster = rosterFor(ev);
     if (roster.length) {
@@ -1316,12 +1398,12 @@
       h('div', { class: 'chona-intro' },
         h('h2', { class: 'chona-name', text: 'La Chona' }),
         h('div', { class: 'chona-states' },
-          h('span', { class: 'chona-state ' + (posting ? 'on' : 'off') },
-            h('i', { class: 'dot' }), t(posting ? 'groupmeOn' : 'groupmeOff')),
-          h('span', { class: 'chona-state ' + (listening ? 'on' : 'off') },
-            h('i', { class: 'dot' }), t(listening ? 'chonaOn' : 'chonaOff'))),
+          h('span', { class: 'chona-state ' + (posting && listening ? 'on' : posting || listening ? 'half' : 'off') },
+            h('i', { class: 'dot' }),
+            t(posting && listening ? 'chonaLive' : posting ? 'chonaPostOnly' : listening ? 'chonaListenOnly' : 'chonaDown'))),
         h('p', { class: 'guide-who', text: t('guideWho') }))));
 
+    if (!posting) app.appendChild(h('p', { class: 'tm-sub', text: t('groupmeOff') }));
     if (!listening) app.appendChild(h('p', { class: 'tm-sub', text: t('botSubOff') }));
 
     var steps = h('ol', { class: 'guide-steps' },
