@@ -141,7 +141,7 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `DATABASE_URL` | yes | Postgres connection string. Easiest: `vercel integration add neon` (sets it automatically). |
-| `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. |
+| `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. Owners stay signed in until they sign out; changing this password signs every owner device out (and nothing else — gig and calendar links keep working). |
 | `SESSION_SECRET` | yes | Random string used to sign owner sessions, gig links and calendar feeds. It falls back to `ADMIN_PASSWORD`, but then changing the password invalidates every gig and calendar link already sitting in the GroupMe chat ("That link is not valid"). Set it once and leave it. |
 | `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
 | `GROUPME_BOT_ID` | **yes, in practice** | Create a bot at https://dev.groupme.com/bots for the team group. Every message the app sends goes out as La Chona; without it the buttons report "La Chona is not connected" and nothing reaches the chat. |

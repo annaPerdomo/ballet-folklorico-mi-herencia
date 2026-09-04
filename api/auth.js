@@ -4,15 +4,15 @@ import { one } from './_lib/db.js';
 
 const ANSWERABLE = ['open', 'confirmed'];
 // Browsers cap cookie lifetime near 400 days, so this is as close to "until you sign out" as a
-// cookie gets; the token behind it never expires on its own.
-const MEMBER_MAX_AGE = 60 * 60 * 24 * 400;
+// cookie gets; the tokens behind it never expire on their own.
+const SESSION_MAX_AGE = 60 * 60 * 24 * 400;
 
 export default route({
   async POST(req, res) {
     const body = await readJson(req);
     if (body.password !== undefined) {
       if (!checkAdminPassword(body.password)) return bad(res, 'Wrong password', 401);
-      return ok(res, { role: 'admin' }, { 'Set-Cookie': [cookie(ADMIN_COOKIE, makeAdminToken(), { maxAge: 60 * 60 * 24 * 30 }), clearCookie(FAMILY_COOKIE)] });
+      return ok(res, { role: 'admin' }, { 'Set-Cookie': [cookie(ADMIN_COOKIE, makeAdminToken(), { maxAge: SESSION_MAX_AGE }), clearCookie(FAMILY_COOKIE)] });
     }
     // The signature proves they came off the GroupMe post — the same "whoever is in the chat"
     // trust the bot already reads answers under. What it grants is answer-only: see requireManage.
@@ -28,7 +28,7 @@ export default route({
       if (!fam) return bad(res, 'Family not found', 404);
       const token = memberToken(fam.id, fam.access_token);
       return ok(res, { role: 'member', family: { id: fam.id, name: fam.name } },
-        { 'Set-Cookie': [cookie(FAMILY_COOKIE, token, { maxAge: MEMBER_MAX_AGE }), clearCookie(ADMIN_COOKIE)] });
+        { 'Set-Cookie': [cookie(FAMILY_COOKIE, token, { maxAge: SESSION_MAX_AGE }), clearCookie(ADMIN_COOKIE)] });
     }
     if (body.key) {
       const fam = await one('SELECT id, name FROM families WHERE access_token = $1', [String(body.key)]);

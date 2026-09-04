@@ -4,7 +4,6 @@ import { parseCookies, httpError } from './http.js';
 
 export const ADMIN_COOKIE = 'bfmh_admin';
 export const FAMILY_COOKIE = 'bfmh_family';
-const ADMIN_TTL = 60 * 60 * 24 * 30; // 30 days
 
 function secret() {
   const s = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;
@@ -26,19 +25,23 @@ export function checkAdminPassword(password) {
   return Boolean(expected) && Boolean(password) && safeEqual(password, expected);
 }
 
+// No expiry: the owners stay signed in on their own phones until they sign out. Changing
+// ADMIN_PASSWORD moves this epoch and drops every owner session, which is the way to boot a lost
+// phone without rotating SESSION_SECRET and breaking the links already posted in GroupMe.
+const adminEpoch = () => sign(`admin.${process.env.ADMIN_PASSWORD || ''}`).slice(0, 8);
+
 export function makeAdminToken() {
-  const exp = Math.floor(Date.now() / 1000) + ADMIN_TTL;
-  const payload = `admin.${exp}`;
+  const payload = `admin.${adminEpoch()}`;
   return `${payload}.${sign(payload)}`;
 }
 
 export function verifyAdminToken(token) {
   if (!token) return false;
-  const parts = token.split('.');
-  if (parts.length !== 3) return false;
+  const parts = String(token).split('.');
+  if (parts.length !== 3 || parts[0] !== 'admin') return false;
   const payload = `${parts[0]}.${parts[1]}`;
   if (!safeEqual(sign(payload), parts[2])) return false;
-  return parseInt(parts[1], 10) > Math.floor(Date.now() / 1000);
+  return safeEqual(parts[1], adminEpoch());
 }
 
 export function newFamilyToken() {
