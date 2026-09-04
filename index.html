@@ -1807,12 +1807,18 @@
 
                   <div class="form-row">
                     <div class="form-group">
-                      <label for="event-date" data-i18n="contact.form.eventDate">Event Date (optional)</label>
-                      <input type="date" id="event-date" name="event_date" data-fs-field />
+                      <label for="event-date">
+                        <span data-i18n="contact.form.eventDate">Event Date</span>
+                        <span class="form-label-optional" data-fs-optional hidden data-i18n="contact.form.optional">(optional)</span>
+                      </label>
+                      <input type="date" id="event-date" name="event_date" required data-fs-field />
                     </div>
                     <div class="form-group">
-                      <label for="event-city" data-i18n="contact.form.city">City / Venue (optional)</label>
-                      <input type="text" id="event-city" name="city" autocomplete="address-level2" data-fs-field data-placeholder-i18n="contact.form.city.placeholder" placeholder="e.g. West Covina" />
+                      <label for="event-city">
+                        <span data-i18n="contact.form.city">City / Venue</span>
+                        <span class="form-label-optional" data-fs-optional hidden data-i18n="contact.form.optional">(optional)</span>
+                      </label>
+                      <input type="text" id="event-city" name="city" autocomplete="address-level2" required data-fs-field data-placeholder-i18n="contact.form.city.placeholder" placeholder="e.g. West Covina" />
                     </div>
                   </div>
 

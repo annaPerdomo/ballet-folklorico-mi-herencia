@@ -1808,12 +1808,18 @@
 
                   <div class="form-row">
                     <div class="form-group">
-                      <label for="event-date" data-i18n="contact.form.eventDate">活動日期（選填）</label>
-                      <input type="date" id="event-date" name="event_date" data-fs-field />
+                      <label for="event-date">
+                        <span data-i18n="contact.form.eventDate">活動日期</span>
+                        <span class="form-label-optional" data-fs-optional hidden data-i18n="contact.form.optional">（選填）</span>
+                      </label>
+                      <input type="date" id="event-date" name="event_date" required data-fs-field />
                     </div>
                     <div class="form-group">
-                      <label for="event-city" data-i18n="contact.form.city">城市 / 場地（選填）</label>
-                      <input type="text" id="event-city" name="city" autocomplete="address-level2" data-fs-field data-placeholder-i18n="contact.form.city.placeholder" placeholder="例如：West Covina" />
+                      <label for="event-city">
+                        <span data-i18n="contact.form.city">城市 / 場地</span>
+                        <span class="form-label-optional" data-fs-optional hidden data-i18n="contact.form.optional">（選填）</span>
+                      </label>
+                      <input type="text" id="event-city" name="city" autocomplete="address-level2" required data-fs-field data-placeholder-i18n="contact.form.city.placeholder" placeholder="例如：West Covina" />
                     </div>
                   </div>
 

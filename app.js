@@ -953,6 +953,30 @@
         });
       }
 
+      /* ── Date + city: required only once the visitor names a bookable event ── */
+      var syncRequiredFields = (function () {
+        var subject   = document.getElementById('event-type');
+        var dateInput = document.getElementById('event-date');
+        var cityInput = document.getElementById('event-city');
+        if (!subject || !dateInput || !cityInput) return function () {};
+
+        var optionalTags = form.querySelectorAll('[data-fs-optional]');
+
+        /* The schema keeps date_text for "we don't know yet", so demanding a date from a visitor
+           who hasn't named a bookable event just drops the lead instead of capturing it. */
+        var NO_DATE_NEEDED = ['', 'classes', 'other'];
+
+        function sync() {
+          var optional = NO_DATE_NEEDED.indexOf(subject.value) !== -1;
+          dateInput.required = !optional;
+          cityInput.required = !optional;
+          optionalTags.forEach(function (tag) { tag.hidden = !optional; });
+        }
+        subject.addEventListener('change', sync);
+        sync();
+        return sync;
+      })();
+
       /* ── Live email validation (errors on blur, not just submit) ── */
       var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       function showEmailError() {
@@ -994,6 +1018,7 @@
           try { successBox.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
         }
         form.reset();
+        syncRequiredFields();
       }
 
       form.addEventListener('submit', function (e) {

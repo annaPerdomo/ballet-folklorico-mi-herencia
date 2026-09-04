@@ -2291,6 +2291,13 @@
       transform: translateY(-1px);
     }
 
+    .form-label-optional {
+      font-weight: 400;
+      font-style: italic;
+      color: #9a8e7e;
+      margin-inline-start: 0.3rem;
+    }
+
     .form-notice {
       font-family: var(--font-ui);
       font-size: 0.78rem;
