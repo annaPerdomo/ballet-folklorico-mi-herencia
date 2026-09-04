@@ -1,5 +1,5 @@
 import { route, readJson, ok, query, int, str, httpError } from './_lib/http.js';
-import { requireUser } from './_lib/auth.js';
+import { requireManage } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 
 async function ownedDancer(me, id) {
@@ -11,7 +11,7 @@ async function ownedDancer(me, id) {
 
 export default route({
   async POST(req, res) {
-    const me = await requireUser(req);
+    const me = await requireManage(req);
     const b = await readJson(req);
     const familyId = me.role === 'admin' ? int(b.family_id) : me.family.id;
     const name = str(b.name, 80);
@@ -20,7 +20,7 @@ export default route({
     ok(res, { id: row.id });
   },
   async PATCH(req, res) {
-    const me = await requireUser(req);
+    const me = await requireManage(req);
     const b = await readJson(req);
     const id = int(query(req).id || b.id);
     await ownedDancer(me, id);
@@ -29,7 +29,7 @@ export default route({
     ok(res);
   },
   async DELETE(req, res) {
-    const me = await requireUser(req);
+    const me = await requireManage(req);
     const id = int(query(req).id);
     await ownedDancer(me, id);
     await sql('DELETE FROM dancers WHERE id = $1', [id]);

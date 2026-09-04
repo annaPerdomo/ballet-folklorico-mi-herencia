@@ -27,7 +27,9 @@ export default route({
     if (me.role === 'anon') throw httpError(401, 'Sign in required');
     const q = query(req);
     const events = await listEvents({ admin: me.role === 'admin', includePast: q.all === '1' });
-    ok(res, { events });
+    // Families see how many dancers are still out, but never who they are.
+    const [{ n }] = await sql('SELECT count(*)::int AS n FROM dancers WHERE active');
+    ok(res, { events, roster: n });
   },
   async POST(req, res) {
     await requireAdmin(req);

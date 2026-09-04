@@ -5,6 +5,7 @@ import { parseCookies, httpError } from './http.js';
 export const ADMIN_COOKIE = 'bfmh_admin';
 export const FAMILY_COOKIE = 'bfmh_family';
 const ADMIN_TTL = 60 * 60 * 24 * 30; // 30 days
+const MEMBER_TTL = 60 * 60 * 24 * 30;
 
 function secret() {
   const s = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;
@@ -45,15 +46,70 @@ export function newFamilyToken() {
   return crypto.randomBytes(18).toString('base64url');
 }
 
+// Calendar links are posted in GroupMe, so they carry no cookie and must not be guessable by
+// walking event ids. Signed, not secret: anyone with the link sees that one gig's details.
+export function calendarSig(eventId) {
+  return sign(`cal.${eventId}`).slice(0, 16);
+}
+
+export function verifyCalendarSig(eventId, sig) {
+  return Boolean(sig) && safeEqual(calendarSig(eventId), sig);
+}
+
+// Given instead of the family's access_token so a picker session is not itself a forwardable
+// login. The epoch pins it to the current invite token, so "New link" logs the old phone out.
+const epochOf = (accessToken) => String(accessToken || '').slice(0, 8) || 'none';
+
+export function memberToken(familyId, accessToken, scope = 'pick') {
+  const exp = Math.floor(Date.now() / 1000) + MEMBER_TTL;
+  const payload = `${scope}.${familyId}.${exp}.${epochOf(accessToken)}`;
+  return `${payload}.${sign(payload)}`;
+}
+
+export function verifyMemberToken(token) {
+  const p = String(token || '').split('.');
+  if (p.length !== 5) return null;
+  const [scope, id, exp, epoch, sig] = p;
+  if (scope !== 'pick' && scope !== 'fam') return null;
+  if (!safeEqual(sign(`${scope}.${id}.${exp}.${epoch}`), sig)) return null;
+  if (!(parseInt(exp, 10) > Math.floor(Date.now() / 1000))) return null;
+  const familyId = parseInt(id, 10);
+  return familyId ? { familyId, scope, epoch } : null;
+}
+
+// A subscription URL is fetched cookie-less and lives on in Google's servers and in access logs,
+// so its key only ever opens the feed. Rotates with the family's invite link.
+export function feedSig(familyId, accessToken) {
+  return sign(`feed.${familyId}.${epochOf(accessToken)}`).slice(0, 20);
+}
+
+export function verifyFeedSig(familyId, accessToken, sig) {
+  return Boolean(sig) && safeEqual(feedSig(familyId, accessToken), sig);
+}
+
+async function asMember(family, scope) {
+  if (!family) return null;
+  const dancers = await sql('SELECT id, name FROM dancers WHERE family_id = $1 AND active ORDER BY name', [family.id]);
+  return { role: 'member', scope, family: { id: family.id, name: family.name }, dancers };
+}
+
 export async function whoami(req) {
   const c = parseCookies(req);
-  if (verifyAdminToken(c[ADMIN_COOKIE])) return { role: 'admin' };
-  if (c[FAMILY_COOKIE]) {
-    const family = await one('SELECT id, name, email, phone FROM families WHERE access_token = $1', [c[FAMILY_COOKIE]]);
-    if (family) {
-      const dancers = await sql('SELECT id, name FROM dancers WHERE family_id = $1 AND active ORDER BY name', [family.id]);
-      return { role: 'member', family, dancers };
+  if (verifyAdminToken(c[ADMIN_COOKIE])) return { role: 'admin', scope: 'admin' };
+  const raw = c[FAMILY_COOKIE];
+  if (raw) {
+    const claim = verifyMemberToken(raw);
+    if (claim) {
+      const family = await one('SELECT id, name, access_token FROM families WHERE id = $1', [claim.familyId]);
+      if (family && epochOf(family.access_token) === claim.epoch) {
+        const me = await asMember(family, claim.scope);
+        if (me) return me;
+      }
+      return { role: 'anon' };
     }
+    const family = await one('SELECT id, name FROM families WHERE access_token = $1', [raw]);
+    const me = await asMember(family, 'fam');
+    if (me) return me;
   }
   return { role: 'anon' };
 }
@@ -67,5 +123,13 @@ export async function requireAdmin(req) {
 export async function requireUser(req) {
   const me = await whoami(req);
   if (me.role === 'anon') throw httpError(401, 'Sign in required');
+  return me;
+}
+
+// A picker session comes off a link anyone in the GroupMe chat can hold: it may answer for a
+// family, never reshape one. Editing dancers needs the family's own invite link, or the owners.
+export async function requireManage(req) {
+  const me = await requireUser(req);
+  if (me.scope === 'pick') throw httpError(403, 'Open your family’s own link to change this');
   return me;
 }
