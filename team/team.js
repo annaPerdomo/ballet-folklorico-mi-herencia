@@ -1369,8 +1369,10 @@
      change it here too. Her posts stay English; only the tap lines are bilingual. */
   var BOT_POSTS = [
     ['askGroup', [
-      '📢 New gig! Who’s dancing? Quinceañera — Ramirez',
+      '📢 New gig request received! Who can join us for:',
+      'Quinceañera — Ramirez',
       'Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina',
+      '',
       'Reply "Sofia yes for Nov 4" or "we can\'t".',
       'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
       '📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1',
