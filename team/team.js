@@ -97,6 +97,13 @@
       newFamily: 'New family', addFamily: 'Add family', familyAdded: 'Family added', noFamilies: 'No families yet.',
       removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link',
       newLinkAsk: 'Create a new link for {name}? The old one will stop working.', removeFamily: 'Remove family', removeFamilyAsk: 'Remove the {name} family and their dancers?',
+      editFamily: 'Edit family', familyNameLabel: 'Family name', familySaved: 'Family updated', needFamilyName: 'Give the family a name.',
+      needDancerName: 'Give every dancer a name, or remove the empty row.',
+      dancerRowName: 'Dancer name', pauseDancer: 'Pause', resumeDancer: 'Un-pause', pausedTag: 'paused',
+      pauseHint: 'A paused dancer stays in the family but stops showing up on gigs. Removing deletes their answers too.',
+      addAnotherDancer: '+ Add dancer', undoRemove: 'Undo',
+      groupmeLabel: 'GroupMe account', groupmeNone: '— not linked —', groupmeOther: 'Linked (id {id})',
+      groupmeHint: 'La Chona reads this family’s chat replies as theirs. Pick the name they post under, or leave it unlinked.',
       roleTeam: 'Team', stateNone: 'Not answered', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going',
       waiting: 'no response received', plusWaiting: '+{n} with no response', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
@@ -201,6 +208,13 @@
       newFamily: 'Nueva familia', addFamily: 'Agregar familia', familyAdded: 'Familia agregada', noFamilies: 'Todavía no hay familias.',
       removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace',
       newLinkAsk: '¿Crear un nuevo enlace para {name}? El anterior dejará de funcionar.', removeFamily: 'Quitar familia', removeFamilyAsk: '¿Quitar a la familia {name} y a sus bailarines?',
+      editFamily: 'Editar familia', familyNameLabel: 'Apellido de la familia', familySaved: 'Familia actualizada', needFamilyName: 'Ponle nombre a la familia.',
+      needDancerName: 'Ponle nombre a cada bailarín, o quita la fila vacía.',
+      dancerRowName: 'Nombre del bailarín', pauseDancer: 'Pausar', resumeDancer: 'Reactivar', pausedTag: 'en pausa',
+      pauseHint: 'Un bailarín en pausa sigue en la familia, pero ya no aparece en los eventos. Quitarlo borra también sus respuestas.',
+      addAnotherDancer: '+ Agregar bailarín', undoRemove: 'Deshacer',
+      groupmeLabel: 'Cuenta de GroupMe', groupmeNone: '— sin vincular —', groupmeOther: 'Vinculada (id {id})',
+      groupmeHint: 'La Chona toma como de esta familia lo que escriba esa cuenta en el chat. Elige el nombre con el que escriben, o déjalo sin vincular.',
       roleTeam: 'Equipo', stateNone: 'Sin responder', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va',
       waiting: 'sin respuesta', plusWaiting: '+{n} sin respuesta', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
@@ -1291,10 +1305,11 @@
     var grid = h('div', { class: 'famgrid' });
     state.families.forEach(function (f) {
       var card = h('div', { class: 'card family-card' + (f.groupme_user_id ? '' : ' quiet') });
-      card.appendChild(h('div', { class: 'fam-top' }, h('h3', { class: 'card-title sm', text: f.name }),
+      card.appendChild(h('div', { class: 'fam-top' },
+        h('h3', { class: 'card-title sm' }, h('button', { class: 'fam-name', 'aria-label': t('editFamily') + ' — ' + f.name, onclick: function () { openFamilyModal(f); } }, f.name, icon('edit', 2))),
         f.groupme_user_id ? h('span', { class: 'chip yes' }, icon('yes', 3), t('botLinkedChip')) : h('span', { class: 'chip none', text: t('notLinked') })));
       card.appendChild(h('div', { class: 'chips' }, f.dancers.map(function (d) {
-        return h('span', { class: 'chip' + (d.active ? '' : ' is-off') }, d.name, h('button', { text: '✕', title: t('remove') + ' ' + d.name, onclick: function () {
+        return h('span', { class: 'chip' + (d.active ? '' : ' is-off'), title: d.active ? false : t('pausedTag') }, d.name, h('button', { text: '✕', title: t('remove') + ' ' + d.name, onclick: function () {
           confirmSheet(t('removeAsk', { name: d.name }), t('remove'), true).then(function (yes) { if (yes) api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(refresh); });
         } }));
       })));
@@ -1310,6 +1325,7 @@
         navigator.share ? h('button', { class: 'btn btn-sm', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }) : null,
         h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () {
           actionSheet(f.name, [
+            { label: t('editFamily'), icon: 'edit', onclick: function () { openFamilyModal(f); } },
             { label: t('newLink'), icon: 'refresh', onclick: function () {
               confirmSheet(t('newLinkAsk', { name: f.name }), t('newLink')).then(function (yes) {
                 if (!yes) return;
@@ -1324,6 +1340,111 @@
       grid.appendChild(card);
     });
     app.appendChild(grid);
+  }
+
+  function openFamilyModal(f) {
+    var nameIn = h('input', { value: f.name, required: true, 'aria-label': t('familyNameLabel') });
+    var gmSel = h('select', { 'aria-label': t('groupmeLabel') });
+    function senderName(id) {
+      var m = (state.botLog || []).filter(function (x) { return x.user_id === id; })[0];
+      return m && m.sender_name;
+    }
+    function fillSenders() {
+      // The log arrives after the sheet opens, so keep whatever the owner has already picked.
+      var picked = gmSel.options.length ? gmSel.value : (f.groupme_user_id || '');
+      var claimed = {};
+      state.families.forEach(function (o) { if (o.id !== f.id && o.groupme_user_id) claimed[o.groupme_user_id] = true; });
+      var seen = {}; var opts = [h('option', { value: '', text: t('groupmeNone') })];
+      // Listed even when claimed elsewhere or silent since the log window: dropping it would unlink them on save.
+      if (f.groupme_user_id) {
+        seen[f.groupme_user_id] = true;
+        opts.push(h('option', { value: f.groupme_user_id, text: senderName(f.groupme_user_id) || t('groupmeOther', { id: f.groupme_user_id }) }));
+      }
+      (state.botLog || []).forEach(function (m) {
+        if (!m.user_id || seen[m.user_id] || claimed[m.user_id]) return;
+        seen[m.user_id] = true;
+        opts.push(h('option', { value: m.user_id, text: m.sender_name || m.user_id }));
+      });
+      gmSel.innerHTML = ''; opts.forEach(function (o) { gmSel.appendChild(o); });
+      gmSel.value = picked;
+      if (gmSel.selectedIndex < 0) gmSel.value = '';
+    }
+    fillSenders();
+    if (state.botLog === null) loadBotLog().then(fillSenders);
+
+    var rows = f.dancers.map(function (d) { return { id: d.id, was: d.name, wasActive: d.active, active: d.active, removed: false }; });
+    var list = h('div', { class: 'full famrows' });
+    function renderRows() {
+      list.innerHTML = '';
+      list.appendChild(h('span', { class: 'tm-label', text: t('dancers') }));
+      rows.forEach(function (r) {
+        if (!r.input) r.input = h('input', { value: r.was, placeholder: t('dancerRowName'), 'aria-label': t('dancerRowName') });
+        r.input.disabled = r.removed;
+        list.appendChild(h('div', { class: 'famrow' + (r.removed ? ' is-gone' : r.active ? '' : ' is-off') },
+          r.input,
+          r.removed
+            ? h('button', { type: 'button', class: 'btn btn-sm', text: t('undoRemove'), onclick: function () { r.removed = false; renderRows(); } })
+            : h('button', { type: 'button', class: 'btn btn-sm', text: r.active ? t('pauseDancer') : t('resumeDancer'),
+                onclick: function () { r.active = !r.active; renderRows(); } }),
+          r.removed ? null : h('button', { type: 'button', class: 'btn btn-sm btn-danger btn-icon',
+            'aria-label': t('remove') + ' ' + (r.input.value.trim() || t('dancerRowName')),
+            onclick: function () { r.removed = true; renderRows(); } }, icon('trash', 2))));
+      });
+      list.appendChild(h('button', { type: 'button', class: 'btn btn-sm', text: t('addAnotherDancer'),
+        onclick: function () { rows.push({ id: null, was: '', active: true, removed: false }); renderRows(); list.querySelectorAll('.famrow input')[rows.length - 1].focus(); } }));
+      list.appendChild(h('p', { class: 'hint', text: t('pauseHint') }));
+    }
+    renderRows();
+
+    var err = h('p', { class: 'error full' });
+    var form = h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault(); err.textContent = '';
+      var name = nameIn.value.trim();
+      if (!name) { err.textContent = t('needFamilyName'); return; }
+      // str() in the API turns '' into null, so refuse instead of dropping the edit and reporting success.
+      if (rows.some(function (r) { return !r.removed && r.id && !r.input.value.trim(); })) {
+        err.textContent = t('needDancerName'); return;
+      }
+      // Each request folds its result back into the rows, so a Save retried after one failed repeats nothing.
+      var jobs = [];
+      if (name !== f.name || (gmSel.value || '') !== (f.groupme_user_id || '')) {
+        var gm = gmSel.value || null;
+        jobs.push(api('/api/families?id=' + f.id, { method: 'PATCH', body: { name: name, groupme_user_id: gm } })
+          .then(function () { f.name = name; f.groupme_user_id = gm; }));
+      }
+      rows.forEach(function (r) {
+        var dn = r.input.value.trim();
+        if (r.removed) {
+          if (r.id) jobs.push(api('/api/dancers?id=' + r.id, { method: 'DELETE' }).then(function () { r.id = null; }));
+          return;
+        }
+        if (!r.id) {
+          if (dn) jobs.push(api('/api/dancers', { method: 'POST', body: { family_id: f.id, name: dn } })
+            .then(function (d) { r.id = d.id; r.was = dn; r.wasActive = true; }));
+          return;
+        }
+        var patch = {};
+        if (dn !== r.was) patch.name = dn;
+        if (r.active !== r.wasActive) patch.active = r.active;
+        if (Object.keys(patch).length) jobs.push(api('/api/dancers?id=' + r.id, { method: 'PATCH', body: patch })
+          .then(function () { r.was = dn; r.wasActive = r.active; }));
+      });
+      Promise.all(jobs.map(function (p) { return p.then(function () { return null; }, function (x) { return x; }); }))
+        .then(function (errs) {
+          var failed = errs.filter(Boolean)[0];
+          if (failed) { err.textContent = failed.message; return refresh(); }
+          closeModal(); toast(t('familySaved')); return refresh();
+        });
+    } },
+      field(t('familyNameLabel'), nameIn, true, true),
+      field(t('groupmeLabel'), gmSel, true),
+      h('p', { class: 'hint full', text: t('groupmeHint') }),
+      list,
+      err,
+      h('div', { class: 'full card-actions' },
+        h('button', { class: 'btn btn-gold', type: 'submit', text: t('save') }),
+        h('button', { class: 'btn', type: 'button', text: t('cancel'), onclick: closeModal })));
+    modal(t('editFamily'), form);
   }
 
   function shareInvite(f) {

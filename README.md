@@ -193,3 +193,5 @@ npm run dev                       # reads .env.local, serves http://localhost:34
 `.env.local` must contain `DATABASE_URL` and `ADMIN_PASSWORD`; the server warns at startup if either is missing, and API errors name the missing variable.
 
 **First-time setup for the owners:** sign in at `/team/` with the password → **Team** tab → add each family with their dancers → **Copy invite link** and send it to that family once (DM or text). The link is their login; **New link** revokes an old one — including any answer-only sessions and calendar feeds minted from it.
+
+**Editing a family later:** tap the family's name on the **Team** tab (or **Edit family** in its ⋯ menu). One sheet holds the family name, which GroupMe account La Chona should read as theirs, and the dancer list — rename a dancer, **Pause** one who is sitting the season out (they stay in the family but drop off every gig), remove one, or add another. Nothing is written until **Save**.

@@ -421,6 +421,15 @@ a.act { text-decoration: none; }
 /* ── families grid ──────────────────────────────────────── */
 .famgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.9rem; align-items: start; margin-bottom: 0.9rem; }
 .famgrid .card { margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.famrows { display: flex; flex-direction: column; gap: 0.45rem; }
+.famrow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.45rem; align-items: center; }
+.famrow.is-off input { opacity: 0.6; }
+.famrow.is-gone input { opacity: 0.45; text-decoration: line-through; }
+.famrows > .btn { align-self: flex-start; }
+/* `.card-title button { all: unset }` strips the layout, so the pencil needs its own spacing back. */
+.card-title .fam-name { display: inline-flex; align-items: center; gap: 0.45rem; cursor: pointer; }
+.card-title .fam-name svg { width: 15px; height: 15px; color: var(--muted); flex-shrink: 0; }
+.card-title .fam-name:hover svg { color: var(--gold-light); }
 .fam-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
 
 /* ── forms ──────────────────────────────────────────────── */
@@ -431,12 +440,12 @@ label.f { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.66rem
 .req { font-style: normal; font-size: 0.58rem; color: var(--gold); border: 1px solid rgba(201,168,76,0.5); border-radius: 999px; padding: 0.08rem 0.4rem; }
 .form-sep { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.25rem; }
 .form-sep::after { content: ''; flex: 1; height: 1px; background: var(--hair); }
-label.f input, label.f select, label.f textarea, .rehrow input, .inline-add input {
+label.f input, label.f select, label.f textarea, .rehrow input, .inline-add input, .famrow input {
   background: var(--bg-deep); border: 1px solid var(--line); color: var(--text); border-radius: 12px; padding: 0.75rem 0.85rem; min-height: var(--tap);
   font-size: 0.95rem; text-transform: none; letter-spacing: 0; font-weight: 400; width: 100%; min-width: 0; -webkit-appearance: none; appearance: none; }
 label.f select { background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
   background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 2rem; }
-label.f input:focus, label.f textarea:focus, label.f select:focus, .rehrow input:focus, .inline-add input:focus { outline: none; border-color: var(--gold); }
+label.f input:focus, label.f textarea:focus, label.f select:focus, .rehrow input:focus, .inline-add input:focus, .famrow input:focus { outline: none; border-color: var(--gold); }
 label.f textarea { min-height: 90px; resize: vertical; }
 input[type=date] { color-scheme: dark; }
 .rehrow { display: grid; grid-template-columns: 1fr 1fr 1.4fr auto; gap: 0.4rem; margin: 0.45rem 0; align-items: center; }
@@ -495,7 +504,7 @@ details[open] > .summary::before { transform: rotate(45deg); }
 @media (max-width: 700px) {
   body { font-size: 15px; }
   /* iOS zooms into any field under 16px — keep every input at 16 so the sheet stays put. */
-  input, select, textarea, label.f input, label.f select, label.f textarea, .rehrow input, .inline-add input { font-size: 16px; }
+  input, select, textarea, label.f input, label.f select, label.f textarea, .rehrow input, .inline-add input, .famrow input { font-size: 16px; }
   .tm-header { padding: calc(0.55rem + var(--safe-t)) 0.7rem 0.55rem; gap: 0.5rem; }
   .tm-logo { width: 32px; height: 32px; }
   .tm-wm-1, .tm-wm-2, .tm-brand-div, .tm-brand-role, .tm-who-label, .hdr-newgig { display: none; }
