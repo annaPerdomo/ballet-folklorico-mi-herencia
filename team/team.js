@@ -47,7 +47,7 @@
       archived: 'Declined / cancelled', posted: 'Posted to the team',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
-      askGroup: '🙋 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
+      askGroup: '📢 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
       askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
@@ -151,7 +151,7 @@
       archived: 'Rechazados / cancelados', posted: 'Publicados al equipo',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
-      askGroup: '🙋 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
+      askGroup: '📢 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
       askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
@@ -374,6 +374,7 @@
       }).catch(function () { toast(t('badLink'), true); });
     }
     if (params.get('e') && params.get('s')) state.gigLink = { e: params.get('e'), s: params.get('s') };
+    state.openCal = params.get('cal') === '1'; // the bot's "Add to my calendar" link opens the chooser
     var m = location.hash.match(/^#event-(\d+)/);
     if (m) state.focusEvent = +m[1];
     chain.then(loadMe).then(function (me) {
@@ -446,6 +447,7 @@
     if (pickCal) {
       app.appendChild(h('div', { class: 'card cal-card' }, h('div', { class: 'card-actions' }, pickCal),
         h('p', { class: 'hint', text: t('addToCalHint') })));
+      if (state.openCal) { state.openCal = false; addEventSheet(ev, calHref(ev)); }
     }
 
     if (!gig.answering) { app.appendChild(h('p', { class: 'hint', text: t('pickClosed') })); return; }
@@ -954,7 +956,7 @@
     var actions = h('div', { class: 'card-actions' });
     if (ev.status === 'inquiry') {
       actions.appendChild(ev.event_date
-        ? h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^🙋\s*/, ''))
+        ? h('button', { class: 'btn btn-gold btn-main', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }, icon('chat', 2), t('askGroup').replace(/^📢\s*/, ''))
         : h('button', { class: 'btn btn-gold btn-main', onclick: function () { doAction(ev, 'publish'); } }, icon('chat', 2), t('postToTeam')));
       actions.appendChild(h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(evTitle(ev), inquiryActions(ev)); } }, icon('more', 2)));
     } else {
@@ -1166,15 +1168,15 @@
     var out = { primary: null, more: [] };
     if (s === 'inquiry') {
       out.primary = ev.event_date
-        ? { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }
+        ? { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } }
         : postToTeam(ev);
       out.more = inquiryActions(ev);
     } else if (s === 'open') {
-      if (!ev.asked_at) out.primary = { label: t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      if (!ev.asked_at) out.primary = { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
       else if (c.pending) out.primary = { label: t('remindWaiting', { n: c.pending }), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
       else out.primary = { label: t('confirmGig'), icon: 'yes', cls: 'btn-teal', onclick: confirmIt };
       out.more = [
-        { label: ev.asked_at ? t('askAgain') : t('askGroup').replace(/^🙋\s*/, ''), icon: 'chat', onclick: function () { askGroup(ev); } },
+        { label: ev.asked_at ? t('askAgain') : t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function () { askGroup(ev); } },
         { label: t('postTally'), icon: 'people', onclick: function () { doAction(ev, 'tally'); } },
         { label: t('postAnnouncement'), icon: 'mail', onclick: function () { doAction(ev, 'announce'); } },
         remind, edit,
@@ -1367,11 +1369,11 @@
      change it here too. Her posts stay English; only the tap lines are bilingual. */
   var BOT_POSTS = [
     ['askGroup', [
-      '🙋 Who can dance: Quinceañera — Ramirez',
+      '📢 New gig — are you in? Quinceañera — Ramirez',
       'Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina',
       'Reply "Sofia yes for Nov 4" or "we can\'t".',
       'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
-      '📅 Save the date / Guardar la fecha: https://bfmh.dance/api/calendar?e=42&s=…',
+      '📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1',
     ]],
     ['postAnnouncement', [
       '📣 New gig: are you available?',
@@ -1381,8 +1383,8 @@
       'Where: Grand Ballroom, 1200 E Garvey Ave, West Covina',
       'Dancers needed: 6',
       '',
-      '📅 Save the date / Guardar la fecha:',
-      'https://bfmh.dance/api/calendar?e=42&s=…',
+      '📅 Add to my calendar / Agregar a mi calendario:',
+      'https://bfmh.dance/team/?e=42&s=…&cal=1',
       '',
       'Mark your availability: https://bfmh.dance/team/?e=42&s=…',
     ]],
@@ -1403,8 +1405,8 @@
       'Call time: 6:15 PM',
       'Where: Grand Ballroom, 1200 E Garvey Ave, West Covina',
       '',
-      '📅 Save to your calendar / Guardar en tu calendario:',
-      'https://bfmh.dance/api/calendar?e=42&s=…',
+      '📅 Add to my calendar / Agregar a mi calendario:',
+      'https://bfmh.dance/team/?e=42&s=…&cal=1',
       '',
       'Dancers: Sofia Garcia, Ashley Orozco',
       '',
@@ -1439,7 +1441,7 @@
 
     var says = h('div', { class: 'guide-posts' }, BOT_POSTS.map(function (pp) {
       return h('div', { class: 'gpost' },
-        h('span', { class: 'gpost-cap' }, icon('chat', 2), t(pp[0]).replace(/^🙋\s*/, '')),
+        h('span', { class: 'gpost-cap' }, icon('chat', 2), t(pp[0]).replace(/^📢\s*/, '')),
         h('div', { class: 'gpost-bubble', text: pp[1].join('\n') }));
     }));
 
@@ -1542,8 +1544,13 @@
   function focusIfNeeded() {
     if (!state.focusEvent) return;
     var el = document.getElementById('event-' + state.focusEvent);
-    state.focusEvent = null;
+    var id = state.focusEvent; state.focusEvent = null;
     if (el) { el.classList.add('is-flash'); setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); }
+    if (state.openCal) {
+      state.openCal = false;
+      var ev = state.events.filter(function (e) { return +e.id === +id; })[0];
+      if (ev && calHref(ev)) addEventSheet(ev, calHref(ev));
+    }
   }
 
   if ('serviceWorker' in navigator) {

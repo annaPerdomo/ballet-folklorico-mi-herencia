@@ -3,7 +3,7 @@ import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink } from '../_lib/notify.js';
+import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -20,7 +20,7 @@ function teamLink(id) { return `${siteUrl()}/team/?e=${id}&s=${calendarSig(id)}`
 async function notifyPublish(ev) {
   const cal = calLink(ev);
   const text = `📣 New gig: are you available?\n${eventSummary(ev)}` +
-    (cal ? `\n\n📅 Save the date / Guardar la fecha:\n${cal}` : '') +
+    (cal ? `\n\n${CAL_LABEL}:\n${cal}` : '') +
     `\n\nMark your availability: ${teamLink(ev.id)}`;
   return { groupme: await postGroupMe(text) };
 }
@@ -34,7 +34,7 @@ async function notifyConfirm(ev) {
   // The calendar link sits high in the message: postGroupMe truncates at 990 chars and a long
   // roster must not be what pushes the link off the end.
   const text = `✅ CONFIRMED: ${eventSummary(ev)}` +
-    (cal ? `\n\n📅 Save to your calendar / Guardar en tu calendario:\n${cal}` : '') +
+    (cal ? `\n\n${CAL_LABEL}:\n${cal}` : '') +
     (names.length ? `\n\nDancers: ${names.join(', ')}` : '') +
     (reh ? `\n\nRehearsals:\n${reh}` : '') +
     `\n\nDetails: ${teamLink(ev.id)}`;

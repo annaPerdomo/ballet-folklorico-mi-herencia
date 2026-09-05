@@ -99,7 +99,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 
 | Button | Action | What lands in GroupMe |
 | --- | --- | --- |
-| Ask GroupMe who's available | `ask` | `🙋 Who can dance: <gig>` + date · time · place, a sample reply, the signed gig link, and a 📅 calendar link |
+| Ask GroupMe who's available | `ask` | `📢 New gig — are you in? <gig>` + date · time · place, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
 | Post the announcement | `announce` | `📣 New gig: are you available?` + the full summary, calendar link, and "Mark your availability" link |
 | Post tally to GroupMe | `tally` | `📊 <gig> — <date>` then ✓ / ? / ✗ names and "Waiting on: …" |
 | Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
@@ -110,11 +110,11 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 Sample ask, exactly as it arrives:
 
 ```
-🙋 Who can dance: Quinceañera — Ramirez
+📢 New gig — are you in? Quinceañera — Ramirez
 Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina
 Reply "Sofia yes for Nov 4" or "we can't".
 Or tap / O toca: https://bfmh.dance/team/?e=42&s=…
-📅 Save the date / Guardar la fecha: https://bfmh.dance/api/calendar?e=42&s=…
+📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1
 ```
 
 The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners can see what the group will get before they tap.

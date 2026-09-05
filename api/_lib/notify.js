@@ -25,11 +25,13 @@ export function fmtDate(d) {
   return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-// Downloads one .ics straight to the phone's calendar app, so saving a gig never needs the site.
+// Opens the gig in the team app with the "which calendar?" sheet up (Apple / Google / Outlook),
+// signed so it works without signing in.
 export function calLink(ev) {
   if (!ev || !ev.id || !ev.event_date) return null;
-  return `${siteUrl()}/api/calendar?e=${ev.id}&s=${calendarSig(ev.id)}`;
+  return `${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}&cal=1`;
 }
+export const CAL_LABEL = '📅 Add to my calendar / Agregar a mi calendario';
 
 export function eventSummary(ev) {
   const lines = [
@@ -55,11 +57,11 @@ export function askText(ev, { again = false } = {}) {
   const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
   const cal = calLink(ev);
   return [
-    `${again ? '🙋 Still need answers' : '🙋 Who can dance'}: ${ev.title || ev.event_type || 'Performance'}`,
+    `${again ? '📢 Still need answers' : '📢 New gig — are you in?'} ${ev.title || ev.event_type || 'Performance'}`,
     [when, time, where].filter(Boolean).join(' · '),
     `Reply "Sofia yes for ${d}" or "we can't".`,
     `Or tap / O toca: ${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}`,
-    cal ? `📅 Save the date / Guardar la fecha: ${cal}` : null,
+    cal ? `${CAL_LABEL}: ${cal}` : null,
   ].filter(Boolean).join('\n');
 }
 
