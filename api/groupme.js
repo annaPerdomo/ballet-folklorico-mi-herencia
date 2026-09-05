@@ -9,7 +9,7 @@ export default route({
     await requireAdmin(req);
     const limit = Math.min(int(query(req).limit) || 40, 200);
     const messages = await sql(
-      `SELECT g.id, g.message_id, g.sender_name, g.text, g.event_id, e.title AS event_title, e.event_date, g.applied, g.result, g.created_at
+      `SELECT g.id, g.message_id, g.user_id, g.sender_name, g.text, g.event_id, e.title AS event_title, e.event_date, g.applied, g.result, g.created_at
          FROM groupme_messages g LEFT JOIN events e ON e.id = g.event_id
         ORDER BY g.id DESC LIMIT $1`, [limit]);
     ok(res, { messages });
