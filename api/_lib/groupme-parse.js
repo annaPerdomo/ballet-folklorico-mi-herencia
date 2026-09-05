@@ -19,8 +19,9 @@ const NO = [
 ];
 const YES = [
   /\byes\b/, /\byep\b/, /\byeah\b/, /\byup\b/, /^sure\b/, /\bable\b/, /\bavailable\b/, /\bcoming\b/,
-  /\bcan(?: (?:go|come|make|do|attend|be there|dance|perform|join|both|all|definitely|also|still|totally|work))?\s*$/,
-  /\bcan (?:go|come|make|do|attend|be there|dance|perform|join|both|all|definitely|also|still|totally)\b/,
+  // "we can definitely go" is a yes; "we can definitely name it anything else" is not — an adverb alone only counts at the end.
+  /\bcan(?: (?:definitely|also|still|totally|both|all))?(?: (?:go|come|make|do|attend|be there|dance|perform|join|work))?\s*$/,
+  /\bcan(?: (?:definitely|also|still|totally|both|all))? (?:go|come|make|do|attend|be there|dance|perform|join)\b/,
   /\bcould (?:make|do|go|come|attend|be there|perform|dance|join)\b/, /\bmake it\b/, /\bwill be there\b/, /\bbe there\b/,
   /\bcount (?:me|us|her|him|them)\b/, /\b(?:i'?m|we'?re|she'?s|he'?s|they'?re|is|are) in\b/,
   /\bsi\b/, /\bclaro\b/, /\bpuede[ns]?\b/, /\bpodemos\b/, /\bpodra[n]?\b/, /\bpodre\b/, /\bvamos\b/, /\bvoy\b/, /\bva[n]?\b/,

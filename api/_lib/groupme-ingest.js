@@ -11,17 +11,21 @@ export async function ingestMessage({ text, senderName, senderUserId, sentAt }) 
   ]);
   const r = parseMessage({ text, senderName, senderUserId }, { dancers, families, events });
 
-  let applied = false; const skipped = [];
+  let applied = false; const skipped = []; const changed = [];
   if (r.updates.length) {
     const note = `via GroupMe (${str(senderName, 60) || 'unknown'}): ${text.slice(0, 160)}`;
     for (const u of r.updates) {
       // Re-reading an old message must not overwrite a newer answer.
       const row = await sql(
-        `INSERT INTO availability (event_id, dancer_id, status, note) VALUES ($1,$2,$3,$4)
+        `WITH old AS (SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2)
+         INSERT INTO availability (event_id, dancer_id, status, note) VALUES ($1,$2,$3,$4)
          ON CONFLICT (event_id, dancer_id) DO UPDATE SET status = EXCLUDED.status, note = EXCLUDED.note, updated_at = now()
-         WHERE $5::timestamptz IS NULL OR availability.updated_at <= $5::timestamptz RETURNING dancer_id`,
+         WHERE $5::timestamptz IS NULL OR availability.updated_at <= $5::timestamptz
+         RETURNING dancer_id, (SELECT status FROM old) AS was`,
         [u.event.id, u.dancer.id, u.status, note, sentAt || null]);
-      if (row.length) applied = true; else skipped.push(u);
+      if (!row.length) { skipped.push(u); continue; }
+      applied = true;
+      if (row[0].was !== u.status) changed.push(u);
     }
     // Surname / first-name matches are guesses; linking on them would bind strangers to a family.
     if (applied && senderUserId && r.sender && r.sender.family && !r.sender.family.groupme_user_id && ['dancer-name', 'family-name'].includes(r.sender.how)) {
@@ -36,5 +40,5 @@ export async function ingestMessage({ text, senderName, senderUserId, sentAt }) 
     skipped: skipped.map((u) => ({ dancer_name: u.dancer.name, event_date: u.event.event_date })),
     ambiguous: r.ambiguous,
   };
-  return { parsed: r, applied, result, eventId: eventIds.length === 1 ? eventIds[0] : null };
+  return { parsed: r, applied, changed, result, eventId: eventIds.length === 1 ? eventIds[0] : null };
 }

@@ -143,5 +143,9 @@ test('chit-chat and announcements are ignored', () => {
     ['Absolutely! Anyone can feel free to reach me anytime at (562) 555-1234!', 'Anna Mendez Perdomo (Adult)', '19478548'],
     ['Hi team, it’s been busy with potential performance inquiries and we recently received another new inquiry from Paramount Pictures for a small internal event on Tuesday October 13 at 3p in LA.  Please let me know ASAP if you can attend', 'Babe', '65375326'],
     ['Hi Everyone, looking forward to seeing everyone at practice tomorrow. Have a great night.', 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023'],
+    ['I named the bot La Chona but we can definitely name it anything else!', 'Anna Mendez Perdomo (Adult)', '19478548'],
+    ['Hi everyone! The messages above are me testing an automated event management tool that I’m building. Please disregard!', 'Anna Mendez Perdomo (Adult)', '19478548'],
   ]) assert.deepEqual(st(P(t, n, u)), {}, t);
+  assert.deepEqual(st(P('I can', 'Anna Mendez Perdomo (Adult)', '19478548')), { 'Anna:11-04': 'yes' });
+  assert.deepEqual(st(P('We can definitely go', 'Folk-Claudia Marin (DT & Lia)', '64889724')), { 'Lia:11-04': 'yes', 'Donatien:11-04': 'yes', 'Isaias:11-04': 'yes' });
 });

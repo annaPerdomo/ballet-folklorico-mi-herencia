@@ -12,17 +12,17 @@ import { postGroupMe, fmtDate, siteUrl } from '../_lib/notify.js';
 const MARK = { yes: '✓', maybe: '?', no: '✗' };
 const short = (d) => fmtDate(d).replace(/, \d{4}$/, '');
 
-function ackText(r) {
+// Short on purpose: it lands in a busy parent chat. Only answers that changed something are echoed.
+function ackText(updates) {
   const byEvent = new Map();
-  for (const u of r.updates) {
+  for (const u of updates) {
     const k = u.event.id;
     if (!byEvent.has(k)) byEvent.set(k, { event: u.event, parts: [] });
     byEvent.get(k).parts.push(`${u.dancer.name.split(' ')[0]} ${MARK[u.status]}`);
   }
   const lines = [...byEvent.values()].sort((a, b) => String(a.event.event_date).localeCompare(String(b.event.event_date)))
     .map(({ event, parts }) => `${event.event_date ? short(event.event_date) : event.title}: ${[...new Set(parts)].join(' · ')}`);
-  const head = r.eventGuessed ? '🤖 Noted (assumed the latest gig — say the date if you meant another):' : '🤖 Noted:';
-  return `${head}\n${lines.join('\n')}\nAnotado. Cambiar / change: ${siteUrl()}/team/`;
+  return `🤖 Noted / Anotado:\n${lines.join('\n')}\nChange / cambiar: ${siteUrl()}/team/`;
 }
 
 // Formspree's body is { form, submission: { _id, ...fields } } on some plans and flat on others.
@@ -53,16 +53,16 @@ async function groupme(req, res) {
     [messageId, str(m.group_id, 40), str(m.user_id, 40), str(m.name, 120), text]);
   if (!claimed.length) return ok(res, { ignored: 'duplicate' });
 
-  let r, applied = false, result, eventId = null;
+  let applied = false, changed = [], result, eventId = null;
   try {
-    ({ parsed: r, applied, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null }));
+    ({ applied, changed, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null }));
   } catch (err) {
     console.error('groupme ingest', err);
     result = { reason: 'error', error: String(err.message || err) };
   }
   await sql('UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4 WHERE id = $1', [claimed[0].id, applied, JSON.stringify(result), eventId]);
 
-  if (applied && process.env.GROUPME_BOT_ACK !== '0') await postGroupMe(ackText(r));
+  if (changed.length && process.env.GROUPME_BOT_ACK !== '0') await postGroupMe(ackText(changed));
   ok(res, { applied, ...result });
 }
 
