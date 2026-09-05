@@ -85,33 +85,78 @@ function block(lines) {
   return lines.filter(Boolean).map(fold).join('\r\n');
 }
 
-export function eventVevent(ev, { uidSuffix = '' } = {}) {
-  if (!ev.event_date) return null;
-  const where = [ev.venue, ev.address, ev.city].filter(Boolean).join(', ');
-  const desc = [
+export const eventWhere = (ev) => [ev.venue, ev.address, ev.city].filter(Boolean).join(', ');
+
+export const eventUrl = (ev) => `${siteUrl()}/team/#event-${ev.id}`;
+
+export function eventDescription(ev) {
+  return [
     ev.call_time ? `Call time: ${ev.call_time}` : null,
     ev.dancers_needed ? `Dancers needed: ${ev.dancers_needed}` : null,
     ev.pay ? `Pay: ${ev.pay}` : null,
     ev.details || null,
-    `${siteUrl()}/team/#event-${ev.id}`,
+    eventUrl(ev),
   ].filter(Boolean).join('\n');
+}
 
-  // The call time is when dancers must actually arrive, so it opens the calendar entry.
+// The call time is when dancers must actually arrive, so it opens the calendar entry.
+// All-day ends are exclusive (next day), as RFC 5545 and Google's dates= both expect.
+export function eventSpan(ev) {
+  if (!ev.event_date) return null;
   const startText = ev.call_time || ev.start_time;
-  const timed = Boolean(parseTime(startText));
-  let dtstart, dtend;
-  if (timed) {
-    dtstart = `DTSTART:${utcStamp(ev.event_date, startText)}`;
-    const endT = parseTime(ev.end_time);
-    if (endT) {
-      dtend = `DTEND:${utcStamp(ev.event_date, ev.end_time)}`;
-    } else {
-      dtend = `DTEND:${utcStampPlus(ev.event_date, startText, DEFAULT_HOURS)}`;
-    }
-  } else {
-    dtstart = `DTSTART;VALUE=DATE:${dateStamp(ev.event_date)}`;
-    dtend = `DTEND;VALUE=DATE:${dateStamp(ev.event_date, 1)}`;
+  if (parseTime(startText)) {
+    const end = parseTime(ev.end_time) ? utcStamp(ev.event_date, ev.end_time) : utcStampPlus(ev.event_date, startText, DEFAULT_HOURS);
+    return { timed: true, start: utcStamp(ev.event_date, startText), end };
   }
+  return { timed: false, start: dateStamp(ev.event_date), end: dateStamp(ev.event_date, 1) };
+}
+
+// On a phone a downloaded .ics only ever opens Apple Calendar, so Google/Outlook get their "new event"
+// page instead. Rehearsals are deliberately left out here; they come with the subscribed feed.
+export function googleEventUrl(ev) {
+  const span = eventSpan(ev);
+  if (!span) return null;
+  const p = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: ev.title || 'Performance',
+    dates: `${span.start}/${span.end}`,
+    ctz: 'America/Los_Angeles',
+  });
+  const where = eventWhere(ev);
+  if (where) p.set('location', where);
+  const desc = eventDescription(ev);
+  if (desc) p.set('details', desc);
+  return `https://calendar.google.com/calendar/render?${p}`;
+}
+
+const isoOf = (stamp) => stamp.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, '$1-$2-$3T$4:$5:$6Z')
+  .replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
+
+export function outlookEventUrl(ev) {
+  const span = eventSpan(ev);
+  if (!span) return null;
+  const p = new URLSearchParams({
+    path: '/calendar/action/compose',
+    rru: 'addevent',
+    subject: ev.title || 'Performance',
+    startdt: isoOf(span.start),
+    enddt: isoOf(span.end),
+  });
+  if (!span.timed) p.set('allday', 'true');
+  const where = eventWhere(ev);
+  if (where) p.set('location', where);
+  const desc = eventDescription(ev);
+  if (desc) p.set('body', desc);
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${p}`;
+}
+
+export function eventVevent(ev, { uidSuffix = '' } = {}) {
+  const span = eventSpan(ev);
+  if (!span) return null;
+  const where = eventWhere(ev);
+  const desc = eventDescription(ev);
+  const dtstart = span.timed ? `DTSTART:${span.start}` : `DTSTART;VALUE=DATE:${span.start}`;
+  const dtend = span.timed ? `DTEND:${span.end}` : `DTEND;VALUE=DATE:${span.end}`;
 
   const seq = ev.updated_at ? Math.floor(new Date(ev.updated_at).getTime() / 60000) % 2147483647 : 0;
   return block([
@@ -125,7 +170,7 @@ export function eventVevent(ev, { uidSuffix = '' } = {}) {
     where ? `LOCATION:${esc(where)}` : null,
     desc ? `DESCRIPTION:${esc(desc)}` : null,
     `STATUS:${ev.status === 'confirmed' ? 'CONFIRMED' : ev.status === 'cancelled' ? 'CANCELLED' : 'TENTATIVE'}`,
-    `URL:${siteUrl()}/team/#event-${ev.id}`,
+    `URL:${eventUrl(ev)}`,
     'BEGIN:VALARM',
     'ACTION:DISPLAY',
     'TRIGGER:-P1D',

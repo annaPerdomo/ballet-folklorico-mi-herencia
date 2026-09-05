@@ -1,7 +1,7 @@
 import { route, query, int, str, httpError } from './_lib/http.js';
 import { whoami, verifyCalendarSig, verifyFeedSig, verifyAdminFeedSig } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
-import { buildCalendar } from './_lib/ics.js';
+import { buildCalendar, googleEventUrl, outlookEventUrl } from './_lib/ics.js';
 import { MEMBER_VISIBLE } from './_lib/events.js';
 
 const COLS = `id, title, status, event_type, event_date, start_time, end_time, call_time,
@@ -37,6 +37,17 @@ function icsName(ev) {
   return `${slug || 'gig'}.ics`;
 }
 
+function sendEvent(res, ev, to) {
+  const url = to === 'google' ? googleEventUrl(ev) : to === 'outlook' ? outlookEventUrl(ev) : null;
+  if (url) {
+    res.statusCode = 302;
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Location', url);
+    return res.end();
+  }
+  return sendIcs(res, buildCalendar([ev], { name: ev.title || 'Performance' }), icsName(ev));
+}
+
 function sendIcs(res, body, filename) {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
@@ -54,7 +65,7 @@ export default route({
       const ev = await one(`SELECT ${cols(false)} FROM events WHERE id = $1`, [signedId]);
       if (!ev || !MEMBER_VISIBLE.includes(ev.status)) throw httpError(404, 'Not found');
       if (!ev.event_date) throw httpError(400, 'This gig has no date yet');
-      return sendIcs(res, buildCalendar([ev], { name: ev.title || 'Performance' }), icsName(ev));
+      return sendEvent(res, ev, str(q.to, 10));
     }
     if (q.e) throw httpError(403, 'That calendar link is not valid');
 
@@ -67,7 +78,7 @@ export default route({
       if (!ev) throw httpError(404, 'Not found');
       if (!admin && !MEMBER_VISIBLE.includes(ev.status)) throw httpError(404, 'Not found');
       if (!ev.event_date) throw httpError(400, 'This gig has no date yet');
-      return sendIcs(res, buildCalendar([ev], { name: ev.title || 'Performance' }), icsName(ev));
+      return sendEvent(res, ev, str(q.to, 10));
     }
 
     const events = admin
