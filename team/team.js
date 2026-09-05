@@ -31,8 +31,10 @@
       subscribeWhat: 'Every gig posted to the team lands in your calendar until you turn it down — the ones your family answers no to drop off on their own. It keeps updating as dates and details change.',
       subscribeWhatOwner: 'Every gig on the board. It keeps updating on its own.',
       addToCalHint: 'Saves the call time, the address, and a reminder the day before.',
+      addEventHint: 'Saves the call time and the address.',
       subscribePick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Copy the link instead',
+      calRehearsalNote: 'Rehearsals come along only with Apple Calendar. Subscribe above to get them everywhere.',
       calGoogleNote: 'Google checks for changes once a day or so, Apple and Outlook every few hours. If a date just moved, open the gig and add it again to get it right away.',
       addDancersFirst: 'Add the dancers in your family below so you can mark availability for each of them.',
       allAnswered: 'Everything else is answered. ¡Gracias!', noGigs: 'No gigs posted yet. The owners will post here when an inquiry comes in.',
@@ -133,8 +135,10 @@
       subscribeWhat: 'Cada evento publicado al equipo aparece en tu calendario hasta que lo rechazas — los que tu familia contesta que no desaparecen solos. Se actualiza cuando cambian las fechas y los detalles.',
       subscribeWhatOwner: 'Todos los eventos del tablero. Se actualiza solo.',
       addToCalHint: 'Guarda la hora de llegada, la dirección y un recordatorio el día anterior.',
+      addEventHint: 'Guarda la hora de llegada y la dirección.',
       subscribePick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace',
+      calRehearsalNote: 'Los ensayos solo se incluyen con Apple Calendar. Suscríbete arriba para tenerlos en cualquier calendario.',
       calGoogleNote: 'Google busca cambios una vez al día; Apple y Outlook cada pocas horas. Si una fecha acaba de cambiar, abre el evento y agrégalo de nuevo para tenerlo al instante.',
       addDancersFirst: 'Agrega abajo a los bailarines de tu familia para marcar la disponibilidad de cada uno.',
       allAnswered: 'Todo lo demás ya está respondido. ¡Gracias!', noGigs: 'Aún no hay eventos publicados. Los dueños publicarán aquí cuando llegue una solicitud.',
@@ -569,7 +573,27 @@
   }
   function calButton(ev) {
     var href = calHref(ev);
-    return href ? h('a', { class: 'btn btn-sm cal-btn', href: href }, icon('calendar', 2.2), t('addToCal')) : null;
+    if (!href) return null;
+    return h('button', { type: 'button', class: 'btn btn-sm cal-btn', onclick: function () { addEventSheet(ev, href); } },
+      icon('calendar', 2.2), t('addToCal'));
+  }
+  function addEventSheet(ev, href) {
+    var pop = popSheet(t('subscribePick'), t('addEventHint'));
+    var list = h('div', { class: 'acts' });
+    [
+      [t('calApple'), href, false],
+      [t('calGoogle'), href + '&to=google', true],
+      [t('calOutlook'), href + '&to=outlook', true],
+    ].forEach(function (row) {
+      var attrs = { class: 'act', href: row[1], onclick: function () { pop.close(); } };
+      if (row[2]) { attrs.target = '_blank'; attrs.rel = 'noopener'; }
+      list.appendChild(h('a', attrs, h('span', { class: 'act-ico' }, icon('calendar', 2)), h('span', { text: row[0] })));
+    });
+    pop.body.appendChild(list);
+    if ((ev.rehearsals || []).some(function (r) { return r && r.date; })) {
+      pop.body.appendChild(h('p', { class: 'hint', text: t('calRehearsalNote') }));
+    }
+    pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
   }
   // Only Apple honors webcal:; Google and Outlook need the feed URL handed to their own "add by URL" page.
   function feedName() {
