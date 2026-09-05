@@ -57,7 +57,7 @@ export function askText(ev, { again = false } = {}) {
   const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
   const cal = calLink(ev);
   return [
-    again ? '📢 Still need answers! Who can join us for this one?' : '📢 New gig request received! Who can join us for this one?',
+    again ? '📢 Friendly reminder! Still hoping to hear from a few more families — who can join us for this one?' : '📢 New gig request received! Who can join us for this one?',
     ev.title || ev.event_type || 'Performance',
     [when, time, where].filter(Boolean).join(' · '),
     '',
