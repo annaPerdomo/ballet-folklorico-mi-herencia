@@ -1163,7 +1163,6 @@
   function postToTeam(ev) { return { label: t('postToTeam'), icon: 'chat', onclick: function () { doAction(ev, 'publish'); } }; }
   function inquiryActions(ev) {
     return [
-      ev.event_date ? postToTeam(ev) : null,
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } },
