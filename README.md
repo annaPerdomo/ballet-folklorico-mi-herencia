@@ -105,7 +105,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 | Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
 | Confirm gig / Post the confirmation | `confirm` / `reconfirm` | `✅ CONFIRMED:` + summary, calendar link, the dancer list, rehearsals, and the details link |
 
-`ask` also opens the gig if it was still an inquiry and stamps `asked_at` / `ask_count`. It needs an event date — replies are matched by date. A bare "yes" or "we can't" with no date goes to the gig with the latest activity: the most recent ask or post. The card shows "Bot asked 2 h ago · 5 of 17 answered", and **Ask again** re-posts with a gentler "Friendly reminder! Still hoping to hear from a few more families" opener. `announce` and `reconfirm` re-send the publish and confirm messages without changing the gig's status.
+`ask` also opens the gig if it was still an inquiry and stamps `asked_at` / `ask_count`. It needs an event date — replies are matched by date. A bare "yes" or "we can't" with no date goes to the gig with the latest activity: the most recent ask or post. The card shows "Bot asked 2 h ago · 5 of 17 answered", and **Ask again** re-posts with a gentler "Friendly reminder! Who else can join us for this one?" opener. `announce` and `reconfirm` re-send the publish and confirm messages without changing the gig's status.
 
 Sample ask, exactly as it arrives:
 
