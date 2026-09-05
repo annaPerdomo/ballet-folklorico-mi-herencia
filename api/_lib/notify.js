@@ -57,7 +57,7 @@ export function askText(ev, { again = false } = {}) {
   const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
   const cal = calLink(ev);
   return [
-    `${again ? '📢 Still need answers' : '📢 New gig — are you in?'} ${ev.title || ev.event_type || 'Performance'}`,
+    `${again ? '📢 Still need answers' : '📢 New gig! Who’s dancing?'} ${ev.title || ev.event_type || 'Performance'}`,
     [when, time, where].filter(Boolean).join(' · '),
     `Reply "Sofia yes for ${d}" or "we can't".`,
     `Or tap / O toca: ${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}`,

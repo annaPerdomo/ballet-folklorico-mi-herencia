@@ -99,7 +99,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 
 | Button | Action | What lands in GroupMe |
 | --- | --- | --- |
-| Ask GroupMe who's available | `ask` | `📢 New gig — are you in? <gig>` + date · time · place, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
+| Ask GroupMe who's available | `ask` | `📢 New gig! Who’s dancing? <gig>` + date · time · place, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
 | Post the announcement | `announce` | `📣 New gig: are you available?` + the full summary, calendar link, and "Mark your availability" link |
 | Post tally to GroupMe | `tally` | `📊 <gig> — <date>` then ✓ / ? / ✗ names and "Waiting on: …" |
 | Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
@@ -110,7 +110,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 Sample ask, exactly as it arrives:
 
 ```
-📢 New gig — are you in? Quinceañera — Ramirez
+📢 New gig! Who’s dancing? Quinceañera — Ramirez
 Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina
 Reply "Sofia yes for Nov 4" or "we can't".
 Or tap / O toca: https://bfmh.dance/team/?e=42&s=…
