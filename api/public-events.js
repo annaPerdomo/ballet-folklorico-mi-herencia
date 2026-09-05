@@ -8,7 +8,7 @@ export default route({
         WHERE website AND event_date IS NOT NULL AND status IN ('confirmed','done','open')
         ORDER BY event_date`);
     const events = rows.map((e) => {
-      const name = e.venue || e.title || 'Performance';
+      const name = e.title || e.venue || 'Performance';
       const loc = e.city ? `${e.city}, CA` : '';
       const time = [e.start_time, e.end_time].filter(Boolean).join(' – ') || null;
       return {
