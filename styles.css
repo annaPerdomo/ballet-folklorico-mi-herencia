@@ -2199,17 +2199,23 @@
     .book-form-wrapper legend > span[data-i18n] { display: block; }
     .book-form-wrapper legend + .form-fields { clear: both; }
 
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 1.25rem;
     }
     @media (max-width: 500px) {
       .form-row { grid-template-columns: 1fr; }
     }
 
     .form-group {
-      margin-block: 1.1rem;
+      margin-block: 0;
     }
 
     .form-group label {
@@ -2274,6 +2280,34 @@
     }
 
     .form-group textarea { resize: vertical; min-height: 110px; }
+
+    /* iOS/Safari give date inputs their own intrinsic width and centre the
+       value; strip that so the field matches every other input in the row. */
+    .form-group input[type="date"] {
+      -webkit-appearance: none;
+      appearance: none;
+      min-width: 0;
+      max-width: 100%;
+      text-align: left;
+      line-height: inherit;
+    }
+    .form-group input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
+      margin: 0;
+    }
+    .form-group input[type="date"]::-webkit-datetime-edit {
+      line-height: normal;
+      padding: 0;
+    }
+    /* The picker button ships taller than the text row and stretches the field. */
+    .form-group input[type="date"]::-webkit-calendar-picker-indicator {
+      width: 1.05rem;
+      height: 1.05rem;
+      padding: 0;
+      margin: 0;
+      opacity: 0.55;
+      cursor: pointer;
+    }
     .form-group select { cursor: pointer; color: #2a2420; }
     .form-group select option { background: #fff; color: #2a2420; }
 

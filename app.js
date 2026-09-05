@@ -690,6 +690,31 @@
     })();
 
     // ─────────────────────────────────────────────────────────
+    //  BOOK CTAs → the form itself on phones
+    // ─────────────────────────────────────────────────────────
+    // Every "Book Us" button points at #contact, but under 760px the contact
+    // section stacks the info column (intro + three cards) above the form, so
+    // the anchor drops you a screen and a half short of the first field.
+    (function () {
+      var STACKED = 760;   // where .book-layout collapses to one column
+
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest ? e.target.closest('a[href$="#contact"]') : null;
+        if (!link || window.innerWidth > STACKED) return;
+
+        var form = document.querySelector('#contact .book-form-wrapper');
+        if (!form) return;
+
+        e.preventDefault();
+        var header = document.querySelector('header[role="banner"]');
+        var offset = (header ? header.offsetHeight : 60) + 12;
+        var top = form.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+        if (history.replaceState) history.replaceState(null, '', '#contact');
+      });
+    })();
+
+    // ─────────────────────────────────────────────────────────
     //  SCROLL-TRIGGERED ANIMATIONS
     // ─────────────────────────────────────────────────────────
     (function () {
