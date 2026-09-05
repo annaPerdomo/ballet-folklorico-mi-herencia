@@ -1369,7 +1369,7 @@
      change it here too. Her posts stay English; only the tap lines are bilingual. */
   var BOT_POSTS = [
     ['askGroup', [
-      '📢 New gig request received! Who can join us for:',
+      '📢 New gig request received! Who can join us for this one?',
       'Quinceañera — Ramirez',
       'Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina',
       '',
