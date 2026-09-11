@@ -1,7 +1,7 @@
 import { route, ok, query, int, str, httpError } from './_lib/http.js';
 import { verifyCalendarSig } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
-import { MEMBER_VISIBLE } from './_lib/events.js';
+import { MEMBER_VISIBLE, withCalendarLinks } from './_lib/events.js';
 
 // Readable with no cookie, off a link that travels (forwards, screenshots), so it carries only
 // enough to tell the families apart: first names, no surnames, no answers, no pay, no tokens.
@@ -26,7 +26,7 @@ export default route({
         GROUP BY f.id ORDER BY f.name`);
 
     ok(res, {
-      event,
+      event: withCalendarLinks(event),
       families: families.filter((f) => f.dancers.length),
       answering: ['open', 'confirmed'].includes(event.status),
     });

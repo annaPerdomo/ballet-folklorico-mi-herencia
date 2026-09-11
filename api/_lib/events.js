@@ -1,4 +1,5 @@
 import { sql, one } from './db.js';
+import { googleEventUrl, outlookEventUrl } from './ics.js';
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled'];
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
@@ -25,11 +26,20 @@ export async function listEvents({ admin, includePast = false }) {
        FROM events e WHERE ${where}
        ORDER BY CASE e.status WHEN 'inquiry' THEN 0 WHEN 'open' THEN 1 WHEN 'confirmed' THEN 1 ELSE 2 END,
                 e.event_date NULLS LAST, e.id DESC`, params);
-  return rows;
+  return rows.map(withCalendarLinks);
 }
 
 export async function getEvent(id, { admin }) {
-  return one(`SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON} FROM events e WHERE e.id = $1`, [id]);
+  const ev = await one(`SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON} FROM events e WHERE e.id = $1`, [id]);
+  return ev && withCalendarLinks(ev);
+}
+
+// Direct "new event" links for Google and Outlook. The phone opens these as plain cross-origin
+// links, so they work with no cookie and no redirect — the installed app and in-app browsers
+// (GroupMe, Safari's sheet) don't reliably carry the sign-in through /api/calendar.
+export function withCalendarLinks(ev) {
+  if (!ev || !ev.event_date) return ev;
+  return { ...ev, calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev) } };
 }
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',

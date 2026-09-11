@@ -596,10 +596,13 @@
   function addEventSheet(ev, href) {
     var pop = popSheet(t('subscribePick'), t('addEventHint'));
     var list = h('div', { class: 'acts' });
+    // Google/Outlook get the direct link from the API when the gig has one; the cookie-bound
+    // /api/calendar redirect is only a fallback, since the installed app doesn't always carry it.
+    var cal = ev.calendar || {};
     [
       [t('calApple'), href, false],
-      [t('calGoogle'), href + '&to=google', true],
-      [t('calOutlook'), href + '&to=outlook', true],
+      [t('calGoogle'), cal.google || href + '&to=google', true],
+      [t('calOutlook'), cal.outlook || href + '&to=outlook', true],
     ].forEach(function (row) {
       var attrs = { class: 'act', href: row[1], onclick: function () { pop.close(); } };
       if (row[2]) { attrs.target = '_blank'; attrs.rel = 'noopener'; }
