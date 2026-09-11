@@ -101,6 +101,7 @@
       guideM4: 'Post anything on her own — she only speaks when you tap a button here.',
       guideFix: 'She got it wrong? Tap the chips in the gig roster. You always have the last word.',
       showOnWebsite: 'Show on website', hideFromWebsite: 'Hide from website', websiteOn: 'Now listed on bfmh.dance', websiteOff: 'Removed from bfmh.dance',
+      websiteRowOn: 'Listed on bfmh.dance', websiteRowOff: 'Not on bfmh.dance', websiteRowHint: 'Public gigs show under Upcoming Events and in Google search results.',
       familiesTitle: 'Families & dancers', familiesSub: 'Send a family their link and they can answer every open gig request in one place. Totally optional — La Chona already does something similar.',
       familyNamePh: 'Family name (e.g. Garcia)', dancersPh: 'Dancers, comma separated (e.g. Luis, Elena)',
       newFamily: 'New family', addFamily: 'Add family', familyAdded: 'Family added', noFamilies: 'No families yet.',
@@ -214,6 +215,7 @@
       guideM4: 'Publicar por su cuenta — solo habla cuando tocas un botón aquí.',
       guideFix: '¿Se equivocó? Toca las fichas en la lista del evento. La última palabra siempre es tuya.',
       showOnWebsite: 'Mostrar en el sitio web', hideFromWebsite: 'Quitar del sitio web', websiteOn: 'Ya aparece en bfmh.dance', websiteOff: 'Quitado de bfmh.dance',
+      websiteRowOn: 'Aparece en bfmh.dance', websiteRowOff: 'No aparece en bfmh.dance', websiteRowHint: 'Los eventos públicos aparecen en Próximos Eventos y en los resultados de Google.',
       familiesTitle: 'Familias y bailarines', familiesSub: 'Envía a una familia su enlace y podrán responder a todos los eventos abiertos en un solo lugar. Es totalmente opcional — La Chona ya hace algo parecido.',
       familyNamePh: 'Apellido de la familia (p. ej. García)', dancersPh: 'Bailarines separados por comas (p. ej. Luis, Elena)',
       newFamily: 'Nueva familia', addFamily: 'Agregar familia', familyAdded: 'Familia agregada', noFamilies: 'Todavía no hay familias.',
@@ -1079,6 +1081,17 @@
         .catch(function (e) { toast(e.message, true); });
     } };
   }
+  // Mirrors the statuses api/public-events.js serves; the toggle is hidden where the site would ignore it.
+  function canShowOnWebsite(ev) { return !!ev.event_date && ['open', 'confirmed', 'done'].indexOf(ev.status) !== -1; }
+  function websiteRow(ev) {
+    if (!canShowOnWebsite(ev)) return null;
+    var act = websiteAction(ev);
+    return h('div', { class: 'site-row' + (ev.website ? ' is-on' : '') },
+      h('button', { type: 'button', class: 'site-toggle', role: 'switch', 'aria-checked': ev.website ? 'true' : 'false', onclick: act.onclick },
+        icon('globe', 2.2), h('span', { class: 'site-label', text: ev.website ? t('websiteRowOn') : t('websiteRowOff') }), h('span', { class: 'switch' })),
+      h('p', { class: 'hint', text: t('websiteRowHint') }));
+  }
+
   function doAction(ev, action, extra) {
     var body = Object.assign({ action: action }, extra || {});
     return api('/api/events/' + ev.id, { method: 'PATCH', body: body }).then(function (d) {
@@ -1266,7 +1279,7 @@
         { label: ev.asked_at ? t('askAgain') : t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function () { askGroup(ev); } },
         { label: t('postTally'), icon: 'people', onclick: function () { doAction(ev, 'tally'); } },
         { label: t('postAnnouncement'), icon: 'mail', onclick: function () { doAction(ev, 'announce'); } },
-        remind, edit,
+        remind, websiteAction(ev), edit,
         { label: t('confirmGig'), icon: 'yes', onclick: confirmIt },
         { label: t('cancelGig'), icon: 'no', cls: 'danger', onclick: cancelIt },
       ];
@@ -1282,8 +1295,8 @@
         { label: t('cancelGig'), icon: 'no', cls: 'danger', onclick: cancelIt },
       ];
     } else if (s === 'done') {
-      out.primary = websiteAction(ev);
-      out.more = [edit, { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
+      out.primary = edit;
+      out.more = [websiteAction(ev), { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } },
         { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
     } else {
       // 'ask' is rejected server-side for a declined/cancelled gig, so reopening is the only way forward.
@@ -1316,6 +1329,7 @@
     if (facts.childNodes.length) body.appendChild(facts);
     var detailCal = calButton(ev);
     if (detailCal) body.appendChild(h('div', { class: 'card-actions' }, detailCal));
+    var siteRow = websiteRow(ev); if (siteRow) body.appendChild(siteRow);
 
     var roster = rosterFor(ev);
     if (roster.length) {
