@@ -7,7 +7,14 @@
   var tabsEl = document.getElementById('tabs');
   var headerRight = document.getElementById('header-right');
   var fabRoot = document.getElementById('fab-root');
-  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0 };
+  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0,
+    inbox: loadInboxPrefs() };
+  function loadInboxPrefs() {
+    var d = { sort: 'newest', range: 'all', from: '', to: '', pick: false };
+    try { var v = JSON.parse(localStorage.getItem('bfmh_team_inbox') || '{}'); if (v.sort === 'eventDate') d.sort = v.sort; if (['upcoming', 'tbd', 'past'].indexOf(v.range) >= 0) d.range = v.range; } catch (e) {}
+    return d;
+  }
+  function saveInboxPrefs() { try { localStorage.setItem('bfmh_team_inbox', JSON.stringify({ sort: state.inbox.sort, range: state.inbox.range })); } catch (e) {} }
 
   /* ── i18n ───────────────────────────────────────────────── */
   var STR = {
@@ -44,6 +51,8 @@
       tabInbox: 'Inbox', tabGigs: 'Gigs', tabTeam: 'Team', tabChona: 'La Chona',
       groupmeOn: 'La Chona is connected', groupmeOff: 'La Chona is not connected — set GROUPME_BOT_ID',
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
+      sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
+      filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
       archived: 'Declined / cancelled', posted: 'Posted to the team',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
@@ -155,6 +164,8 @@
       tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabTeam: 'Equipo', tabChona: 'La Chona',
       groupmeOn: 'La Chona está conectada', groupmeOff: 'La Chona no está conectada — falta GROUPME_BOT_ID',
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
+      sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
+      filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
       archived: 'Rechazados / cancelados', posted: 'Publicados al equipo',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
@@ -910,18 +921,78 @@
   }
 
   function renderInbox(inquiries) {
-    app.appendChild(section(t('newInquiries'), inquiries.length));
+    var shown = filterInquiries(inquiries);
+    if (state.focusEvent && !shown.some(function (e) { return e.id === state.focusEvent; }) && inquiries.some(function (e) { return e.id === state.focusEvent; })) {
+      state.inbox.range = 'all'; state.inbox.pick = false; state.inbox.from = ''; state.inbox.to = '';
+      shown = filterInquiries(inquiries);
+    }
+    var filtered = shown.length !== inquiries.length;
+    app.appendChild(section(t('newInquiries'), filtered ? t('ofTotal', { n: shown.length, total: inquiries.length }) : inquiries.length));
     app.appendChild(h('p', { class: 'tm-sub', text: t('inboxSub') }));
+    if (inquiries.length) app.appendChild(inboxFilters());
     if (!inquiries.length) {
       app.appendChild(emptyState('mail', t('inboxEmptyText'),
         h('button', { class: 'btn btn-sm btn-gold', text: t('inboxEmptyBtn'), onclick: function () { openEventModal(null); } })));
+    } else if (!shown.length) {
+      app.appendChild(emptyState('mail', t('noMatch'),
+        h('button', { class: 'btn btn-sm', text: t('clearFilters'), onclick: function () { setInbox({ range: 'all', from: '', to: '', pick: false }); } })));
     }
-    inquiries.forEach(function (ev) { app.appendChild(adminCard(ev)); });
+    shown.forEach(function (ev) { app.appendChild(adminCard(ev)); });
     var archived = state.events.filter(function (e) { return e.status === 'declined' || e.status === 'cancelled'; });
     if (archived.length) {
       app.appendChild(section(t('archived'), archived.length));
       archived.forEach(function (ev) { app.appendChild(adminCard(ev)); });
     }
+  }
+
+  function setInbox(patch) { Object.keys(patch).forEach(function (k) { state.inbox[k] = patch[k]; }); saveInboxPrefs(); render(); }
+
+  function filterInquiries(list) {
+    var f = state.inbox, today = new Date(new Date().setHours(0, 0, 0, 0));
+    var from = f.pick && f.from ? parseDate(f.from) : null, to = f.pick && f.to ? parseDate(f.to) : null;
+    var out = list.filter(function (ev) {
+      var d = parseDate(ev.event_date);
+      if (f.range === 'tbd') return !d;
+      if (f.range === 'upcoming' && !(d && d >= today)) return false;
+      if (f.range === 'past' && !(d && d < today)) return false;
+      if ((from || to) && !d) return false;
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      return true;
+    });
+    var newest = function (a, b) { return String(b.created_at || '').localeCompare(String(a.created_at || '')) || b.id - a.id; };
+    out.sort(f.sort === 'eventDate'
+      ? function (a, b) { var da = parseDate(a.event_date), db = parseDate(b.event_date); if (!da && !db) return newest(a, b); if (!da) return 1; if (!db) return -1; return da - db || newest(a, b); }
+      : newest);
+    return out;
+  }
+
+  function inboxFilters() {
+    var f = state.inbox;
+    function chip(label, on, fn, cls) { return h('button', { type: 'button', class: 'fchip' + (on ? ' is-on' : '') + (cls ? ' ' + cls : ''), 'aria-pressed': on ? 'true' : 'false', text: label, onclick: fn }); }
+    var sort = h('div', { class: 'frow' }, h('span', { class: 'flabel', text: t('sortBy') }),
+      chip(t('sortNewest'), f.sort === 'newest', function () { setInbox({ sort: 'newest' }); }),
+      chip(t('sortEventDate'), f.sort === 'eventDate', function () { setInbox({ sort: 'eventDate' }); }));
+    var show = h('div', { class: 'frow' }, h('span', { class: 'flabel', text: t('showLabel') }));
+    [['all', 'filterAll'], ['upcoming', 'filterUpcoming'], ['tbd', 'filterTbd'], ['past', 'filterPast']].forEach(function (r) {
+      show.appendChild(chip(t(r[1]), f.range === r[0] && !f.pick, function () { setInbox({ range: r[0], pick: false }); }));
+    });
+    show.appendChild(chip(t('filterDates'), f.pick, function () { setInbox({ pick: !f.pick, range: f.pick ? f.range : 'all' }); }, 'fchip-dates'));
+    var bar = h('div', { class: 'filterbar' }, sort, show);
+    if (f.pick) {
+      var dateIn = function (key, label) {
+        var inp = h('input', { type: 'date', value: f[key], 'aria-label': label });
+        // Chrome fires change per typed segment (year "0002"); only apply once the year is real.
+        var apply = function () { if (inp.value === f[key]) return; var p = {}; p[key] = inp.value; setInbox(p); };
+        var valid = function () { return !inp.value || /^[12]\d{3}-/.test(inp.value); };
+        inp.addEventListener('change', function () { if (valid()) apply(); });
+        inp.addEventListener('blur', function () { setTimeout(function () { if (valid()) apply(); }, 0); });
+        return h('label', { class: 'fdate' }, h('span', { text: label }), inp);
+      };
+      bar.appendChild(h('div', { class: 'frow fdates' }, dateIn('from', t('filterFrom')), dateIn('to', t('filterTo')),
+        (f.from || f.to) ? h('button', { type: 'button', class: 'btn btn-sm', text: t('clearFilters'), onclick: function () { setInbox({ from: '', to: '' }); } }) : null));
+    }
+    return bar;
   }
 
   function renderGigs() {
