@@ -38,6 +38,8 @@
       subscribeWhat: 'Every gig posted to the team lands in your calendar until you turn it down — the ones your family answers no to drop off on their own. It keeps updating as dates and details change.',
       subscribeWhatOwner: 'Every gig on the board. It keeps updating on its own.',
       addToCalHint: 'Saves the call time, the address, and a reminder the day before.',
+      removeFromCal: 'Remove from my calendar', removeFromCalHint: 'This gig was cancelled — take it off your calendar.',
+      removeEventHint: 'Apple opens a cancellation for the gig and its rehearsals — tap Delete. Google and Outlook open that day so you can delete it there. If you subscribed to the feed, it drops off on its own.',
       addEventHint: 'Saves the call time and the address.',
       subscribePick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Copy the link instead',
@@ -152,6 +154,8 @@
       subscribeWhat: 'Cada evento publicado al equipo aparece en tu calendario hasta que lo rechazas — los que tu familia contesta que no desaparecen solos. Se actualiza cuando cambian las fechas y los detalles.',
       subscribeWhatOwner: 'Todos los eventos del tablero. Se actualiza solo.',
       addToCalHint: 'Guarda la hora de llegada, la dirección y un recordatorio el día anterior.',
+      removeFromCal: 'Quitar de mi calendario', removeFromCalHint: 'Este evento se canceló — quítalo de tu calendario.',
+      removeEventHint: 'Apple abre la cancelación del evento y sus ensayos — toca Eliminar. Google y Outlook abren ese día para que lo borres ahí. Si te suscribiste al calendario, desaparece solo.',
       addEventHint: 'Guarda la hora de llegada y la dirección.',
       subscribePick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
       calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace',
@@ -473,8 +477,8 @@
     var pickCal = calButton(ev);
     if (pickCal) {
       app.appendChild(h('div', { class: 'card cal-card' }, h('div', { class: 'card-actions' }, pickCal),
-        h('p', { class: 'hint', text: t('addToCalHint') })));
-      if (state.openCal) { state.openCal = false; addEventSheet(ev, calHref(ev)); }
+        h('p', { class: 'hint', text: t(ev.status === 'cancelled' ? 'removeFromCalHint' : 'addToCalHint') })));
+      if (state.openCal) { state.openCal = false; calSheet(ev, calHref(ev)); }
     }
 
     if (!gig.answering) { app.appendChild(h('p', { class: 'hint', text: t('pickClosed') })); return; }
@@ -603,8 +607,26 @@
   function calButton(ev) {
     var href = calHref(ev);
     if (!href) return null;
-    return h('button', { type: 'button', class: 'btn btn-sm cal-btn', onclick: function () { addEventSheet(ev, href); } },
-      icon('calendar', 2.2), t('addToCal'));
+    var gone = ev.status === 'cancelled';
+    return h('button', { type: 'button', class: 'btn btn-sm cal-btn', onclick: function () { calSheet(ev, href); } },
+      icon('calendar', 2.2), t(gone ? 'removeFromCal' : 'addToCal'));
+  }
+  function calSheet(ev, href) { return ev.status === 'cancelled' ? removeEventSheet(ev, href) : addEventSheet(ev, href); }
+  function removeEventSheet(ev, href) {
+    var pop = popSheet(t('removeFromCal'), t('removeEventHint'));
+    var list = h('div', { class: 'acts' });
+    var cal = ev.calendar || {};
+    [
+      [t('calApple'), href + '&remove=1', false],
+      [t('calGoogle'), cal.google_day || href + '&remove=1&to=google', true],
+      [t('calOutlook'), cal.outlook_day || href + '&remove=1&to=outlook', true],
+    ].forEach(function (row) {
+      var attrs = { class: 'act', href: row[1], onclick: function () { pop.close(); } };
+      if (row[2]) { attrs.target = '_blank'; attrs.rel = 'noopener'; }
+      list.appendChild(h('a', attrs, h('span', { class: 'act-ico' }, icon('calendar', 2)), h('span', { text: row[0] })));
+    });
+    pop.body.appendChild(list);
+    pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
   }
   function addEventSheet(ev, href) {
     var pop = popSheet(t('subscribePick'), t('addEventHint'));
@@ -1759,7 +1781,12 @@
     if (state.openCal) {
       state.openCal = false;
       var ev = state.events.filter(function (e) { return +e.id === +id; })[0];
-      if (ev && calHref(ev)) addEventSheet(ev, calHref(ev));
+      if (ev && calHref(ev)) calSheet(ev, calHref(ev));
+      // Cancelled gigs are filtered out of the family list, so fetch it for the bot's "remove" link.
+      else if (!ev && state.gigLink && +state.gigLink.e === id) {
+        api('/api/gig?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s))
+          .then(function (g) { if (calHref(g.event)) calSheet(g.event, calHref(g.event)); }).catch(function () {});
+      }
     }
   }
 

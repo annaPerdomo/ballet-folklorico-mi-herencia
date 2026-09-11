@@ -1,5 +1,5 @@
 import { sql, one } from './db.js';
-import { googleEventUrl, outlookEventUrl } from './ics.js';
+import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl } from './ics.js';
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled'];
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
@@ -39,7 +39,7 @@ export async function getEvent(id, { admin }) {
 // (GroupMe, Safari's sheet) don't reliably carry the sign-in through /api/calendar.
 export function withCalendarLinks(ev) {
   if (!ev || !ev.event_date) return ev;
-  return { ...ev, calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev) } };
+  return { ...ev, calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev), google_day: googleDayUrl(ev), outlook_day: outlookDayUrl(ev) } };
 }
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',

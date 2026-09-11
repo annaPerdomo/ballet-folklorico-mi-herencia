@@ -15,7 +15,8 @@ export default route({
     if (!id || !verifyCalendarSig(id, str(q.s, 32))) throw httpError(403, 'That link is not valid');
 
     const event = await one(`SELECT ${COLS} FROM events WHERE id = $1`, [id]);
-    if (!event || !MEMBER_VISIBLE.includes(event.status)) throw httpError(404, 'Not found');
+    // The bot's "remove from my calendar" link points here after a cancel.
+    if (!event || !(MEMBER_VISIBLE.includes(event.status) || event.status === 'cancelled')) throw httpError(404, 'Not found');
 
     const families = await sql(
       `SELECT f.id, f.name,

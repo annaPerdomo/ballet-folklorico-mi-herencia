@@ -150,7 +150,27 @@ export function outlookEventUrl(ev) {
   return `https://outlook.live.com/calendar/0/deeplink/compose?${p}`;
 }
 
-export function eventVevent(ev, { uidSuffix = '' } = {}) {
+// Google and Outlook have no "delete this event" URL; the day view is the closest landing.
+function ymd(dateStr) { return String(dateStr).split('-').map(Number); }
+export function googleDayUrl(ev) {
+  if (!ev.event_date) return null;
+  const [y, mo, d] = ymd(ev.event_date);
+  return `https://calendar.google.com/calendar/r/day/${y}/${mo}/${d}`;
+}
+export function outlookDayUrl(ev) {
+  if (!ev.event_date) return null;
+  const [y, mo, d] = ymd(ev.event_date);
+  return `https://outlook.live.com/calendar/0/view/day/${y}/${pad(mo)}/${pad(d)}`;
+}
+
+// Doubled so a cancel (+1) outranks the publish it follows but not the next edit.
+function sequence(ev, cancel) {
+  const minutes = ev.updated_at ? Math.floor(new Date(ev.updated_at).getTime() / 60000) : 0;
+  return ((minutes * 2) % 2147483647) + (cancel ? 1 : 0);
+}
+const ORGANIZER = 'ORGANIZER;CN=Ballet Folklórico Mi Herencia:mailto:noreply@bfmh.dance';
+
+export function eventVevent(ev, { uidSuffix = '', cancel = false } = {}) {
   const span = eventSpan(ev);
   if (!span) return null;
   const where = eventWhere(ev);
@@ -158,24 +178,24 @@ export function eventVevent(ev, { uidSuffix = '' } = {}) {
   const dtstart = span.timed ? `DTSTART:${span.start}` : `DTSTART;VALUE=DATE:${span.start}`;
   const dtend = span.timed ? `DTEND:${span.end}` : `DTEND;VALUE=DATE:${span.end}`;
 
-  const seq = ev.updated_at ? Math.floor(new Date(ev.updated_at).getTime() / 60000) % 2147483647 : 0;
   return block([
     'BEGIN:VEVENT',
     `UID:event-${ev.id}${uidSuffix}@bfmh.dance`,
     `DTSTAMP:${now()}`,
-    `SEQUENCE:${seq}`,
+    `SEQUENCE:${sequence(ev, cancel)}`,
+    cancel ? ORGANIZER : null,
     dtstart,
     dtend,
     `SUMMARY:${esc(ev.title || 'Performance')}`,
     where ? `LOCATION:${esc(where)}` : null,
     desc ? `DESCRIPTION:${esc(desc)}` : null,
-    `STATUS:${ev.status === 'confirmed' ? 'CONFIRMED' : ev.status === 'cancelled' ? 'CANCELLED' : 'TENTATIVE'}`,
+    `STATUS:${cancel || ev.status === 'cancelled' ? 'CANCELLED' : ev.status === 'confirmed' ? 'CONFIRMED' : 'TENTATIVE'}`,
     `URL:${eventUrl(ev)}`,
-    'BEGIN:VALARM',
-    'ACTION:DISPLAY',
-    'TRIGGER:-P1D',
-    `DESCRIPTION:${esc(ev.title || 'Performance')} is tomorrow`,
-    'END:VALARM',
+    cancel ? null : 'BEGIN:VALARM',
+    cancel ? null : 'ACTION:DISPLAY',
+    cancel ? null : 'TRIGGER:-P1D',
+    cancel ? null : `DESCRIPTION:${esc(ev.title || 'Performance')} is tomorrow`,
+    cancel ? null : 'END:VALARM',
     'END:VEVENT',
   ]);
 }
@@ -185,7 +205,7 @@ export function eventVevent(ev, { uidSuffix = '' } = {}) {
 const rehearsalUid = (ev, r) =>
   `event-${ev.id}-rehearsal-${crypto.createHash('sha1').update(`${r.date}T${r.time || ''}`).digest('hex').slice(0, 10)}`;
 
-export function rehearsalVevents(ev) {
+export function rehearsalVevents(ev, { cancel = false } = {}) {
   return (ev.rehearsals || []).map((r) => {
     if (!r || !r.date) return null;
     const timed = Boolean(parseTime(r.time));
@@ -200,9 +220,12 @@ export function rehearsalVevents(ev) {
       'BEGIN:VEVENT',
       `UID:${rehearsalUid(ev, r)}@bfmh.dance`,
       `DTSTAMP:${now()}`,
+      `SEQUENCE:${sequence(ev, cancel)}`,
+      cancel ? ORGANIZER : null,
       dtstart,
       dtend,
       `SUMMARY:${esc(`Rehearsal — ${ev.title || 'Performance'}`)}`,
+      cancel ? 'STATUS:CANCELLED' : null,
       r.location ? `LOCATION:${esc(r.location)}` : null,
       r.note ? `DESCRIPTION:${esc(r.note)}` : null,
       `URL:${siteUrl()}/team/#event-${ev.id}`,
@@ -213,12 +236,12 @@ export function rehearsalVevents(ev) {
 
 // Single events must NOT carry X-WR-CALNAME or a refresh interval: Apple Calendar reads those as
 // "make a new calendar" and spawns one per gig instead of using the user's default.
-export function buildCalendar(events, { name = 'Ballet Folklórico Mi Herencia', rehearsals = true, feed = false } = {}) {
+export function buildCalendar(events, { name = 'Ballet Folklórico Mi Herencia', rehearsals = true, feed = false, cancel = false } = {}) {
   const bodies = [];
   for (const ev of events) {
-    const v = eventVevent(ev);
+    const v = eventVevent(ev, { cancel });
     if (v) bodies.push(v);
-    if (rehearsals) bodies.push(...rehearsalVevents(ev));
+    if (rehearsals) bodies.push(...rehearsalVevents(ev, { cancel }));
   }
   return [
     block([
@@ -226,7 +249,7 @@ export function buildCalendar(events, { name = 'Ballet Folklórico Mi Herencia',
       'VERSION:2.0',
       'PRODID:-//Ballet Folklorico Mi Herencia//Team//EN',
       'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
+      cancel ? 'METHOD:CANCEL' : 'METHOD:PUBLISH',
       'X-WR-TIMEZONE:America/Los_Angeles',
       feed ? `X-WR-CALNAME:${esc(name)}` : null,
       feed ? 'REFRESH-INTERVAL;VALUE=DURATION:PT12H' : null,

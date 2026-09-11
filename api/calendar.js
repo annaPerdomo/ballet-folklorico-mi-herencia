@@ -1,7 +1,7 @@
 import { route, query, int, str, httpError } from './_lib/http.js';
 import { whoami, verifyCalendarSig, verifyFeedSig, verifyAdminFeedSig } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
-import { buildCalendar, googleEventUrl, outlookEventUrl } from './_lib/ics.js';
+import { buildCalendar, googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl } from './_lib/ics.js';
 import { MEMBER_VISIBLE } from './_lib/events.js';
 
 const COLS = `id, title, status, event_type, event_date, start_time, end_time, call_time,
@@ -32,20 +32,21 @@ async function viewer(req) {
   return me;
 }
 
-function icsName(ev) {
+function icsName(ev, remove) {
   const slug = String(ev.title || 'gig').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
-  return `${slug || 'gig'}.ics`;
+  return `${slug || 'gig'}${remove ? '-cancelled' : ''}.ics`;
 }
 
-function sendEvent(res, ev, to) {
-  const url = to === 'google' ? googleEventUrl(ev) : to === 'outlook' ? outlookEventUrl(ev) : null;
+function sendEvent(res, ev, to, remove) {
+  const url = to === 'google' ? (remove ? googleDayUrl(ev) : googleEventUrl(ev))
+    : to === 'outlook' ? (remove ? outlookDayUrl(ev) : outlookEventUrl(ev)) : null;
   if (url) {
     res.statusCode = 302;
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Location', url);
     return res.end();
   }
-  return sendIcs(res, buildCalendar([ev], { name: ev.title || 'Performance' }), icsName(ev));
+  return sendIcs(res, buildCalendar([ev], { name: ev.title || 'Performance', cancel: remove }), icsName(ev, remove));
 }
 
 function sendIcs(res, body, filename) {
@@ -59,13 +60,17 @@ function sendIcs(res, body, filename) {
 export default route({
   async GET(req, res) {
     const q = query(req);
+    const wantRemove = q.remove === '1';
+    const visible = (ev) => MEMBER_VISIBLE.includes(ev.status) || (wantRemove && ev.status === 'cancelled');
+    // A stale remove link for a gig that came back on must not cancel it.
+    const removeFor = (ev) => wantRemove && ev.status === 'cancelled';
 
     const signedId = int(q.e);
     if (signedId && verifyCalendarSig(signedId, str(q.s, 32))) {
       const ev = await one(`SELECT ${cols(false)} FROM events WHERE id = $1`, [signedId]);
-      if (!ev || !MEMBER_VISIBLE.includes(ev.status)) throw httpError(404, 'Not found');
+      if (!ev || !visible(ev)) throw httpError(404, 'Not found');
       if (!ev.event_date) throw httpError(400, 'This gig has no date yet');
-      return sendEvent(res, ev, str(q.to, 10));
+      return sendEvent(res, ev, str(q.to, 10), removeFor(ev));
     }
     if (q.e) throw httpError(403, 'That calendar link is not valid');
 
@@ -76,9 +81,9 @@ export default route({
     if (id) {
       const ev = await one(`SELECT ${cols(admin)} FROM events WHERE id = $1`, [id]);
       if (!ev) throw httpError(404, 'Not found');
-      if (!admin && !MEMBER_VISIBLE.includes(ev.status)) throw httpError(404, 'Not found');
+      if (!admin && !visible(ev)) throw httpError(404, 'Not found');
       if (!ev.event_date) throw httpError(400, 'This gig has no date yet');
-      return sendEvent(res, ev, str(q.to, 10));
+      return sendEvent(res, ev, str(q.to, 10), removeFor(ev));
     }
 
     const events = admin
