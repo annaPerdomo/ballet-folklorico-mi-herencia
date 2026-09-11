@@ -392,6 +392,14 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .pop-head p { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--muted); }
 .pop-head { margin-bottom: 0.9rem; }
 .pop-msg { margin: 0.3rem 0 1rem; font-size: 0.95rem; line-height: 1.5; color: var(--text); }
+.pop-toggle { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.7rem 0.85rem; margin: 0 0 0.9rem; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; text-align: left; }
+.pop-toggle svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--muted); }
+.pop-toggle.is-on { border-color: rgba(46,205,167,0.45); color: var(--text); }
+.pop-toggle.is-on svg { color: var(--teal-light); }
+.pop-toggle.is-on .switch { background: var(--teal); }
+.pop-toggle.is-on .switch::after { transform: translateX(16px); }
+.pop-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .pop-btns { display: flex; flex-direction: column; gap: 0.5rem; }
 .pop-btns .btn { min-height: 52px; font-size: 0.78rem; border-radius: 14px; }
 .ansgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }

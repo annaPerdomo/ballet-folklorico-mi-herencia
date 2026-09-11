@@ -32,6 +32,7 @@ export function calLink(ev) {
   return `${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}&cal=1`;
 }
 export const CAL_LABEL = '📅 Add to my calendar / Agregar a mi calendario';
+export const UNCAL_LABEL = '🗓 Remove from my calendar / Quitar de mi calendario';
 
 export function eventSummary(ev) {
   const lines = [

@@ -3,7 +3,7 @@ import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL } from '../_lib/notify.js';
+import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -39,6 +39,19 @@ async function notifyConfirm(ev) {
     (reh ? `\n\nRehearsals:\n${reh}` : '') +
     `\n\nDetails: ${teamLink(ev.id)}`;
   return { groupme: await postGroupMe(text) };
+}
+
+function cancelText(ev) {
+  const where = [ev.venue, ev.city].filter(Boolean).join(', ');
+  const cal = calLink(ev);   // the app opens the "remove" chooser for a cancelled gig
+  return [
+    `❌ CANCELLED: ${ev.title || ev.event_type || 'Performance'} — ${fmtDate(ev.event_date)}`,
+    where ? `Where: ${where}` : null,
+    '',
+    'This gig is off — no need to come.',
+    'Este evento se canceló — no hay que ir.',
+    cal ? `\n${UNCAL_LABEL}:\n${cal}` : null,
+  ].filter((l) => l !== null).join('\n');
 }
 
 export function reminderText(ev, roster) {
@@ -105,6 +118,7 @@ export default route({
         if (action === 'publish') notified = await notifyPublish(ev);
         if (action === 'confirm') notified = await notifyConfirm(ev);
       }
+      if (action === 'cancel' && body.notify === true) notified = { groupme: await postGroupMe(cancelText(ev)) };
     }
     const ev = await getEvent(id, { admin: true });
     ok(res, { event: ev, roster: await rosterFor(id), notified });

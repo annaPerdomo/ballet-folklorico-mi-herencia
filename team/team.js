@@ -76,6 +76,7 @@
       tapToChange: 'Tap to change',
       editDetails: 'Edit details', postAnnouncement: 'Post the announcement', sendReminder: 'Send reminder', confirmGig: 'Confirm gig',
       confirmAsk: 'Confirm this gig? Families who said yes will be notified (if a channel is connected).', cancelGig: 'Cancel gig', cancelAsk: 'Cancel this gig?',
+      cancelPost: 'Have La Chona post “Gig cancelled” to GroupMe', postCancellation: 'Post the cancellation',
       postConfirmation: 'Post the confirmation', markDone: 'Mark done', gig: 'Gig',
       botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer',
       addFamilyFrom: 'Add this family', reread: 'Read again', addFamilyHint: 'From GroupMe name “{name}”. Check the spelling of each dancer — the bot matches these names in the chat.',
@@ -192,6 +193,7 @@
       tapToChange: 'Toca para cambiar',
       editDetails: 'Editar detalles', postAnnouncement: 'Publicar el anuncio', sendReminder: 'Enviar recordatorio', confirmGig: 'Confirmar evento',
       confirmAsk: '¿Confirmar este evento? Se avisará a las familias que dijeron que sí (si hay un canal conectado).', cancelGig: 'Cancelar evento', cancelAsk: '¿Cancelar este evento?',
+      cancelPost: 'Que La Chona publique “Evento cancelado” en GroupMe', postCancellation: 'Publicar la cancelación',
       postConfirmation: 'Publicar la confirmación', markDone: 'Marcar terminado', gig: 'Evento',
       botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta',
       addFamilyFrom: 'Agregar esta familia', reread: 'Leer de nuevo', addFamilyHint: 'Del nombre de GroupMe “{name}”. Revisa cómo se escribe cada bailarín — el bot busca esos nombres en el chat.',
@@ -1159,12 +1161,20 @@
     document.body.appendChild(back);
     return { el: back, body: body, close: close };
   }
-  function confirmSheet(message, okLabel, danger) {
+  function confirmSheet(message, okLabel, danger, opts) {
+    opts = opts || {};
     return new Promise(function (resolve) {
       var pop = popSheet(null);
       pop.body.appendChild(h('p', { class: 'pop-msg', text: message }));
+      var on = opts.toggle ? !!opts.toggle.on : false;
+      if (opts.toggle) {
+        var row = h('button', { type: 'button', class: 'pop-toggle' + (on ? ' is-on' : ''), role: 'switch', 'aria-checked': on ? 'true' : 'false',
+          onclick: function () { on = !on; row.classList.toggle('is-on', on); row.setAttribute('aria-checked', on ? 'true' : 'false'); } },
+          icon('chat', 2.2), h('span', { class: 'site-label', text: opts.toggle.label }), h('span', { class: 'switch' }));
+        pop.body.appendChild(row);
+      }
       pop.body.appendChild(h('div', { class: 'pop-btns' },
-        h('button', { class: 'btn btn-wide ' + (danger ? 'btn-danger-fill' : 'btn-gold'), text: okLabel || t('done'), onclick: function () { pop.close(); resolve(true); } }),
+        h('button', { class: 'btn btn-wide ' + (danger ? 'btn-danger-fill' : 'btn-gold'), text: okLabel || t('done'), onclick: function () { pop.close(); resolve(opts.toggle ? { toggle: on } : true); } }),
         h('button', { class: 'btn btn-wide', text: t('cancel'), onclick: function () { pop.close(); resolve(false); } })));
       pop.el.addEventListener('click', function (e) { if (e.target === pop.el) resolve(false); });
     });
@@ -1282,8 +1292,11 @@
     var confirmIt = function () {
       confirmSheet(t('confirmAsk'), t('confirmGig')).then(function (yes) { if (yes) doAction(ev, 'confirm'); });
     };
+    var canPost = state.me.channels && state.me.channels.groupme;
     var cancelIt = function () {
-      confirmSheet(t('cancelAsk'), t('cancelGig'), true).then(function (yes) { if (yes) doAction(ev, 'cancel').then(closeDetail); });
+      confirmSheet(t('cancelAsk'), t('cancelGig'), true, canPost ? { toggle: { label: t('cancelPost'), on: true } } : null).then(function (yes) {
+        if (yes) doAction(ev, 'cancel', { notify: !!(yes && yes.toggle) }).then(closeDetail);
+      });
     };
     var remind = { label: t('sendReminder'), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
     var edit = { label: t('editDetails'), icon: 'edit', onclick: function () { openEventModal(ev); } };
@@ -1323,7 +1336,10 @@
     } else {
       // 'ask' is rejected server-side for a declined/cancelled gig, so reopening is the only way forward.
       out.primary = { label: t('reopen'), icon: 'refresh', onclick: function () { doAction(ev, 'reopen'); } };
-      out.more = [edit, { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
+      out.more = [
+        // Re-sending 'cancel' on a cancelled gig is a no-op transition, so this only posts.
+        s === 'cancelled' && canPost ? { label: t('postCancellation'), icon: 'chat', onclick: function () { doAction(ev, 'cancel', { notify: true }); } } : null,
+        edit, { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
     }
     return out;
   }
@@ -1646,6 +1662,16 @@
       '• Wed, Oct 28, 2026 6:00 PM @ Studio B',
       '',
       'Details: https://bfmh.dance/team/?e=42&s=…',
+    ]],
+    ['postCancellation', [
+      '❌ CANCELLED: Quinceañera — Ramirez — Wed, Nov 4, 2026',
+      'Where: Grand Ballroom, West Covina',
+      '',
+      'This gig is off — no need to come.',
+      'Este evento se canceló — no hay que ir.',
+      '',
+      '🗓 Remove from my calendar / Quitar de mi calendario:',
+      'https://bfmh.dance/team/?e=42&s=…&cal=1',
     ]],
   ];
 
