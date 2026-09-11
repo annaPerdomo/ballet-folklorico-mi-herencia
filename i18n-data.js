@@ -594,7 +594,7 @@
     { name: { es: "LA County Fair — Expo Hall 4", en: "LA County Fair — Expo Hall 4" }, date: "2026-05-24", time: null, location: { es: "Pomona, CA", en: "Pomona, CA" } },
     { name: { es: "Head Start", en: "Head Start" }, date: "2026-06-01", time: "9:15 AM", location: { es: "Baldwin Park, CA", en: "Baldwin Park, CA" } },
     { name: { es: "100 Aniversario del Distrito de Agua de Pico Rivera", en: "Pico Rivera Water District 100 Year Anniversary" }, date: "2026-06-26", time: "11:30 AM", location: { es: "Pico Rivera, CA", en: "Pico Rivera, CA" } },
-    { name: { es: "St. John Vianney Church's ECD: Harvest in the Heights", en: "St. John Vianney Church's ECD: Harvest in the Heights" }, date: "2026-10-18", time: null, location: { es: "Hacienda Heights, CA", en: "Hacienda Heights, CA" } }
+    { name: { es: "St. John Vianney Church's ECD: Harvest in the Heights", en: "St. John Vianney Church's ECD: Harvest in the Heights" }, date: "2026-10-18", time: "5:30 PM", location: { es: "Hacienda Heights, CA", en: "Hacienda Heights, CA" } }
   ];
 
   // Order in which the switcher lists languages.
