@@ -22,7 +22,7 @@ const dancers = [
 const E = (id, event_date, title, event_type, city, status = 'open', published_at = '2026-08-14') => ({ id, event_date, title, event_type, city, status, published_at });
 const events = [
   E(1, '2026-09-12', '50th Birthday Dinner — Knott’s Berry Farm Hotel', 'private', 'Buena Park', 'confirmed'),
-  E(2, '2026-09-14', 'Corporate Reception — Rancho Palos Verdes', 'corporate', 'Rancho Palos Verdes', 'confirmed'),
+  E(2, '2026-09-14', 'Corporate Reception — Rancho Palos Verdes (adults only)', 'corporate', 'Rancho Palos Verdes', 'confirmed'),
   E(3, '2026-09-19', 'Montebello Mall', 'festival', 'Montebello', 'open', '2026-08-25'),
   E(4, '2026-09-25', 'Long Beach — The Loft', 'private', 'Long Beach', 'open', '2026-08-25'),
   E(5, '2026-09-26', 'Stonewood Center Mall — Downey', 'festival', 'Downey', 'open', '2026-08-25'),
@@ -147,5 +147,10 @@ test('chit-chat and announcements are ignored', () => {
     ['Hi everyone! The messages above are me testing an automated event management tool that I’m building. Please disregard!', 'Anna Mendez Perdomo (Adult)', '19478548'],
   ]) assert.deepEqual(st(P(t, n, u)), {}, t);
   assert.deepEqual(st(P('I can', 'Anna Mendez Perdomo (Adult)', '19478548')), { 'Anna:11-04': 'yes' });
+  const reminder = 'Hi Everyone\nPractice is still on for today.\n\nFriendly reminder’s:\n\n-Everyone wear sneakers first half of practice then we will end with shoes.\n-Bring skirts\n-No bangs/ Hair pulled back well in bun\n-work out attire only: prefer black attire with dance tshirts\n-water bottles\n-boys bring hats Jalisco & Sinaloa\n\nThank you\nSee you later\nMayra';
+  const r = P(reminder, 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023');
+  assert.deepEqual(st(r), {}, 'practice reminder');
+  assert.equal(r.reason, 'announcement');
+  assert.deepEqual(st(P('Hi everyone, Tati can\'t make 9/12', 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023')), { 'Tati:09-12': 'no' });
   assert.deepEqual(st(P('We can definitely go', 'Folk-Claudia Marin (DT & Lia)', '64889724')), { 'Lia:11-04': 'yes', 'Donatien:11-04': 'yes', 'Isaias:11-04': 'yes' });
 });

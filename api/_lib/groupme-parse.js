@@ -37,6 +37,11 @@ const ALL_WORDS = [/\ball\b/, /\bevery(?:thing| one of them| date| event)\b/, /\
 const EXPLICIT = [/\byes\b/, /\bno\b(?! (?:problem|worries|rush|way|idea|thanks))/, /\bsi\b/, /\bcan'?t\b/, /\bcannot\b/, /\bno (?:puede[ns]?|podemos|va[n]?|vamos|voy)\b/,
   /\bnot available\b/, /\bunable\b/, /\bcount (?:me|us|her|him|them)\b/, /\bmaybe\b/, /\bnot sure\b/, /\btal vez\b/, /\bquizas?\b/,
   /\b(?:i|we|she|he|they) (?:can|could|will|cannot|can'?t|won'?t)\b/, /\bcould make\b/, /\bmake it\b/, /\bwill be there\b/, /\bpuedo\b/, /\bpodemos\b/, /\bpuede[ns]?\b/];
+// Practice reminders read like "-No bangs" / "work out attire only"; a broadcast is never an answer.
+const ANNOUNCE = [/\breminders?\b/, /\brecordatorio/, /^(?:hi|hello|hey|hola|buen[oa]s (?:dias|tardes|noches))[ ,!]*(?:everyone|everybody|all|team|familias?|families|a todos|todos|padres|parents)\b/];
+const bulletLines = (text) => String(text || '').split(/\n/).filter((l) => /^\s*[-•*–]\s*\S/.test(l)).length;
+const isAnnouncement = (text) => bulletLines(text) >= 2 || any(ANNOUNCE, norm(text));
+
 const REQUEST = [/\blet (?:me|us) know\b/, /\bplease (?:reply|respond|confirm|let)\b/, /\bavisenme\b/, /\bavisame\b/, /\bconfirmen\b/, /\bwho (?:can|is)\b/, /\bquien(?:es)? (?:puede|va)/];
 const isQuestion = (raw) => /\?\s*$/.test(String(raw).trim());
 
@@ -157,7 +162,8 @@ const TYPE_ALIASES = {
   quinceanera: ['quince', 'quinceanera', 'quinceañera', 'xv'], wedding: ['wedding', 'boda'], festival: ['festival', 'feria', 'fiestas'],
   school: ['school', 'assembly', 'escuela'], corporate: ['corporate', 'company', 'empresa'], private: ['private', 'party', 'fiesta'],
 };
-const STOP = new Set(['for', 'the', 'and', 'with', 'para', 'con', 'del', 'de', 'la', 'el', 'los', 'las', 'event', 'evento', 'inquiry', 'performance', 'gig', 'mall', 'center', 'high', 'hotel']);
+const STOP = new Set(['for', 'the', 'and', 'with', 'para', 'con', 'del', 'de', 'la', 'el', 'los', 'las', 'event', 'evento', 'inquiry', 'performance', 'gig', 'mall', 'center', 'high', 'hotel',
+  'only', 'adult', 'adults', 'kids', 'internal', 'small', 'private']);
 
 function eventWords(e) {
   const words = new Set(norm([e.title, e.event_type, e.venue, e.city, e.client_name].filter(Boolean).join(' '))
@@ -218,6 +224,10 @@ export function parseMessage({ text, senderName, senderUserId }, { dancers, fami
   });
 
   const messageHasDates = lines.some((l) => l.units.some((u) => u.dates.length));
+  // "Hi everyone, Kiley can't make 9/19" still counts; a reminder with no dated answer does not.
+  if (isAnnouncement(text) && !(messageHasDates && lines.some((l) => l.units.some((u) => u.intent && u.explicit && u.dates.length)))) {
+    return { intent: null, sender, updates: [], ambiguous: [], reason: 'announcement', eventGuessed: false };
+  }
   const ambiguous = new Set(lines.flatMap((l) => l.ambiguous));
   const updates = new Map();
   let anyIntent = null; let eventGuessed = false; let contextNames = []; let unresolvedDates = false;
