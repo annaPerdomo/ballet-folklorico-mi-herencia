@@ -21,3 +21,4 @@ scripts/team-tour/
 
 # LinkedIn post audio, not part of the site
 *.mp3
+prompts/
