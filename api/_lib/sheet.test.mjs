@@ -56,29 +56,34 @@ test('renderSheet builds the printable grid', () => {
   const html = renderSheet({ events, dancers, availability, lang: 'en', printedAt: new Date('2026-09-01T12:00:00Z') });
 
   assert.equal((html.match(/<th[ >]/g) || []).length, 3);
-  assert.ok(html.includes('1. Angel'));
+  assert.ok(html.includes('<span class="n">1.</span> Angel'));
   assert.ok(html.includes('class="c-yes">Yes<'));
   assert.ok(html.includes('class="c-none"></td>'));
-  const blankRow = '<tr><td class="name"></td><td></td><td></td></tr>';
+  const blankRow = '<tr class="first blank"><td class="name"></td><td></td><td></td></tr>';
   assert.equal(html.split(blankRow).length - 1, 2);
-  assert.ok(html.includes('2 / 12'));
-  assert.ok(!html.includes('3 / 12'));
+  assert.ok(html.includes('2<span class="of"> / 12</span>'));
+  assert.ok(!html.includes('3<span class="of"> / 12</span>'));
   assert.ok(!html.includes('<b>'));
   assert.ok(html.includes('&lt;b&gt;'));
   assert.ok(!/\b500\b/.test(html));
   assert.ok(!html.includes('secret'));
   assert.ok(!html.includes('555-1212'));
 
-  const fewEvents = renderSheet({ events: events.slice(0, 1), dancers, availability, lang: 'en' });
-  assert.ok(fewEvents.includes('size: letter portrait'));
+  const one = renderSheet({ events: events.slice(0, 1), dancers, availability, lang: 'en' });
+  assert.ok(!one.includes('size: letter'), 'orientation is left to the print dialog');
+  assert.ok(!one.includes('class="fam"'), 'no family column when no dancer has a family');
 
-  const manyEvents = renderSheet({
-    events: [...events, { id: 3, title: 'C' }, { id: 4, title: 'D' }, { id: 5, title: 'E' }],
-    dancers,
-    availability,
+  const grouped = renderSheet({
+    events: events.slice(0, 1), availability,
+    dancers: [{ id: 1, name: 'Angel', family: 'Ramirez' }, { id: 2, name: 'Mayra', family: 'Ramirez' }, { id: 3, name: 'Lia', family: 'Marin' }],
     lang: 'en',
   });
-  assert.ok(manyEvents.includes('size: letter landscape'));
+  assert.ok(grouped.includes('<th class="fam">Family</th>'));
+  assert.ok(grouped.includes('<td class="fam" rowspan="2">Ramirez</td>'));
+  assert.ok(grouped.includes('<td class="fam" rowspan="1">Marin</td>'));
+  assert.equal((grouped.match(/<td class="fam"/g) || []).length, 4, 'one family cell per family plus the two blank rows');
+  assert.ok(grouped.includes('<span class="n">3.</span> Lia'), 'numbering runs across families');
+  assert.ok(grouped.includes('<td colspan="2">Going</td>'));
 });
 
 test('renderSheet footer date uses the LA timezone, not the server UTC day', () => {
@@ -88,7 +93,7 @@ test('renderSheet footer date uses the LA timezone, not the server UTC day', () 
 
 test('renderSheet in Spanish', () => {
   const html = renderSheet({ events: [], dancers: [], availability: [], lang: 'es', printedAt: new Date('2026-09-01T12:00:00Z') });
-  assert.ok(html.includes('Nombre'));
+  assert.ok(html.includes('Bailarín'));
   assert.ok(html.includes('Van'));
   assert.ok(html.includes('Impreso'));
 });

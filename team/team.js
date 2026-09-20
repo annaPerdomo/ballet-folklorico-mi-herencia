@@ -134,9 +134,10 @@
       refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
       when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
       chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
-      printSchedule: 'Print schedule', printPick: 'Choose the gigs for the sheet', printAll: 'All upcoming', printNone: 'None',
-      printCount: '{n} on the sheet', printOpen: 'Open print sheet', printShare: 'Send link to a computer', printCopy: 'Copy link',
-      printHint: 'Opens a page you can print or save as a PDF. On a phone, use Share → Print. Blank cells mean no answer yet.',
+      printSchedule: 'Print schedule', printIntro: 'Pick the gigs for the sheet, then open it to print or save as a PDF.',
+      printPick: 'Gigs on the sheet', printAll: 'Select all', printNone: 'Clear', printCount: '{n} selected',
+      printOpen: 'Open sheet', printShare: 'Share link', printCopy: 'Copy link',
+      printHint: 'Printing from a computer? Share or copy the link and open it there. Blank cells on the sheet mean no answer yet.',
       printShareMsg: 'Performance schedule sheet — open on a computer to print',
       printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet',
     },
@@ -256,9 +257,10 @@
       refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
       when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
       chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
-      printSchedule: 'Imprimir calendario', printPick: 'Elige los eventos para la hoja', printAll: 'Todos los próximos', printNone: 'Ninguno',
-      printCount: '{n} en la hoja', printOpen: 'Abrir hoja para imprimir', printShare: 'Enviar enlace a una computadora', printCopy: 'Copiar enlace',
-      printHint: 'Abre una página para imprimir o guardar como PDF. En el teléfono, usa Compartir → Imprimir. Las celdas en blanco no tienen respuesta.',
+      printSchedule: 'Imprimir calendario', printIntro: 'Elige los eventos para la hoja y luego ábrela para imprimir o guardar como PDF.',
+      printPick: 'Eventos en la hoja', printAll: 'Seleccionar todos', printNone: 'Quitar todos', printCount: '{n} seleccionados',
+      printOpen: 'Abrir hoja', printShare: 'Compartir enlace', printCopy: 'Copiar enlace',
+      printHint: '¿Vas a imprimir desde una computadora? Comparte o copia el enlace y ábrelo allí. Las celdas en blanco no tienen respuesta.',
       printShareMsg: 'Hoja del calendario de presentaciones — ábrela en una computadora para imprimir',
       printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja',
     },
@@ -708,7 +710,7 @@
       var key = state.me && state.me.sheet_key || '';
       return location.origin + '/api/events?sheet=' + sheet + '&a=' + encodeURIComponent(key) + '&lang=' + state.lang;
     }
-    var countEl = h('p', { class: 'tm-sub' });
+    var countEl = h('span', { class: 'print-count' });
     var openBtn = h('button', { class: 'btn btn-gold', text: t('printOpen'), onclick: function () {
       var url = buildUrl(); if (!window.open(url, '_blank')) location.href = url;
     } });
@@ -716,28 +718,32 @@
       navigator.share({ title: 'Ballet Folklórico Mi Herencia', text: t('printShareMsg'), url: buildUrl() }).catch(function () {});
     } }) : null;
     var copyBtn = h('button', { class: 'btn', text: t('printCopy'), onclick: function () { copyText(buildUrl()); } });
+    var allBtn = h('button', { type: 'button', class: 'btn-link', text: t('printAll') });
+    var noneBtn = h('button', { type: 'button', class: 'btn-link', text: t('printNone') });
     function updateCount() {
       var n = candidates.filter(function (e) { return checked[e.id]; }).length;
-      countEl.textContent = t('printCount', { n: n }) + (candidates.length > 10 ? ' · ' + t('printMax') : '');
+      countEl.textContent = t('printCount', { n: n });
       openBtn.disabled = n === 0; if (shareBtn) shareBtn.disabled = n === 0; copyBtn.disabled = n === 0;
+      allBtn.hidden = n === candidates.length; noneBtn.hidden = n === 0;
     }
     var rows = [];
-    var list = h('div', {});
+    var list = h('div', { class: 'print-list' });
     candidates.forEach(function (e) {
       var input = h('input', { type: 'checkbox', checked: true, onchange: function () { checked[e.id] = input.checked; updateCount(); } });
+      var where = fmtWhere(e);
       list.appendChild(h('label', { class: 'print-row' }, input,
-        h('div', {}, h('div', { class: 'l1', text: evTitle(e) }), h('div', { class: 'l2', text: fmtDate(e.event_date) + ' · ' + fmtWhere(e) }))));
+        h('div', { class: 'print-txt' }, h('div', { class: 'l1', text: evTitle(e) }), h('div', { class: 'l2', text: fmtDate(e.event_date) + (where ? ' · ' + where : '') }))));
       rows.push(input);
     });
-    var links = h('div', { class: 'print-links' },
-      h('button', { type: 'button', text: t('printAll'), onclick: function () {
-        candidates.forEach(function (e) { checked[e.id] = true; }); rows.forEach(function (r) { r.checked = true; }); updateCount();
-      } }),
-      h('button', { type: 'button', text: t('printNone'), onclick: function () {
-        candidates.forEach(function (e) { checked[e.id] = false; }); rows.forEach(function (r) { r.checked = false; }); updateCount();
-      } }));
-    var body = h('div', {}, h('p', { class: 'tm-sub', text: t('printHint') }),
-      h('p', { class: 'tm-sub', style: 'font-weight:700', text: t('printPick') }), links, list, countEl);
+    function setAll(on) { candidates.forEach(function (e) { checked[e.id] = on; }); rows.forEach(function (r) { r.checked = on; }); updateCount(); }
+    allBtn.addEventListener('click', function () { setAll(true); });
+    noneBtn.addEventListener('click', function () { setAll(false); });
+    var body = h('div', { class: 'print-pick' },
+      h('p', { class: 'print-intro', text: t('printIntro') }),
+      h('div', { class: 'print-head' }, h('div', { class: 'print-label' }, h('span', { text: t('printPick') }), countEl), h('div', { class: 'print-links' }, allBtn, noneBtn)),
+      list,
+      candidates.length > 10 ? h('p', { class: 'print-note', text: t('printMax') }) : null,
+      h('p', { class: 'print-note', text: t('printHint') }));
     updateCount();
     modal(t('printSchedule'), body, h('div', { class: 'foot-btns print-foot' }, openBtn, shareBtn, copyBtn));
   }
