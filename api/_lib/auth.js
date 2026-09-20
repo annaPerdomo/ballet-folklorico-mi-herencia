@@ -98,6 +98,14 @@ export function verifyAdminFeedSig(sig) {
   return Boolean(sig) && safeEqual(adminFeedSig(), sig);
 }
 
+export function sheetSig() {
+  return sign(`sheet.admin.${adminEpoch()}`).slice(0, 20);
+}
+
+export function verifySheetSig(sig) {
+  return Boolean(sig) && safeEqual(sheetSig(), sig);
+}
+
 async function asMember(family, scope) {
   if (!family) return null;
   const dancers = await sql('SELECT id, name FROM dancers WHERE family_id = $1 AND active ORDER BY name', [family.id]);
