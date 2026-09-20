@@ -42,7 +42,7 @@ export default route({
           ? await sql(`SELECT ${cols} FROM events WHERE id = ANY($1) ORDER BY event_date NULLS LAST, id`, [ids])
           : [];
       }
-      const dancers = await sql('SELECT d.id, d.name, f.name AS family FROM dancers d JOIN families f ON f.id = d.family_id WHERE d.active ORDER BY f.name, d.name');
+      const dancers = await sql('SELECT d.id, d.name FROM dancers d JOIN families f ON f.id = d.family_id WHERE d.active ORDER BY f.name, d.name');
       const availability = events.length
         ? await sql('SELECT event_id, dancer_id, status FROM availability WHERE event_id = ANY($1)', [events.map((e) => e.id)])
         : [];

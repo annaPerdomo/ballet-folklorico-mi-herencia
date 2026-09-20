@@ -12,10 +12,10 @@ export function seasonOf(dateStr) {
 }
 
 const SEASON_LABEL = {
-  fall: { en: 'FALL', es: 'OTOÑO' },
-  winter: { en: 'WINTER', es: 'INVIERNO' },
-  spring: { en: 'SPRING', es: 'PRIMAVERA' },
-  summer: { en: 'SUMMER', es: 'VERANO' },
+  fall: { en: 'Fall', es: 'Otoño' },
+  winter: { en: 'Winter', es: 'Invierno' },
+  spring: { en: 'Spring', es: 'Primavera' },
+  summer: { en: 'Summer', es: 'Verano' },
 };
 
 function earliestDate(events) {
@@ -30,11 +30,11 @@ function earliestDate(events) {
 export function sheetTitle(events, lang) {
   const es = lang === 'es';
   const date = earliestDate(events);
-  if (!date) return es ? 'CALENDARIO DE PRESENTACIONES' : 'PERFORMANCE SCHEDULE';
+  if (!date) return es ? 'Calendario de presentaciones' : 'Performance Schedule';
   const season = seasonOf(date);
   const year = date.slice(0, 4);
   const label = SEASON_LABEL[season][es ? 'es' : 'en'];
-  return es ? `CALENDARIO DE PRESENTACIONES · ${label} ${year}` : `${label} ${year} PERFORMANCE SCHEDULE`;
+  return es ? `Calendario de presentaciones · ${label} ${year}` : `${label} ${year} Performance Schedule`;
 }
 
 function dateHeader(dateStr, lang) {
@@ -85,22 +85,9 @@ function esc(s) {
   }[c]));
 }
 
-function groupByFamily(dancers) {
-  const groups = [];
-  for (const d of dancers) {
-    const family = d.family || '';
-    const last = groups[groups.length - 1];
-    if (last && last.family === family) last.members.push(d);
-    else groups.push({ family, members: [d] });
-  }
-  return groups;
-}
-
 export function renderSheet({ events, dancers, availability, lang = 'en', printedAt = new Date() }) {
   const es = lang === 'es';
   const title = sheetTitle(events, lang);
-  const withFamily = dancers.some((d) => d.family);
-  const cols = events.length + (withFamily ? 2 : 1);
 
   const answerByKey = new Map();
   for (const a of availability || []) {
@@ -119,26 +106,20 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     })
     .join('');
 
-  const answerCells = (d) => events
-    .map((ev) => {
-      const status = answerByKey.get(`${ev.id}:${d.id}`);
-      const cls = status === 'yes' ? 'c-yes' : status === 'no' ? 'c-no' : status === 'maybe' ? 'c-maybe' : 'c-none';
-      return `<td class="${cls}">${esc(cellText(status, lang))}</td>`;
+  const bodyRows = dancers
+    .map((d, i) => {
+      const cells = events
+        .map((ev) => {
+          const status = answerByKey.get(`${ev.id}:${d.id}`);
+          const cls = status === 'yes' ? 'c-yes' : status === 'no' ? 'c-no' : status === 'maybe' ? 'c-maybe' : 'c-none';
+          return `<td class="${cls}">${esc(cellText(status, lang))}</td>`;
+        })
+        .join('');
+      return `<tr><td class="name"><span class="n">${i + 1}.</span> ${esc(d.name)}</td>${cells}</tr>`;
     })
     .join('');
 
-  let n = 0;
-  const bodyRows = groupByFamily(dancers)
-    .map((g) => g.members
-      .map((d, i) => {
-        n += 1;
-        const famCell = !withFamily ? '' : i === 0 ? `<td class="fam" rowspan="${g.members.length}">${esc(g.family)}</td>` : '';
-        return `<tr class="${i === 0 ? 'first' : ''}">${famCell}<td class="name"><span class="n">${n}.</span> ${esc(d.name)}</td>${answerCells(d)}</tr>`;
-      })
-      .join(''))
-    .join('');
-
-  const blankRow = `<tr class="first blank">${withFamily ? '<td class="fam"></td>' : ''}<td class="name"></td>${events.map(() => '<td></td>').join('')}</tr>`;
+  const blankRow = `<tr class="blank"><td class="name"></td>${events.map(() => '<td></td>').join('')}</tr>`;
   const blankRows = blankRow + blankRow;
 
   const footCells = events
@@ -166,7 +147,6 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
   const hint = es
     ? 'En el teléfono, toca Compartir y luego Imprimir o Guardar en Archivos. Con más de cuatro eventos, elige horizontal en el cuadro de impresión.'
     : 'On a phone, tap Share, then Print or Save to Files. With more than four gigs, choose landscape in the print dialog.';
-  const famHeader = es ? 'Familia' : 'Family';
   const nameHeader = es ? 'Bailarín' : 'Dancer';
   const goingLabel = es ? 'Van' : 'Going';
 
@@ -176,44 +156,49 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-@page { margin: 0.5in }
+@page { margin: 0.45in }
 * { box-sizing: border-box }
-body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #111; background: #fff; margin: 0 }
+body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #1a1024; background: #fff; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact }
 .bar { background: #1e1230; color: #fff; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px }
 .bar button { font: inherit; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; color: #1e1230;
   background: linear-gradient(135deg, #e8c97a, #c9a84c); border: 0; border-radius: 12px; padding: 12px 20px; cursor: pointer; min-height: 48px }
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
-.page { padding: 18px 18px 24px }
-.brand { font-size: 8pt; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #6b4a8a; margin: 0 0 2px }
-.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 3px double #c9a84c; margin-bottom: 10px }
-h1 { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; font-size: 19pt; font-weight: 700; letter-spacing: 0.02em; margin: 0; line-height: 1.1 }
-.meta { font-size: 8.5pt; color: #555; white-space: nowrap; padding-bottom: 3px }
-table { border-collapse: collapse; width: 100%; page-break-inside: auto }
-th, td { border: 1px solid #b5b5b5; padding: 4px 6px; vertical-align: top }
-thead th { background: #f1ecf6; text-align: left; font-size: 8.5pt; line-height: 1.3; -webkit-print-color-adjust: exact; print-color-adjust: exact }
-thead th.gig { min-width: 5.5em }
-thead th.name, thead th.fam { vertical-align: bottom; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.12em; color: #555 }
-thead th .date { font-weight: 700; font-size: 9.5pt; color: #111 }
-thead th .title { font-weight: 600 }
-thead th .place, thead th .time { color: #444 }
+.page { padding: 18px 18px 24px; max-width: 11in; margin: 0 auto }
+.mast { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid #c9a84c }
+.mast img { width: 46px; height: 46px; border-radius: 11px; flex: none }
+.mast .who { flex: 1; min-width: 0 }
+.mast .brand { font-family: 'Playfair Display', Georgia, serif; font-size: 13.5pt; font-weight: 700; color: #1e1230; line-height: 1.15 }
+.mast .tag { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #9a7b2e; margin-top: 3px }
+.mast .meta { font-size: 8pt; color: #6b6470; text-align: right; white-space: nowrap }
+h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 20pt; font-weight: 700; color: #1e1230; margin: 12px 0 10px; line-height: 1.1 }
+table { border-collapse: collapse; width: 100%; table-layout: fixed }
+col.name { width: 2in }
+th, td { border: 1px solid #c4bccb; padding: 4px 6px; vertical-align: top; overflow-wrap: anywhere }
+thead th { background: #efe9f5; text-align: left; font-size: 8.5pt; line-height: 1.3; border-bottom: 2px solid #1e1230 }
+thead th.name { vertical-align: bottom; font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #6b4a8a }
+thead th .date { font-weight: 800; font-size: 9.5pt; color: #1e1230 }
+thead th .title { font-weight: 600; color: #1a1024 }
+thead th .place, thead th .time { color: #55506a; font-weight: 500 }
 tbody tr { page-break-inside: avoid }
-tbody td { height: 24px }
-tbody tr.first td, tfoot td { border-top: 2px solid #444 }
-tbody tr.blank td { height: 26px }
-td.fam { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b4a8a; width: 1%; white-space: nowrap; vertical-align: top; padding-top: 6px; background: #faf8fc; -webkit-print-color-adjust: exact; print-color-adjust: exact }
-td.name { white-space: nowrap; font-weight: 600 }
-td.name .n { display: inline-block; min-width: 1.8em; color: #888; font-weight: 400; font-variant-numeric: tabular-nums }
-tbody td:not(.name):not(.fam), tfoot td:not(:first-child) { text-align: center }
-.c-yes { font-weight: 700 }
-.c-no { color: #8a8a8a }
-.c-maybe { font-style: italic; color: #444 }
-tfoot td { background: #f1ecf6; font-weight: 700; -webkit-print-color-adjust: exact; print-color-adjust: exact }
-tfoot td:first-child { text-transform: uppercase; letter-spacing: 0.12em; font-size: 8pt; color: #555 }
-tfoot .of { font-weight: 400; color: #666 }
-.legend { margin: 8px 0 0; font-size: 8pt; color: #666; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
-@media print { .bar { display: none } .page { padding: 0 } }
-@media screen and (max-width: 640px) { .page { padding: 12px; overflow-x: auto } .head { flex-direction: column; align-items: flex-start } }
+tbody td { height: 25px }
+tbody tr:nth-child(even) td { background: #faf8fc }
+tbody tr.blank td { height: 27px; background: #fff }
+td.name { white-space: nowrap; font-weight: 600; overflow: hidden; text-overflow: ellipsis }
+td.name .n { display: inline-block; min-width: 1.7em; color: #9a93a3; font-weight: 500; font-variant-numeric: tabular-nums }
+tbody td:not(.name), tfoot td:not(:first-child) { text-align: center }
+.c-yes { font-weight: 700; color: #1e1230 }
+.c-no { color: #8f8898 }
+.c-maybe { font-style: italic; color: #55506a }
+tfoot td { background: #efe9f5; font-weight: 800; color: #1e1230; border-top: 2px solid #1e1230 }
+tfoot td:first-child { text-transform: uppercase; letter-spacing: 0.14em; font-size: 7.5pt; color: #6b4a8a; vertical-align: middle }
+tfoot .of { font-weight: 500; color: #6b6470 }
+.legend { margin: 8px 0 0; font-size: 7.5pt; color: #6b6470; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
+@media print { .bar { display: none } .page { padding: 0; max-width: none } }
+@media screen and (max-width: 640px) { .page { padding: 12px } .mast .meta { display: none } }
 </style>
 </head>
 <body>
@@ -222,18 +207,23 @@ tfoot .of { font-weight: 400; color: #666 }
 <p>${esc(hint)}</p>
 </div>
 <div class="page">
-<p class="brand">Ballet Folklórico Mi Herencia</p>
-<div class="head"><h1>${esc(title)}</h1><div class="meta">${esc(meta)}</div></div>
+<div class="mast">
+<img src="/team/icons/icon-192.png" alt="">
+<div class="who"><div class="brand">Ballet Folklórico Mi Herencia</div><div class="tag">${es ? 'Equipo de baile' : 'Dance team'}</div></div>
+<div class="meta">${esc(meta)}</div>
+</div>
+<h1>${esc(title)}</h1>
 <table>
+<colgroup><col class="name">${events.map(() => '<col>').join('')}</colgroup>
 <thead>
-<tr>${withFamily ? `<th class="fam">${esc(famHeader)}</th>` : ''}<th class="name">${esc(nameHeader)}</th>${headCells}</tr>
+<tr><th class="name">${esc(nameHeader)}</th>${headCells}</tr>
 </thead>
 <tbody>
 ${bodyRows}
 ${blankRows}
 </tbody>
 <tfoot>
-<tr><td${withFamily ? ' colspan="2"' : ''}>${esc(goingLabel)}</td>${footCells}</tr>
+<tr><td>${esc(goingLabel)}</td>${footCells}</tr>
 </tfoot>
 </table>
 <p class="legend"><span>${esc(legend)}</span><span>bfmh.dance/team</span></p>

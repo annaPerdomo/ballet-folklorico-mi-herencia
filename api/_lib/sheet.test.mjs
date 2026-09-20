@@ -13,10 +13,10 @@ test('seasonOf buckets by month, ignoring year boundaries', () => {
 
 test('sheetTitle picks the earliest date regardless of input order', () => {
   const events = [{ event_date: '2026-11-01' }, { event_date: '2026-09-12' }, { event_date: '2026-10-05' }];
-  assert.equal(sheetTitle(events, 'en'), 'FALL 2026 PERFORMANCE SCHEDULE');
-  assert.equal(sheetTitle(events, 'es'), 'CALENDARIO DE PRESENTACIONES · OTOÑO 2026');
-  assert.equal(sheetTitle([], 'en'), 'PERFORMANCE SCHEDULE');
-  assert.equal(sheetTitle([], 'es'), 'CALENDARIO DE PRESENTACIONES');
+  assert.equal(sheetTitle(events, 'en'), 'Fall 2026 Performance Schedule');
+  assert.equal(sheetTitle(events, 'es'), 'Calendario de presentaciones · Otoño 2026');
+  assert.equal(sheetTitle([], 'en'), 'Performance Schedule');
+  assert.equal(sheetTitle([], 'es'), 'Calendario de presentaciones');
 });
 
 test('columnHeader formats date, time, and place per language', () => {
@@ -41,7 +41,7 @@ test('cellText maps status to language', () => {
 
 test('renderSheet builds the printable grid', () => {
   const events = [
-    { id: 1, title: 'Fiesta <b>', event_date: '2026-09-12', dancers_needed: 12, pay: 500, notes: 'secret', phone: '555-1212' },
+    { id: 1, title: 'Fiesta <b>', event_date: '2026-09-12', dancers_needed: 12, pay: 987, notes: 'secret', phone: '555-1212' },
     { id: 2, title: 'Boda', event_date: '2026-09-19' },
   ];
   const dancers = [
@@ -59,31 +59,20 @@ test('renderSheet builds the printable grid', () => {
   assert.ok(html.includes('<span class="n">1.</span> Angel'));
   assert.ok(html.includes('class="c-yes">Yes<'));
   assert.ok(html.includes('class="c-none"></td>'));
-  const blankRow = '<tr class="first blank"><td class="name"></td><td></td><td></td></tr>';
+  const blankRow = '<tr class="blank"><td class="name"></td><td></td><td></td></tr>';
   assert.equal(html.split(blankRow).length - 1, 2);
   assert.ok(html.includes('2<span class="of"> / 12</span>'));
   assert.ok(!html.includes('3<span class="of"> / 12</span>'));
   assert.ok(!html.includes('<b>'));
   assert.ok(html.includes('&lt;b&gt;'));
-  assert.ok(!/\b500\b/.test(html));
+  assert.ok(!/\b987\b/.test(html));
   assert.ok(!html.includes('secret'));
   assert.ok(!html.includes('555-1212'));
 
   const one = renderSheet({ events: events.slice(0, 1), dancers, availability, lang: 'en' });
   assert.ok(!one.includes('size: letter'), 'orientation is left to the print dialog');
-  assert.ok(!one.includes('class="fam"'), 'no family column when no dancer has a family');
-
-  const grouped = renderSheet({
-    events: events.slice(0, 1), availability,
-    dancers: [{ id: 1, name: 'Angel', family: 'Ramirez' }, { id: 2, name: 'Mayra', family: 'Ramirez' }, { id: 3, name: 'Lia', family: 'Marin' }],
-    lang: 'en',
-  });
-  assert.ok(grouped.includes('<th class="fam">Family</th>'));
-  assert.ok(grouped.includes('<td class="fam" rowspan="2">Ramirez</td>'));
-  assert.ok(grouped.includes('<td class="fam" rowspan="1">Marin</td>'));
-  assert.equal((grouped.match(/<td class="fam"/g) || []).length, 4, 'one family cell per family plus the two blank rows');
-  assert.ok(grouped.includes('<span class="n">3.</span> Lia'), 'numbering runs across families');
-  assert.ok(grouped.includes('<td colspan="2">Going</td>'));
+  assert.ok(one.includes('<col class="name"><col></colgroup>'), 'one column per gig');
+  assert.ok(!one.includes('Family'), 'family names never appear on the sheet');
 });
 
 test('renderSheet footer date uses the LA timezone, not the server UTC day', () => {
