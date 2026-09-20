@@ -134,6 +134,11 @@
       refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
       when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
       chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
+      printSchedule: 'Print schedule', printPick: 'Choose the gigs for the sheet', printAll: 'All upcoming', printNone: 'None',
+      printCount: '{n} on the sheet', printOpen: 'Open print sheet', printShare: 'Send link to a computer', printCopy: 'Copy link',
+      printHint: 'Opens a page you can print or save as a PDF. On a phone, use Share → Print. Blank cells mean no answer yet.',
+      printShareMsg: 'Performance schedule sheet — open on a computer to print',
+      printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -251,6 +256,11 @@
       refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
       when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
       chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
+      printSchedule: 'Imprimir calendario', printPick: 'Elige los eventos para la hoja', printAll: 'Todos los próximos', printNone: 'Ninguno',
+      printCount: '{n} en la hoja', printOpen: 'Abrir hoja para imprimir', printShare: 'Enviar enlace a una computadora', printCopy: 'Copiar enlace',
+      printHint: 'Abre una página para imprimir o guardar como PDF. En el teléfono, usa Compartir → Imprimir. Las celdas en blanco no tienen respuesta.',
+      printShareMsg: 'Hoja del calendario de presentaciones — ábrela en una computadora para imprimir',
+      printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja',
     },
   };
   function t(key, vars) {
@@ -683,6 +693,55 @@
       h('span', { class: 'calsub-go' }, icon('chevron', 2.5)));
   }
 
+  function printSheet() {
+    var candidates = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && e.event_date && !isPast(e); })
+      .sort(function (a, b) { return (a.event_date || '').localeCompare(b.event_date || '') || a.id - b.id; });
+    if (!candidates.length) { toast(t('printNoGigs')); return; }
+    if (!(state.me && state.me.sheet_key)) {
+      api('/api/me').then(function (me) { state.me = me; }).catch(function (e) { toast(e.message, true); });
+    }
+    var checked = {};
+    candidates.forEach(function (e) { checked[e.id] = true; });
+    function buildUrl() {
+      var ids = candidates.filter(function (e) { return checked[e.id]; }).map(function (e) { return e.id; });
+      var sheet = ids.length === candidates.length && candidates.length <= 10 ? 'all' : ids.slice(0, 10).join(',');
+      var key = state.me && state.me.sheet_key || '';
+      return location.origin + '/api/events?sheet=' + sheet + '&a=' + encodeURIComponent(key) + '&lang=' + state.lang;
+    }
+    var countEl = h('p', { class: 'tm-sub' });
+    var openBtn = h('button', { class: 'btn btn-gold', text: t('printOpen'), onclick: function () {
+      var url = buildUrl(); if (!window.open(url, '_blank')) location.href = url;
+    } });
+    var shareBtn = navigator.share ? h('button', { class: 'btn', text: t('printShare'), onclick: function () {
+      navigator.share({ title: 'Ballet Folklórico Mi Herencia', text: t('printShareMsg'), url: buildUrl() }).catch(function () {});
+    } }) : null;
+    var copyBtn = h('button', { class: 'btn', text: t('printCopy'), onclick: function () { copyText(buildUrl()); } });
+    function updateCount() {
+      var n = candidates.filter(function (e) { return checked[e.id]; }).length;
+      countEl.textContent = t('printCount', { n: n }) + (candidates.length > 10 ? ' · ' + t('printMax') : '');
+      openBtn.disabled = n === 0; if (shareBtn) shareBtn.disabled = n === 0; copyBtn.disabled = n === 0;
+    }
+    var rows = [];
+    var list = h('div', {});
+    candidates.forEach(function (e) {
+      var input = h('input', { type: 'checkbox', checked: true, onchange: function () { checked[e.id] = input.checked; updateCount(); } });
+      list.appendChild(h('label', { class: 'print-row' }, input,
+        h('div', {}, h('div', { class: 'l1', text: evTitle(e) }), h('div', { class: 'l2', text: fmtDate(e.event_date) + ' · ' + fmtWhere(e) }))));
+      rows.push(input);
+    });
+    var links = h('div', { class: 'print-links' },
+      h('button', { type: 'button', text: t('printAll'), onclick: function () {
+        candidates.forEach(function (e) { checked[e.id] = true; }); rows.forEach(function (r) { r.checked = true; }); updateCount();
+      } }),
+      h('button', { type: 'button', text: t('printNone'), onclick: function () {
+        candidates.forEach(function (e) { checked[e.id] = false; }); rows.forEach(function (r) { r.checked = false; }); updateCount();
+      } }));
+    var body = h('div', {}, h('p', { class: 'tm-sub', text: t('printHint') }),
+      h('p', { class: 'tm-sub', style: 'font-weight:700', text: t('printPick') }), links, list, countEl);
+    updateCount();
+    modal(t('printSchedule'), body, h('div', { class: 'foot-btns print-foot' }, openBtn, shareBtn, copyBtn));
+  }
+
   /* ── headcount ring ───────────────────────────────────── */
   var SVG_NS = 'http://www.w3.org/2000/svg';
   function ring(pct, color) {
@@ -1024,7 +1083,7 @@
   function renderGigs() {
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
     var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); });
-    app.appendChild(section(t('posted'), live.length));
+    app.appendChild(section(t('posted'), live.length, h('button', { class: 'btn btn-sm', text: t('printSchedule'), onclick: printSheet })));
     app.appendChild(h('p', { class: 'tm-sub', text: t('tapGigHint') }));
     if (!live.length) {
       app.appendChild(emptyState('calendar', t('nothingPosted'),

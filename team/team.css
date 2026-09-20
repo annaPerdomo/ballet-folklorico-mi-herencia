@@ -496,6 +496,14 @@ input[type=date] { color-scheme: dark; }
   border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); transform: rotate(-45deg); transition: transform 0.15s; }
 details[open] > .summary::before { transform: rotate(45deg); }
 .summary:hover { border-color: var(--gold); }
+.print-row { display: flex; gap: 12px; align-items: center; min-height: var(--tap); padding: 6px 0; border-bottom: 1px solid var(--hair); cursor: pointer; }
+.print-row input { width: 22px; height: 22px; accent-color: var(--gold); flex: none; }
+.print-row .l1 { font-weight: 600; }
+.print-row .l2 { color: var(--muted); font-size: 13px; }
+.print-links { display: flex; gap: 16px; margin: 4px 0 8px; }
+.print-links button { all: unset; color: var(--gold-light); cursor: pointer; font-size: 14px; min-height: 44px; }
+.print-links button:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.print-foot { flex-wrap: wrap; gap: 8px; }
 .inline-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.45rem; }
 
 .login { max-width: 400px; margin: 3rem auto; }
