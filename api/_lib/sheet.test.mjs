@@ -60,7 +60,7 @@ test('renderSheet builds the printable grid', () => {
   assert.ok(html.includes('class="c-yes">Yes<'));
   assert.ok(html.includes('class="c-none"></td>'));
   const blankRow = '<tr class="blank"><td class="name"></td><td></td><td></td></tr>';
-  assert.equal(html.split(blankRow).length - 1, 2);
+  assert.equal(html.split(blankRow).length - 1, 0, 'no write-in rows');
   assert.ok(html.includes('2<span class="of"> / 12</span>'));
   assert.ok(!html.includes('3<span class="of"> / 12</span>'));
   assert.ok(!html.includes('<b>'));

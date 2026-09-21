@@ -124,8 +124,6 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     })
     .join('');
 
-  const blankRow = `<tr class="blank"><td class="name"></td>${events.map(() => '<td></td>').join('')}</tr>`;
-  const blankRows = blankRow + blankRow;
 
   const footCells = events
     .map((ev) => {
@@ -142,9 +140,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     timeZone: 'America/Los_Angeles',
   }).format(printedAt);
 
-  const meta = es
-    ? `Impreso ${printedDate} · ${dancers.length} bailarines`
-    : `Printed ${printedDate} · ${dancers.length} dancers`;
+  const meta = es ? `Impreso ${printedDate}` : `Printed ${printedDate}`;
   const legend = es
     ? 'En blanco = sin respuesta · Van = confirmados / necesarios'
     : 'Blank = no answer yet · Going = confirmed / needed';
@@ -167,19 +163,24 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
 <style>
 @page { margin: 0.5in }
 * { box-sizing: border-box }
-body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #1a1024; background: #fff; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact }
+html, body { height: 100% }
+body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #1a1024; background: #fff; margin: 0; display: flex; flex-direction: column; -webkit-print-color-adjust: exact; print-color-adjust: exact }
 .bar { background: #1e1230; color: #fff; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px }
 .bar button { font: inherit; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; color: #1e1230;
   background: linear-gradient(135deg, #e8c97a, #c9a84c); border: 0; border-radius: 12px; padding: 12px 20px; cursor: pointer; min-height: 48px }
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
-.page { padding: 18px 18px 24px; max-width: 11in; margin: 0 auto }
-.mast { display: flex; align-items: center; gap: 14px; padding-bottom: 10px; border-bottom: 2px solid #c9a84c }
+.page { padding: 18px 18px 16px; max-width: 11in; margin: 0 auto; width: 100%; flex: 1 }
+.mast { display: flex; align-items: center; gap: 14px }
+.rosette { display: flex; align-items: center; margin: 6px 0 4px }
+.rosette::before, .rosette::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #9a7b2e, #c9a84c, #9a7b2e, transparent) }
+.rosette .center { display: flex; align-items: center; gap: 10px; padding: 0 20px; flex: none }
+.rosette svg { display: block }
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
 .mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
 .mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #1e1230 }
 .mast .meta { font-size: 8pt; color: #6b6470; text-align: right; white-space: nowrap }
-h1 { font-size: 16pt; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1e1230; margin: 12px 0 10px; line-height: 1.15 }
+h1 { font-size: 16pt; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1e1230; margin: 4px 0 10px; line-height: 1.15 }
 table { border-collapse: collapse; width: 100%; table-layout: fixed }
 col.name { width: 2in }
 th, td { border: 1px solid #c4bccb; padding: 4px 6px; vertical-align: top; overflow-wrap: anywhere }
@@ -191,7 +192,6 @@ thead th .place, thead th .time { color: #55506a; font-weight: 500 }
 tbody tr { page-break-inside: avoid }
 tbody td { height: 25px }
 tbody tr:nth-child(even) td { background: #faf8fc }
-tbody tr.blank td { height: 27px; background: #fff }
 td.name { white-space: nowrap; font-weight: 600; overflow: hidden; text-overflow: ellipsis }
 td.name .n { display: inline-block; min-width: 1.7em; color: #9a93a3; font-weight: 500; font-variant-numeric: tabular-nums }
 tbody td:not(.name), tfoot td:not(:first-child) { text-align: center }
@@ -202,7 +202,7 @@ tfoot td { background: #efe9f5; font-weight: 800; color: #1e1230; border-top: 2p
 tfoot td:first-child { text-transform: uppercase; letter-spacing: 0.14em; font-size: 7.5pt; color: #6b4a8a; vertical-align: middle }
 tfoot .of { font-weight: 500; color: #6b6470 }
 .legend { margin: 8px 0 0; font-size: 7.5pt; color: #6b6470; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
-@media print { .bar { display: none } .page { padding: 0.35in 0.4in; max-width: none } }
+@media print { html, body { height: auto; display: block } .bar { display: none } .page { padding: 0.35in 0.4in; max-width: none; width: auto } }
 @media print and (orientation: portrait) {
   body { font-size: 10.5pt }
   .page { padding: 0.3in 0.25in }
@@ -210,7 +210,6 @@ tfoot .of { font-weight: 500; color: #6b6470 }
   thead th { font-size: 8.5pt }
   thead th .date { font-size: 10pt }
   tbody td { height: 29px }
-  tbody tr.blank td { height: 31px }
   td.name .n { min-width: 1.9em }
 }
 @media screen and (max-width: 640px) { .page { padding: 12px } .mast .meta { display: none } }
@@ -227,6 +226,7 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 <div class="who"><div class="wm">Ballet Folklórico<span class="mh">Mi Herencia</span></div></div>
 <div class="meta">${esc(meta)}</div>
 </div>
+<div class="rosette" aria-hidden="true"><div class="center"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.45"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.8"/></svg><svg width="30" height="30" viewBox="0 0 32 32" fill="none"><g transform="translate(16,16)" opacity="0.75"><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(0 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(51 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(103 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(154 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(206 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(257 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(309 0 0)"/></g><circle cx="16" cy="16" r="3" fill="#c9a84c"/><circle cx="16" cy="16" r="1.2" fill="#e8c97a"/></svg><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.45"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.8"/></svg></div></div>
 <h1>${esc(title)}</h1>
 <table>
 <colgroup><col class="name">${events.map(() => '<col>').join('')}</colgroup>
@@ -235,7 +235,6 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 </thead>
 <tbody>
 ${bodyRows}
-${blankRows}
 </tbody>
 <tfoot>
 <tr><td>${esc(goingLabel)}</td>${footCells}</tr>
