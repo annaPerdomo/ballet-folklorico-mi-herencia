@@ -171,7 +171,7 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
 .page { padding: 18px 18px 16px; max-width: 11in; margin: 0 auto; width: 100%; flex: 1 }
 .mast { display: flex; align-items: center; gap: 14px }
-.flourish { width: 120px; height: 3px; margin: 12px 0 8px; background: linear-gradient(90deg, #c9a84c 0%, #c9a84c 55%, transparent 100%) }
+.flourish { width: 100%; height: 3px; margin: 12px 0 8px; background: linear-gradient(90deg, #c9a84c 0%, #c9a84c 60%, transparent 100%) }
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
 .mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
