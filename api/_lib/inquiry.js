@@ -6,6 +6,19 @@ const TYPE_TITLES = {
   corporate: 'Corporate Event', school: 'School Assembly', classes: 'Classes', other: 'Inquiry',
 };
 
+// The landing pages' forms take date and city in one box ("Oct 24 — West Covina").
+const MONTHISH = /^(?:(?:early|mid|late|end of|beginning of|this|next|principios de|mediados de|finales de|este|el próximo|el proximo)\s+)?(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre|spring|summer|fall|autumn|winter|primavera|verano|otoño|invierno|year|año|month|mes|week|semana|tbd)[a-z]*$/i;
+const STATEISH = /^(?:[a-z]{2}\.?|california|usa|u\.s\.a?\.?|estados unidos)$/i;
+// "La Puente" and "El Monte" are cities, so only "the ..." and time-of-day words mark a non-city.
+const TIMEISH = /^the\s|\b(?:morning|afternoon|evening|night|noon|mañana|tarde|noche|mediodía|or|o|y|and)\b/i;
+export function cityFromDateText(text) {
+  const parts = String(text || '').split(/\s+[—–-]\s+|,\s*|\s+(?:in|en)\s+/i).map((p) => p.trim()).filter(Boolean);
+  if (parts.length > 2 && STATEISH.test(parts[parts.length - 1])) parts.pop();
+  if (parts.length < 2) return null;
+  const last = parts[parts.length - 1];
+  return /\d/.test(last) || last.length > 60 || MONTHISH.test(last) || STATEISH.test(last) || TIMEISH.test(last) ? null : last;
+}
+
 export function normalizeInquiry(f = {}) {
   const type = str(f.subject || f.event_type, 40)?.toLowerCase() || null;
   const dateText = str(f.event_date_city || f.date_text, 200);
@@ -17,7 +30,7 @@ export function normalizeInquiry(f = {}) {
     event_type: type,
     event_date: eventDate,
     date_text: dateText,
-    city: str(f.city, 120),
+    city: str(f.city, 120) || cityFromDateText(dateText),
     client_name: name,
     client_email: str(f.email, 200)?.toLowerCase() || null,
     client_phone: str(f.phone, 40),

@@ -132,7 +132,7 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 
 - `api/` — Vercel Functions (plain Node, Postgres via `pg`). Schema is created automatically on first request (`api/_lib/db.js`).
 - `team/` — the app (vanilla JS, no build step).
-- `api/inquiry.js` — the contact form and the landing-page quote forms post a copy of every submission here (see `app.js` / `landing.js`). Formspree still sends the email.
+- `api/inquiry.js` — the contact form and the landing-page quote forms post a copy of every submission here (see `app.js` / `landing.js`). Formspree still sends the email. The landing pages ask for date and city in one box ("Oct 24 — West Covina"); the trailing part after a dash, comma or "in" is stored as the city when it isn't a number or a month, and the original text is kept as `date_text`.
 - `api/webhooks/[source].js` — the Formspree webhook target (optional; dedupes against the direct post) and the GroupMe bot callback, in one function.
 
   The Hobby plan allows 12 Vercel Functions per deployment, so a few endpoints share a file. `api/families.js` also serves `/api/dancers` and `/api/availability`, which `vercel.json` rewrites to it with `?r=`; `dev-server.mjs` mirrors those rewrites. Every public URL is unchanged — split them back out on a plan with more room.
