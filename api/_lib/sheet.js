@@ -146,8 +146,8 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     : 'Blank = no answer yet · Going = confirmed / needed';
   const printLabel = es ? 'Imprimir o guardar PDF' : 'Print or save as PDF';
   const hint = es
-    ? 'En el teléfono, toca Compartir y luego Imprimir o Guardar en Archivos. Con más de cuatro eventos, elige horizontal en el cuadro de impresión.'
-    : 'On a phone, tap Share, then Print or Save to Files. With more than four gigs, choose landscape in the print dialog.';
+    ? 'Con más de cuatro eventos, se recomienda imprimir en horizontal.'
+    : 'If more than four gigs, printing on landscape mode is recommended.';
   const nameHeader = es ? 'Bailarín' : 'Dancer';
   const goingLabel = es ? 'Van' : 'Going';
 

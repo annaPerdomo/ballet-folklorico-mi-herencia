@@ -134,10 +134,10 @@
       refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
       when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
       chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
-      printSchedule: 'Print schedule', printIntro: 'Pick the gigs for the sheet, then open it to print or save as a PDF.',
+      printSchedule: 'Print schedule',
       printPick: 'Gigs on the sheet', printAll: 'Select all', printNone: 'Clear', printCount: '{n} selected',
-      printOpen: 'Open sheet', printShare: 'Share link', printCopy: 'Copy link',
-      printHint: 'Printing from a computer? Share or copy the link and open it there. Blank cells on the sheet mean no answer yet.',
+      printOpen: 'Open sheet', printShare: 'Share', printCopy: 'Copy link',
+      printHint: 'Copy the link to print from a computer.',
       printShareMsg: 'Performance schedule sheet — open on a computer to print',
       printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet',
     },
@@ -257,10 +257,10 @@
       refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
       when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
       chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
-      printSchedule: 'Imprimir calendario', printIntro: 'Elige los eventos para la hoja y luego ábrela para imprimir o guardar como PDF.',
+      printSchedule: 'Imprimir calendario',
       printPick: 'Eventos en la hoja', printAll: 'Seleccionar todos', printNone: 'Quitar todos', printCount: '{n} seleccionados',
-      printOpen: 'Abrir hoja', printShare: 'Compartir enlace', printCopy: 'Copiar enlace',
-      printHint: '¿Vas a imprimir desde una computadora? Comparte o copia el enlace y ábrelo allí. Las celdas en blanco no tienen respuesta.',
+      printOpen: 'Abrir hoja', printShare: 'Compartir', printCopy: 'Copiar enlace',
+      printHint: 'Copia el enlace para imprimir desde una computadora.',
       printShareMsg: 'Hoja del calendario de presentaciones — ábrela en una computadora para imprimir',
       printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja',
     },
@@ -714,7 +714,8 @@
     var openBtn = h('button', { class: 'btn btn-gold', text: t('printOpen'), onclick: function () {
       var url = buildUrl(); if (!window.open(url, '_blank')) location.href = url;
     } });
-    var shareBtn = navigator.share ? h('button', { class: 'btn', text: t('printShare'), onclick: function () {
+    var canShare = navigator.share && /Android|iPhone|iPad/i.test(navigator.userAgent);
+    var shareBtn = canShare ? h('button', { class: 'btn', text: t('printShare'), onclick: function () {
       navigator.share({ title: 'Ballet Folklórico Mi Herencia', text: t('printShareMsg'), url: buildUrl() }).catch(function () {});
     } }) : null;
     var copyBtn = h('button', { class: 'btn', text: t('printCopy'), onclick: function () { copyText(buildUrl()); } });
@@ -739,7 +740,6 @@
     allBtn.addEventListener('click', function () { setAll(true); });
     noneBtn.addEventListener('click', function () { setAll(false); });
     var body = h('div', { class: 'print-pick' },
-      h('p', { class: 'print-intro', text: t('printIntro') }),
       h('div', { class: 'print-head' }, h('div', { class: 'print-label' }, h('span', { text: t('printPick') }), countEl), h('div', { class: 'print-links' }, allBtn, noneBtn)),
       list,
       candidates.length > 10 ? h('p', { class: 'print-note', text: t('printMax') }) : null,
