@@ -509,8 +509,8 @@ details[open] > .summary::before { transform: rotate(45deg); }
 .print-row .l2 { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
 .print-note { margin: 0.9rem 0 0; color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
 .print-foot { flex-wrap: wrap; gap: 0.5rem; }
-.print-foot .btn-gold { flex: 1 1 100%; }
-.print-foot .btn:not(.btn-gold) { flex: 1 1 0; }
+.print-foot .btn { flex: 1 1 0; min-width: 0; }
+.print-foot-3 .btn-gold { flex: 1 1 100%; }
 .inline-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.45rem; }
 
 .login { max-width: 400px; margin: 3rem auto; }

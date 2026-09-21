@@ -137,7 +137,7 @@
       printSchedule: 'Print schedule',
       printPick: 'Gigs on the sheet', printAll: 'Select all', printNone: 'Clear', printCount: '{n} selected',
       printOpen: 'Open sheet', printShare: 'Share', printCopy: 'Copy link',
-      printHint: 'Copy the link to print from a computer.',
+      printHint: 'Use the link to print from a computer.',
       printShareMsg: 'Performance schedule sheet — open on a computer to print',
       printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet',
     },
@@ -260,7 +260,7 @@
       printSchedule: 'Imprimir calendario',
       printPick: 'Eventos en la hoja', printAll: 'Seleccionar todos', printNone: 'Quitar todos', printCount: '{n} seleccionados',
       printOpen: 'Abrir hoja', printShare: 'Compartir', printCopy: 'Copiar enlace',
-      printHint: 'Copia el enlace para imprimir desde una computadora.',
+      printHint: 'Usa el enlace para imprimir desde una computadora.',
       printShareMsg: 'Hoja del calendario de presentaciones — ábrela en una computadora para imprimir',
       printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja',
     },
@@ -745,7 +745,7 @@
       candidates.length > 10 ? h('p', { class: 'print-note', text: t('printMax') }) : null,
       h('p', { class: 'print-note', text: t('printHint') }));
     updateCount();
-    modal(t('printSchedule'), body, h('div', { class: 'foot-btns print-foot' }, openBtn, shareBtn, copyBtn));
+    modal(t('printSchedule'), body, h('div', { class: 'foot-btns print-foot' + (shareBtn ? ' print-foot-3' : '') }, openBtn, shareBtn, copyBtn));
   }
 
   /* ── headcount ring ───────────────────────────────────── */
