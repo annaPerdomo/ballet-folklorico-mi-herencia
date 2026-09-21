@@ -161,7 +161,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
 <title>${esc(title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 @page { margin: 0.45in }
 * { box-sizing: border-box }
@@ -171,13 +171,13 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
   background: linear-gradient(135deg, #e8c97a, #c9a84c); border: 0; border-radius: 12px; padding: 12px 20px; cursor: pointer; min-height: 48px }
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
 .page { padding: 18px 18px 24px; max-width: 11in; margin: 0 auto }
-.mast { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid #c9a84c }
-.mast img { width: 46px; height: 46px; border-radius: 11px; flex: none }
+.mast { display: flex; align-items: center; gap: 14px; padding-bottom: 10px; border-bottom: 2px solid #c9a84c }
+.mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
-.mast .brand { font-family: 'Playfair Display', Georgia, serif; font-size: 13.5pt; font-weight: 700; color: #1e1230; line-height: 1.15 }
-.mast .tag { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #9a7b2e; margin-top: 3px }
+.mast .wm { font-size: 9pt; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #5e5668; line-height: 1.25 }
+.mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #9a7b2e }
 .mast .meta { font-size: 8pt; color: #6b6470; text-align: right; white-space: nowrap }
-h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 20pt; font-weight: 700; color: #1e1230; margin: 12px 0 10px; line-height: 1.1 }
+h1 { font-size: 16pt; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1e1230; margin: 12px 0 10px; line-height: 1.15 }
 table { border-collapse: collapse; width: 100%; table-layout: fixed }
 col.name { width: 2in }
 th, td { border: 1px solid #c4bccb; padding: 4px 6px; vertical-align: top; overflow-wrap: anywhere }
@@ -211,8 +211,8 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 </div>
 <div class="page">
 <div class="mast">
-<img src="/team/icons/icon-192.png" alt="">
-<div class="who"><div class="brand">Ballet Folklórico Mi Herencia</div><div class="tag">${es ? 'Equipo de baile' : 'Dance team'}</div></div>
+<img src="/images/optimized/logo-dancers-color.webp" alt="">
+<div class="who"><div class="wm">Ballet Folklórico<span class="mh">Mi Herencia</span></div></div>
 <div class="meta">${esc(meta)}</div>
 </div>
 <h1>${esc(title)}</h1>
