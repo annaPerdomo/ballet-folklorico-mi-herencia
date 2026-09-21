@@ -60,11 +60,9 @@ export function columnHeader(ev, lang) {
   const parts = [ev.venue, ev.city].filter((v) => v && !inTitle(v));
   const place = parts.join(', ') || (ev.venue || ev.city ? '' : String(ev.address || '').trim());
   const show = ev.start_time ? ev.start_time + (ev.end_time ? `–${ev.end_time}` : '') : '';
-  let time = '';
-  if (ev.call_time && show) time = `${es ? 'Llamado' : 'Call'} ${ev.call_time} · ${es ? 'Función' : 'Show'} ${show}`;
-  else if (ev.call_time) time = `${es ? 'Llamado' : 'Call'} ${ev.call_time}`;
-  else if (show) time = (es ? 'Hora: ' : 'Time: ') + show;
-  return { date, title, place, time };
+  const call = ev.call_time ? `${es ? 'Llamado' : 'Call time'}: ${ev.call_time}` : '';
+  const time = show ? `${es ? 'Función' : 'Performance'}: ${show}` : '';
+  return { date, title, place, call, time };
 }
 
 const CELL_TEXT = {
@@ -107,6 +105,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
       if (h.date) parts.push(`<div class="date">${esc(h.date)}</div>`);
       if (h.title) parts.push(`<div class="title">${esc(h.title)}</div>`);
       if (h.place) parts.push(`<div class="place">${esc(h.place)}</div>`);
+      if (h.call) parts.push(`<div class="time">${esc(h.call)}</div>`);
       if (h.time) parts.push(`<div class="time">${esc(h.time)}</div>`);
       return `<th class="gig">${parts.join('')}</th>`;
     })

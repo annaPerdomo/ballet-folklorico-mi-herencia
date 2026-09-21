@@ -21,12 +21,12 @@ test('sheetTitle picks the earliest date regardless of input order', () => {
 
 test('columnHeader formats date, time, and place per language', () => {
   const ev = { event_date: '2026-09-12', title: 'Fiesta', venue: 'Plaza', city: 'Salinas', start_time: '6:00 PM', end_time: '7:30 PM' };
-  assert.deepEqual(columnHeader(ev, 'en'), { date: 'Sat, Sep 12', title: 'Fiesta', place: 'Plaza, Salinas', time: 'Time: 6:00 PM–7:30 PM' });
+  assert.deepEqual(columnHeader(ev, 'en'), { date: 'Sat, Sep 12', title: 'Fiesta', place: 'Plaza, Salinas', call: '', time: 'Performance: 6:00 PM–7:30 PM' });
   const es = columnHeader(ev, 'es');
-  assert.ok(es.time.startsWith('Hora:'));
+  assert.ok(es.time.startsWith('Función:'));
   assert.ok(es.date.startsWith('sáb'));
 
-  assert.deepEqual(columnHeader({}, 'en'), { date: '', title: '', place: '', time: '' });
+  assert.deepEqual(columnHeader({}, 'en'), { date: '', title: '', place: '', call: '', time: '' });
 });
 
 test('cellText maps status to language', () => {
@@ -106,8 +106,10 @@ test('the sheet shows first names only and call times when the owners set one', 
   assert.ok(html.includes('</span> Kiley</td>'));
   assert.ok(!html.includes('Aceves'));
   const h = columnHeader({ event_date: '2026-09-12', call_time: '5:15 PM', start_time: '6:00 PM', end_time: '7:30 PM' }, 'en');
-  assert.equal(h.time, 'Call 5:15 PM · Show 6:00 PM–7:30 PM');
-  assert.equal(columnHeader({ call_time: '5 PM' }, 'es').time, 'Llamado 5 PM');
+  assert.equal(h.call, 'Call time: 5:15 PM');
+  assert.equal(h.time, 'Performance: 6:00 PM–7:30 PM');
+  assert.equal(columnHeader({ call_time: '5 PM' }, 'es').call, 'Llamado: 5 PM');
+  assert.equal(columnHeader({ call_time: '5 PM' }, 'es').time, '');
   assert.equal(columnHeader({ address: '123 Main St, Downey' }, 'en').place, '123 Main St, Downey');
 });
 
