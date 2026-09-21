@@ -223,9 +223,13 @@ tfoot .of { font-weight: 500; color: #6b6470 }
   .bar p { display: none }
   .bar button { width: 100% }
   .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch }
-  table { min-width: calc(120px + ${events.length} * 170px) }
+  table { min-width: calc(120px + ${events.length} * 170px); border-collapse: separate; border-spacing: 0; border-top: 1px solid #c4bccb; border-left: 1px solid #c4bccb }
+  th, td { border-width: 0 1px 1px 0 }
+  thead th { border-bottom: 2px solid #1e1230 }
+  tbody tr:last-child td { border-bottom: 0 }
+  tfoot td { border-top: 2px solid #1e1230 }
   col.name { width: 120px }
-  th.name, td.name { position: sticky; left: 0; z-index: 1; background: #fff; box-shadow: 1px 0 0 #c4bccb, inset 0 -1px 0 #c4bccb }
+  th.name, td.name { position: sticky; left: 0; z-index: 1; background: #fff }
   thead th.name, tfoot td.name { background: #efe9f5 }
   tbody tr:nth-child(even) td.name { background: #faf8fc }
 }
