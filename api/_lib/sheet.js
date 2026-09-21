@@ -55,7 +55,10 @@ export function columnHeader(ev, lang) {
   const es = lang === 'es';
   const date = dateHeader(ev.event_date, lang);
   const title = ev.title || '';
-  const place = [ev.venue, ev.city].filter(Boolean).join(', ') || String(ev.address || '').trim();
+  const plain = (v) => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/gi, ' ').trim().toLowerCase();
+  const inTitle = (v) => Boolean(v) && plain(title).includes(plain(v));
+  const parts = [ev.venue, ev.city].filter((v) => v && !inTitle(v));
+  const place = parts.join(', ') || (ev.venue || ev.city ? '' : String(ev.address || '').trim());
   const show = ev.start_time ? ev.start_time + (ev.end_time ? `–${ev.end_time}` : '') : '';
   let time = '';
   if (ev.call_time && show) time = `${es ? 'Llamado' : 'Call'} ${ev.call_time} · ${es ? 'Función' : 'Show'} ${show}`;

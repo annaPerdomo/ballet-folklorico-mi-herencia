@@ -110,3 +110,11 @@ test('the sheet shows first names only and call times when the owners set one', 
   assert.equal(columnHeader({ call_time: '5 PM' }, 'es').time, 'Llamado 5 PM');
   assert.equal(columnHeader({ address: '123 Main St, Downey' }, 'en').place, '123 Main St, Downey');
 });
+
+test('columnHeader drops venue and city that the title already says', () => {
+  assert.equal(columnHeader({ title: 'Stonewood Center Mall — Downey', venue: 'Stonewood Center Mall', city: 'Downey' }, 'en').place, '');
+  assert.equal(columnHeader({ title: 'Paramount Pictures — internal event', venue: 'Paramount Pictures', city: 'Los Angeles' }, 'en').place, 'Los Angeles');
+  assert.equal(columnHeader({ title: "St. John Vianney Church's ECD", venue: 'St. John Vianney Church', city: 'Hacienda Heights' }, 'en').place, 'Hacienda Heights');
+  assert.equal(columnHeader({ title: 'Quinceañera — Lopez', venue: 'Grand Ballroom', city: 'West Covina' }, 'en').place, 'Grand Ballroom, West Covina');
+  assert.equal(columnHeader({ title: 'Fiesta en Montebello', venue: 'Montebello Mall', city: 'Montebello' }, 'en').place, 'Montebello Mall');
+});
