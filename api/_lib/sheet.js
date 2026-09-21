@@ -171,11 +171,7 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
 .page { padding: 18px 18px 16px; max-width: 11in; margin: 0 auto; width: 100%; flex: 1 }
 .mast { display: flex; align-items: center; gap: 14px }
-.flourish { display: block; width: 100%; height: 10px; margin: 10px 0 6px; position: relative;
-  background: radial-gradient(circle, #c9a84c 1.3px, transparent 1.7px) left center / 7px 100% no-repeat,
-    radial-gradient(circle, #c9a84c 1.3px, transparent 1.7px) right center / 7px 100% no-repeat,
-    linear-gradient(90deg, #c9a84c, #c9a84c) center / 100% 1.5px no-repeat }
-.flourish::before { content: ''; position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; transform: translate(-50%, -50%) rotate(45deg); background: #c9a84c; box-shadow: 0 0 0 5px #fff }
+.flourish { width: 120px; height: 3px; margin: 12px 0 8px; background: linear-gradient(90deg, #c9a84c 0%, #c9a84c 55%, transparent 100%) }
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
 .mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
