@@ -154,8 +154,8 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     : 'Blank = no answer yet · Going = confirmed / needed';
   const printLabel = es ? 'Imprimir o guardar PDF' : 'Print or save as PDF';
   const hint = es
-    ? 'Con más de cuatro eventos, se recomienda imprimir en horizontal.'
-    : 'If more than four gigs, printing on landscape mode is recommended.';
+    ? 'Con más de cuatro eventos, imprime en horizontal.'
+    : 'With more than four gigs, print in landscape.';
   const nameHeader = es ? 'Bailarín' : 'Dancer';
   const goingLabel = es ? 'Van' : 'Going';
 
@@ -217,7 +217,18 @@ tfoot .of { font-weight: 500; color: #6b6470 }
   tbody td { height: 29px }
   td.name .n { min-width: 1.9em }
 }
-@media screen and (max-width: 640px) { .page { padding: 12px } .mast .meta { display: none } }
+@media screen and (max-width: 640px) {
+  .page { padding: 12px }
+  .mast .meta { display: none }
+  .bar p { display: none }
+  .bar button { width: 100% }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch }
+  table { min-width: calc(120px + ${events.length} * 170px) }
+  col.name { width: 120px }
+  th.name, td.name { position: sticky; left: 0; z-index: 1; background: #fff; box-shadow: 1px 0 0 #c4bccb, inset 0 -1px 0 #c4bccb }
+  thead th.name, tfoot td.name { background: #efe9f5 }
+  tbody tr:nth-child(even) td.name { background: #faf8fc }
+}
 </style>
 </head>
 <body>
@@ -233,6 +244,7 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 </div>
 <div class="flourish" aria-hidden="true"></div>
 <h1>${esc(title)}</h1>
+<div class="scroll">
 <table>
 <colgroup><col class="name">${events.map(() => '<col>').join('')}</colgroup>
 <thead>
@@ -242,9 +254,10 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 ${bodyRows}
 </tbody>
 <tfoot>
-<tr><td>${esc(goingLabel)}</td>${footCells}</tr>
+<tr><td class="name">${esc(goingLabel)}</td>${footCells}</tr>
 </tfoot>
 </table>
+</div>
 <p class="legend"><span>${esc(legend)}</span><span>bfmh.dance/team</span></p>
 </div>
 </body>
