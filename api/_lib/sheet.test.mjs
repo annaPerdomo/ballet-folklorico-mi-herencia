@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { seasonOf, sheetTitle, columnHeader, cellText, renderSheet } from './sheet.js';
+import { seasonOf, sheetTitle, columnHeader, cellText, renderSheet, firstName } from './sheet.js';
 
 test('seasonOf buckets by month, ignoring year boundaries', () => {
   assert.equal(seasonOf('2026-09-12'), 'fall');
@@ -90,10 +90,23 @@ test('renderSheet in Spanish', () => {
 test('renderSheet escapes dancer names', () => {
   const html = renderSheet({
     events: [{ id: 1, title: 'Fiesta', event_date: '2026-09-12' }],
-    dancers: [{ id: 10, name: 'Angel <i>' }],
+    dancers: [{ id: 10, name: '<i>Angel Ramirez' }],
     availability: [],
     lang: 'en',
   });
   assert.ok(!html.includes('<i>'));
   assert.ok(html.includes('&lt;i&gt;'));
+});
+
+test('the sheet shows first names only and call times when the owners set one', () => {
+  assert.equal(firstName('Anna Mendez Perdomo'), 'Anna');
+  assert.equal(firstName('  Sebas '), 'Sebas');
+  assert.equal(firstName(''), '');
+  const html = renderSheet({ events: [], availability: [], dancers: [{ id: 1, name: 'Kiley Aceves' }], lang: 'en' });
+  assert.ok(html.includes('</span> Kiley</td>'));
+  assert.ok(!html.includes('Aceves'));
+  const h = columnHeader({ event_date: '2026-09-12', call_time: '5:15 PM', start_time: '6:00 PM', end_time: '7:30 PM' }, 'en');
+  assert.equal(h.time, 'Call 5:15 PM · Show 6:00 PM–7:30 PM');
+  assert.equal(columnHeader({ call_time: '5 PM' }, 'es').time, 'Llamado 5 PM');
+  assert.equal(columnHeader({ address: '123 Main St, Downey' }, 'en').place, '123 Main St, Downey');
 });

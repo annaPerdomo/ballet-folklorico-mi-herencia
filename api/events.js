@@ -29,7 +29,7 @@ export default route({
       const allowed = verifySheetSig(str(q.a, 40)) || (await whoami(req)).role === 'admin';
       if (!allowed) throw httpError(403, 'That link is not valid');
       const lang = q.lang === 'es' ? 'es' : 'en';
-      const cols = 'id, title, event_date, start_time, end_time, venue, city, dancers_needed';
+      const cols = 'id, title, event_date, call_time, start_time, end_time, venue, address, city, dancers_needed';
       const sheet = str(q.sheet, 200) || '';
       let events;
       if (sheet === 'all') {

@@ -55,11 +55,12 @@ export function columnHeader(ev, lang) {
   const es = lang === 'es';
   const date = dateHeader(ev.event_date, lang);
   const title = ev.title || '';
-  const place = [ev.venue, ev.city].filter(Boolean).join(', ');
+  const place = [ev.venue, ev.city].filter(Boolean).join(', ') || String(ev.address || '').trim();
+  const show = ev.start_time ? ev.start_time + (ev.end_time ? `–${ev.end_time}` : '') : '';
   let time = '';
-  if (ev.start_time) {
-    time = (es ? 'Hora: ' : 'Time: ') + ev.start_time + (ev.end_time ? `–${ev.end_time}` : '');
-  }
+  if (ev.call_time && show) time = `${es ? 'Llamado' : 'Call'} ${ev.call_time} · ${es ? 'Función' : 'Show'} ${show}`;
+  else if (ev.call_time) time = `${es ? 'Llamado' : 'Call'} ${ev.call_time}`;
+  else if (show) time = (es ? 'Hora: ' : 'Time: ') + show;
   return { date, title, place, time };
 }
 
@@ -84,6 +85,8 @@ function esc(s) {
     "'": '&#39;',
   }[c]));
 }
+
+export const firstName = (name) => String(name || '').trim().split(/\s+/)[0] || '';
 
 export function renderSheet({ events, dancers, availability, lang = 'en', printedAt = new Date() }) {
   const es = lang === 'es';
@@ -115,7 +118,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
           return `<td class="${cls}">${esc(cellText(status, lang))}</td>`;
         })
         .join('');
-      return `<tr><td class="name"><span class="n">${i + 1}.</span> ${esc(d.name)}</td>${cells}</tr>`;
+      return `<tr><td class="name"><span class="n">${i + 1}.</span> ${esc(firstName(d.name))}</td>${cells}</tr>`;
     })
     .join('');
 
