@@ -81,6 +81,9 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tm-sec-count { font-size: 0.69rem; font-weight: 800; letter-spacing: 0.1em; color: var(--bg-deep);
   background: linear-gradient(135deg, var(--gold-light), var(--gold)); border-radius: 999px; padding: 3px 9px; }
 .tm-sec-rule { flex: 1; min-width: 1rem; height: 1px; background: var(--hair); }
+.btn-print { gap: 0.4rem; flex: none; }
+.btn-print svg { width: 15px; height: 15px; }
+.btn-print .lbl-short { display: none; }
 .tm-sub { color: var(--muted); font-size: 0.8rem; margin: -0.5rem 0 0.9rem; line-height: 1.55; }
 
 /* ── empty states ───────────────────────────────────────── */
@@ -295,7 +298,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .chip button:hover { color: var(--no); }
 .chip.is-off { opacity: 0.45; }
 
-.askline { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: var(--muted); }
+.askline { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
 .askline svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--gold); }
 .askline b { color: var(--gold-light); font-weight: 600; }
 .askline.never { color: var(--magenta-light); }
@@ -474,6 +477,8 @@ label.f textarea { min-height: 90px; resize: vertical; }
 input[type=date] { color-scheme: dark; }
 .rehrow { display: grid; grid-template-columns: 1fr 1fr 1.4fr auto; gap: 0.4rem; margin: 0.45rem 0; align-items: center; }
 .hint { color: var(--muted); font-size: 0.76rem; margin: 0.35rem 0 0; line-height: 1.55; }
+.askmeta { display: flex; flex-wrap: wrap; column-gap: 0.9rem; row-gap: 0; margin: 0; }
+.askmeta span { white-space: nowrap; }
 .site-row { margin-top: 0.8rem; }
 .site-toggle { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.7rem 0.85rem; border-radius: 12px; cursor: pointer;
   border: 1px solid var(--line); background: var(--bg-elevated); color: var(--text-2); font-size: 0.86rem; font-weight: 600; }
@@ -496,6 +501,22 @@ input[type=date] { color-scheme: dark; }
   border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); transform: rotate(-45deg); transition: transform 0.15s; }
 details[open] > .summary::before { transform: rotate(45deg); }
 .summary:hover { border-color: var(--gold); }
+.print-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 32px; margin-bottom: 0.2rem; }
+.print-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); display: flex; align-items: baseline; gap: 0.6rem; }
+.print-count.over { color: var(--magenta-light); font-weight: 700; }
+.print-count { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--muted); font-size: 0.8rem; }
+.print-links { display: flex; gap: 1rem; }
+.print-links .btn-link { min-height: 32px; padding: 0 0.2rem; }
+.print-list { border-top: 1px solid var(--hair); }
+.print-row { display: flex; gap: 0.85rem; align-items: center; min-height: 56px; padding: 0.55rem 0; border-bottom: 1px solid var(--hair); cursor: pointer; }
+.print-row input { width: 22px; height: 22px; margin: 0; accent-color: var(--gold); flex: none; }
+.print-txt { min-width: 0; }
+.print-row .l1 { font-weight: 600; line-height: 1.3; }
+.print-row .l2 { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+.print-note { margin: 0.9rem 0 0; color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+.print-foot { flex-wrap: wrap; gap: 0.5rem; }
+.print-foot .btn { flex: 1 1 0; min-width: 0; }
+.print-foot-3 .btn-gold { flex: 1 1 100%; }
 .inline-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.45rem; }
 
 .login { max-width: 400px; margin: 3rem auto; }
@@ -589,4 +610,11 @@ details[open] > .summary::before { transform: rotate(45deg); }
 @media (prefers-reduced-motion: reduce) {
   .modal, .pop, .ring-fg { animation: none; transition: none; }
   .tm-twirl .tw, .tm-twirl .tw-core { animation-duration: 3.5s; }
+}
+@media (max-width: 700px) {
+  .tm-sec { flex-wrap: nowrap; }
+  .tm-sec-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .btn-print { margin-left: auto; padding: 0 0.7rem; }
+  .btn-print .lbl-long { display: none; }
+  .btn-print .lbl-short { display: inline; }
 }

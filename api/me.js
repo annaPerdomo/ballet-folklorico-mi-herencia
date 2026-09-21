@@ -1,5 +1,5 @@
 import { route, ok } from './_lib/http.js';
-import { whoami, feedSig, adminFeedSig } from './_lib/auth.js';
+import { whoami, feedSig, adminFeedSig, sheetSig } from './_lib/auth.js';
 import { channels, siteUrl } from './_lib/notify.js';
 import { one } from './_lib/db.js';
 
@@ -13,6 +13,7 @@ async function feedUrl(me) {
 export default route({
   async GET(req, res) {
     const me = await whoami(req);
-    ok(res, { ...me, calendar_feed: await feedUrl(me), channels: channels(), configured: Boolean(process.env.ADMIN_PASSWORD) });
+    const extra = me.role === 'admin' ? { sheet_key: sheetSig() } : {};
+    ok(res, { ...me, ...extra, calendar_feed: await feedUrl(me), channels: channels(), configured: Boolean(process.env.ADMIN_PASSWORD) });
   },
 });
