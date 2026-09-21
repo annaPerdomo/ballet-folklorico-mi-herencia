@@ -175,7 +175,7 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
 .mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
-.mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #6f5418 }
+.mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #1e1230 }
 .mast .meta { font-size: 8pt; color: #6b6470; text-align: right; white-space: nowrap }
 h1 { font-size: 16pt; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1e1230; margin: 12px 0 10px; line-height: 1.15 }
 table { border-collapse: collapse; width: 100%; table-layout: fixed }
