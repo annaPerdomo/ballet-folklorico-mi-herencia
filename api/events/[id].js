@@ -3,7 +3,7 @@ import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, eventSummary, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
+import { postGroupMe, eventSummary, eventWhere, mapLink, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -42,7 +42,7 @@ async function notifyConfirm(ev) {
 }
 
 function cancelText(ev) {
-  const where = [ev.venue, ev.city].filter(Boolean).join(', ');
+  const where = eventWhere(ev);
   const cal = calLink(ev);   // the app opens the "remove" chooser for a cancelled gig
   return [
     `❌ CANCELLED: ${ev.title || ev.event_type || 'Performance'} — ${fmtDate(ev.event_date)}`,
@@ -59,7 +59,13 @@ export function reminderText(ev, roster) {
   for (const f of roster) for (const d of f.dancers) if (!d.status) missing.push(d.name);
   const head = `⏰ Reminder — ${ev.title} on ${fmtDate(ev.event_date)}.`;
   if (!missing.length) return `${head} Everyone has answered, thank you!`;
-  return `${head} Still need an answer from: ${missing.join(', ')}.\n${teamLink(ev.id)}`;
+  const where = eventWhere(ev);
+  return [
+    `${head} Still need an answer from: ${missing.join(', ')}.`,
+    ev.call_time ? `Call time / Hora de llegada: ${ev.call_time}` : null, // no ⏰: the head line already carries it
+    where ? `📍 ${where} · ${mapLink(ev)}` : null,
+    teamLink(ev.id),
+  ].filter(Boolean).join('\n');
 }
 
 export default route({

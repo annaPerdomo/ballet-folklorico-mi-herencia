@@ -99,7 +99,7 @@ Private page for the owners and the dancer families. Replaces the "who is availa
 
 | Button | Action | What lands in GroupMe |
 | --- | --- | --- |
-| Ask GroupMe who's available | `ask` | `📢 New gig request received! Who can join us for this one?` + gig, date · time · place, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
+| Ask GroupMe who's available | `ask` | `📢 New gig request received! Who can join us for this one?` + gig, date · time, ⏰ call time, 📍 venue + street address + city with a 🗺 Google Maps link, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
 | Post the announcement | `announce` | `📣 New gig: are you available?` + the full summary, calendar link, and "Mark your availability" link |
 | Post tally to GroupMe | `tally` | `📊 <gig> — <date>` then ✓ / ? / ✗ names and "Waiting on: …" |
 | Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
@@ -112,7 +112,10 @@ Sample ask, exactly as it arrives:
 ```
 📢 New gig request received! Who can join us for this one?
 Quinceañera — Ramirez
-Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina
+Wed, Nov 4 · 7:00 PM–7:30 PM
+⏰ Call time / Hora de llegada: 6:15 PM
+📍 Grand Ballroom, 123 Main St, West Covina
+🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%20123%20Main%20St%2C%20West%20Covina
 
 Reply "Sofia yes for Nov 4" or "we can't".
 Or tap / O toca: https://bfmh.dance/team/?e=42&s=…
