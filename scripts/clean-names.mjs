@@ -1,4 +1,5 @@
-// One-off cleanup: family name = surname only, dancer name = first name only.
+// One-off cleanup: dancer display names become first names only. Family names are left as they are,
+// since some are a parent's full name and that is where the surname lives.
 // Dry run by default; pass --apply to write. Needs DATABASE_URL (or .env.local) like the seed scripts.
 import { readFileSync, existsSync } from 'node:fs';
 import pg from 'pg';
@@ -12,52 +13,32 @@ await client.connect();
 
 const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
-// "Coco Ramirez (Anisa)" -> "Ramirez"; "Cindy (Zamyra & Zaryna)" -> "" (parent's first name only, no surname known)
-function surnameOf(family) {
-  const base = family.replace(/\(.*?\)/g, '').trim();
-  const words = base.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) return words.slice(1).join(' ');
-  return '';
-}
-
-function firstNameOf(dancer, surname) {
-  const words = dancer.trim().split(/\s+/);
-  if (words.length === 1) return dancer.trim();
-  if (surname && norm(dancer).endsWith(' ' + norm(surname))) return dancer.trim().slice(0, dancer.trim().length - surname.length).trim();
+// "Anna Mendez Perdomo" in family "Mendez Perdomo" -> "Anna"; otherwise the first word.
+function firstNameOf(dancer, family) {
+  const name = dancer.trim();
+  const words = name.split(/\s+/);
+  if (words.length === 1) return name;
+  const famWords = family.replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean);
+  for (let i = 1; i < famWords.length + 1 && i <= famWords.length; i++) {
+    const tail = famWords.slice(famWords.length - i).join(' ');
+    if (tail && norm(name).endsWith(' ' + norm(tail))) return name.slice(0, name.length - tail.length).trim();
+  }
   return words[0];
 }
 
 const { rows } = await client.query(
-  `SELECT f.id AS fid, f.name AS family, d.id AS did, d.name AS dancer
-     FROM families f LEFT JOIN dancers d ON d.family_id = f.id ORDER BY f.name, d.name`);
+  `SELECT f.name AS family, d.id, d.name FROM dancers d JOIN families f ON f.id = d.family_id ORDER BY f.name, d.name`);
 
-const familyUpdates = new Map();
-const dancerUpdates = [];
-const needsSurname = [];
-for (const r of rows) {
-  const hasParens = /\(/.test(r.family);
-  const surname = surnameOf(r.family);
-  const singleWord = r.family.trim().split(/\s+/).length === 1 && !hasParens;
-  const inferred = singleWord ? r.family.trim() : surname;
-  if (inferred && inferred !== r.family) familyUpdates.set(r.fid, { from: r.family, to: inferred });
-  if (!inferred && !familyUpdates.has(r.fid)) needsSurname.push(r.family);
-  if (r.did) {
-    const first = firstNameOf(r.dancer, inferred || surname);
-    if (first !== r.dancer) dancerUpdates.push({ id: r.did, from: r.dancer, to: first });
-  }
-}
+const updates = rows.map((r) => ({ id: r.id, family: r.family, from: r.name, to: firstNameOf(r.name, r.family) })).filter((u) => u.to !== u.from);
 
 console.log(apply ? 'Applying:' : 'Dry run (add --apply to write):');
-for (const [id, u] of familyUpdates) console.log(`  family #${id}: "${u.from}" -> "${u.to}"`);
-for (const u of dancerUpdates) console.log(`  dancer #${u.id}: "${u.from}" -> "${u.to}"`);
-if (!familyUpdates.size && !dancerUpdates.length) console.log('  nothing to change');
-for (const f of [...new Set(needsSurname)]) console.log(`  ! family "${f}" has no surname to use; rename it in the Team tab`);
+for (const u of updates) console.log(`  dancer #${u.id} (${u.family}): "${u.from}" -> "${u.to}"`);
+if (!updates.length) console.log('  nothing to change');
 
 if (apply) {
   await client.query('BEGIN');
-  for (const [id, u] of familyUpdates) await client.query('UPDATE families SET name = $2 WHERE id = $1', [id, u.to]);
-  for (const u of dancerUpdates) await client.query('UPDATE dancers SET name = $2 WHERE id = $1', [u.id, u.to]);
+  for (const u of updates) await client.query('UPDATE dancers SET name = $2 WHERE id = $1', [u.id, u.to]);
   await client.query('COMMIT');
-  console.log(`Done: ${familyUpdates.size} families, ${dancerUpdates.length} dancers renamed.`);
+  console.log(`Done: ${updates.length} dancers renamed.`);
 }
 await client.end();
