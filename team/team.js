@@ -67,7 +67,7 @@
       payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
       title: 'Title', titlePh: 'e.g. Quinceañera — Lopez family', typeLabel: 'Type', typePh: '— type —', dateLabel: 'Date', startTime: 'Start time', endTime: 'End time',
       dancersNeededLabel: 'Dancers needed', venue: 'Venue', city: 'City', address: 'Address',
-      clientWrote: 'Client wrote (date & city)', detailsForTeam: 'Details for the team', detailsPh: 'Costume, dances, parking, what to bring…',
+      clientWrote: 'Client wrote (date & city)', clientWroteShort: 'Client wrote', detailsForTeam: 'Details for the team', detailsPh: 'Costume, dances, parking, what to bring…',
       rehearsalsLabel: 'Rehearsals (shown to the team)', rehearsalDate: 'Rehearsal date', time: 'Time', locationNote: 'Location / note', addRehearsal: '+ Add rehearsal',
       clientSection: 'Client contact & private notes', clientName: 'Client name', clientEmail: 'Client email', clientPhone: 'Client phone', clientMessage: 'Client message',
       privateNotes: 'Private notes (owners only)',
@@ -190,7 +190,7 @@
       payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
       title: 'Título', titlePh: 'p. ej. Quinceañera — familia López', typeLabel: 'Tipo', typePh: '— tipo —', dateLabel: 'Fecha', startTime: 'Hora de inicio', endTime: 'Hora de fin',
       dancersNeededLabel: 'Bailarines necesarios', venue: 'Lugar', city: 'Ciudad', address: 'Dirección',
-      clientWrote: 'El cliente escribió (fecha y ciudad)', detailsForTeam: 'Detalles para el equipo', detailsPh: 'Vestuario, bailes, estacionamiento, qué traer…',
+      clientWrote: 'El cliente escribió (fecha y ciudad)', clientWroteShort: 'El cliente escribió', detailsForTeam: 'Detalles para el equipo', detailsPh: 'Vestuario, bailes, estacionamiento, qué traer…',
       rehearsalsLabel: 'Ensayos (visibles al equipo)', rehearsalDate: 'Fecha del ensayo', time: 'Hora', locationNote: 'Lugar / nota', addRehearsal: '+ Agregar ensayo',
       clientSection: 'Contacto del cliente y notas privadas', clientName: 'Nombre del cliente', clientEmail: 'Correo del cliente', clientPhone: 'Teléfono del cliente', clientMessage: 'Mensaje del cliente',
       privateNotes: 'Notas privadas (solo dueños)',
@@ -484,7 +484,7 @@
     app.appendChild(h('div', { class: 'card' },
       h('div', { class: 'card-head' },
         h('div', { class: 'card-headmain' }, pill(ev.status), h('h3', { class: 'card-title', text: evTitle(ev) }),
-          h('p', { class: 'card-meta', text: fmtDate(ev.event_date) }), metaLine(ev)),
+          factList(ev)),
         dateBox(ev)),
       ev.details ? h('p', { class: 'card-text', text: ev.details }) : null));
 
@@ -795,16 +795,21 @@
           h('em', { class: 'pending' }, icon('clock', 2.5), h('b', { text: c.pending }), ' ' + t('waiting')))));
   }
   function pill(status) { return h('span', { class: 'pill pill-' + status, text: t('status')[status] || status }); }
-  function metaLine(ev) {
-    var parts = [];
-    if (fmtTime(ev)) parts.push(h('span', {}, h('b', { text: fmtTime(ev) })));
-    if (ev.call_time) parts.push(h('span', { text: t('callTime') + ' ' + ev.call_time }));
-    if (fmtWhere(ev)) parts.push(h('span', { text: fmtWhere(ev) }));
-    if (ev.dancers_needed) parts.push(h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) }));
-    if (ev.pay && state.me && state.me.role === 'admin') parts.push(h('span', { text: t('pay') + ': ' + ev.pay }));
-    var out = h('p', { class: 'card-meta' });
-    parts.forEach(function (p, i) { if (i) out.appendChild(document.createTextNode('  ·  ')); out.appendChild(p); });
-    return parts.length ? out : null;
+  function factList(ev) {
+    var facts = h('div', { class: 'facts' });
+    if (fmtTime(ev) || ev.call_time) {
+      facts.appendChild(h('div', { class: 'fact' }, icon('clock', 2), h('span', {}, fmtTime(ev) ? h('b', { text: fmtTime(ev) }) : null,
+        ev.call_time ? h('span', { class: fmtTime(ev) ? 'fact-sub' : '', text: t('callTime') + ': ' + ev.call_time }) : null)));
+    }
+    if (fmtWhere(ev) || ev.address) {
+      var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
+      facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: 'https://maps.apple.com/?q=' + q, target: '_blank', rel: 'noopener' },
+        fmtWhere(ev) ? h('b', { text: fmtWhere(ev) }) : null,
+        ev.address ? h('span', { class: fmtWhere(ev) ? 'fact-sub' : '', text: ev.address }) : null)));
+    }
+    if (ev.dancers_needed) facts.appendChild(h('div', { class: 'fact' }, icon('people', 2), h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
+    if (ev.pay && state.me && state.me.role === 'admin') facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
+    return facts.childNodes.length ? facts : null;
   }
   function rehearsalLine(r) { return [fmtDate(r.date), r.time, r.location ? '@ ' + r.location : null, r.note ? '— ' + r.note : null].filter(Boolean).join(' '); }
   function rehearsalList(ev) {
@@ -892,7 +897,7 @@
     var card = h('div', { class: 'card' + (needsMe ? ' is-urgent' : ''), id: 'event-' + ev.id },
       h('div', { class: 'card-head' },
         h('div', { class: 'card-headmain' }, pill(ev.status), h('h3', { class: 'card-title', text: evTitle(ev) }),
-          h('p', { class: 'card-meta', text: fmtDate(ev.event_date) }), metaLine(ev)),
+          factList(ev)),
         dateBox(ev)),
       ev.details ? h('p', { class: 'card-text', text: ev.details }) : null);
 
@@ -1114,7 +1119,7 @@
         dateBox(ev),
         h('div', { class: 'gigmain' },
           h('div', { class: 'gigmain-top' }, h('span', { class: 'card-title sm', text: evTitle(ev) }), pill(ev.status)),
-          h('p', { class: 'card-meta', text: [fmtTime(ev), fmtWhere(ev)].filter(Boolean).join('  ·  ') || fmtDate(ev.event_date) }),
+          gigFacts(ev),
           askedLine(ev)),
         headcount(ev, c),
         h('div', { class: 'gigmeter' }, meterBar(c), tallyRow(c), goingNames(ev)),
@@ -1124,15 +1129,23 @@
     return list;
   }
 
+  function gigFacts(ev) {
+    var out = h('div', { class: 'gigfacts' });
+    if (fmtTime(ev) || ev.call_time) out.appendChild(h('span', { class: 'gigfact' }, icon('clock', 2), h('span', { text: [fmtTime(ev), ev.call_time ? t('callTime') + ': ' + ev.call_time : null].filter(Boolean).join(' · ') })));
+    var title = (ev.title || '').toLowerCase();
+    var place = [ev.venue, ev.city].filter(function (v) { return v && title.indexOf(v.toLowerCase()) === -1; }).join(' · ');
+    place = [place, ev.address].filter(Boolean).join(', ');
+    if (place) out.appendChild(h('span', { class: 'gigfact' }, icon('pin', 2), h('span', { text: place })));
+    return out;
+  }
   function adminCard(ev) {
     var card = h('div', { class: 'card', id: 'event-' + ev.id });
     card.appendChild(h('div', { class: 'card-head' },
       h('div', { class: 'card-headmain' }, pill(ev.status),
-        h('h3', { class: 'card-title sm' }, h('button', { text: ev.title || t('untitled'), onclick: function () { openDetail(ev.id); } })),
-        h('p', { class: 'card-meta', text: fmtDate(ev.event_date) + (ev.date_text ? '  ·  “' + ev.date_text + '”' : '') }), metaLine(ev)),
+        h('h3', { class: 'card-title sm' }, h('button', { text: ev.title || t('untitled'), onclick: function () { openDetail(ev.id); } }))),
       dateBox(ev)));
-    if (ev.status === 'inquiry' || ev.client_name) {
-      card.appendChild(clientBlock(ev));
+    if (ev.status === 'inquiry' || ev.client_name || fmtWhere(ev) || fmtTime(ev) || ev.call_time) {
+      card.appendChild(clientBlock(ev, true));
       if (ev.message) card.appendChild(h('p', { class: 'card-text', text: ev.message }));
     }
     var actions = h('div', { class: 'card-actions' });
@@ -1149,7 +1162,8 @@
     return card;
   }
 
-  function clientBlock(ev) {
+  // withFacts: where/when/needs rows — the detail sheet gets those from factList instead.
+  function clientBlock(ev, withFacts) {
     var dl = h('dl', { class: 'kv' });
     if (ev.client_name) dl.appendChild(h('div', {}, h('dt', { text: t('from') }), h('dd', { text: ev.client_name })));
     if (ev.client_email) dl.appendChild(h('div', {}, h('dt', { text: t('email') }), h('dd', {}, h('a', { href: 'mailto:' + ev.client_email, text: ev.client_email }))));
@@ -1162,7 +1176,11 @@
           h('a', { class: 'btn btn-sm', href: 'sms:' + digits }, icon('chat', 2.2), t('text'))))));
     }
     if (ev.event_type) dl.appendChild(h('div', {}, h('dt', { text: t('type') }), h('dd', { text: typeLabel(ev.event_type) })));
-    dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + ev.source : '') })));
+    if (withFacts && (fmtWhere(ev) || ev.address)) dl.appendChild(h('div', {}, h('dt', { text: t('where') }), h('dd', { text: [fmtWhere(ev), ev.address].filter(Boolean).join(', ') })));
+    if (ev.date_text) dl.appendChild(h('div', {}, h('dt', { text: t('clientWroteShort') }), h('dd', { text: '“' + ev.date_text + '”' })));
+    if (withFacts && (fmtTime(ev) || ev.call_time)) dl.appendChild(h('div', {}, h('dt', { text: t('when') }), h('dd', { text: [fmtTime(ev), ev.call_time ? t('callTime') + ': ' + ev.call_time : null].filter(Boolean).join(' · ') })));
+    if (withFacts && ev.dancers_needed) dl.appendChild(h('div', {}, h('dt', { text: t('needs') }), h('dd', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
+    if (ev.status === 'inquiry' || ev.client_name) dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + ev.source : '') })));
     return dl;
   }
 
@@ -1424,15 +1442,8 @@
 
     body.appendChild(hero(ev, c));
 
-    var facts = h('div', { class: 'facts' });
-    if (fmtTime(ev) || ev.call_time) facts.appendChild(h('div', { class: 'fact' }, icon('clock', 2), h('span', {}, fmtTime(ev) ? h('b', { text: fmtTime(ev) }) : null, ev.call_time ? ' · ' + t('callTime') + ' ' + ev.call_time : '')));
-    if (fmtWhere(ev) || ev.address) {
-      var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
-      facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: 'https://maps.apple.com/?q=' + q, target: '_blank', rel: 'noopener', text: [fmtWhere(ev), ev.address].filter(Boolean).join(' · ') })));
-    }
-    if (ev.dancers_needed) facts.appendChild(h('div', { class: 'fact' }, icon('people', 2), h('span', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
-    if (ev.pay && state.me && state.me.role === 'admin') facts.appendChild(h('div', { class: 'fact' }, h('span', { class: 'fact-sym', text: '$' }), h('span', { text: t('pay') + ': ' + ev.pay })));
-    if (facts.childNodes.length) body.appendChild(facts);
+    var facts = factList(ev);
+    if (facts) body.appendChild(facts);
     var detailCal = calButton(ev);
     if (detailCal) body.appendChild(h('div', { class: 'card-actions' }, detailCal));
     var siteRow = websiteRow(ev); if (siteRow) body.appendChild(siteRow);
@@ -1685,7 +1696,10 @@
     ['askGroup', [
       '📢 New gig request received! Who can join us for this one?',
       'Quinceañera — Ramirez',
-      'Wed, Nov 4 · 7:00 PM–7:30 PM · Grand Ballroom, West Covina',
+      'Wed, Nov 4 · 7:00 PM–7:30 PM',
+      '⏰ Call time / Hora de llegada: 6:15 PM',
+      '📍 Grand Ballroom, 1200 E Garvey Ave, West Covina',
+      '🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%201200%20E%20Garvey%20Ave%2C%20West%20Covina',
       '',
       'Reply "Sofia yes for Nov 4" or "we can\'t".',
       'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
