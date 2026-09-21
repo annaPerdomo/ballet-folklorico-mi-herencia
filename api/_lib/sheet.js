@@ -203,6 +203,16 @@ tfoot td:first-child { text-transform: uppercase; letter-spacing: 0.14em; font-s
 tfoot .of { font-weight: 500; color: #6b6470 }
 .legend { margin: 8px 0 0; font-size: 7.5pt; color: #6b6470; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
 @media print { .bar { display: none } .page { padding: 0.35in 0.4in; max-width: none } }
+@media print and (orientation: portrait) {
+  body { font-size: 10.5pt }
+  .page { padding: 0.3in 0.25in }
+  col.name { width: 1.45in }
+  thead th { font-size: 8.5pt }
+  thead th .date { font-size: 10pt }
+  tbody td { height: 29px }
+  tbody tr.blank td { height: 31px }
+  td.name .n { min-width: 1.9em }
+}
 @media screen and (max-width: 640px) { .page { padding: 12px } .mast .meta { display: none } }
 </style>
 </head>
