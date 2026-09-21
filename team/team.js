@@ -1105,7 +1105,11 @@
     } else {
       app.appendChild(gigList(live));
     }
-    if (past.length) { app.appendChild(section(t('past'), past.length)); app.appendChild(gigList(past)); }
+    if (past.length) {
+      var pastSec = section(t('past'), past.length);
+      pastSec.className += ' tm-sec-fold';
+      app.appendChild(h('details', { class: 'tm-fold' }, h('summary', { class: 'tm-fold-summary' }, pastSec), gigList(past)));
+    }
     var ownerCal = subscribeCard(true);
     if (ownerCal) { app.appendChild(section(t('calSection'))); app.appendChild(ownerCal); }
   }

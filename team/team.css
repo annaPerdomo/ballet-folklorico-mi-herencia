@@ -81,6 +81,15 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tm-sec-count { font-size: 0.69rem; font-weight: 800; letter-spacing: 0.1em; color: var(--bg-deep);
   background: linear-gradient(135deg, var(--gold-light), var(--gold)); border-radius: 999px; padding: 3px 9px; }
 .tm-sec-rule { flex: 1; min-width: 1rem; height: 1px; background: var(--hair); }
+.tm-fold { margin-top: 1.7rem; }
+.tm-fold-summary { cursor: pointer; list-style: none; }
+.tm-fold-summary > .tm-sec { margin-top: 0; }
+.tm-fold-summary::-webkit-details-marker { display: none; }
+.tm-sec-fold::after { content: ''; flex-shrink: 0; width: 7px; height: 7px; margin: 0 4px 3px 0;
+  border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); transform: rotate(-45deg); transition: transform 0.15s; }
+.tm-fold[open] > .tm-fold-summary .tm-sec-fold::after { transform: rotate(45deg); margin-bottom: 0; }
+.tm-fold-summary:hover .tm-sec-title { color: var(--gold); }
+.tm-fold-summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
 .btn-print { gap: 0.4rem; flex: none; }
 .btn-print svg { width: 15px; height: 15px; }
 .btn-print .lbl-short { display: none; }
