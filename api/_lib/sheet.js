@@ -163,7 +163,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-@page { margin: 0.45in }
+@page { margin: 0.5in }
 * { box-sizing: border-box }
 body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #1a1024; background: #fff; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact }
 .bar { background: #1e1230; color: #fff; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px }
@@ -174,8 +174,8 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
 .mast { display: flex; align-items: center; gap: 14px; padding-bottom: 10px; border-bottom: 2px solid #c9a84c }
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
-.mast .wm { font-size: 9pt; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #5e5668; line-height: 1.25 }
-.mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #9a7b2e }
+.mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
+.mast .wm .mh { display: block; font-size: 12.5pt; font-weight: 800; letter-spacing: 0.1em; color: #6f5418 }
 .mast .meta { font-size: 8pt; color: #6b6470; text-align: right; white-space: nowrap }
 h1 { font-size: 16pt; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #1e1230; margin: 12px 0 10px; line-height: 1.15 }
 table { border-collapse: collapse; width: 100%; table-layout: fixed }
@@ -200,7 +200,7 @@ tfoot td { background: #efe9f5; font-weight: 800; color: #1e1230; border-top: 2p
 tfoot td:first-child { text-transform: uppercase; letter-spacing: 0.14em; font-size: 7.5pt; color: #6b4a8a; vertical-align: middle }
 tfoot .of { font-weight: 500; color: #6b6470 }
 .legend { margin: 8px 0 0; font-size: 7.5pt; color: #6b6470; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap }
-@media print { .bar { display: none } .page { padding: 0; max-width: none } }
+@media print { .bar { display: none } .page { padding: 0.35in 0.4in; max-width: none } }
 @media screen and (max-width: 640px) { .page { padding: 12px } .mast .meta { display: none } }
 </style>
 </head>
