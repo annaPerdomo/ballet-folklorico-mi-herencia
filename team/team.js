@@ -59,7 +59,7 @@
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '📢 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
-      askedLine: 'Bot asked {when} · {n} of {total} answered', askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
+      askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
@@ -134,12 +134,12 @@
       refresh: 'Refresh', tryAgain: 'Try again', refreshed: 'Up to date', answered: 'answered', answeredLine: '{n} of {total} answered', tapName: 'Tap a name to answer for them.',
       when: 'When', where: 'Where', needs: 'Needs', client: 'Client', call: 'Call', text: 'Text',
       chatOn: 'La Chona is in the chat', chatOff: 'La Chona is not connected',
-      printSchedule: 'Print schedule',
+      printSchedule: 'Print schedule', printShort: 'Print',
       printPick: 'Gigs on the sheet', printAll: 'Select all', printNone: 'Clear', printCount: '{n} selected',
       printOpen: 'Open sheet', printShare: 'Share', printCopy: 'Copy link',
       printHint: 'Use the link to print from a computer.',
       printShareMsg: 'Performance schedule sheet — open on a computer to print',
-      printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet',
+      printNoGigs: 'Post a gig first, then print the sheet.', printMax: 'Up to 10 gigs fit on one sheet — uncheck some to continue.',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -182,7 +182,7 @@
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '📢 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
-      askedLine: 'El bot preguntó {when} · {n} de {total} respondieron', askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
+      askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
@@ -257,12 +257,12 @@
       refresh: 'Actualizar', tryAgain: 'Reintentar', refreshed: 'Actualizado', answered: 'respondieron', answeredLine: '{n} de {total} respondieron', tapName: 'Toca un nombre para responder por esa persona.',
       when: 'Cuándo', where: 'Dónde', needs: 'Necesita', client: 'Cliente', call: 'Llamar', text: 'Mensaje',
       chatOn: 'La Chona está en el chat', chatOff: 'La Chona no está conectada',
-      printSchedule: 'Imprimir calendario',
+      printSchedule: 'Imprimir calendario', printShort: 'Imprimir',
       printPick: 'Eventos en la hoja', printAll: 'Seleccionar todos', printNone: 'Quitar todos', printCount: '{n} seleccionados',
       printOpen: 'Abrir hoja', printShare: 'Compartir', printCopy: 'Copiar enlace',
       printHint: 'Usa el enlace para imprimir desde una computadora.',
       printShareMsg: 'Hoja del calendario de presentaciones — ábrela en una computadora para imprimir',
-      printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja',
+      printNoGigs: 'Publica un evento primero y luego imprime la hoja.', printMax: 'Caben hasta 10 eventos en una hoja; quita algunos para continuar.',
     },
   };
   function t(key, vars) {
@@ -335,7 +335,7 @@
   function askedDetail(ev) {
     if (!ev.asked_at) return askTracked(ev) ? h('p', { class: 'hint', text: t('askedNever') }) : null;
     var c = tallyOf(ev), total = c.yes + c.maybe + c.no + c.pending;
-    return h('p', { class: 'hint', style: 'margin:0', text: t('askedLine', { when: timeAgo(ev.asked_at), n: total - c.pending, total: total }) });
+    return h('p', { class: 'hint askmeta' }, h('span', { text: t('askedAgo', { when: timeAgo(ev.asked_at) }) }), h('span', { text: t('answeredLine', { n: total - c.pending, total: total }) }));
   }
   function askGroup(ev, after, btn) {
     if (!ev.event_date) { toast(t('askNeedsDate'), true); if (after) after(); openEventModal(ev); return Promise.resolve(); }
@@ -523,6 +523,7 @@
     chat: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 21l1.9-4.6A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4z"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',
+    printer: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="2"/><path d="M6 14h12v7H6z"/>',
     allDone: '<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>',
     mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
     people: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 5.5 5.5"/>',
@@ -703,10 +704,10 @@
       api('/api/me').then(function (me) { state.me = me; }).catch(function (e) { toast(e.message, true); });
     }
     var checked = {};
-    candidates.forEach(function (e) { checked[e.id] = true; });
+    candidates.forEach(function (e, i) { checked[e.id] = i < 10; });
     function buildUrl() {
       var ids = candidates.filter(function (e) { return checked[e.id]; }).map(function (e) { return e.id; });
-      var sheet = ids.length === candidates.length && candidates.length <= 10 ? 'all' : ids.slice(0, 10).join(',');
+      var sheet = ids.length === candidates.length ? 'all' : ids.join(',');
       var key = state.me && state.me.sheet_key || '';
       return location.origin + '/api/events?sheet=' + sheet + '&a=' + encodeURIComponent(key) + '&lang=' + state.lang;
     }
@@ -714,7 +715,7 @@
     var openBtn = h('button', { class: 'btn btn-gold', text: t('printOpen'), onclick: function () {
       var url = buildUrl(); if (!window.open(url, '_blank')) location.href = url;
     } });
-    var canShare = navigator.share && /Android|iPhone|iPad/i.test(navigator.userAgent);
+    var canShare = navigator.share && (/Android|iPhone|iPad/i.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1));
     var shareBtn = canShare ? h('button', { class: 'btn', text: t('printShare'), onclick: function () {
       navigator.share({ title: 'Ballet Folklórico Mi Herencia', text: t('printShareMsg'), url: buildUrl() }).catch(function () {});
     } }) : null;
@@ -723,8 +724,10 @@
     var noneBtn = h('button', { type: 'button', class: 'btn-link', text: t('printNone') });
     function updateCount() {
       var n = candidates.filter(function (e) { return checked[e.id]; }).length;
-      countEl.textContent = t('printCount', { n: n });
-      openBtn.disabled = n === 0; if (shareBtn) shareBtn.disabled = n === 0; copyBtn.disabled = n === 0;
+      var over = n > 10;
+      countEl.textContent = over ? n + ' / 10' : t('printCount', { n: n });
+      countEl.classList.toggle('over', over);
+      openBtn.disabled = n === 0 || over; if (shareBtn) shareBtn.disabled = n === 0 || over; copyBtn.disabled = n === 0 || over;
       allBtn.hidden = n === candidates.length; noneBtn.hidden = n === 0;
     }
     var rows = [];
@@ -1089,7 +1092,7 @@
   function renderGigs() {
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
     var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); });
-    app.appendChild(section(t('posted'), live.length, h('button', { class: 'btn btn-sm', text: t('printSchedule'), onclick: printSheet })));
+    app.appendChild(section(t('posted'), live.length, h('button', { class: 'btn btn-sm btn-print', onclick: printSheet, 'aria-label': t('printSchedule') }, icon('printer', 2.2), h('span', { class: 'lbl-long', text: t('printSchedule') }), h('span', { class: 'lbl-short', text: t('printShort') }))));
     app.appendChild(h('p', { class: 'tm-sub', text: t('tapGigHint') }));
     if (!live.length) {
       app.appendChild(emptyState('calendar', t('nothingPosted'),

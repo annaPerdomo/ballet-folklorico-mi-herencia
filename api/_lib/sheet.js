@@ -55,8 +55,8 @@ export function columnHeader(ev, lang) {
   const es = lang === 'es';
   const date = dateHeader(ev.event_date, lang);
   const title = ev.title || '';
-  const plain = (v) => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/gi, ' ').trim().toLowerCase();
-  const inTitle = (v) => Boolean(v) && plain(title).includes(plain(v));
+  const plain = (v) => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+  const inTitle = (v) => { const p = plain(v); return p.length >= 3 && (' ' + plain(title) + ' ').includes(' ' + p + ' '); };
   const parts = [ev.venue, ev.city].filter((v) => v && !inTitle(v));
   const place = parts.join(', ') || (ev.venue || ev.city ? '' : String(ev.address || '').trim());
   const show = ev.start_time ? ev.start_time + (ev.end_time ? `–${ev.end_time}` : '') : '';
@@ -111,6 +111,14 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
     })
     .join('');
 
+  const firstCounts = new Map();
+  for (const d of dancers) { const k = firstName(d.name).toLowerCase(); firstCounts.set(k, (firstCounts.get(k) || 0) + 1); }
+  const label = (d) => {
+    const first = firstName(d.name);
+    if (firstCounts.get(first.toLowerCase()) < 2) return first;
+    const rest = String(d.name || '').trim().split(/\s+/).slice(1).join(' ') || String(d.family || '').trim();
+    return rest ? `${first} ${rest[0].toUpperCase()}.` : first;
+  };
   const bodyRows = dancers
     .map((d, i) => {
       const cells = events
@@ -120,7 +128,7 @@ export function renderSheet({ events, dancers, availability, lang = 'en', printe
           return `<td class="${cls}">${esc(cellText(status, lang))}</td>`;
         })
         .join('');
-      return `<tr><td class="name"><span class="n">${i + 1}.</span> ${esc(firstName(d.name))}</td>${cells}</tr>`;
+      return `<tr><td class="name"><span class="n">${i + 1}.</span> ${esc(label(d))}</td>${cells}</tr>`;
     })
     .join('');
 

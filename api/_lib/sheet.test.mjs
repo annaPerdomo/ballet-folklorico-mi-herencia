@@ -119,4 +119,15 @@ test('columnHeader drops venue and city that the title already says', () => {
   assert.equal(columnHeader({ title: "St. John Vianney Church's ECD", venue: 'St. John Vianney Church', city: 'Hacienda Heights' }, 'en').place, 'Hacienda Heights');
   assert.equal(columnHeader({ title: 'Quinceañera — Lopez', venue: 'Grand Ballroom', city: 'West Covina' }, 'en').place, 'Grand Ballroom, West Covina');
   assert.equal(columnHeader({ title: 'Fiesta en Montebello', venue: 'Montebello Mall', city: 'Montebello' }, 'en').place, 'Montebello Mall');
+  assert.equal(columnHeader({ title: 'Fiesta de la Plaza', venue: 'Plaza', city: 'LA' }, 'en').place, 'LA', 'LA is not a word of Plaza');
+  assert.equal(columnHeader({ title: 'Bellflower Parade', city: 'Bell' }, 'en').place, 'Bell');
+  assert.equal(columnHeader({ title: '東京フェスティバル', venue: '渋谷ホール', city: '東京' }, 'en').place, '渋谷ホール, 東京', 'non-Latin text is kept, never blanked');
+});
+
+test('dancers who share a first name get a family or surname initial', () => {
+  const html = renderSheet({ events: [], availability: [], lang: 'en',
+    dancers: [{ id: 1, name: 'Sofia Lopez' }, { id: 2, name: 'Sofia', family: 'Ramirez' }, { id: 3, name: 'Luis Lopez' }] });
+  assert.ok(html.includes('</span> Sofia L.</td>'));
+  assert.ok(html.includes('</span> Sofia R.</td>'));
+  assert.ok(html.includes('</span> Luis</td>'));
 });

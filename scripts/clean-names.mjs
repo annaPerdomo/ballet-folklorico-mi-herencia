@@ -8,7 +8,7 @@ const env = existsSync('.env.local') ? readFileSync('.env.local', 'utf8') : '';
 const url = process.env.DATABASE_URL || (env.match(/^DATABASE_URL="?([^"\n]+)/m) || [])[1];
 if (!url) { console.error('DATABASE_URL is not set'); process.exit(1); }
 const apply = process.argv.includes('--apply');
-const client = new pg.Client({ connectionString: url, ssl: /localhost|127\.0\.0\.1/.test(url) ? false : { rejectUnauthorized: false } });
+const client = new pg.Client({ connectionString: url, ssl: /[?&]sslmode=/.test(url) ? undefined : false });
 await client.connect();
 
 const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
@@ -19,9 +19,9 @@ function firstNameOf(dancer, family) {
   const words = name.split(/\s+/);
   if (words.length === 1) return name;
   const famWords = family.replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean);
-  for (let i = 1; i < famWords.length + 1 && i <= famWords.length; i++) {
+  for (let i = famWords.length; i >= 1; i--) {
     const tail = famWords.slice(famWords.length - i).join(' ');
-    if (tail && norm(name).endsWith(' ' + norm(tail))) return name.slice(0, name.length - tail.length).trim();
+    if (norm(name).endsWith(' ' + norm(tail))) return words.slice(0, words.length - i).join(' ') || words[0];
   }
   return words[0];
 }
@@ -34,11 +34,21 @@ const updates = rows.map((r) => ({ id: r.id, family: r.family, from: r.name, to:
 console.log(apply ? 'Applying:' : 'Dry run (add --apply to write):');
 for (const u of updates) console.log(`  dancer #${u.id} (${u.family}): "${u.from}" -> "${u.to}"`);
 if (!updates.length) console.log('  nothing to change');
+const after = rows.map((r) => { const u = updates.find((x) => x.id === r.id); return { name: u ? u.to : r.name, family: r.family }; });
+const seen = new Map();
+for (const a of after) seen.set(norm(a.name), [...(seen.get(norm(a.name)) || []), a.family]);
+for (const [name, fams] of seen) if (fams.length > 1) console.log(`  ! two dancers will both be "${name}" (${fams.join(', ')}); the sheet adds a family initial to tell them apart`);
 
 if (apply) {
-  await client.query('BEGIN');
-  for (const u of updates) await client.query('UPDATE dancers SET name = $2 WHERE id = $1', [u.id, u.to]);
-  await client.query('COMMIT');
-  console.log(`Done: ${updates.length} dancers renamed.`);
+  try {
+    await client.query('BEGIN');
+    for (const u of updates) await client.query('UPDATE dancers SET name = $2 WHERE id = $1', [u.id, u.to]);
+    await client.query('COMMIT');
+    console.log(`Done: ${updates.length} dancers renamed.`);
+  } catch (e) {
+    await client.query('ROLLBACK');
+    await client.end();
+    throw e;
+  }
 }
 await client.end();
