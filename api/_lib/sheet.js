@@ -30,11 +30,11 @@ function earliestDate(events) {
 export function sheetTitle(events, lang) {
   const es = lang === 'es';
   const date = earliestDate(events);
-  if (!date) return es ? 'Calendario de presentaciones' : 'Performance Schedule';
+  if (!date) return es ? 'Lista de eventos' : 'Gig Roster';
   const season = seasonOf(date);
   const year = date.slice(0, 4);
   const label = SEASON_LABEL[season][es ? 'es' : 'en'];
-  return es ? `Calendario de presentaciones · ${label} ${year}` : `${label} ${year} Performance Schedule`;
+  return es ? `Lista de eventos · ${label} ${year}` : `${label} ${year} Gig Roster`;
 }
 
 function dateHeader(dateStr, lang) {

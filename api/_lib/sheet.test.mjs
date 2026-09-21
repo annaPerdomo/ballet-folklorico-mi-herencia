@@ -13,10 +13,10 @@ test('seasonOf buckets by month, ignoring year boundaries', () => {
 
 test('sheetTitle picks the earliest date regardless of input order', () => {
   const events = [{ event_date: '2026-11-01' }, { event_date: '2026-09-12' }, { event_date: '2026-10-05' }];
-  assert.equal(sheetTitle(events, 'en'), 'Fall 2026 Performance Schedule');
-  assert.equal(sheetTitle(events, 'es'), 'Calendario de presentaciones · Otoño 2026');
-  assert.equal(sheetTitle([], 'en'), 'Performance Schedule');
-  assert.equal(sheetTitle([], 'es'), 'Calendario de presentaciones');
+  assert.equal(sheetTitle(events, 'en'), 'Fall 2026 Gig Roster');
+  assert.equal(sheetTitle(events, 'es'), 'Lista de eventos · Otoño 2026');
+  assert.equal(sheetTitle([], 'en'), 'Gig Roster');
+  assert.equal(sheetTitle([], 'es'), 'Lista de eventos');
 });
 
 test('columnHeader formats date, time, and place per language', () => {
