@@ -171,10 +171,11 @@ body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; font-size
 .bar p { margin: 0; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 60ch }
 .page { padding: 18px 18px 16px; max-width: 11in; margin: 0 auto; width: 100%; flex: 1 }
 .mast { display: flex; align-items: center; gap: 14px }
-.rosette { display: flex; align-items: center; margin: 6px 0 4px }
-.rosette::before, .rosette::after { content: ''; flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #9a7b2e, #c9a84c, #9a7b2e, transparent) }
-.rosette .center { display: flex; align-items: center; gap: 10px; padding: 0 20px; flex: none }
-.rosette svg { display: block }
+.flourish { display: block; width: 100%; height: 10px; margin: 10px 0 6px; position: relative;
+  background: radial-gradient(circle, #c9a84c 1.3px, transparent 1.7px) left center / 7px 100% no-repeat,
+    radial-gradient(circle, #c9a84c 1.3px, transparent 1.7px) right center / 7px 100% no-repeat,
+    linear-gradient(90deg, #c9a84c, #c9a84c) center / 100% 1.5px no-repeat }
+.flourish::before { content: ''; position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; transform: translate(-50%, -50%) rotate(45deg); background: #c9a84c; box-shadow: 0 0 0 5px #fff }
 .mast img { height: 54px; width: auto; flex: none }
 .mast .who { flex: 1; min-width: 0 }
 .mast .wm { font-size: 9pt; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #1e1230; line-height: 1.25 }
@@ -226,7 +227,7 @@ tfoot .of { font-weight: 500; color: #6b6470 }
 <div class="who"><div class="wm">Ballet Folklórico<span class="mh">Mi Herencia</span></div></div>
 <div class="meta">${esc(meta)}</div>
 </div>
-<div class="rosette" aria-hidden="true"><div class="center"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.45"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.8"/></svg><svg width="30" height="30" viewBox="0 0 32 32" fill="none"><g transform="translate(16,16)" opacity="0.75"><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(0 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(51 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(103 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(154 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(206 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#6c5ce7" transform="rotate(257 0 0)"/><ellipse cx="0" cy="-7" rx="2" ry="5" fill="#9b59b6" transform="rotate(309 0 0)"/></g><circle cx="16" cy="16" r="3" fill="#c9a84c"/><circle cx="16" cy="16" r="1.2" fill="#e8c97a"/></svg><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10,2 Q16,6 14,10 Q16,14 10,18 Q4,14 6,10 Q4,6 10,2Z" stroke="#1a7b6a" stroke-width="1" fill="#1a7b6a" opacity="0.45"/><circle cx="10" cy="10" r="2" fill="#c9a84c" opacity="0.8"/></svg></div></div>
+<div class="flourish" aria-hidden="true"></div>
 <h1>${esc(title)}</h1>
 <table>
 <colgroup><col class="name">${events.map(() => '<col>').join('')}</colgroup>
