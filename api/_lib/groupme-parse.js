@@ -7,7 +7,7 @@ export const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replac
 const MAYBE = [
   /\bmaybe\b/, /\bmight\b(?! be (?:a (?:little|bit) )?late)/, /\bnot sure\b/, /\bunsure\b/, /\bpossibly\b/, /\bprobably\b/, /\bdepends\b/, /\btentative/,
   /\blet (?:you|u|them) know\b/, /\bwill (?:check|confirm|see)\b/, /\bhave to (?:check|see)\b/, /\bstill checking\b/, /\bknow more\b/,
-  /\btal vez\b/, /\bquizas?\b/, /\ba lo mejor\b/, /\bpuede ser\b/, /\bno (?:se|sabemos|esta[n]? segur|estoy segur|estamos segur)/,
+  /\btal vez\b/, /\bquizas?\b/, /\ba lo mejor\b/, /\bpuede ser\b/, /\bno (?:se\b|sabemos|esta[n]? segur|estoy segur|estamos segur)/,
   /\b(?:isn'?t|not|aren'?t) (?:sure|certain)\b/, /\bdepende\b/, /\bles? aviso\b/, /\bte aviso\b/, /\bvoy a ver\b/, /\btengo que ver\b/,
   /\bposiblemente\b/, /\bprobablemente\b/, /🤷|🤔/,
 ];

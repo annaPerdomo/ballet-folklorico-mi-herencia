@@ -154,3 +154,8 @@ test('chit-chat and announcements are ignored', () => {
   assert.deepEqual(st(P('Hi everyone, Tati can\'t make 9/12', 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023')), { 'Tati:09-12': 'no' });
   assert.deepEqual(st(P('We can definitely go', 'Folk-Claudia Marin (DT & Lia)', '64889724')), { 'Lia:11-04': 'yes', 'Donatien:11-04': 'yes', 'Isaias:11-04': 'yes' });
 });
+
+test('"no September" is a no, not "no sé"', () => {
+  assert.deepEqual(st(P('Isabella no September 25', 'CYNTHIA ALVAREZ (Isabella)', '136328681')), { 'Isabella:09-25': 'no' });
+  assert.equal(detectIntent('no sé todavía'), 'maybe');
+});
