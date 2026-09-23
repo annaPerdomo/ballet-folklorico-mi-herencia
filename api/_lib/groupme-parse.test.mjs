@@ -159,3 +159,34 @@ test('"no September" is a no, not "no sé"', () => {
   assert.deepEqual(st(P('Isabella no September 25', 'CYNTHIA ALVAREZ (Isabella)', '136328681')), { 'Isabella:09-25': 'no' });
   assert.equal(detectIntent('no sé todavía'), 'maybe');
 });
+
+test('a grown dancer on their own account answers for themselves, the parent still answers for the family', () => {
+  const own = dancers.map((d) => (d.name === 'Isaias Marin' ? { ...d, groupme_user_id: '134892319' } : d));
+  const PO = (text, senderName, senderUserId) => parseMessage({ text, senderName, senderUserId }, { dancers: own, families, events });
+  const r = PO('We can’t make the 26th', 'Isaias', '134892319');
+  assert.equal(r.sender.how, 'linked-dancer');
+  assert.deepEqual(st(r), { 'Isaias:09-26': 'no' });
+  assert.equal(r.updates[0].self, true);
+  assert.deepEqual(st(PO('Lia and I are a yes for 9/26', 'Isaias', '134892319')), { 'Lia:09-26': 'yes', 'Isaias:09-26': 'yes' });
+
+  const parent = PO('We can definitely go', 'Folk-Claudia Marin (DT & Lia)', '64889724');
+  assert.deepEqual(st(parent), { 'Lia:11-04': 'yes', 'Donatien:11-04': 'yes', 'Isaias:11-04': 'yes' });
+  assert.ok(parent.updates.every((u) => u.wholeFamily && !u.self));
+  const named = PO('Isaias yes for 11/4', 'Folk-Claudia Marin (DT & Lia)', '64889724');
+  assert.deepEqual(st(named), { 'Isaias:11-04': 'yes' });
+  assert.equal(named.updates[0].wholeFamily, false);
+});
+
+test('a full-name match speaks for itself when the family is linked to someone else, and may be a parent who dances when not', () => {
+  assert.deepEqual(st(P('We can’t on 9/26', 'Folk-Ashley Orozco', '80447802')), { 'Ashley:09-26': 'no' });
+  assert.deepEqual(st(P('We can’t on 9/26', 'Tati Ramirez', '777')), { 'Tati:09-26': 'no', 'Nati:09-26': 'no', 'Sebas:09-26': 'no' });
+  assert.deepEqual(st(P('Sharlene and I can do 9/26', 'Folk-Ashley Orozco', '80447802')), { 'Ashley:09-26': 'yes', 'Sharlene:09-26': 'yes' });
+  const r = P('I can do 9/26', 'Folk-Ashley Orozco', '80447802');
+  assert.deepEqual(st(r), { 'Ashley:09-26': 'yes' }); assert.equal(r.updates[0].self, true);
+});
+
+test('a paused dancer on their own account never answers for the family', () => {
+  const own = dancers.map((d) => (d.name === 'Isaias Marin' ? { ...d, active: false, groupme_user_id: '134892319' } : d));
+  const r = parseMessage({ text: 'We can’t make 9/26', senderName: 'Isaias Marin', senderUserId: '134892319' }, { dancers: own, families, events });
+  assert.deepEqual(st(r), {}); assert.equal(r.reason, 'paused-sender');
+});

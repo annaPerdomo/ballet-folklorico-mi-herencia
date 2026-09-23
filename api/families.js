@@ -7,12 +7,20 @@ import { siteUrl } from './_lib/notify.js';
    the Hobby plan. /api/dancers and /api/availability keep their own URLs: vercel.json rewrites
    them here with ?r=, and dev-server.mjs mirrors those rewrites. */
 
+async function assertGroupmeFree(uid, { dancerId = 0, familyId = 0 } = {}) {
+  if (!uid) return;
+  const taken = await one(
+    `SELECT 1 FROM dancers WHERE groupme_user_id = $1 AND id <> $2
+     UNION ALL SELECT 1 FROM families WHERE groupme_user_id = $1 AND id <> $3 LIMIT 1`, [uid, dancerId, familyId]);
+  if (taken) throw httpError(409, 'That GroupMe account is already linked to someone else');
+}
+
 const inviteLink = (token) => `${siteUrl()}/team/?k=${token}`;
 
 async function listFamilies() {
   const rows = await sql(
     `SELECT f.id, f.name, f.groupme_user_id, f.access_token, f.created_at,
-            COALESCE(json_agg(json_build_object('id', d.id, 'name', d.name, 'active', d.active) ORDER BY d.name)
+            COALESCE(json_agg(json_build_object('id', d.id, 'name', d.name, 'active', d.active, 'groupme_user_id', d.groupme_user_id) ORDER BY d.name)
                      FILTER (WHERE d.id IS NOT NULL), '[]'::json) AS dancers
        FROM families f LEFT JOIN dancers d ON d.family_id = f.id
       GROUP BY f.id ORDER BY f.name`);
@@ -33,7 +41,9 @@ const dancers = {
     const familyId = me.role === 'admin' ? int(b.family_id) : me.family.id;
     const name = str(b.name, 80);
     if (!familyId || !name) throw httpError(400, 'family_id and name required');
-    const row = await one('INSERT INTO dancers (family_id, name) VALUES ($1,$2) RETURNING id', [familyId, name]);
+    const gm = me.role === 'admin' ? str(b.groupme_user_id, 40) : null;
+    await assertGroupmeFree(gm);
+    const row = await one('INSERT INTO dancers (family_id, name, groupme_user_id) VALUES ($1,$2,$3) RETURNING id', [familyId, name, gm]);
     ok(res, { id: row.id });
   },
   async PATCH(req, res) {
@@ -43,6 +53,11 @@ const dancers = {
     await ownedDancer(me, id);
     if ('name' in b) await sql('UPDATE dancers SET name = $2 WHERE id = $1', [id, str(b.name, 80)]);
     if ('active' in b) await sql('UPDATE dancers SET active = $2 WHERE id = $1', [id, Boolean(b.active)]);
+    if ('groupme_user_id' in b && me.role === 'admin') {
+      const gm = str(b.groupme_user_id, 40);
+      await assertGroupmeFree(gm, { dancerId: id });
+      await sql('UPDATE dancers SET groupme_user_id = $2 WHERE id = $1', [id, gm]);
+    }
     ok(res);
   },
   async DELETE(req, res) {
@@ -76,7 +91,7 @@ const availability = {
     } else {
       await sql(
         `INSERT INTO availability (event_id, dancer_id, status, note) VALUES ($1,$2,$3,$4)
-         ON CONFLICT (event_id, dancer_id) DO UPDATE SET status = EXCLUDED.status, note = EXCLUDED.note, updated_at = now()`,
+         ON CONFLICT (event_id, dancer_id) DO UPDATE SET status = EXCLUDED.status, note = EXCLUDED.note, self = false, updated_at = now()`,
         [eventId, dancerId, status, str(body.note, 300)]);
     }
     ok(res);
@@ -93,6 +108,7 @@ const families = {
     const b = await readJson(req);
     const name = str(b.name, 120);
     if (!name) throw httpError(400, 'Family name is required');
+    await assertGroupmeFree(str(b.groupme_user_id, 40));
     const fam = await one(
       'INSERT INTO families (name, access_token, groupme_user_id) VALUES ($1,$2,$3) RETURNING id, access_token',
       [name, newFamilyToken(), str(b.groupme_user_id, 40)]);
@@ -114,7 +130,9 @@ const families = {
     }
     const sets = []; const params = [id];
     if ('name' in b) { params.push(str(b.name, 120)); sets.push(`name = $${params.length}`); }
-    if ('groupme_user_id' in b && me.role === 'admin') { params.push(str(b.groupme_user_id, 40)); sets.push(`groupme_user_id = $${params.length}`); }
+    if ('groupme_user_id' in b && me.role === 'admin') {
+      await assertGroupmeFree(str(b.groupme_user_id, 40), { familyId: id });
+      params.push(str(b.groupme_user_id, 40)); sets.push(`groupme_user_id = $${params.length}`); }
     if (sets.length) await sql(`UPDATE families SET ${sets.join(', ')} WHERE id = $1`, params);
     ok(res);
   },

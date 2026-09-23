@@ -82,6 +82,8 @@ CREATE TABLE IF NOT EXISTS availability (
   PRIMARY KEY (event_id, dancer_id)
 );
 ALTER TABLE families ADD COLUMN IF NOT EXISTS groupme_user_id text;
+ALTER TABLE dancers ADD COLUMN IF NOT EXISTS groupme_user_id text;
+ALTER TABLE availability ADD COLUMN IF NOT EXISTS self boolean NOT NULL DEFAULT false;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS website boolean NOT NULL DEFAULT false;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS asked_at timestamptz;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS ask_count int NOT NULL DEFAULT 0;

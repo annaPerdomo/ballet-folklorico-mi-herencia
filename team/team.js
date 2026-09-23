@@ -78,7 +78,7 @@
       confirmAsk: 'Confirm this gig? Families who said yes will be notified (if a channel is connected).', cancelGig: 'Cancel gig', cancelAsk: 'Cancel this gig?',
       cancelPost: 'Have La Chona post “Gig cancelled” to GroupMe', postCancellation: 'Post the cancellation',
       postConfirmation: 'Post the confirmation', markDone: 'Mark done', gig: 'Gig',
-      botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer',
+      botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer', botPaused: 'Sent by a paused dancer — not applied', botKept: 'Kept the answers already there (newer, or the dancer’s own)',
       addFamilyFrom: 'Add this family', reread: 'Read again', addFamilyHint: 'From GroupMe name “{name}”. Check the spelling of each dancer — the bot matches these names in the chat.',
       pickWho: 'Who’s answering?', pickHint: 'Tap your family. We’ll remember you on this phone.', pickNotListed: 'Don’t see your family? Just reply in GroupMe and the owners will add you.',
       pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.',
@@ -117,6 +117,9 @@
       addAnotherDancer: '+ Add dancer', undoRemove: 'Undo',
       groupmeLabel: 'GroupMe account', groupmeNone: '— not linked —', groupmeOther: 'Linked (id {id})',
       groupmeHint: 'La Chona reads this family’s chat replies as theirs. Pick the name they post under, or leave it unlinked.',
+      ownGroupme: 'Own GroupMe', ownGroupmeNone: '— family answers —', ownGroupmeTag: 'answers for themselves in GroupMe',
+      ownGroupmeHint: 'Grown dancers with their own GroupMe: La Chona reads their replies as theirs alone, and a parent’s “we can’t” won’t overwrite an answer they gave themselves. Naming them (“Isaias yes”) still counts.',
+      groupmeTwice: 'Each GroupMe account can belong to only one person here.',
       roleTeam: 'Team', stateNone: 'Not answered', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going',
       waiting: 'no response received', plusWaiting: '+{n} with no response', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
@@ -201,7 +204,7 @@
       confirmAsk: '¿Confirmar este evento? Se avisará a las familias que dijeron que sí (si hay un canal conectado).', cancelGig: 'Cancelar evento', cancelAsk: '¿Cancelar este evento?',
       cancelPost: 'Que La Chona publique “Evento cancelado” en GroupMe', postCancellation: 'Publicar la cancelación',
       postConfirmation: 'Publicar la confirmación', markDone: 'Marcar terminado', gig: 'Evento',
-      botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta',
+      botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta', botPaused: 'Lo envió un bailarín en pausa — no se aplicó', botKept: 'Se quedaron las respuestas que ya había (más nuevas, o del propio bailarín)',
       addFamilyFrom: 'Agregar esta familia', reread: 'Leer de nuevo', addFamilyHint: 'Del nombre de GroupMe “{name}”. Revisa cómo se escribe cada bailarín — el bot busca esos nombres en el chat.',
       pickWho: '¿Quién responde?', pickHint: 'Toca tu familia. Te recordaremos en este teléfono.', pickNotListed: '¿No ves a tu familia? Responde en GroupMe y los dueños te agregan.',
       pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
@@ -240,6 +243,9 @@
       addAnotherDancer: '+ Agregar bailarín', undoRemove: 'Deshacer',
       groupmeLabel: 'Cuenta de GroupMe', groupmeNone: '— sin vincular —', groupmeOther: 'Vinculada (id {id})',
       groupmeHint: 'La Chona toma como de esta familia lo que escriba esa cuenta en el chat. Elige el nombre con el que escriben, o déjalo sin vincular.',
+      ownGroupme: 'Su propio GroupMe', ownGroupmeNone: '— responde la familia —', ownGroupmeTag: 'responde por sí mismo en GroupMe',
+      ownGroupmeHint: 'Bailarines adultos con su propio GroupMe: La Chona toma sus respuestas solo como de ellos, y un “no podemos” de los papás no borra lo que ellos ya respondieron. Nombrarlos (“Isaias sí”) sigue contando.',
+      groupmeTwice: 'Cada cuenta de GroupMe puede ser de una sola persona.',
       roleTeam: 'Equipo', stateNone: 'Sin responder', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va',
       waiting: 'sin respuesta', plusWaiting: '+{n} sin respuesta', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
@@ -1517,7 +1523,8 @@
         h('h3', { class: 'card-title sm' }, h('button', { class: 'fam-name', 'aria-label': t('editFamily') + ' — ' + f.name, onclick: function () { openFamilyModal(f); } }, f.name, icon('edit', 2))),
         f.groupme_user_id ? h('span', { class: 'chip yes' }, icon('yes', 3), t('botLinkedChip')) : h('span', { class: 'chip none', text: t('notLinked') })));
       card.appendChild(h('div', { class: 'chips' }, f.dancers.map(function (d) {
-        return h('span', { class: 'chip' + (d.active ? '' : ' is-off'), title: d.active ? false : t('pausedTag') }, d.name, h('button', { text: '✕', title: t('remove') + ' ' + d.name, onclick: function () {
+        return h('span', { class: 'chip' + (d.active ? '' : ' is-off'), title: d.active ? (d.groupme_user_id ? t('ownGroupmeTag') : false) : t('pausedTag') },
+          d.groupme_user_id ? icon('chat', 2) : null, d.name, h('button', { text: '✕', title: t('remove') + ' ' + d.name, onclick: function () {
           confirmSheet(t('removeAsk', { name: d.name }), t('remove'), true).then(function (yes) { if (yes) api('/api/dancers?id=' + d.id, { method: 'DELETE' }).then(refresh); });
         } }));
       })));
@@ -1557,37 +1564,45 @@
       var m = (state.botLog || []).filter(function (x) { return x.user_id === id; })[0];
       return m && m.sender_name;
     }
-    function fillSenders() {
+    // Links inside this family stay pickable so one can move between rows.
+    var claimed = {};
+    state.families.forEach(function (o) {
+      if (o.id === f.id) return;
+      if (o.groupme_user_id) claimed[o.groupme_user_id] = true;
+      o.dancers.forEach(function (d) { if (d.groupme_user_id) claimed[d.groupme_user_id] = true; });
+    });
+    function fillSenders(sel, current, noneText) {
       // The log arrives after the sheet opens, so keep whatever the owner has already picked.
-      var picked = gmSel.options.length ? gmSel.value : (f.groupme_user_id || '');
-      var claimed = {};
-      state.families.forEach(function (o) { if (o.id !== f.id && o.groupme_user_id) claimed[o.groupme_user_id] = true; });
-      var seen = {}; var opts = [h('option', { value: '', text: t('groupmeNone') })];
+      var picked = sel.options.length ? sel.value : (current || '');
+      var seen = {}; var opts = [h('option', { value: '', text: noneText })];
       // Listed even when claimed elsewhere or silent since the log window: dropping it would unlink them on save.
-      if (f.groupme_user_id) {
-        seen[f.groupme_user_id] = true;
-        opts.push(h('option', { value: f.groupme_user_id, text: senderName(f.groupme_user_id) || t('groupmeOther', { id: f.groupme_user_id }) }));
+      if (current) {
+        seen[current] = true;
+        opts.push(h('option', { value: current, text: senderName(current) || t('groupmeOther', { id: current }) }));
       }
       (state.botLog || []).forEach(function (m) {
         if (!m.user_id || seen[m.user_id] || claimed[m.user_id]) return;
         seen[m.user_id] = true;
         opts.push(h('option', { value: m.user_id, text: m.sender_name || m.user_id }));
       });
-      gmSel.innerHTML = ''; opts.forEach(function (o) { gmSel.appendChild(o); });
-      gmSel.value = picked;
-      if (gmSel.selectedIndex < 0) gmSel.value = '';
+      sel.innerHTML = ''; opts.forEach(function (o) { sel.appendChild(o); });
+      sel.value = picked;
+      if (sel.selectedIndex < 0) sel.value = '';
     }
-    fillSenders();
-    if (state.botLog === null) loadBotLog().then(fillSenders);
+    function fillAll() {
+      fillSenders(gmSel, f.groupme_user_id, t('groupmeNone'));
+      rows.forEach(function (r) { if (r.gm) fillSenders(r.gm, r.wasGm, t('ownGroupmeNone')); });
+    }
 
-    var rows = f.dancers.map(function (d) { return { id: d.id, was: d.name, wasActive: d.active, active: d.active, removed: false }; });
+    var rows = f.dancers.map(function (d) { return { id: d.id, was: d.name, wasActive: d.active, active: d.active, removed: false, wasGm: d.groupme_user_id || '' }; });
     var list = h('div', { class: 'full famrows' });
     function renderRows() {
       list.innerHTML = '';
       list.appendChild(h('span', { class: 'tm-label', text: t('dancers') }));
       rows.forEach(function (r) {
         if (!r.input) r.input = h('input', { value: r.was, placeholder: t('dancerRowName'), 'aria-label': t('dancerRowName') });
-        r.input.disabled = r.removed;
+        if (!r.gm) { r.gm = h('select', { 'aria-label': t('ownGroupme') }); fillSenders(r.gm, r.wasGm, t('ownGroupmeNone')); }
+        r.input.disabled = r.removed; r.gm.disabled = r.removed;
         list.appendChild(h('div', { class: 'famrow' + (r.removed ? ' is-gone' : r.active ? '' : ' is-off') },
           r.input,
           r.removed
@@ -1596,13 +1611,17 @@
                 onclick: function () { r.active = !r.active; renderRows(); } }),
           r.removed ? null : h('button', { type: 'button', class: 'btn btn-sm btn-danger btn-icon',
             'aria-label': t('remove') + ' ' + (r.input.value.trim() || t('dancerRowName')),
-            onclick: function () { r.removed = true; renderRows(); } }, icon('trash', 2))));
+            onclick: function () { r.removed = true; renderRows(); } }, icon('trash', 2)),
+          r.removed ? null : h('label', { class: 'famrow-gm' }, h('span', { text: t('ownGroupme') }), r.gm)));
       });
       list.appendChild(h('button', { type: 'button', class: 'btn btn-sm', text: t('addAnotherDancer'),
-        onclick: function () { rows.push({ id: null, was: '', active: true, removed: false }); renderRows(); list.querySelectorAll('.famrow input')[rows.length - 1].focus(); } }));
+        onclick: function () { rows.push({ id: null, was: '', active: true, removed: false, wasGm: '' }); renderRows(); list.querySelectorAll('.famrow input')[rows.length - 1].focus(); } }));
       list.appendChild(h('p', { class: 'hint', text: t('pauseHint') }));
+      list.appendChild(h('p', { class: 'hint', text: t('ownGroupmeHint') }));
     }
     renderRows();
+    fillAll();
+    if (state.botLog === null) loadBotLog().then(fillAll);
 
     var err = h('p', { class: 'error full' });
     var form = h('form', { class: 'form-grid', onsubmit: function (e) {
@@ -1613,31 +1632,43 @@
       if (rows.some(function (r) { return !r.removed && r.id && !r.input.value.trim(); })) {
         err.textContent = t('needDancerName'); return;
       }
+      var picks = [gmSel.value].concat(rows.filter(function (r) { return !r.removed; }).map(function (r) { return r.gm.value; })).filter(Boolean);
+      if (picks.some(function (v, i) { return picks.indexOf(v) !== i; })) { err.textContent = t('groupmeTwice'); return; }
       // Each request folds its result back into the rows, so a Save retried after one failed repeats nothing.
-      var jobs = [];
+      // The server refuses an account linked twice, so a link moving between rows is released before it is claimed.
+      var jobs = []; var claims = [];
       if (name !== f.name || (gmSel.value || '') !== (f.groupme_user_id || '')) {
         var gm = gmSel.value || null;
-        jobs.push(api('/api/families?id=' + f.id, { method: 'PATCH', body: { name: name, groupme_user_id: gm } })
-          .then(function () { f.name = name; f.groupme_user_id = gm; }));
+        (gm && gm !== f.groupme_user_id ? claims : jobs).push(function () {
+          return api('/api/families?id=' + f.id, { method: 'PATCH', body: { name: name, groupme_user_id: gm } })
+            .then(function () { f.name = name; f.groupme_user_id = gm; });
+        });
       }
       rows.forEach(function (r) {
         var dn = r.input.value.trim();
         if (r.removed) {
-          if (r.id) jobs.push(api('/api/dancers?id=' + r.id, { method: 'DELETE' }).then(function () { r.id = null; }));
+          if (r.id) jobs.push(function () { return api('/api/dancers?id=' + r.id, { method: 'DELETE' }).then(function () { r.id = null; }); });
           return;
         }
         if (!r.id) {
-          if (dn) jobs.push(api('/api/dancers', { method: 'POST', body: { family_id: f.id, name: dn } })
-            .then(function (d) { r.id = d.id; r.was = dn; r.wasActive = true; }));
+          var newGm = r.gm.value || null;
+          if (dn) (newGm ? claims : jobs).push(function () {
+            return api('/api/dancers', { method: 'POST', body: { family_id: f.id, name: dn, groupme_user_id: newGm } })
+              .then(function (d) { r.id = d.id; r.was = dn; r.wasActive = true; r.wasGm = newGm || ''; });
+          });
           return;
         }
         var patch = {};
         if (dn !== r.was) patch.name = dn;
         if (r.active !== r.wasActive) patch.active = r.active;
-        if (Object.keys(patch).length) jobs.push(api('/api/dancers?id=' + r.id, { method: 'PATCH', body: patch })
-          .then(function () { r.was = dn; r.wasActive = r.active; }));
+        if ((r.gm.value || '') !== r.wasGm) patch.groupme_user_id = r.gm.value || null;
+        if (Object.keys(patch).length) (patch.groupme_user_id ? claims : jobs).push(function () {
+          return api('/api/dancers?id=' + r.id, { method: 'PATCH', body: patch })
+            .then(function () { r.was = dn; r.wasActive = r.active; r.wasGm = r.gm.value || ''; });
+        });
       });
-      Promise.all(jobs.map(function (p) { return p.then(function () { return null; }, function (x) { return x; }); }))
+      function runAll(list) { return Promise.all(list.map(function (job) { return job().then(function () { return null; }, function (x) { return x; }); })); }
+      runAll(jobs).then(function (a) { return runAll(claims).then(function (b) { return a.concat(b); }); })
         .then(function (errs) {
           var failed = errs.filter(Boolean)[0];
           if (failed) { err.textContent = failed.message; return refresh(); }
@@ -1673,7 +1704,7 @@
       order.sort();
       return order.map(function (k) { return (/^\d{4}-/.test(k) ? fmtDate(k) : k) + ': ' + byEv[k].join(' · '); }).join('  ·  ') + (r.event_guessed ? ' ' + t('botGuessed') : '');
     }
-    var why = { 'no-intent': t('botIgnored'), 'no-dancers': t('botNoDancers'), 'unknown-sender': t('botUnknownSender'), 'no-open-event': t('botNoEvent'), 'no-event-for-date': t('botNoDate'), 'too-vague': t('botVague'), 'announcement': t('botAnnouncement') }[r.reason] || t('botIgnored');
+    var why = { 'no-intent': t('botIgnored'), 'no-dancers': t('botNoDancers'), 'unknown-sender': t('botUnknownSender'), 'no-open-event': t('botNoEvent'), 'no-event-for-date': t('botNoDate'), 'too-vague': t('botVague'), 'announcement': t('botAnnouncement'), 'paused-sender': t('botPaused'), 'kept-existing': t('botKept') }[r.reason] || t('botIgnored');
     if (r.ambiguous && r.ambiguous.length) why += ' — ' + t('botAmbiguous', { names: r.ambiguous.join(', ') });
     return why;
   }
@@ -1827,7 +1858,9 @@
           h('span', { class: m.applied ? 'ok' : 'skip', text: botResultText(m) }),
           h('span', { class: 'logtime', text: timeAgo(m.created_at || m.received_at || Date.now()) }));
         if (!m.applied && r.intent && m.user_id) {
-          var known = state.families.some(function (f) { return f.groupme_user_id === m.user_id; });
+          var known = state.families.some(function (f) {
+            return f.groupme_user_id === m.user_id || f.dancers.some(function (d) { return d.groupme_user_id === m.user_id; });
+          });
           out.appendChild(h('div', { class: 'card-actions', style: 'margin-top:0.35rem' },
             !known ? h('button', { class: 'btn btn-sm btn-gold', text: t('addFamilyFrom'), onclick: function () { addFamilyFromGroupMe(m); } }) : null,
             h('button', { class: 'btn btn-sm', text: t('reread'), onclick: function () { rereadMessage(m); } })));

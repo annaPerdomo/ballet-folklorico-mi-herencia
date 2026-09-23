@@ -30,7 +30,7 @@ const YES = [
 ];
 const FAMILY_WORDS = [/\bwe\b/, /\bus\b/, /\bour\b/, /\bboth\b/, /\ball (?:of us|three|3|four|4)\b/, /\bmy (?:kids|girls|boys|daughters?|sons?|children)\b/,
   /\bnosotr/, /\bambas\b/, /\bambos\b/, /\blas dos\b/, /\blos dos\b/, /\btod[oa]s\b/, /\bmis (?:hij|nin)/, /\bla familia\b/, /\bfamily\b/, /\bfamilia\b/];
-const SELF_WORDS = [/\b(?:i|yo) (?:can|could|will|am|cannot|can'?t|won'?t|unfortunately|sadly|might|may|no)\b/, /\bi'?m\b/, /\bcount me\b/, /\bme (?:too|neither)\b/];
+const SELF_WORDS = [/\b(?:i|yo) (?:can|could|will|am|cannot|can'?t|won'?t|unfortunately|sadly|might|may|no)\b/, /\bi'?m\b/, /\bcount me\b/, /\bme (?:too|neither)\b/, /\b(?:and|y|&) (?:i|me|yo)\b/];
 const ALL_WORDS = [/\ball\b/, /\bevery(?:thing| one of them| date| event)\b/, /\btod[oa]s\b/];
 
 // Don't loosen: "what time is call on the 19th?" must never become an answer.
@@ -102,8 +102,12 @@ export function findNames(clause, idx, preferFamilyId) {
   return { found, ambiguous };
 }
 
-export function resolveSender({ senderName, senderUserId }, { dancers, families }) {
+export function resolveSender({ senderName, senderUserId }, { dancers: everyone, families }) {
+  const dancers = everyone.filter((d) => d.active !== false);
   if (senderUserId) {
+    // Paused dancers too, or their "we can't" falls through and speaks for the family.
+    const own = everyone.find((d) => d.groupme_user_id && String(d.groupme_user_id) === String(senderUserId));
+    if (own) return { family: families.find((f) => f.id === own.family_id) || null, dancer: own, how: 'linked-dancer' };
     const fam = families.find((f) => f.groupme_user_id && String(f.groupme_user_id) === String(senderUserId));
     if (fam) return { family: fam, dancer: null, how: 'linked' };
   }
@@ -194,7 +198,13 @@ export function pickEvent(text, events) {
 export function parseMessage({ text, senderName, senderUserId }, { dancers, families, events }) {
   const active = dancers.filter((d) => d.active !== false);
   const open = events.filter((e) => !e.status || ['open', 'confirmed'].includes(e.status));
-  const sender = resolveSender({ senderName, senderUserId }, { dancers: active, families });
+  const sender = resolveSender({ senderName, senderUserId }, { dancers, families });
+  if (sender && sender.how === 'linked-dancer' && sender.dancer.active === false) {
+    return { intent: null, sender, updates: [], ambiguous: [], reason: 'paused-sender', eventGuessed: false };
+  }
+  const ownVoice = Boolean(sender && sender.dancer && ['linked-dancer', 'dancer-name'].includes(sender.how));
+  // A full-name match from an account other than the family's is the dancer themselves; ingest links it the same way.
+  const ownAccount = Boolean(sender && (sender.how === 'linked-dancer' || (sender.how === 'dancer-name' && sender.family && sender.family.groupme_user_id)));
   const idx = nameIndex(active);
   const preferFam = sender && sender.family ? sender.family.id : null;
   const whole = norm(text);
@@ -240,12 +250,13 @@ export function parseMessage({ text, senderName, senderUserId }, { dancers, fami
       if (!u.intent) continue;
       anyIntent = anyIntent || u.intent;
 
-      let who = u.names.length ? u.names : contextNames;
+      let who = u.names.length ? u.names : contextNames; let wholeFamily = false;
       if (u.names.length) contextNames = u.names;
       if (!who.length && sender) {
         if (!u.explicit) continue; // nobody named: only an explicit "yes / no / can't / no puede" counts
-        const wantsFamily = any(FAMILY_WORDS, whole) || !sender.dancer;
-        who = wantsFamily && famDancers.length ? famDancers : (sender.dancer ? [sender.dancer] : famDancers);
+        // A dancer on their own account speaks only for themselves, even in "we".
+        wholeFamily = famDancers.length > 0 && (!sender.dancer || (!ownAccount && any(FAMILY_WORDS, whole)));
+        who = wholeFamily || !sender.dancer ? famDancers : [sender.dancer];
       } else if (u.self && sender && sender.dancer && !who.includes(sender.dancer)) {
         who = who.concat([sender.dancer]);
       }
@@ -258,7 +269,9 @@ export function parseMessage({ text, senderName, senderUserId }, { dancers, fami
         const picked = pickEvent(text, open);
         if (picked.event) { evs = [picked.event]; if (picked.guessed) { if (!short) continue; eventGuessed = true; } }
       }
-      for (const e of evs) for (const d of who) updates.set(key(e, d), { dancer: d, event: e, status: u.intent });
+      for (const e of evs) for (const d of who) {
+        updates.set(key(e, d), { dancer: d, event: e, status: u.intent, self: ownVoice && sender.dancer.id === d.id, wholeFamily });
+      }
     }
   }
 
