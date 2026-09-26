@@ -322,6 +322,7 @@
   function fmtTime(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
   function fmtWhere(ev) { return [ev.venue, ev.city].filter(Boolean).join(' · '); }
   function isPast(ev) { var d = parseDate(ev.event_date); return d && d < new Date(new Date().setHours(0, 0, 0, 0)); }
+  function newestFirst(a, b) { return (b.event_date || '').localeCompare(a.event_date || ''); }
   function typeLabel(k) { return t('types')[k] || k; }
   function timeAgo(iso) {
     var m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -884,7 +885,7 @@
               } })));
     }
     upcoming.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
-    if (past.length) { app.appendChild(section(t('recent'))); past.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev), true)); }); }
+    if (past.length) { app.appendChild(section(t('recent'))); past.sort(newestFirst).forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev), true)); }); }
 
     var famCal = subscribeCard();
     if (famCal) { app.appendChild(section(t('calSection'))); app.appendChild(famCal); }
@@ -1102,7 +1103,7 @@
 
   function renderGigs() {
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
-    var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); });
+    var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); }).sort(newestFirst);
     app.appendChild(section(t('posted'), live.length, h('button', { class: 'btn btn-sm btn-print', onclick: printSheet, 'aria-label': t('printSchedule') }, icon('printer', 2.2), h('span', { class: 'lbl-long', text: t('printSchedule') }), h('span', { class: 'lbl-short', text: t('printShort') }))));
     app.appendChild(h('p', { class: 'tm-sub', text: t('tapGigHint') }));
     if (!live.length) {
