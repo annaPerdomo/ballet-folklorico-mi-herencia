@@ -153,6 +153,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .btn-sm { min-height: 36px; padding: 0 0.75rem; font-size: 0.66rem; border-radius: 9px; }
 .btn-wide { width: 100%; }
 .btn-main { flex: 1; min-width: 0; white-space: normal; line-height: 1.25; padding: 0 0.7rem; }
+.btn-wrap { flex: 1 1 7rem; min-width: 0; padding-top: 0.4rem; padding-bottom: 0.4rem; white-space: normal; line-height: 1.25; text-align: center; height: auto; min-height: 36px; }
 .btn-main, .foot-btns .btn { min-height: 52px; font-size: 0.78rem; border-radius: 14px; }
 .btn-icon { padding: 0; width: 44px; flex: none; }
 .btn-icon.btn-sm { width: 36px; }

@@ -108,7 +108,7 @@
       familiesTitle: 'Families & dancers', familiesSub: 'Send a family their link and they can answer every open gig request in one place. Totally optional — La Chona already does something similar.',
       familyNamePh: 'Family name (e.g. Garcia)', dancersPh: 'Dancers, comma separated (e.g. Luis, Elena)',
       newFamily: 'New family', addFamily: 'Add family', familyAdded: 'Family added', noFamilies: 'No families yet.',
-      removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy invite link', newLink: 'New link',
+      removeAsk: 'Remove {name}?', addDancer: 'Add dancer', copyInvite: 'Copy link to their upcoming gigs', newLink: 'New link',
       newLinkAsk: 'Create a new link for {name}? The old one will stop working.', removeFamily: 'Remove family', removeFamilyAsk: 'Remove the {name} family and their dancers?',
       editFamily: 'Edit family', familyNameLabel: 'Family name', familySaved: 'Family updated', needFamilyName: 'Give the family a name.',
       needDancerName: 'Give every dancer a name, or remove the empty row.',
@@ -234,7 +234,7 @@
       familiesTitle: 'Familias y bailarines', familiesSub: 'Envía a una familia su enlace y podrán responder a todos los eventos abiertos en un solo lugar. Es totalmente opcional — La Chona ya hace algo parecido.',
       familyNamePh: 'Apellido de la familia (p. ej. García)', dancersPh: 'Bailarines separados por comas (p. ej. Luis, Elena)',
       newFamily: 'Nueva familia', addFamily: 'Agregar familia', familyAdded: 'Familia agregada', noFamilies: 'Todavía no hay familias.',
-      removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace', newLink: 'Nuevo enlace',
+      removeAsk: '¿Quitar a {name}?', addDancer: 'Agregar bailarín', copyInvite: 'Copiar enlace a sus próximos eventos', newLink: 'Nuevo enlace',
       newLinkAsk: '¿Crear un nuevo enlace para {name}? El anterior dejará de funcionar.', removeFamily: 'Quitar familia', removeFamilyAsk: '¿Quitar a la familia {name} y a sus bailarines?',
       editFamily: 'Editar familia', familyNameLabel: 'Apellido de la familia', familySaved: 'Familia actualizada', needFamilyName: 'Ponle nombre a la familia.',
       needDancerName: 'Ponle nombre a cada bailarín, o quita la fila vacía.',
@@ -1537,8 +1537,8 @@
       card.appendChild(h('div', { class: 'card-actions', style: 'margin:0' },
         navigator.share
           ? h('button', { class: 'btn btn-sm btn-gold', onclick: function () { shareInvite(f); } }, icon('share', 2.2), t('shareInvite'))
-          : h('button', { class: 'btn btn-sm btn-gold', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }),
-        navigator.share ? h('button', { class: 'btn btn-sm', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }) : null,
+          : h('button', { class: 'btn btn-sm btn-gold btn-wrap', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }),
+        navigator.share ? h('button', { class: 'btn btn-sm btn-wrap', text: t('copyInvite'), onclick: function () { copyText(f.invite_link); } }) : null,
         h('button', { class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () {
           actionSheet(f.name, [
             { label: t('editFamily'), icon: 'edit', onclick: function () { openFamilyModal(f); } },
