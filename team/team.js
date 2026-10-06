@@ -32,7 +32,7 @@
       ownerPassword: 'Owner password', signIn: 'Sign in', notConfigured: 'ADMIN_PASSWORD is not set on the server yet.',
       signInAs: 'Your name',
       badLink: 'That link is not valid anymore. Ask the owners for a new one.',
-      needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Recent', myFamily: 'My family',
+      needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Past gigs', myFamily: 'My family',
       subscribe: 'Add our gigs to your calendar', subscribeHint: 'Keeps updating on its own as dates change.',
       subscribeOwner: 'Add every gig to your calendar', addToCal: 'Add to my calendar', calSection: 'Calendar',
       subscribeWhat: 'Every gig posted to the team lands in your calendar until you turn it down — the ones your family answers no to drop off on their own. It keeps updating as dates and details change.',
@@ -158,7 +158,7 @@
       ownerPassword: 'Contraseña de dueño', signIn: 'Entrar', notConfigured: 'ADMIN_PASSWORD todavía no está configurado en el servidor.',
       signInAs: 'Tu nombre',
       badLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
-      needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Recientes', myFamily: 'Mi familia',
+      needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Eventos pasados', myFamily: 'Mi familia',
       subscribe: 'Agrega nuestros eventos a tu calendario', subscribeHint: 'Se actualiza solo cuando cambian las fechas.',
       subscribeOwner: 'Agrega todos los eventos a tu calendario', addToCal: 'Agregar a mi calendario', calSection: 'Calendario',
       subscribeWhat: 'Cada evento publicado al equipo aparece en tu calendario hasta que lo rechazas — los que tu familia contesta que no desaparecen solos. Se actualiza cuando cambian las fechas y los detalles.',
@@ -885,7 +885,12 @@
               } })));
     }
     upcoming.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
-    if (past.length) { app.appendChild(section(t('recent'))); past.sort(newestFirst).forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev), true)); }); }
+    if (past.length) {
+      var pastSec = section(t('recent'), past.length);
+      pastSec.className += ' tm-sec-fold';
+      app.appendChild(h('details', { class: 'tm-fold' }, h('summary', { class: 'tm-fold-summary' }, pastSec),
+        past.sort(newestFirst).map(function (ev) { return memberCard(ev, myAnswers(ev), true); })));
+    }
 
     var famCal = subscribeCard();
     if (famCal) { app.appendChild(section(t('calSection'))); app.appendChild(famCal); }
@@ -1927,7 +1932,7 @@
     if (!state.focusEvent) return;
     var el = document.getElementById('event-' + state.focusEvent);
     var id = state.focusEvent; state.focusEvent = null;
-    if (el) { el.classList.add('is-flash'); setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); }
+    if (el) { var fold = el.closest('details'); if (fold) fold.open = true; el.classList.add('is-flash'); setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); }
     if (state.openCal) {
       state.openCal = false;
       var ev = state.events.filter(function (e) { return +e.id === +id; })[0];
