@@ -58,15 +58,29 @@ export function eventSummary(ev) {
 
 const shortDate = (d) => fmtDate(d).replace(/, \d{4}$/, '');
 
+export function daysUntil(d, now = new Date()) {
+  if (!d) return null;
+  const iso = typeof d === 'string' ? d.slice(0, 10) : d.toISOString().slice(0, 10);
+  const today = now.toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+  return Math.round((Date.parse(iso) - Date.parse(today)) / 86400000);
+}
+
+function reminderHead(ev, now) {
+  const n = daysUntil(ev.event_date, now);
+  const when = n === 0 ? 'is today' : n === 1 ? 'is tomorrow' : n > 1 ? `is coming up in ${n} days` : null;
+  return when ? `📢 Friendly reminder! This gig ${when}. Update your RSVP if anything changed.`
+    : '📢 Friendly reminder! Update your RSVP if anything changed.';
+}
+
 // The sample reply must stay in a shape api/_lib/groupme-parse.js understands.
-export function askText(ev, { again = false } = {}) {
+export function askText(ev, { again = false, now } = {}) {
   const when = ev.event_date ? shortDate(ev.event_date) : (ev.date_text || 'date TBD');
   const where = eventWhere(ev);
   const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
   const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
   const cal = calLink(ev);
   return [
-    again ? '📢 Friendly reminder! Who else can join us for this one?' : '📢 New gig request received! Who can join us for this one?',
+    again ? reminderHead(ev, now) : '📢 New gig request received! Who can join us for this one?',
     ev.title || ev.event_type || 'Performance',
     [when, time].filter(Boolean).join(' · '),
     ev.call_time ? `⏰ Call time / Hora de llegada: ${ev.call_time}` : null,

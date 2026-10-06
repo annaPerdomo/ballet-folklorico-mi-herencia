@@ -58,7 +58,7 @@
       archived: 'Declined / cancelled', posted: 'Posted to the team',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
-      askGroup: '📢 Ask GroupMe who’s available', askAgain: 'Ask again in GroupMe', postTally: 'Post tally to GroupMe',
+      askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
       askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
@@ -129,7 +129,7 @@
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
       openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
       going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
-      remindWaiting: 'Remind {n} with no answer', moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
+      moreActions: 'More', setAnswerFor: 'Answer for {name}', clearAnswer: 'Clear answer',
       waitingOn: 'No response received', tapGigHint: 'Tap a gig to see who’s in and nudge who isn’t.',
       goingAre: 'Going:',
       everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
@@ -184,7 +184,7 @@
       archived: 'Rechazados / cancelados', posted: 'Publicados al equipo',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
-      askGroup: '📢 Preguntar en GroupMe quién puede', askAgain: 'Volver a preguntar en GroupMe', postTally: 'Publicar el conteo en GroupMe',
+      askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
       askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
@@ -255,7 +255,7 @@
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
       openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
       going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
-      remindWaiting: 'Recordar a {n} sin respuesta', moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
+      moreActions: 'Más', setAnswerFor: 'Respuesta de {name}', clearAnswer: 'Borrar respuesta',
       waitingOn: 'Sin respuesta', tapGigHint: 'Toca un evento para ver quién va y avisar a quien falta.',
       goingAre: 'Van:',
       everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
@@ -1409,11 +1409,10 @@
         : postToTeam(ev);
       out.more = inquiryActions(ev);
     } else if (s === 'open') {
-      if (!ev.asked_at) out.primary = { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
-      else if (c.pending) out.primary = { label: t('remindWaiting', { n: c.pending }), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
+      if (!ev.asked_at || !ev.event_date) out.primary = { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      else if (c.pending) out.primary = { label: t('sendReminder'), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
       else out.primary = { label: t('confirmGig'), icon: 'yes', cls: 'btn-teal', onclick: confirmIt };
       out.more = [
-        { label: ev.asked_at ? t('askAgain') : t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function () { askGroup(ev); } },
         { label: t('postTally'), icon: 'people', onclick: function () { doAction(ev, 'tally'); } },
         { label: t('postAnnouncement'), icon: 'mail', onclick: function () { doAction(ev, 'announce'); } },
         remind, websiteAction(ev), edit,
@@ -1425,7 +1424,7 @@
         ? { label: t('markDone'), icon: 'allDone', cls: 'btn-teal', onclick: function () { doAction(ev, 'done'); } }
         : { label: t('postConfirmation'), icon: 'chat', onclick: function () { doAction(ev, 'reconfirm'); } };
       out.more = [
-        remind,
+        isPast(ev) ? null : remind,
         websiteAction(ev),
         edit,
         { label: t('markDone'), icon: 'allDone', onclick: function () { doAction(ev, 'done'); } },
@@ -1768,10 +1767,16 @@
       'Waiting on: Elena',
     ]],
     ['sendReminder', [
-      '⏰ Reminder — Quinceañera — Ramirez on Wed, Nov 4, 2026. Still need an answer from: Elena Ramos.',
-      'Call time / Hora de llegada: 6:15 PM',
-      '📍 Grand Ballroom, 1200 E Garvey Ave, West Covina · https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%201200%20E%20Garvey%20Ave%2C%20West%20Covina',
-      'https://bfmh.dance/team/?e=42&s=…',
+      '📢 Friendly reminder! This gig is coming up in 4 days. Update your RSVP if anything changed.',
+      'Quinceañera — Ramirez',
+      'Wed, Nov 4 · 7:00 PM–7:30 PM',
+      '⏰ Call time / Hora de llegada: 6:15 PM',
+      '📍 Grand Ballroom, 1200 E Garvey Ave, West Covina',
+      '🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%201200%20E%20Garvey%20Ave%2C%20West%20Covina',
+      '',
+      'Reply "Sofia yes for Nov 4" or "we can\'t".',
+      'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
+      '📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1',
     ]],
     ['postConfirmation', [
       '✅ CONFIRMED: Quinceañera — Ramirez — Wed, Nov 4, 2026',

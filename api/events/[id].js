@@ -3,7 +3,7 @@ import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, eventSummary, eventWhere, mapLink, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
+import { postGroupMe, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -22,7 +22,10 @@ async function notifyPublish(ev) {
   const text = `📣 New gig: are you available?\n${eventSummary(ev)}` +
     (cal ? `\n\n${CAL_LABEL}:\n${cal}` : '') +
     `\n\nMark your availability: ${teamLink(ev.id)}`;
-  return { groupme: await postGroupMe(text) };
+  const posted = await postGroupMe(text);
+  // Counts as an ask, so the UI offers Remind next and a later ask isn't posted as new.
+  if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]);
+  return { groupme: posted };
 }
 
 async function notifyConfirm(ev) {
@@ -54,20 +57,6 @@ function cancelText(ev) {
   ].filter((l) => l !== null).join('\n');
 }
 
-export function reminderText(ev, roster) {
-  const missing = [];
-  for (const f of roster) for (const d of f.dancers) if (!d.status) missing.push(d.name);
-  const head = `⏰ Reminder — ${ev.title} on ${fmtDate(ev.event_date)}.`;
-  if (!missing.length) return `${head} Everyone has answered, thank you!`;
-  const where = eventWhere(ev);
-  return [
-    `${head} Still need an answer from: ${missing.join(', ')}.`,
-    ev.call_time ? `Call time / Hora de llegada: ${ev.call_time}` : null, // no ⏰: the head line already carries it
-    where ? `📍 ${where} · ${mapLink(ev)}` : null,
-    teamLink(ev.id),
-  ].filter(Boolean).join('\n');
-}
-
 export default route({
   async GET(req, res) {
     const me = await whoami(req);
@@ -93,14 +82,16 @@ export default route({
     let notified = null;
     const action = str(body.action, 20);
     if (action === 'remind') {
-      const ev = await getEvent(id, { admin: true });
-      const text = reminderText(ev, await rosterFor(id));
-      notified = { groupme: await postGroupMe(text) };
+      if (!current.event_date) throw httpError(400, 'Set the event date before asking');
+      const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: true }));
+      if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
+      notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       if (current.status === 'inquiry') await sql(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]);
-      const text = askText(await getEvent(id, { admin: true }), { again: current.ask_count > 0 });
+      // Gigs published before publishing counted as an ask have ask_count 0 but families already saw them.
+      const text = askText(await getEvent(id, { admin: true }), { again: current.ask_count > 0 || current.status !== 'inquiry' });
       const posted = await postGroupMe(text);
       if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
       notified = { groupme: posted };

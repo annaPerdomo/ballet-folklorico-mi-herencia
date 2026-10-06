@@ -25,6 +25,15 @@ test('missing pieces are left out rather than printed blank', () => {
   assert.doesNotMatch(askText({ id: 7, title: 'Parade', event_date: '2026-10-24' }), /🗺|📍/);
 });
 
+test('asking again reminds how far off the gig is instead of announcing it as new', () => {
+  const now = new Date('2026-10-20T23:30:00-07:00');
+  assert.match(askText(ev, { again: true, now }), /^📢 Friendly reminder! This gig is coming up in 4 days\. Update your RSVP if anything changed\./);
+  assert.match(askText(ev, { again: true, now: new Date('2026-10-23T12:00:00-07:00') }), /This gig is tomorrow\./);
+  assert.match(askText(ev, { again: true, now: new Date('2026-10-24T09:00:00-07:00') }), /This gig is today\./);
+  assert.match(askText(ev, { again: true, now: new Date('2026-10-25T09:00:00-07:00') }), /^📢 Friendly reminder! Update your RSVP/);
+  assert.match(askText(ev), /^📢 New gig request received!/);
+});
+
 test('publish and confirm summaries include the map link under the address', () => {
   const text = eventSummary(ev);
   assert.match(text, /⏰ Call time \/ Hora de llegada: 5:15 PM\n📍 Where: Grand Ballroom, 123 Main St, West Covina\n🗺 https:/);
