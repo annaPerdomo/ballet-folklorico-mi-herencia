@@ -72,6 +72,11 @@ function reminderHead(ev, now) {
     : '📢 Friendly reminder! Update your RSVP if anything changed.';
 }
 
+// Gigs published before publishing counted as an ask have ask_count 0 but families already saw them.
+export function isRepeatAsk(ev) {
+  return ev.ask_count > 0 || (ev.status !== 'inquiry' && !ev.quiet);
+}
+
 // The sample reply must stay in a shape api/_lib/groupme-parse.js understands.
 export function askText(ev, { again = false, now } = {}) {
   const when = ev.event_date ? shortDate(ev.event_date) : (ev.date_text || 'date TBD');

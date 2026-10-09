@@ -61,7 +61,7 @@
       askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
       askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
-      postToTeam: 'Post to team', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
+      postToTeam: 'Post to team', addQuietly: 'Add to Gigs without posting', addQuietlyNew: 'Add straight to Gigs — no GroupMe post', confirmPost: 'Post the confirmation to GroupMe', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
       requiredTag: 'required', optionalHead: 'Optional — fill in what you know',
       payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
@@ -187,7 +187,7 @@
       askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
       askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
-      postToTeam: 'Publicar al equipo', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
+      postToTeam: 'Publicar al equipo', addQuietly: 'Agregar a Eventos sin publicar', addQuietlyNew: 'Agregar directo a Eventos — sin publicar en GroupMe', confirmPost: 'Publicar la confirmación en GroupMe', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
       requiredTag: 'obligatorio', optionalHead: 'Opcional — llena lo que sepas',
       payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
@@ -1327,6 +1327,10 @@
       rehBox.appendChild(h('button', { type: 'button', class: 'btn btn-sm', text: t('addRehearsal'), onclick: function () { rehearsals.push({}); renderReh(); } }));
     }
     renderReh();
+    var quiet = false;
+    var quietRow = isNew ? h('button', { type: 'button', class: 'pop-toggle full', role: 'switch', 'aria-checked': 'false',
+      onclick: function () { quiet = !quiet; quietRow.classList.toggle('is-on', quiet); quietRow.setAttribute('aria-checked', quiet ? 'true' : 'false'); } },
+      icon('calendar', 2.2), h('span', { class: 'site-label', text: t('addQuietlyNew') }), h('span', { class: 'switch' })) : null;
     var err = h('p', { class: 'error' });
     var form = h('form', { class: 'form-grid', id: 'event-form', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
@@ -1336,7 +1340,7 @@
       if (!body.title) { err.textContent = t('needTitle'); return; }
       var p;
       if (isNew) {
-        body.status = 'inquiry';
+        body.status = quiet ? 'open' : 'inquiry';
         p = api('/api/events', { method: 'POST', body: body });
       } else {
         p = api('/api/events/' + ev.id, { method: 'PATCH', body: body });
@@ -1345,10 +1349,12 @@
         closeModal();
         toast(t('saved'));
         if (back) state.detail = back;
+        if (quiet) state.tab = 'gigs';
         return refresh();
       }).catch(function (x) { err.textContent = x.message; });
     } },
       field(t('title'), inp('title', ev, { placeholder: t('titlePh'), required: true }), true, true),
+      quietRow,
       h('div', { class: 'form-sep full' }, h('span', { class: 'tm-label', text: t('optionalHead') })),
       field(t('dateLabel'), inp('event_date', ev, { type: 'date' })),
       field(t('typeLabel'), typeSel),
@@ -1382,8 +1388,14 @@
   // Publishing takes no date, so it is the only way a "date TBD" gig reaches the families:
   // askGroup and the server's 'ask' both refuse an event with no event_date.
   function postToTeam(ev) { return { label: t('postToTeam'), icon: 'chat', onclick: function () { doAction(ev, 'publish'); } }; }
+  function addQuietly(ev) {
+    return { label: t('addQuietly'), icon: 'calendar', onclick: function () {
+      doAction(ev, 'publish', { notify: false }).then(function (d) { if (d) { state.tab = 'gigs'; render(); } });
+    } };
+  }
   function inquiryActions(ev) {
     return [
+      addQuietly(ev),
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } },
@@ -1391,10 +1403,12 @@
   }
   function primaryFor(ev, c) {
     var s = ev.status;
-    var confirmIt = function () {
-      confirmSheet(t('confirmAsk'), t('confirmGig')).then(function (yes) { if (yes) doAction(ev, 'confirm'); });
-    };
     var canPost = state.me.channels && state.me.channels.groupme;
+    var confirmIt = function () {
+      confirmSheet(t('confirmAsk'), t('confirmGig'), false, canPost ? { toggle: { label: t('confirmPost'), on: !(ev.quiet && !ev.asked_at) } } : null).then(function (yes) {
+        if (yes) doAction(ev, 'confirm', { notify: yes === true || !!yes.toggle });
+      });
+    };
     var cancelIt = function () {
       confirmSheet(t('cancelAsk'), t('cancelGig'), true, canPost ? { toggle: { label: t('cancelPost'), on: true } } : null).then(function (yes) {
         if (yes) doAction(ev, 'cancel', { notify: !!(yes && yes.toggle) }).then(closeDetail);
@@ -1409,7 +1423,8 @@
         : postToTeam(ev);
       out.more = inquiryActions(ev);
     } else if (s === 'open') {
-      if (!ev.asked_at || !ev.event_date) out.primary = { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
+      if (isPast(ev)) out.primary = { label: t('markDone'), icon: 'allDone', cls: 'btn-teal', onclick: function () { doAction(ev, 'done'); } };
+      else if (!ev.asked_at || !ev.event_date) out.primary = { label: t('askGroup').replace(/^📢\s*/, ''), icon: 'chat', onclick: function (e) { askGroup(ev, null, e.currentTarget); } };
       else if (c.pending) out.primary = { label: t('sendReminder'), icon: 'bell', onclick: function () { doAction(ev, 'remind'); } };
       else out.primary = { label: t('confirmGig'), icon: 'yes', cls: 'btn-teal', onclick: confirmIt };
       out.more = [

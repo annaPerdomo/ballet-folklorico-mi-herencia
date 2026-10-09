@@ -68,9 +68,9 @@ export default route({
     const vals = Object.values(patch);
     const status = ['inquiry', 'open'].includes(body.status) ? body.status : 'inquiry';
     const row = await sql(
-      `INSERT INTO events (${cols.join(',')}, status, source, published_at)
+      `INSERT INTO events (${cols.join(',')}, status, source, published_at, quiet)
        VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, 'manual',
-               CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END) RETURNING id`,
+               CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} = 'open') RETURNING id`,
       [...vals, status]);
     ok(res, { id: row[0].id });
   },

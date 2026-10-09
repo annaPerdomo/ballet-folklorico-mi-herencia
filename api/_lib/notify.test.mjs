@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 process.env.SESSION_SECRET ||= 'test-secret';
-const { askText, eventSummary, mapLink } = await import('./notify.js');
+const { askText, isRepeatAsk, eventSummary, mapLink } = await import('./notify.js');
 
 const ev = { id: 5, title: 'Quinceañera — Lopez', event_date: '2026-10-24', start_time: '6:00 PM', end_time: '7:30 PM',
   call_time: '5:15 PM', venue: 'Grand Ballroom', address: '123 Main St', city: 'West Covina' };
@@ -32,6 +32,13 @@ test('asking again reminds how far off the gig is instead of announcing it as ne
   assert.match(askText(ev, { again: true, now: new Date('2026-10-24T09:00:00-07:00') }), /This gig is today\./);
   assert.match(askText(ev, { again: true, now: new Date('2026-10-25T09:00:00-07:00') }), /^📢 Friendly reminder! Update your RSVP/);
   assert.match(askText(ev), /^📢 New gig request received!/);
+});
+
+test('a gig added without a post is asked as new until the first ask goes out', () => {
+  assert.equal(isRepeatAsk({ status: 'inquiry', ask_count: 0, quiet: false }), false);
+  assert.equal(isRepeatAsk({ status: 'open', ask_count: 0, quiet: true }), false);
+  assert.equal(isRepeatAsk({ status: 'open', ask_count: 0, quiet: false }), true);
+  assert.equal(isRepeatAsk({ status: 'open', ask_count: 1, quiet: true }), true);
 });
 
 test('publish and confirm summaries include the map link under the address', () => {

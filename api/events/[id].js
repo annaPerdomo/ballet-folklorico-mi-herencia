@@ -3,7 +3,7 @@ import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
+import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
@@ -83,15 +83,14 @@ export default route({
     const action = str(body.action, 20);
     if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
-      const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: true }));
+      const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));
       if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
       notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       if (current.status === 'inquiry') await sql(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]);
-      // Gigs published before publishing counted as an ask have ask_count 0 but families already saw them.
-      const text = askText(await getEvent(id, { admin: true }), { again: current.ask_count > 0 || current.status !== 'inquiry' });
+      const text = askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) });
       const posted = await postGroupMe(text);
       if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
       notified = { groupme: posted };
@@ -109,7 +108,8 @@ export default route({
       if (!t) throw httpError(400, 'Unknown action');
       if (!t.from.includes(current.status) && current.status !== t.to) throw httpError(400, `Cannot ${action} an event that is ${current.status}`);
       const stamp = t.to === 'open' ? 'published_at = COALESCE(published_at, now()),' : t.to === 'confirmed' ? 'confirmed_at = now(),' : '';
-      await sql(`UPDATE events SET status = $2, ${stamp} updated_at = now() WHERE id = $1`, [id, t.to]);
+      const quiet = action === 'publish' && body.notify === false && current.status === 'inquiry' ? 'quiet = true,' : '';
+      await sql(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1`, [id, t.to]);
       const ev = await getEvent(id, { admin: true });
       if (body.notify !== false) {
         if (action === 'publish') notified = await notifyPublish(ev);
