@@ -2,6 +2,7 @@ import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js
 import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
 import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
+import { takeEventMedia, removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
 import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
@@ -123,7 +124,9 @@ export default route({
   async DELETE(req, res) {
     await requireAdmin(req);
     const id = int(query(req).id);
+    const files = await takeEventMedia(id);
     await sql('DELETE FROM events WHERE id = $1', [id]);
+    await removeFiles(files);
     ok(res);
   },
 });

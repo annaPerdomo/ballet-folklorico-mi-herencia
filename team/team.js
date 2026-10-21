@@ -3,11 +3,17 @@
   'use strict';
 
   var app = document.getElementById('app');
+  var FAMILIA = /^\/familia\/?$/.test(location.pathname);
+  if (FAMILIA) {
+    var mf = document.querySelector('link[rel="manifest"]'); if (mf) mf.href = '/team/familia.webmanifest';
+    var at = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (at) at.content = 'MH Familia';
+    document.title = 'Familia · Ballet Folklórico Mi Herencia';
+  }
   var painted = null;
   var tabsEl = document.getElementById('tabs');
   var headerRight = document.getElementById('header-right');
   var fabRoot = document.getElementById('fab-root');
-  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0,
+  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', mtab: 'gigs', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0,
     inbox: loadInboxPrefs() };
   function loadInboxPrefs() {
     var d = { sort: 'newest', range: 'all', from: '', to: '', pick: false };
@@ -142,6 +148,32 @@
       printOpen: 'Open roster', printShare: 'Share', printCopy: 'Copy link',
       printHint: 'Open it, then tap Print or save as PDF.',
       printShareMsg: 'Gig roster',
+      tabMedia: 'Gallery', gallery: 'Photos & videos', galleryN: 'Photos & videos ({n})', mediaLoading: 'Loading the gallery…',
+      storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
+      musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
+      gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
+      photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 song', songMany: '{n} songs',
+      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', titleLabel: 'Title',
+      deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
+      photos: 'Photos', videos: 'Videos', music: 'Music', addPhotos: 'Add photos', noPhotos: 'No photos yet. Add the ones you took at this gig.',
+      openPhoto: 'Open photo {n}', previous: 'Previous', next: 'Next',
+      addLink: 'Add YouTube link', addClip: 'Upload a short clip', noVideos: 'No videos yet.',
+      videoHint: 'Full performances: upload to YouTube as Unlisted, then add the link here. Short clips (up to 150 MB) can be uploaded directly.',
+      addTrack: 'Upload a track', fromLibrary: 'From the library', noTracks: 'No music for this gig yet.', unlink: 'Remove from this gig', fromLibraryTag: 'Library',
+      linkHint: 'Anyone with the bfmh.dance/familia address can see this gallery. Set YouTube videos to Unlisted so they stay off search.', linkUrl: 'Link', linkTitlePh: 'e.g. Jalisco — full set',
+      pickSongs: 'Songs for this gig', pickSongsHint: 'Tap to add or remove songs from the music library.', noLibrary: 'The music library is empty. Add songs from the Gallery tab first.',
+      uploadingN: 'Uploading {n} of {total}…', uploadFailed: '{n} didn’t upload.', uploadedOne: 'Uploaded', uploadedMany: '{n} uploaded',
+      uploadRefused: 'storage refused it ({n})', uploadNetwork: 'the connection dropped',
+      dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
+      dirEmpty: 'No families have been added yet.', ownersHere: 'Admins can sign in here', familiesHere: 'Families: find your family here',
+      webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webShowShort: 'Add to website', webBadge: 'On bfmh.dance',
+      webOn: 'Now on bfmh.dance — it shows up within a few minutes', webOff: 'Removed from bfmh.dance',
+      webNewUploads: 'Also show what I add on bfmh.dance (anyone can see it there)',
+      webSuggest: 'Suggest for bfmh.dance', webWithdraw: 'Withdraw suggestion', webApprove: 'Approve for bfmh.dance', webPending: 'Waiting for an owner’s OK',
+      webSuggested: 'Suggested — an owner will look at it before it goes on bfmh.dance',
+      webNewSuggest: 'Suggest what I add for bfmh.dance (an owner approves it first)',
+      reviewTitle: 'Waiting for your OK', reviewHint: 'Families suggested these for bfmh.dance. Nothing goes public until you approve it.',
+      approve: 'Approve', webDeclined: 'Kept off bfmh.dance',
       printNoGigs: 'Post a gig first, then print the roster.', printMax: 'Up to 10 gigs fit on one page — uncheck some to continue.',
     },
     es: {
@@ -268,6 +300,32 @@
       printOpen: 'Abrir lista', printShare: 'Compartir', printCopy: 'Copiar enlace',
       printHint: 'Ábrelo y luego toca Imprimir o guardar PDF.',
       printShareMsg: 'Lista de eventos',
+      tabMedia: 'Galería', gallery: 'Fotos y videos', galleryN: 'Fotos y videos ({n})', mediaLoading: 'Cargando la galería…',
+      storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
+      musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
+      gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
+      photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 canción', songMany: '{n} canciones',
+      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', titleLabel: 'Título',
+      deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
+      photos: 'Fotos', videos: 'Videos', music: 'Música', addPhotos: 'Agregar fotos', noPhotos: 'Todavía no hay fotos. Agrega las que tomaste en este evento.',
+      openPhoto: 'Abrir foto {n}', previous: 'Anterior', next: 'Siguiente',
+      addLink: 'Agregar enlace de YouTube', addClip: 'Subir un clip corto', noVideos: 'Todavía no hay videos.',
+      videoHint: 'Presentaciones completas: súbelas a YouTube como "No listado" y agrega el enlace aquí. Los clips cortos (hasta 150 MB) se pueden subir directamente.',
+      addTrack: 'Subir una pista', fromLibrary: 'De la biblioteca', noTracks: 'Todavía no hay música para este evento.', unlink: 'Quitar de este evento', fromLibraryTag: 'Biblioteca',
+      linkHint: 'Cualquiera con la dirección bfmh.dance/familia puede ver esta galería. Pon los videos de YouTube como "No listado" para que no salgan en búsquedas.', linkUrl: 'Enlace', linkTitlePh: 'p. ej. Jalisco — presentación completa',
+      pickSongs: 'Canciones para este evento', pickSongsHint: 'Toca para agregar o quitar canciones de la biblioteca de música.', noLibrary: 'La biblioteca de música está vacía. Primero agrega canciones desde la pestaña Galería.',
+      uploadingN: 'Subiendo {n} de {total}…', uploadFailed: '{n} no se subieron.', uploadedOne: 'Subido', uploadedMany: '{n} subidos',
+      uploadRefused: 'el almacenamiento lo rechazó ({n})', uploadNetwork: 'se cortó la conexión',
+      dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
+      dirEmpty: 'Todavía no se ha agregado ninguna familia.', ownersHere: 'Los administradores pueden entrar aquí', familiesHere: 'Familias: encuentren a su familia aquí',
+      webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webShowShort: 'Poner en la página', webBadge: 'En bfmh.dance',
+      webOn: 'Ya está en bfmh.dance; aparece en unos minutos', webOff: 'Se quitó de bfmh.dance',
+      webNewUploads: 'Mostrar también lo que agrego en bfmh.dance (ahí lo puede ver cualquiera)',
+      webSuggest: 'Sugerir para bfmh.dance', webWithdraw: 'Retirar sugerencia', webApprove: 'Aprobar para bfmh.dance', webPending: 'Esperando el visto bueno de un dueño',
+      webSuggested: 'Sugerido; un dueño lo revisará antes de ponerlo en bfmh.dance',
+      webNewSuggest: 'Sugerir lo que agrego para bfmh.dance (un dueño lo aprueba primero)',
+      reviewTitle: 'Esperando tu visto bueno', reviewHint: 'Las familias sugirieron esto para bfmh.dance. Nada se publica hasta que lo apruebes.',
+      approve: 'Aprobar', webDeclined: 'No se pondrá en bfmh.dance',
       printNoGigs: 'Publica un evento primero y luego imprime la lista.', printMax: 'Caben hasta 10 eventos en una página; quita algunos para continuar.',
     },
   };
@@ -397,6 +455,7 @@
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
     if (state.me.role === 'admin') { jobs.push(loadFamilies()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
+    if (isMediaTab()) jobs.push(loadMediaIndex());
     return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
   }
   function refreshIfStale() {
@@ -408,6 +467,8 @@
   /* Never yank a half-typed form or an open sheet out from under a thumb. */
   function isEditing() {
     if (document.querySelector('.modal-back form, .pop-back')) return true;
+    // A repaint would rebuild the song list and cut off the track someone is practicing to.
+    if (Array.prototype.some.call(document.querySelectorAll('audio, video'), function (m) { return !m.paused; })) return true;
     var el = document.activeElement;
     return !!el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
   }
@@ -435,7 +496,7 @@
         return api('/api/gig?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s))
           .then(renderPicker, function () { renderLogin(); toast(t('pickBadLink'), true); });
       }
-      if (me.role === 'anon') { renderLogin(); return; }
+      if (me.role === 'anon') { if (FAMILIA) renderDirectory(); else renderLogin(); return; }
       if (state.gigLink) { state.focusEvent = +state.gigLink.e; history.replaceState(null, '', location.pathname + '#event-' + state.gigLink.e); }
       if (me.role === 'admin') state.tab = 'inbox';
       return refresh();
@@ -446,7 +507,7 @@
     });
   }
   function setLangSilently(l) { state.lang = l; document.documentElement.lang = l; try { localStorage.setItem('bfmh_team_lang', l); } catch (e) {} }
-  function paintBrandRole() { var el = document.getElementById('brand-role'); if (el) el.textContent = t('roleTeam'); }
+  function paintBrandRole() { var el = document.getElementById('brand-role'); if (el) el.textContent = t(FAMILIA ? 'familia' : 'roleTeam'); }
 
   /* ── login ──────────────────────────────────────────────── */
   /* A lone password box is a credential a password manager cannot finish: iOS keeps asking for
@@ -474,12 +535,37 @@
       state.me && state.me.configured === false ? h('p', { class: 'hint', text: t('notConfigured') }) : null
     );
     app.appendChild(form);
+    app.appendChild(h('a', { class: 'btn btn-wide familia-link', href: '/familia' }, icon('people', 2), t('familiesHere')));
   }
 
   /* Back to the picker, not the login: a shared phone can switch families without the link. */
   function signOut() {
-    var back = state.gigLink ? '/team/?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s) : '/team/';
+    var back = state.gigLink ? '/team/?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s)
+      : state.me && state.me.role === 'member' ? '/familia' : '/team/';
     api('/api/auth', { method: 'DELETE' }).then(function () { location.href = back; });
+  }
+
+  function renderDirectory() {
+    tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
+    headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
+    var err = h('p', { class: 'error' });
+    var grid = h('div', { class: 'pickgrid' });
+    app.appendChild(h('div', { class: 'card familia' },
+      h('h3', { class: 'card-title', text: t('dirTitle') }),
+      h('p', { class: 'card-meta', text: t('dirHint') }),
+      grid, err,
+      h('p', { class: 'hint', text: t('pickNotListed') })));
+    app.appendChild(h('p', { class: 'hint familia-owners' }, h('a', { href: '/team/', text: t('ownersHere') })));
+    api('/api/auth?families').then(function (d) {
+      if (!d.families.length) { grid.appendChild(h('p', { class: 'card-meta', text: t('dirEmpty') })); return; }
+      d.families.forEach(function (f) {
+        grid.appendChild(h('button', { class: 'btn pickbtn', type: 'button', onclick: function () {
+          err.textContent = '';
+          api('/api/auth', { method: 'POST', body: { directory: f.id } }).then(function () { location.reload(); })
+            .catch(function (x) { err.textContent = x.message; });
+        } }, h('b', { text: f.name }), h('span', { class: 'pickkids', text: f.dancers.join(', ') })));
+      });
+    }, function (e) { err.textContent = e.message; });
   }
 
   /* No password here — being in the GroupMe chat is the guest list. */
@@ -547,6 +633,12 @@
     globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
     home: '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/>',
     chevron: '<path d="m9 5 7 7-7 7"/>',
+    back: '<path d="m15 5-7 7 7 7"/>',
+    image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>',
+    music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+    play: '<path d="M7 4.5v15l13-7.5z" fill="currentColor"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
   };
   function icon(name, width) {
     var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -851,14 +943,22 @@
   /* ── member view ───────────────────────────────────────── */
   function renderMember() {
     var me = state.me;
-    tabsEl.hidden = true; fabRoot.innerHTML = '';
+    fabRoot.innerHTML = '';
     paintBrandRole();
+    if (state.focusEvent) state.mtab = 'gigs';
+    tabsEl.hidden = false; tabsEl.innerHTML = '';
+    [['gigs', 'tabGigs', 'calendar'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
+      tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.mtab === tb[0] ? ' is-active' : ''), 'aria-current': state.mtab === tb[0] ? 'page' : false,
+        onclick: function () { state.mtab = tb[0]; render(); } },
+        h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) })));
+    });
     headerRight.innerHTML = '';
     headerRight.appendChild(h('span', { class: 'tm-who' },
       h('span', { class: 'tm-who-label', text: t('familia') }), h('span', { class: 'tm-who-name', text: me.family.name })));
     headerRight.appendChild(langToggle());
     headerRight.appendChild(h('button', { class: 'btn btn-sm', text: t('signOut'), onclick: signOut }));
     app.innerHTML = '';
+    if (state.mtab === 'media') { renderMediaTab(); return; }
     me.dancers.forEach(function (d) { d.family = me.family.name; d.family_id = me.family.id; });
 
     var mine = {}; me.dancers.forEach(function (d) { mine[d.id] = d; });
@@ -944,8 +1044,7 @@
 
     var whoBlock = whosIn(ev);
     if (whoBlock) card.appendChild(whoBlock);
-    var cal = calButton(ev);
-    if (cal) card.appendChild(h('div', { class: 'card-actions' }, cal));
+    card.appendChild(h('div', { class: 'card-actions' }, calButton(ev), galleryButton(ev)));
     return card;
   }
 
@@ -991,7 +1090,7 @@
   }
 
   /* ── admin view ────────────────────────────────────────── */
-  var TABS = [['inbox', 'tabInbox', 'mail'], ['gigs', 'tabGigs', 'calendar'], ['team', 'tabTeam', 'people'], ['chona', 'tabChona', null]];
+  var TABS = [['inbox', 'tabInbox', 'mail'], ['gigs', 'tabGigs', 'calendar'], ['media', 'tabMedia', 'image'], ['team', 'tabTeam', 'people'], ['chona', 'tabChona', null]];
   function renderAdmin() {
     paintBrandRole();
     headerRight.innerHTML = '';
@@ -1027,6 +1126,7 @@
     if (state.tab === 'inbox') renderInbox(inquiries);
     else if (state.tab === 'gigs') renderGigs();
     else if (state.tab === 'chona') renderChona();
+    else if (state.tab === 'media') renderMediaTab();
     else renderTeam();
     focusIfNeeded();
   }
@@ -1475,7 +1575,8 @@
     var facts = factList(ev);
     if (facts) body.appendChild(facts);
     var detailCal = calButton(ev);
-    if (detailCal) body.appendChild(h('div', { class: 'card-actions' }, detailCal));
+    var detailGal = ['open', 'confirmed', 'done'].indexOf(ev.status) !== -1 ? galleryButton(ev) : null;
+    if (detailCal || detailGal) body.appendChild(h('div', { class: 'card-actions' }, detailCal, detailGal));
     var siteRow = websiteRow(ev); if (siteRow) body.appendChild(siteRow);
 
     var roster = rosterFor(ev);
@@ -1516,6 +1617,463 @@
     var prev = document.querySelector('#modal-root .modal-body'); var scrollTop = prev ? prev.scrollTop : 0;
     modal(title, body, foot, { cls: 'modal-detail', onclose: closeDetail, noFocus: true });
     var nb = document.querySelector('#modal-root .modal-body'); if (nb && scrollTop) nb.scrollTop = scrollTop;
+  }
+
+  /* ── gallery & music ───────────────────────────────────── */
+  var media = { index: null, library: null, loading: null };
+  function shareDefault() { try { return localStorage.getItem('bfmh_share_web') === '1'; } catch (e) { return false; } }
+  function setShareDefault(on) { try { localStorage.setItem('bfmh_share_web', on ? '1' : '0'); } catch (e) {} }
+  /* UI only: websiteFlags in api/_lib/media.js is what keeps families to suggesting. */
+  function isOwner() { return state.me && state.me.role === 'admin'; }
+  function setWebsite(it, on) {
+    return api('/api/media?id=' + it.id, { method: 'PATCH', body: { website: on } }).then(function (d) {
+      it.website = d.item.website; it.suggested = d.item.suggested;
+      toast(it.website ? t('webOn') : it.suggested ? t('webSuggested') : t('webOff')); reloadMedia();
+    }).catch(function (e) { toast(e.message, true); });
+  }
+  function webState(it) { return it.website ? 'on' : it.suggested ? 'suggested' : 'off'; }
+  function webLabel(it) {
+    var st = webState(it);
+    if (st === 'on') return t('webHide');
+    if (st === 'suggested') return isOwner() ? t('webApprove') : t('webWithdraw');
+    return isOwner() ? t('webShow') : t('webSuggest');
+  }
+  function webToggle(it) { return setWebsite(it, isOwner() ? !it.website : !(it.website || it.suggested)); }
+  function mediaWebAction(it) {
+    if (!it.can_edit || it.kind === 'audio' || (it.kind === 'photo' && !it.thumb)) return null;
+    return { label: webLabel(it), icon: 'globe', onclick: function () { webToggle(it); } };
+  }
+  function webBadge(it) {
+    var st = webState(it);
+    return st === 'off' ? null : h('span', { class: 'web-badge is-' + st, title: t(st === 'on' ? 'webBadge' : 'webPending') }, icon(st === 'on' ? 'globe' : 'clock', 2.2));
+  }
+  function shareToggle() {
+    var on = shareDefault();
+    var row = h('button', { type: 'button', class: 'pop-toggle share-toggle' + (on ? ' is-on' : ''), role: 'switch', 'aria-checked': on ? 'true' : 'false',
+      onclick: function () { on = !on; setShareDefault(on); row.classList.toggle('is-on', on); row.setAttribute('aria-checked', on ? 'true' : 'false'); } },
+      icon('globe', 2.2), h('span', { class: 'site-label', text: t(isOwner() ? 'webNewUploads' : 'webNewSuggest') }), h('span', { class: 'switch' }));
+    return row;
+  }
+  var gal = null;
+  function plural(n, one, many) { return t(n === 1 ? one : many, { n: n }); }
+  function fmtBytes(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : Math.max(1, Math.round(b / 1048576)) + ' MB'; }
+  function addedBy(it) { return t('addedBy', { who: it.uploader === 'owners' ? t('theOwners') : it.uploader }); }
+  function loadMediaIndex() {
+    if (!media.loading) {
+      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1')]).then(function (r) {
+        media.index = r[0]; media.library = r[1].songs; media.loading = null;
+      }, function (e) { media.loading = null; throw e; });
+    }
+    return media.loading;
+  }
+  function galleryButton(ev) {
+    var n = ev.media_count || 0;
+    return h('button', { type: 'button', class: 'btn btn-sm', onclick: function () { openGallery(ev.id); } },
+      icon('image', 2), n ? t('galleryN', { n: n }) : t('gallery'));
+  }
+
+  function renderMediaTab() {
+    if (!media.index) {
+      app.appendChild(h('div', { class: 'tm-boot' }, h('p', { class: 'tm-boot-text', text: t('mediaLoading') })));
+      loadMediaIndex().then(render, function (e) { toast(e.message, true); });
+      return;
+    }
+    var idx = media.index;
+    if (!idx.storage) app.appendChild(h('div', { class: 'card' }, h('p', { class: 'card-meta', text: t('storageOff') })));
+    if (idx.usage) {
+      var pct = Math.min(100, Math.round(idx.usage.used / idx.usage.quota * 100));
+      app.appendChild(h('div', { class: 'card quiet storage' },
+        h('div', { class: 'storage-line' }, h('span', { class: 'tm-label', text: t('storageLabel') }),
+          h('span', { class: 'card-meta', text: t('storageUsed', { used: fmtBytes(idx.usage.used), quota: fmtBytes(idx.usage.quota) }) })),
+        h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:' + (pct > 85 ? 'var(--no)' : 'var(--gold)') }), h('i', { style: 'flex:' + (100 - pct) }))));
+    }
+
+    if (idx.review && idx.review.length) renderReview(idx.review);
+
+    app.appendChild(section(t('musicLibrary'), media.library.length || null,
+      idx.storage ? pickButton(t('addSongs'), 'audio/*', function (files) { uploadFiles(files, null, function () { return 'audio'; }); }) : null));
+    if (!media.library.length) app.appendChild(emptyState('music', t('noSongs')));
+    else app.appendChild(h('div', { class: 'songs' }, media.library.map(function (s) { return songRow(s, libraryActions(s)); })));
+
+    app.appendChild(section(t('gigGalleries'), idx.gigs.length || null));
+    if (!idx.gigs.length) { app.appendChild(emptyState('image', t('noGalleryGigs'))); return; }
+    app.appendChild(h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
+      var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null,
+        g.songs ? plural(g.songs, 'songOne', 'songMany') : null].filter(Boolean).join(' · ');
+      return h('button', { type: 'button', class: 'galcard', onclick: function () { openGallery(g.id); } },
+        h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? h('img', { src: g.cover, alt: '', loading: 'lazy' }) : icon('image', 1.5)),
+        h('span', { class: 'galcard-text' },
+          h('b', { text: evTitle(g) }),
+          h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }),
+          h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
+    })));
+  }
+
+  function renderReview(list) {
+    app.appendChild(section(t('reviewTitle'), list.length));
+    app.appendChild(h('p', { class: 'hint review-hint', text: t('reviewHint') }));
+    var photos = list.filter(function (it) { return it.kind === 'photo'; });
+    app.appendChild(h('div', { class: 'review' }, list.map(function (it) {
+      var open = it.kind === 'photo' ? function () { lightbox(photos, photos.indexOf(it)); }
+        : function () { window.open(it.url, '_blank', 'noopener'); };
+      return h('div', { class: 'review-item' },
+        h('button', { type: 'button', class: 'review-thumb', 'aria-label': t('photos'), onclick: open },
+          it.thumb ? h('img', { src: it.thumb, alt: '', loading: 'lazy' }) : icon('play', 2)),
+        h('div', { class: 'review-text' }, h('b', { text: it.title || evTitle({ title: it.event_title }) }),
+          h('span', { class: 'song-sub', text: [it.title ? it.event_title : null, addedBy(it)].filter(Boolean).join(' · ') })),
+        h('div', { class: 'review-btns' },
+          h('button', { type: 'button', class: 'btn btn-sm btn-gold', onclick: function () { setWebsite(it, true); } }, icon('yes', 2.5), t('approve')),
+          h('button', { type: 'button', class: 'btn btn-sm', onclick: function () {
+            api('/api/media?id=' + it.id, { method: 'PATCH', body: { website: false } })
+              .then(function () { toast(t('webDeclined')); reloadMedia(); }).catch(function (e) { toast(e.message, true); });
+          } }, icon('no', 2.5), t('decline'))));
+    })));
+  }
+
+  function pickButton(label, accept, onPick, cls) {
+    var input = h('input', { type: 'file', accept: accept, multiple: true, hidden: true, onchange: function () {
+      var files = Array.prototype.slice.call(input.files || []); input.value = '';
+      if (files.length) onPick(files);
+    } });
+    return h('label', { class: cls || 'btn btn-sm btn-gold', tabindex: 0, role: 'button',
+      onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } } }, icon('plus', 2.5), h('span', { text: label }), input);
+  }
+
+  function libraryActions(s) {
+    if (!s.can_edit) return null;
+    return [{ label: t('rename'), icon: 'edit', onclick: function () { renameSheet(s, reloadMedia); } },
+      { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteItem(s, reloadMedia); } }];
+  }
+  function songRow(s, actions, tag) {
+    return h('div', { class: 'song' },
+      h('div', { class: 'song-top' },
+        h('span', { class: 'song-ico' }, icon('music', 2)),
+        h('span', { class: 'song-name' }, h('b', { text: s.title || t('untitledSong') }),
+          h('span', { class: 'song-sub', text: [tag, addedBy(s)].filter(Boolean).join(' · ') })),
+        s.download ? h('a', { class: 'btn btn-sm btn-icon', href: s.download, 'aria-label': t('download'), title: t('download') }, icon('download', 2)) : null,
+        actions ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(s.title || t('untitledSong'), actions); } }, icon('more', 2)) : null),
+      s.url ? h('audio', { controls: true, preload: 'none', src: s.url }) : null);
+  }
+
+  function reloadMedia() {
+    var jobs = [];
+    if (gal) jobs.push(loadGallery());
+    if (media.index || isMediaTab()) jobs.push(loadMediaIndex());
+    return Promise.all(jobs).then(function () { if (isMediaTab()) render(); if (gal) paintGallery(); });
+  }
+  function isMediaTab() { return state.me && (state.me.role === 'admin' ? state.tab : state.mtab) === 'media'; }
+
+  function renameSheet(it, after) {
+    var pop = popSheet(t('rename'));
+    var input = h('input', { value: it.title || '', 'aria-label': t('titleLabel'), maxlength: 200 });
+    pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault();
+      api('/api/media?id=' + it.id, { method: 'PATCH', body: { title: input.value } })
+        .then(function () { pop.close(); toast(t('saved')); return after(); }).catch(function (x) { toast(x.message, true); });
+    } }, h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), input),
+      h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t('save') }),
+        h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
+    input.focus();
+  }
+  function deleteItem(it, after) {
+    return confirmSheet(t('deleteMediaAsk'), t('del'), true).then(function (yes) {
+      if (!yes) return false;
+      return api('/api/media?id=' + it.id, { method: 'DELETE' }).then(function () { toast(t('deleted')); after(); return true; })
+        .catch(function (e) { toast(e.message, true); return false; });
+    });
+  }
+
+  /* ── one gig's gallery (full-screen layer over the app) ── */
+  function openGallery(eventId, tab) {
+    closeGallery(true);
+    gal = { id: eventId, data: null, tab: tab || 'photos', root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
+    document.body.appendChild(gal.root);
+    document.body.classList.add('has-gal');
+    try { history.pushState({ gal: eventId }, ''); gal.pushed = true; } catch (e) {}
+    paintGallery();
+    loadGallery().then(paintGallery, function (e) { toast(e.message, true); closeGallery(); });
+  }
+  function closeGallery(silent) {
+    if (!gal) return;
+    var g = gal; gal = null;
+    g.root.remove();
+    document.body.classList.remove('has-gal');
+    if (g.pushed && !silent && history.state && history.state.gal) history.back();
+    if (media.index) loadMediaIndex().then(function () { if (isMediaTab()) render(); }).catch(function () {});
+    if (g.dirty) loadEvents().then(render).catch(function () {});
+  }
+  window.addEventListener('popstate', function () { if (gal) { gal.pushed = false; closeGallery(); } });
+  function loadGallery() {
+    var id = gal.id;
+    return api('/api/media?event=' + id).then(function (d) { if (gal && gal.id === id) gal.data = d; });
+  }
+
+  function paintGallery() {
+    if (!gal) return;
+    var d = gal.data, root = gal.root;
+    var tray = document.getElementById('upload-tray');
+    root.innerHTML = '';
+    var ev = d ? d.event : state.events.filter(function (e) { return e.id === gal.id; })[0];
+    root.appendChild(h('header', { class: 'gal-head' },
+      h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
+      h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('gallery') }),
+        h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' }))));
+    if (!d) { root.appendChild(h('div', { class: 'tm-boot' }, h('p', { class: 'tm-boot-text', text: t('mediaLoading') }))); return; }
+
+    var photos = d.items.filter(function (i) { return i.kind === 'photo'; });
+    var videos = d.items.filter(function (i) { return i.kind === 'video' || i.kind === 'link'; });
+    var tracks = d.items.filter(function (i) { return i.kind === 'audio'; });
+    var tabs = [['photos', t('photos'), photos.length], ['videos', t('videos'), videos.length], ['music', t('music'), tracks.length + d.setlist.length]];
+    root.appendChild(h('div', { class: 'gal-tabs', role: 'tablist' }, tabs.map(function (tb) {
+      return h('button', { type: 'button', role: 'tab', class: gal.tab === tb[0] ? 'is-on' : '', 'aria-selected': gal.tab === tb[0] ? 'true' : 'false',
+        onclick: function () { gal.tab = tb[0]; paintGallery(); } }, tb[1], tb[2] ? h('span', { class: 'gal-n', text: tb[2] }) : null);
+    })));
+
+    var body = h('div', { class: 'gal-body' });
+    root.appendChild(body);
+    var eid = gal.id;
+    var canUpload = d.storage;
+    var bar = h('div', { class: 'gal-actions' });
+    body.appendChild(bar);
+    if (!canUpload) body.appendChild(h('p', { class: 'hint', text: t('storageOff') }));
+
+    if (gal.tab !== 'music') body.appendChild(shareToggle());
+    if (gal.tab === 'photos') {
+      if (canUpload) bar.appendChild(pickButton(t('addPhotos'), 'image/*', function (files) { uploadFiles(files, eid, function () { return 'photo'; }); }));
+      if (!photos.length) body.appendChild(emptyState('image', t('noPhotos')));
+      else body.appendChild(h('div', { class: 'photogrid' }, photos.map(function (p, i) {
+        return h('button', { type: 'button', class: 'photo', 'aria-label': t('openPhoto', { n: i + 1 }), onclick: function () { lightbox(photos, i); } },
+          h('img', { src: p.thumb || p.url, alt: '', loading: 'lazy' }),
+          webBadge(p));
+      })));
+    } else if (gal.tab === 'videos') {
+      bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm btn-gold', onclick: function () { linkSheet(eid); } }, icon('link', 2.2), t('addLink')));
+      if (canUpload) bar.appendChild(pickButton(t('addClip'), 'video/*', function (files) { uploadFiles(files, eid, function () { return 'video'; }); }, 'btn btn-sm'));
+      body.appendChild(h('p', { class: 'hint', text: t('videoHint') }));
+      if (!videos.length) body.appendChild(emptyState('play', t('noVideos')));
+      if (videos.length) body.appendChild(h('div', { class: 'gal-videos' }, videos.map(videoCard)));
+    } else {
+      if (canUpload) bar.appendChild(pickButton(t('addTrack'), 'audio/*', function (files) { uploadFiles(files, eid, function () { return 'audio'; }); }));
+      if (state.me.role === 'admin') bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', onclick: function () { setlistSheet(eid); } }, icon('music', 2), t('fromLibrary')));
+      if (!tracks.length && !d.setlist.length) body.appendChild(emptyState('music', t('noTracks')));
+      var songs = h('div', { class: 'songs' });
+      d.setlist.forEach(function (s) {
+        songs.appendChild(songRow(s, state.me.role === 'admin' ? [{ label: t('unlink'), icon: 'no', cls: 'danger', onclick: function () { setSong(eid, s.id, false).then(reloadMedia); } }] : null, t('fromLibraryTag')));
+      });
+      tracks.forEach(function (s) { songs.appendChild(songRow(s, itemActions(s))); });
+      body.appendChild(songs);
+    }
+    if (tray) root.appendChild(tray);
+  }
+  function itemActions(it) {
+    if (!it.can_edit) return null;
+    return [mediaWebAction(it), { label: t('rename'), icon: 'edit', onclick: function () { renameSheet(it, reloadMedia); } },
+      { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteItem(it, function () { if (gal) gal.dirty = true; reloadMedia(); }); } }];
+  }
+  function videoCard(v) {
+    var meta = h('div', { class: 'video-meta' },
+      h('span', { class: 'song-name' }, v.title ? h('b', { text: v.title }) : null,
+        h('span', { class: 'song-sub', text: [addedBy(v), v.website ? t('webBadge') : v.suggested ? t('webPending') : null].filter(Boolean).join(' · ') })),
+      v.download ? h('a', { class: 'btn btn-sm btn-icon', href: v.download, 'aria-label': t('download'), title: t('download') }, icon('download', 2)) : null,
+      v.can_edit ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(v.title || t('videos'), itemActions(v)); } }, icon('more', 2)) : null);
+    if (v.kind === 'link') {
+      return h('div', { class: 'video' },
+        h('a', { class: 'video-link' + (v.thumb ? '' : ' is-plain'), href: v.url, target: '_blank', rel: 'noopener' },
+          v.thumb ? h('img', { src: v.thumb, alt: '', loading: 'lazy' }) : null,
+          h('span', { class: 'video-play' }, icon('play', 2)),
+          v.thumb ? null : h('span', { class: 'video-host', text: v.url.replace(/^https:\/\/(www\.)?/, '').slice(0, 60) })),
+        meta);
+    }
+    return h('div', { class: 'video' }, h('video', { controls: true, playsinline: true, preload: 'metadata', src: v.url + '#t=0.1' }), meta);
+  }
+
+  function linkSheet(eventId) {
+    var pop = popSheet(t('addLink'), t('linkHint'));
+    var url = h('input', { type: 'url', inputmode: 'url', placeholder: 'https://youtu.be/…', 'aria-label': t('linkUrl'), required: true });
+    var title = h('input', { placeholder: t('linkTitlePh'), 'aria-label': t('titleLabel'), maxlength: 200 });
+    pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault();
+      api('/api/media', { method: 'POST', body: { action: 'link', event_id: eventId, url: url.value, title: title.value, website: shareDefault() } })
+        .then(function () { pop.close(); toast(t('saved')); if (gal) gal.dirty = true; gal && (gal.tab = 'videos'); return reloadMedia(); })
+        .catch(function (x) { toast(x.message, true); });
+    } }, h('label', { class: 'f full' }, h('span', { text: t('linkUrl') }), url),
+      h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), title),
+      h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t('add') }),
+        h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
+    url.focus();
+  }
+
+  function setSong(eventId, mediaId, on) {
+    return api('/api/media', { method: 'POST', body: { action: 'setlist', event_id: eventId, media_id: mediaId, on: on } })
+      .catch(function (e) { toast(e.message, true); });
+  }
+  function setlistSheet(eventId) {
+    var pop = popSheet(t('pickSongs'), t('pickSongsHint'));
+    var linked = {}; (gal && gal.data ? gal.data.setlist : []).forEach(function (s) { linked[s.id] = true; });
+    var changed = false;
+    function fill(songs) {
+      pop.body.innerHTML = '';
+      if (!songs.length) { pop.body.appendChild(h('p', { class: 'pop-msg', text: t('noLibrary') })); return; }
+      var list = h('div', { class: 'acts' });
+      songs.forEach(function (s) {
+        var row = h('button', { type: 'button', class: 'pop-toggle' + (linked[s.id] ? ' is-on' : ''), role: 'switch', 'aria-checked': linked[s.id] ? 'true' : 'false',
+          onclick: function () {
+            linked[s.id] = !linked[s.id]; changed = true;
+            row.classList.toggle('is-on', linked[s.id]); row.setAttribute('aria-checked', linked[s.id] ? 'true' : 'false');
+            setSong(eventId, s.id, linked[s.id]);
+          } }, icon('music', 2), h('span', { class: 'site-label', text: s.title || t('untitledSong') }), h('span', { class: 'switch' }));
+        list.appendChild(row);
+      });
+      pop.body.appendChild(list);
+      pop.body.appendChild(h('button', { type: 'button', class: 'btn btn-wide btn-gold', text: t('done'), onclick: function () { pop.close(); if (changed) reloadMedia(); } }));
+    }
+    pop.el.addEventListener('click', function (e) { if (e.target === pop.el && changed) reloadMedia(); });
+    var have = media.library;
+    if (have) fill(have); else loadMediaIndex().then(function () { fill(media.library); }, function (e) { toast(e.message, true); });
+  }
+
+  /* ── lightbox ──────────────────────────────────────────── */
+  function lightbox(items, start) {
+    var i = start;
+    var img = h('img', { class: 'lb-img', alt: '' });
+    var count = h('span', { class: 'lb-count' });
+    var who = h('span', { class: 'lb-who' });
+    var dl = h('a', { class: 'btn btn-sm btn-icon', 'aria-label': t('download'), title: t('download') }, icon('download', 2));
+    var del = h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('del'), title: t('del'), onclick: function () {
+      deleteItem(items[i], function () { if (gal) gal.dirty = true; reloadMedia(); }).then(function (gone) {
+        if (!gone) return;
+        items = items.slice(0, i).concat(items.slice(i + 1));
+        if (!items.length) close(); else show(i);
+      });
+    } }, icon('trash', 2));
+    var web = h('button', { type: 'button', class: 'btn btn-sm lb-web', onclick: function () {
+      webToggle(items[i]).then(function () { show(i); });
+    } }, icon('globe', 2), h('span'));
+    var root = h('div', { class: 'lb', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('photos') },
+      h('div', { class: 'lb-bar' },
+        h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: close }, icon('close', 2.2)),
+        count, h('span', { class: 'lb-spacer' }), web, dl, del),
+      h('div', { class: 'lb-stage' }, img,
+        h('button', { type: 'button', class: 'lb-nav lb-prev', 'aria-label': t('previous'), onclick: function () { show(i - 1); } }, icon('back', 2.2)),
+        h('button', { type: 'button', class: 'lb-nav lb-next', 'aria-label': t('next'), onclick: function () { show(i + 1); } }, icon('chevron', 2.2))),
+      who);
+    function show(n) {
+      i = (n + items.length) % items.length;
+      var it = items[i];
+      img.src = it.url; count.textContent = (i + 1) + ' / ' + items.length; who.textContent = addedBy(it);
+      dl.href = it.download || it.url; del.hidden = !it.can_edit;
+      web.hidden = !it.can_edit || !it.thumb; web.classList.toggle('is-on', !!it.website); web.classList.toggle('is-pending', !it.website && !!it.suggested);
+      web.lastChild.textContent = webLabel(it);
+      var next = items[(i + 1) % items.length]; if (next) { var pre = new Image(); pre.src = next.url; }
+    }
+    var x0 = null;
+    root.addEventListener('touchstart', function (e) { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+      if (x0 == null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
+    });
+    function onKey(e) {
+      if (document.querySelector('.pop-back')) return;
+      if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') show(i + 1); else if (e.key === 'ArrowLeft') show(i - 1);
+    }
+    function close() { root.remove(); document.removeEventListener('keydown', onKey); }
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(root);
+    show(i);
+  }
+
+  /* ── uploads ───────────────────────────────────────────── */
+  /* Decoding through <img> applies EXIF rotation, and Safari decodes HEIC; Chrome can't (falls back). */
+  function shrinkPhoto(file) {
+    return new Promise(function (resolve, reject) {
+      var src = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var w = img.naturalWidth, ht = img.naturalHeight;
+        function draw(max, q) {
+          var s = Math.min(1, max / Math.max(w, ht));
+          var c = document.createElement('canvas'); c.width = Math.round(w * s); c.height = Math.round(ht * s);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          return new Promise(function (ok, no) { c.toBlob(function (b) { if (b) ok(b); else no(new Error('encode')); }, 'image/jpeg', q); });
+        }
+        Promise.all([file.type === 'image/gif' ? file : draw(2560, 0.86), draw(480, 0.75)]).then(function (b) {
+          URL.revokeObjectURL(src);
+          // Always the re-encode (GIFs aside): it drops EXIF, so no GPS rides along to bfmh.dance.
+          resolve({ blob: b[0], thumb: b[1].size <= 1048576 ? b[1] : null, width: w, height: ht });
+        }, function (e) { URL.revokeObjectURL(src); reject(e); });
+      };
+      img.onerror = function () { URL.revokeObjectURL(src); reject(new Error('decode')); };
+      img.src = src;
+    });
+  }
+  function putFile(url, blob, onProgress) {
+    return new Promise(function (resolve, reject) {
+      var x = new XMLHttpRequest();
+      x.open('PUT', url);
+      if (blob.type) x.setRequestHeader('Content-Type', blob.type);
+      if (onProgress) x.upload.onprogress = function (e) { if (e.lengthComputable) onProgress(e.loaded / e.total); };
+      x.onload = function () { if (x.status >= 200 && x.status < 300) resolve(); else reject(new Error(t('uploadRefused', { n: x.status }))); };
+      x.onerror = function () { reject(new Error(t('uploadNetwork'))); };
+      x.send(blob);
+    });
+  }
+  function uploadOne(file, kind, eventId, onProgress, website) {
+    var prep = kind === 'photo' ? shrinkPhoto(file).catch(function () { return { blob: file }; }) : Promise.resolve({ blob: file });
+    return prep.then(function (p) {
+      var name = p.blob === file ? file.name : file.name.replace(/\.[^.]+$/, '') + '.jpg';
+      return api('/api/media', { method: 'POST', body: { action: 'upload', kind: kind, event_id: eventId, name: name, type: p.blob.type || file.type,
+        size: p.blob.size, thumb: !!p.thumb, thumb_size: p.thumb ? p.thumb.size : 0, width: p.width, height: p.height, website: !!website } }).then(function (r) {
+        var jobs = [putFile(r.put, p.blob, onProgress)];
+        if (r.thumb_put) jobs.push(putFile(r.thumb_put, p.thumb));
+        return Promise.all(jobs).then(function () {
+          return api('/api/media', { method: 'POST', body: { action: 'done', id: r.id } });
+        }, function (e) {
+          api('/api/media?id=' + r.id, { method: 'DELETE' }).catch(function () {});
+          throw e;
+        });
+      });
+    });
+  }
+  var uploads = { total: 0, done: 0, failed: [], progress: {}, running: 0, queue: [] };
+  function paintTray() {
+    var tray = document.getElementById('upload-tray');
+    var busy = uploads.done + uploads.failed.length < uploads.total;
+    if (!busy) { if (tray) tray.remove(); return; }
+    if (!tray) { tray = h('div', { id: 'upload-tray', class: 'upload-tray', role: 'status' }); (gal ? gal.root : document.body).appendChild(tray); }
+    var frac = 0; Object.keys(uploads.progress).forEach(function (k) { frac += uploads.progress[k]; });
+    var pct = Math.round((uploads.done + uploads.failed.length + frac) / uploads.total * 100);
+    tray.innerHTML = '';
+    tray.appendChild(h('span', { text: t('uploadingN', { n: Math.min(uploads.done + uploads.failed.length + 1, uploads.total), total: uploads.total }) }));
+    tray.appendChild(h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:var(--gold)' }), h('i', { style: 'flex:' + (100 - pct) })));
+  }
+  function uploadFiles(files, eventId, kindOf) {
+    if (!uploads.running && uploads.done + uploads.failed.length >= uploads.total) uploads = { total: 0, done: 0, failed: [], progress: {}, running: 0, queue: [] };
+    var website = eventId != null && shareDefault();
+    files.forEach(function (f) { uploads.queue.push({ file: f, kind: kindOf(f), eventId: eventId, id: ++uploads.total, website: website }); });
+    paintTray();
+    pump();
+  }
+  function pump() {
+    while (uploads.running < 2 && uploads.queue.length) {
+      var job = uploads.queue.shift();
+      uploads.running++;
+      (function (job) {
+        uploadOne(job.file, job.kind, job.eventId, function (f) { uploads.progress[job.id] = f; paintTray(); }, job.website)
+          .then(function () { uploads.done++; if (gal && gal.id === job.eventId) gal.dirty = true; },
+            function (e) { uploads.failed.push(job.file.name + ': ' + e.message); })
+          .then(function () {
+            delete uploads.progress[job.id]; uploads.running--;
+            paintTray();
+            if (!uploads.running && !uploads.queue.length) finishUploads(); else pump();
+          });
+      })(job);
+    }
+  }
+  function finishUploads() {
+    if (uploads.failed.length) toast(t('uploadFailed', { n: uploads.failed.length }) + ' ' + uploads.failed[0], true);
+    else toast(plural(uploads.done, 'uploadedOne', 'uploadedMany'));
+    reloadMedia();
   }
 
   /* ── team (families) ───────────────────────────────────── */
@@ -1943,7 +2501,8 @@
     if (!state.me || state.me.role === 'anon') return renderLogin();
     /* #app is the scroller (team.css): a background repaint must not throw the list back to
        the top, but a tab change is a fresh view, so only the same tab keeps its place. */
-    var scrollTop = app.scrollTop; var sameTab = painted === state.tab; painted = state.tab;
+    var view = state.me.role === 'admin' ? state.tab : state.mtab;
+    var scrollTop = app.scrollTop; var sameTab = painted === view; painted = view;
     if (state.me.role === 'admin') renderAdmin(); else renderMember();
     if (sameTab) { if (scrollTop) app.scrollTop = scrollTop; } else app.scrollTop = 0;
     if (state.me.role === 'admin') { if (state.detail) renderDetailSheet(); else if (document.querySelector('#modal-root .modal-detail')) closeModal(); }

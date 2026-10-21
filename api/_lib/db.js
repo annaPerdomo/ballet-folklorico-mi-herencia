@@ -100,6 +100,34 @@ CREATE TABLE IF NOT EXISTS groupme_messages (
   result jsonb,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE TABLE IF NOT EXISTS media (
+  id serial PRIMARY KEY,
+  event_id int REFERENCES events(id) ON DELETE CASCADE,
+  kind text NOT NULL CHECK (kind IN ('photo','video','audio','link')),
+  title text,
+  note text,
+  storage_key text,
+  thumb_key text,
+  url text,
+  mime text,
+  bytes bigint NOT NULL DEFAULT 0,
+  width int,
+  height int,
+  family_id int REFERENCES families(id) ON DELETE SET NULL,
+  uploader text,
+  ready boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS media_event ON media(event_id, kind);
+ALTER TABLE media ADD COLUMN IF NOT EXISTS website boolean NOT NULL DEFAULT false;
+ALTER TABLE media ADD COLUMN IF NOT EXISTS suggested boolean NOT NULL DEFAULT false;
+ALTER TABLE media ADD COLUMN IF NOT EXISTS thumb_bytes int NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS event_songs (
+  event_id int NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  media_id int NOT NULL REFERENCES media(id) ON DELETE CASCADE,
+  position int NOT NULL DEFAULT 0,
+  PRIMARY KEY (event_id, media_id)
+);
 `;
 
 export function ensureSchema() {

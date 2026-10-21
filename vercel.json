@@ -7,9 +7,28 @@
     {
       "source": "/api/availability",
       "destination": "/api/families?r=availability"
+    },
+    {
+      "source": "/familia",
+      "destination": "/team/index.html"
     }
   ],
   "redirects": [
+    {
+      "source": "/familia/",
+      "destination": "/familia",
+      "permanent": true
+    },
+    {
+      "source": "/family",
+      "destination": "/familia",
+      "permanent": true
+    },
+    {
+      "source": "/family/",
+      "destination": "/familia",
+      "permanent": true
+    },
     {
       "source": "/index.html",
       "destination": "/",

@@ -14,7 +14,8 @@ const AVAIL_JSON = `
       'dancer_id', a.dancer_id, 'dancer_name', d.name, 'family_id', d.family_id, 'family_name', f.name,
       'status', a.status, 'note', a.note, 'updated_at', a.updated_at) ORDER BY d.name)
     FROM availability a JOIN dancers d ON d.id = a.dancer_id JOIN families f ON f.id = d.family_id
-    WHERE a.event_id = e.id), '[]'::json) AS availability`;
+    WHERE a.event_id = e.id), '[]'::json) AS availability,
+  (SELECT count(*) FROM media m WHERE m.event_id = e.id AND m.ready)::int AS media_count`;
 
 export async function listEvents({ admin, includePast = false }) {
   const where = admin

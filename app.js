@@ -157,7 +157,9 @@
     //  (keeps the page fast: no iframe until the visitor clicks)
     // ─────────────────────────────────────────────────────────
     function initVideoFacades() {
-      document.querySelectorAll('.video-facade').forEach(function (btn) {
+      document.querySelectorAll('.video-facade').forEach(bindFacade);
+    }
+    function bindFacade(btn) {
         btn.addEventListener('click', function () {
           var id = btn.getAttribute('data-video-id');
           if (!id) return;
@@ -172,7 +174,6 @@
           item.innerHTML = '';
           item.appendChild(iframe);
         });
-      });
     }
 
     if (document.readyState === 'loading') {
@@ -281,8 +282,32 @@
     // ─────────────────────────────────────────────────────────
     const MONTH_NAMES = window.__I18N__.months;
 
-    const EVENTS_VISIBLE = 4;
+    const EVENTS_VISIBLE = 3;
     let eventsExpanded = false;
+    let openLightbox = null;
+    const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="#080311" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+
+    function eventMediaStrip(ev, name, lang) {
+      const media = ev.media || [];
+      if (!media.length) return '';
+      const shown = media.slice(0, 4);
+      const label = (STRINGS[lang] && STRINGS[lang]['events.viewMedia']) || 'Photos and videos';
+      return '<div class="event-media">' + shown.map(function (m, i) {
+        const extra = i === shown.length - 1 && media.length > shown.length ? media.length - shown.length + 1 : 0;
+        return '<button type="button" class="event-media-thumb' + (m.kind === 'photo' ? '' : ' is-video') + '"'
+          + ' data-media-ev="' + esc(ev.id) + '" data-media-i="' + i + '" aria-label="' + esc(label + ': ' + name) + '">'
+          + (m.thumb ? '<img src="' + esc(m.thumb) + '" alt="" loading="lazy" />' : '')
+          + (m.kind === 'photo' ? '' : '<span class="event-media-play">' + PLAY_SVG + '</span>')
+          + (extra ? '<span class="event-media-more">+' + extra + '</span>' : '')
+          + '</button>';
+      }).join('') + '</div>';
+    }
+    function mediaSlides(list) {
+      return list.map(function (m) {
+        return m.kind === 'photo' ? { src: m.url, alt: m.title || '' }
+          : m.youtube ? { youtube: m.youtube, alt: m.title || '' } : { video: m.url, alt: m.title || '' };
+      });
+    }
 
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function buildEventCard(ev, lang, now) {
@@ -295,7 +320,8 @@
       const loc = esc(ev.location[lang] || ev.location.en || ev.location.es);
       const time = esc(ev.time);
 
-      return '<article class="event-card' + (isPast ? ' is-past' : '') + '" role="listitem">'
+      const mediaHtml = eventMediaStrip(ev, name, lang);
+      return '<article class="event-card' + (isPast ? ' is-past' : '') + (mediaHtml ? ' has-media' : '') + '" role="listitem">'
         + '<div class="event-date-badge"><span class="day">' + day + '</span><span class="month">' + month + '</span><span class="year">' + year + '</span></div>'
         + '<div class="event-card-body">'
         + '<h3>' + name + '</h3>'
@@ -303,6 +329,7 @@
         + '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + loc + '</span>'
         + (ev.time ? '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + time + '</span>' : '')
         + '</div>'
+        + mediaHtml
         + '</div>'
         + '</article>';
     }
@@ -365,6 +392,13 @@
       }
     }
 
+    document.getElementById('performances').addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-media-ev]');
+      if (!btn || !openLightbox) return;
+      const ev = EVENTS.find(function (x) { return String(x.id) === btn.getAttribute('data-media-ev'); });
+      if (ev && ev.media) openLightbox(mediaSlides(ev.media), +btn.getAttribute('data-media-i'));
+    });
+
     // Toggle expand/collapse
     document.getElementById('eventsToggleBtn').addEventListener('click', function () {
       eventsExpanded = !eventsExpanded;
@@ -378,18 +412,65 @@
     // Also merged into the page's Event JSON-LD ItemList (addEventsToJsonLd below) for rich results.
     if (window.fetch) {
       fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-        if (!d || !d.events || !d.events.length) return;
+        if (!d) return;
+        addSharedMedia(d.media || []);
+        if (!d.events || !d.events.length) return;
         var have = {};
-        EVENTS.forEach(function (ev) { have[ev.date + '|' + (ev.name.en || '').toLowerCase()] = true; });
+        EVENTS.forEach(function (ev) { have[ev.date + '|' + (ev.name.en || '').toLowerCase()] = ev; });
         var added = 0, newlyAdded = [];
         d.events.forEach(function (ev) {
           var k = ev.date + '|' + (ev.name.en || '').toLowerCase();
-          if (have[k]) return;
-          have[k] = true; EVENTS.push(ev); newlyAdded.push(ev); added++;
+          if (have[k]) { if (ev.media.length) { have[k].id = ev.id; have[k].media = ev.media; added++; } return; }
+          have[k] = ev; EVENTS.push(ev); newlyAdded.push(ev); added++;
         });
         if (added) renderEvents(currentLang);
         if (newlyAdded.length) addEventsToJsonLd(newlyAdded);
       }).catch(function () {});
+    }
+
+    function addSharedMedia(list) {
+      const strip = document.getElementById('galleryStrip');
+      const photos = list.filter(function (m) { return m.kind === 'photo'; });
+      if (strip && photos.length) {
+        const frag = document.createDocumentFragment();
+        photos.forEach(function (m) {
+          const item = document.createElement('div');
+          item.className = 'gallery-item is-shared';
+          item.style.setProperty('--ar', (m.width && m.height ? m.width / m.height : 1.4).toFixed(3));
+          const img = document.createElement('img');
+          img.src = m.url; img.alt = m.title || 'Ballet Folklórico Mi Herencia'; img.loading = 'lazy';
+          img.addEventListener('load', layoutGallery, { once: true });
+          item.appendChild(img);
+          frag.appendChild(item);
+        });
+        const lead = strip.querySelector('.gallery-item');
+        strip.insertBefore(frag, lead ? lead.nextSibling : null);
+        layoutGallery();
+      }
+      const vstrip = document.querySelector('.video-strip');
+      const videos = list.filter(function (m) { return m.kind !== 'photo'; });
+      if (vstrip && videos.length) {
+        const frag = document.createDocumentFragment();
+        videos.forEach(function (m) {
+          const item = document.createElement('div');
+          item.className = 'video-item is-shared';
+          if (m.youtube) {
+            item.innerHTML = '<button type="button" class="video-facade" data-video-id="' + esc(m.youtube) + '" aria-label="' + esc(m.title || 'Video') + '">'
+              + '<img src="' + esc(m.thumb) + '" alt="" loading="lazy" />'
+              + '<span class="video-play" aria-hidden="true">' + PLAY_SVG + '</span>'
+              + (m.title ? '<span class="video-caption"><span class="video-caption-title">' + esc(m.title) + '</span></span>' : '')
+              + '</button>';
+            bindFacade(item.querySelector('.video-facade'));
+          } else {
+            const v = document.createElement('video');
+            v.controls = true; v.playsInline = true; v.preload = 'metadata'; v.src = m.url + '#t=0.1';
+            if (m.title) v.setAttribute('aria-label', m.title);
+            item.appendChild(v);
+          }
+          frag.appendChild(item);
+        });
+        vstrip.insertBefore(frag, vstrip.firstChild);
+      }
     }
 
     // Pacific-time UTC offset ("-07:00" / "-08:00") for a given YYYY-MM-DD, DST-aware.
@@ -558,17 +639,43 @@
       const boxImg = document.getElementById('lightboxImg');
       if (!box || !boxImg) return;
 
-      const imgs = Array.from(strip.querySelectorAll('.gallery-item img'));
+      // Slides: { src, alt } for photos, { youtube } or { video } for shared videos.
+      let slides = [];
       let current = -1;
       let lastFocus = null;
+      let player = null;
+      const figure = boxImg.parentElement;
+      function stripSlides() {
+        return Array.from(strip.querySelectorAll('.gallery-item img')).map(function (img) { return { src: img.currentSrc || img.src, alt: img.alt }; });
+      }
+      function clearPlayer() {
+        if (player) { player.remove(); player = null; }
+        boxImg.hidden = false;
+      }
 
       const counter = document.getElementById('lightboxCount');
       function show(i) {
-        current = (i + imgs.length) % imgs.length;
-        const src = imgs[current];
-        boxImg.src = src.currentSrc || src.src;
-        boxImg.alt = src.alt || '';
-        if (counter) counter.textContent = (current + 1) + ' / ' + imgs.length;
+        current = (i + slides.length) % slides.length;
+        const s = slides[current];
+        clearPlayer();
+        if (s.youtube || s.video) {
+          boxImg.hidden = true;
+          if (s.youtube) {
+            player = document.createElement('iframe');
+            player.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(s.youtube) + '?autoplay=1&rel=0';
+            player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+            player.allowFullscreen = true;
+            player.title = s.alt || 'YouTube video';
+          } else {
+            player = document.createElement('video');
+            player.src = s.video; player.controls = true; player.autoplay = true; player.playsInline = true;
+          }
+          figure.appendChild(player);
+        } else {
+          boxImg.src = s.src;
+          boxImg.alt = s.alt || '';
+        }
+        if (counter) counter.textContent = (current + 1) + ' / ' + slides.length;
         // restart the pop-in animation on each navigation
         boxImg.style.animation = 'none';
         void boxImg.offsetWidth;
@@ -583,6 +690,7 @@
         document.getElementById('lightboxClose').focus();
       }
       function close() {
+        clearPlayer();
         box.classList.remove('open');
         document.body.style.overflow = '';
         const done = () => { box.hidden = true; box.removeEventListener('transitionend', done); };
@@ -591,10 +699,14 @@
         if (lastFocus && lastFocus.focus) lastFocus.focus();
       }
 
-      strip.querySelectorAll('.gallery-item').forEach(function (item, i) {
-        const img = item.querySelector('img');
-        if (img) img.addEventListener('click', () => open(i));
+      // Delegated: photos added later by addSharedMedia must open too.
+      strip.addEventListener('click', function (e) {
+        const img = e.target.closest('.gallery-item img');
+        if (!img) return;
+        slides = stripSlides();
+        open(Array.from(strip.querySelectorAll('.gallery-item img')).indexOf(img));
       });
+      openLightbox = function (list, i) { if (list.length) { slides = list; open(i); } };
 
       const viewAllBtn = document.getElementById('galleryViewAll');
       if (viewAllBtn) viewAllBtn.addEventListener('click', function () {

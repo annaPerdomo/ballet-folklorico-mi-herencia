@@ -161,6 +161,8 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | `GROUPME_BOT_ID` | **yes, in practice** | Create a bot at https://dev.groupme.com/bots for the team group. Every message the app sends goes out as La Chona; without it the buttons report "La Chona is not connected" and nothing reaches the chat. |
 | `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
 | `GROUPME_GROUP_ID`, `GROUPME_BOT_ACK` | no | Reader options: only accept messages from this group id; set `GROUPME_BOT_ACK=0` to stop the "🤖 Noted…" replies. |
+| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | for the Gallery | Cloudflare R2 bucket that holds gig photos, clips and music (setup below). Without them the Gallery tab says storage isn't set up. |
+| `MEDIA_QUOTA_GB` | no | Uploads stop at this many GB (default 9) so the bucket stays inside R2's 10 GB free tier. |
 | `FORMSPREE_WEBHOOK_SECRET` | no | If you enable the Formspree webhook plugin, point it at `/api/webhooks/formspree?secret=<value>`. |
 
 **GroupMe reader (the bot reads the chat and fills in availability)**
@@ -184,6 +186,27 @@ How it reads a message (`api/_lib/groupme-parse.js`, English and Spanish; the te
 Run the parser tests with `node --test "api/_lib/*.test.mjs"`.
 
 **Show on website.** Every open, confirmed or done gig with a date has a **Listed on bfmh.dance** switch in its detail sheet (also under ⋯ → Show on website). Turning it on lists the gig under Upcoming Events on bfmh.dance within about five minutes, using the venue as the name and the city as the location. `api/public-events.js` serves the flagged gigs and `app.js` merges them with the static list in `i18n-data.js` (no rebuild); it also appends a matching `DanceEvent` entry to the page's Event JSON-LD (`addEventsToJsonLd` in `app.js`), so these gigs are eligible for the same Google Event rich results as the static list. Hide it again with the same button. The static list is still the place for past years, and it's the only source hand-tuned per language by `build.mjs` (localized descriptions etc.) — team-published entries reuse a generic English description regardless of page language.
+
+**Gallery & music.** Every open, confirmed or done gig has a gallery (**Photos & videos** on its card, or the **Gallery** tab, which also lists older gigs that have dropped off the family page). Anyone signed in can add photos, short clips (up to 150 MB), YouTube links and music; families can rename or delete their own uploads, owners anything. Full performances go on YouTube as *Unlisted* and get pasted in as a link. The **Music library** on the Gallery tab holds the songs for each dance; owners attach library songs to a gig with **From the library** on its Music tab, and a gig can also carry its own one-off tracks. Files sit in a private R2 bucket and the app hands out signed links (good for 6–12 h) to anyone signed in, which includes anyone who opens the open `/familia` page, so treat the gallery as unlisted rather than private. Uploads are signed for their exact size (R2 rejects any other length) and expire after 10 minutes, so the quota can't be dodged by declaring a small file. Photos are always re-encoded in the browser, which strips EXIF location data; a photo the browser couldn't re-encode can't go on the website.
+
+Photos are shrunk in the browser to a 2560 px JPEG plus a 480 px thumbnail before upload, so a phone photo costs ~0.5–1 MB. Files go straight from the phone to R2 on a presigned PUT (`api/_lib/storage.js` signs them — no AWS SDK), `api/media.js` keeps the rows (`media`, `event_songs`), and deleting a gig deletes its files. Owners see storage used vs `MEDIA_QUOTA_GB` at the top of the Gallery tab.
+
+One-time R2 setup (free tier: 10 GB stored, no download fees; Cloudflare asks for a card to turn R2 on, and the quota keeps usage under the free tier):
+
+1. Cloudflare dashboard → **R2** → **Create bucket** (e.g. `bfmh-media`). Leave public access **off**.
+2. Bucket → **Settings** → **CORS policy** → paste:
+   ```json
+   [{ "AllowedOrigins": ["https://bfmh.dance", "https://www.bfmh.dance"],
+      "AllowedMethods": ["GET", "PUT", "HEAD"], "AllowedHeaders": ["Content-Type"], "MaxAgeSeconds": 3600 }]
+   ```
+3. R2 → **Manage API tokens** → **Create API token** with *Object Read & Write* on that bucket. Copy the Access Key ID and Secret Access Key, plus the Account ID shown on the R2 overview page.
+4. `vercel env add` each of `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` for Production, then redeploy.
+
+**bfmh.dance/familia** is the families' front door (`/family` redirects there). It's deliberately open, the owners' choice: no code, just "Which family are you part of?", and a tap signs that phone in with the same session a GroupMe gig link gives (`GET /api/auth?families`, `POST /api/auth {directory}`): it can answer gigs, add to the gallery, delete that family's own uploads and suggest items for the website, but not edit the family's dancers. Anyone with the address can see the family list, the gigs and the gallery. It opens the normal family view with Gigs and Gallery tabs and installs to the home screen as "MH Familia" (`team/familia.webmanifest`). The owner login at `/team/` links to it, and a family's **Sign out** goes back to it.
+
+**Show on bfmh.dance.** Photos, clips and YouTube links (not music) can go on the public site, but only an owner can put them there. Families *suggest*: the gallery switch **Suggest what I add for bfmh.dance** (remembered per phone), or **Suggest for bfmh.dance** from the photo viewer's globe button or the ⋯ menu. Suggestions wait under **Waiting for your OK** at the top of the owners' Gallery tab, with **Approve** and **Decline**. Owners can also publish or pull any item directly. A globe badge marks what's public and a clock badge what's waiting. The server enforces this (`websiteFlags` in `api/_lib/media.js`), since `/familia` is open to anyone. `/api/public-events` returns them (`media`, and per listed gig `events[].media`) on signed links, and `app.js` adds them to the site: the gig's card under Upcoming/Past Events shows up to four thumbnails (only if the gig itself is listed on the site), photos join the Gallery photo strip after the lead photo, and videos go to the front of the video carousel. The site lightbox plays videos too. Past Events shows the 3 most recent before "See past events".
+
+Locally, with no `R2_*` set, uploads land in the gitignored `.media-dev/` and `npm run dev` serves them under `/__media/`. `api/media.js` is the 12th serverless function, the Vercel Hobby limit, so any new endpoint has to ride an existing function (like the `?r=` rewrites in `vercel.json`).
 
 **Local development**
 
