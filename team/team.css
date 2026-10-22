@@ -667,6 +667,8 @@ details[open] > .summary::before { transform: rotate(45deg); }
 
 .gal { position: fixed; inset: 0; z-index: 35; background: var(--bg-primary); display: flex; flex-direction: column; padding-top: var(--safe-t); }
 body.has-gal { overflow: hidden; }
+/* iOS composites a backdrop-filter above later fixed layers, so the frosted bars smear through the gallery. */
+body.has-gal .tm-header, body.has-gal .tm-tabs, body.has-gal .modal-back:not(.pop-back) { visibility: hidden; }
 .gal-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
