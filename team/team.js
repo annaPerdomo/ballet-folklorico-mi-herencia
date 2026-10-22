@@ -155,10 +155,10 @@
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', titleLabel: 'Title',
       deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
-      photos: 'Photos', videos: 'Videos', music: 'Music', addMedia: 'Add photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
+      photos: 'Photos', videos: 'Videos', music: 'Music', addMedia: 'Photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
       openPhoto: 'Open photo {n}', openVideo: 'Play video {n}', previous: 'Previous', next: 'Next',
-      addLink: 'Add YouTube link',
-      videoHint: 'Full performances: upload to YouTube as Unlisted, then add the link here. Short clips (up to 150 MB) can be uploaded directly.',
+      addLink: 'Add YouTube link', openYoutube: 'Open in YouTube', linkKind: 'Link', cover: 'Cover', coverTitle: 'Folder cover', coverHint: 'Pick the picture everyone sees on this gig’s folder.', coverAuto: 'Choose automatically', coverSet: 'Cover updated', addLinkShort: 'YouTube', video: 'Video',
+      videoHint: 'Photos and clips up to 150 MB upload here. For full performances, add an Unlisted YouTube link.',
       addTrack: 'Upload a track', fromLibrary: 'From the library', noTracks: 'No music for this gig yet.', unlink: 'Remove from this gig', fromLibraryTag: 'Library',
       linkHint: 'Anyone with the bfmh.dance/familia address can see this gallery. Set YouTube videos to Unlisted so they stay off search.', linkUrl: 'Link', linkTitlePh: 'e.g. Jalisco — full set',
       pickSongs: 'Songs for this gig', pickSongsHint: 'Tap to add or remove songs from the music library.', noLibrary: 'The music library is empty. Add songs from the Gallery tab first.',
@@ -305,10 +305,10 @@
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 canción', songMany: '{n} canciones',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', titleLabel: 'Título',
       deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
-      photos: 'Fotos', videos: 'Videos', music: 'Música', addMedia: 'Agregar fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
+      photos: 'Fotos', videos: 'Videos', music: 'Música', addMedia: 'Fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
       openPhoto: 'Abrir foto {n}', openVideo: 'Ver video {n}', previous: 'Anterior', next: 'Siguiente',
-      addLink: 'Agregar enlace de YouTube',
-      videoHint: 'Presentaciones completas: súbelas a YouTube como "No listado" y agrega el enlace aquí. Los clips cortos (hasta 150 MB) se pueden subir directamente.',
+      addLink: 'Agregar enlace de YouTube', openYoutube: 'Abrir en YouTube', linkKind: 'Enlace', cover: 'Portada', coverTitle: 'Portada de la carpeta', coverHint: 'Elige la imagen que todos ven en la carpeta de este evento.', coverAuto: 'Elegir automáticamente', coverSet: 'Portada actualizada', addLinkShort: 'YouTube', video: 'Video',
+      videoHint: 'Sube fotos y clips de hasta 150 MB aquí. Para presentaciones completas, agrega un enlace de YouTube "No listado".',
       addTrack: 'Subir una pista', fromLibrary: 'De la biblioteca', noTracks: 'Todavía no hay música para este evento.', unlink: 'Quitar de este evento', fromLibraryTag: 'Biblioteca',
       linkHint: 'Cualquiera con la dirección bfmh.dance/familia puede ver esta galería. Pon los videos de YouTube como "No listado" para que no salgan en búsquedas.', linkUrl: 'Enlace', linkTitlePh: 'p. ej. Jalisco — presentación completa',
       pickSongs: 'Canciones para este evento', pickSongsHint: 'Toca para agregar o quitar canciones de la biblioteca de música.', noLibrary: 'La biblioteca de música está vacía. Primero agrega canciones desde la pestaña Galería.',
@@ -1807,7 +1807,8 @@
     root.appendChild(h('header', { class: 'gal-head' },
       h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
       h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('gallery') }),
-        h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' }))));
+        h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' })),
+      d && isOwner() && d.items.some(coverable) ? h('button', { type: 'button', class: 'btn btn-sm gal-cover-btn', onclick: function () { coverSheet(d); } }, icon('image', 2), h('span', { text: t('cover') })) : null));
     if (!d) { root.appendChild(h('div', { class: 'tm-boot' }, h('p', { class: 'tm-boot-text', text: t('mediaLoading') }))); return; }
 
     var shown = d.items.filter(function (i) { return i.kind !== 'audio'; });
@@ -1828,11 +1829,17 @@
 
     if (gal.tab === 'media') {
       if (canUpload) bar.appendChild(pickButton(t('addMedia'), 'image/*,video/*', function (files) { uploadFiles(files, eid, kindOf); }));
-      bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', onclick: function () { linkSheet(eid); } }, icon('link', 2.2), t('addLink')));
+      bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('addLink'), onclick: function () { linkSheet(eid); } }, icon('link', 2.2), h('span', { text: t('addLinkShort') })));
       body.appendChild(h('p', { class: 'hint', text: t('videoHint') }));
-      var viewable = shown.filter(function (i) { return i.kind !== 'link'; });
+      var photos = shown.filter(function (i) { return i.kind === 'photo'; });
+      var clips = shown.filter(function (i) { return i.kind !== 'photo'; });
+      var viewable = photos.concat(clips).filter(function (i) { return i.kind !== 'link' || i.youtube; });
       if (!shown.length) body.appendChild(emptyState('image', t('noMedia')));
-      else body.appendChild(h('div', { class: 'photogrid' }, shown.map(function (it) { return mediaTile(it, viewable); })));
+      [[t('photos'), photos], [t('videos'), clips]].forEach(function (sec) {
+        if (!sec[1].length) return;
+        body.appendChild(h('h3', { class: 'gal-sec' }, sec[0], h('span', { class: 'gal-n', text: sec[1].length })));
+        body.appendChild(h('div', { class: 'photogrid' }, sec[1].map(function (it) { return mediaTile(it, viewable); })));
+      });
     } else {
       if (canUpload) bar.appendChild(pickButton(t('addTrack'), 'audio/*', function (files) { uploadFiles(files, eid, function () { return 'audio'; }); }));
       if (state.me.role === 'admin') bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', onclick: function () { setlistSheet(eid); } }, icon('music', 2), t('fromLibrary')));
@@ -1851,20 +1858,46 @@
     return [mediaWebAction(it), { label: t('rename'), icon: 'edit', onclick: function () { renameSheet(it, reloadMedia); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteItem(it, function () { if (gal) gal.dirty = true; reloadMedia(); }); } }];
   }
+  function fmtDuration(sec) { var m = Math.floor(sec / 60), r = Math.round(sec % 60); if (r === 60) { m++; r = 0; } return m + ':' + (r < 10 ? '0' : '') + r; }
   function kindOf(f) { return /^video\//.test(f.type) ? 'video' : 'photo'; }
   function mediaTile(it, viewable) {
     var n = viewable.indexOf(it);
-    var open = it.kind === 'link' ? function () { window.open(it.url, '_blank', 'noopener'); } : function () { lightbox(viewable, n); };
+    var open = it.kind === 'link' && !it.youtube ? function () { window.open(it.url, '_blank', 'noopener'); } : function () { lightbox(viewable, n); };
     var more = it.kind !== 'photo' && it.can_edit ? h('button', { type: 'button', class: 'tile-more', 'aria-label': t('moreActions'),
       onclick: function (e) { e.stopPropagation(); actionSheet(it.title || t('videos'), itemActions(it)); } }, icon('more', 2)) : null;
+    var plainLink = it.kind === 'link' && !it.youtube;
+    var kindText = h('span', { text: it.youtube ? 'YouTube' : plainLink ? t('linkKind') : t('video') });
     var pic = it.kind === 'photo' ? h('img', { src: it.thumb || it.url, alt: '', loading: 'lazy' })
-      : it.kind === 'video' ? h('video', { muted: true, playsinline: true, preload: 'metadata', src: it.url + '#t=0.1' })
+      : it.kind === 'video' ? h('video', { muted: true, playsinline: true, preload: 'metadata', src: it.url + '#t=0.1',
+        onloadedmetadata: function () { if (isFinite(this.duration)) kindText.textContent = fmtDuration(this.duration); } })
       : it.thumb ? h('img', { src: it.thumb, alt: '', loading: 'lazy' }) : null;
+    var cap = it.kind === 'photo' ? null : h('span', { class: 'tile-cap' },
+      h('span', { class: 'tile-kind' + (it.youtube ? ' is-yt' : '') }, icon(plainLink ? 'link' : 'play', 2.4), kindText),
+      it.kind === 'link' ? h('span', { class: 'tile-cap-text', text: it.title || it.url.replace(/^https:\/\/(www\.)?/, '').slice(0, 60) }) : null);
     return h('div', { class: 'photo' + (it.kind === 'photo' ? '' : ' is-video') + (pic ? '' : ' is-plain') },
       h('button', { type: 'button', class: 'tile-open', 'aria-label': it.kind === 'photo' ? t('openPhoto', { n: n + 1 }) : it.title || t('openVideo', { n: n + 1 }), onclick: open },
-        pic, it.kind === 'photo' ? null : h('span', { class: 'video-play' }, icon('play', 2)),
-        it.kind === 'link' ? h('span', { class: 'tile-cap', text: it.title || it.url.replace(/^https:\/\/(www\.)?/, '').slice(0, 60) }) : null),
+        pic, it.kind === 'photo' || plainLink ? null : h('span', { class: 'video-play' }, icon('play', 2)), cap),
       webBadge(it), more);
+  }
+
+  function coverable(it) { return (it.kind === 'photo' && it.thumb) || !!it.youtube; }
+  function coverSheet(d) {
+    var pop = popSheet(t('coverTitle'), t('coverHint'));
+    var current = d.event.cover_media_id;
+    function pick(id) {
+      api('/api/media', { method: 'POST', body: { action: 'cover', event_id: d.event.id, media_id: id } })
+        .then(function () { d.event.cover_media_id = id; pop.close(); toast(t('coverSet')); paintGallery(); })
+        .catch(function (e) { toast(e.message, true); });
+    }
+    var picks = d.items.filter(coverable);
+    picks = picks.filter(function (it) { return it.kind === 'photo'; }).concat(picks.filter(function (it) { return it.kind !== 'photo'; }));
+    pop.body.appendChild(h('div', { class: 'cover-grid' }, picks.map(function (it) {
+      var on = it.id === current;
+      return h('button', { type: 'button', class: 'cover-pick' + (on ? ' is-on' : ''), 'aria-pressed': on ? 'true' : 'false',
+        'aria-label': it.title || t(it.kind === 'photo' ? 'photos' : 'videos'), onclick: function () { pick(it.id); } },
+        h('img', { src: it.thumb, alt: '', loading: 'lazy' }), on ? h('span', { class: 'cover-check' }, icon('yes', 3)) : null);
+    })));
+    if (current) pop.body.appendChild(h('button', { type: 'button', class: 'btn btn-wide', text: t('coverAuto'), onclick: function () { pick(null); } }));
   }
 
   function linkSheet(eventId) {
@@ -1917,6 +1950,10 @@
     var i = start;
     var img = h('img', { class: 'lb-img', alt: '' });
     var vid = h('video', { class: 'lb-img', controls: true, playsinline: true, preload: 'metadata' });
+    var yt = h('iframe', { class: 'lb-img lb-yt', title: 'YouTube', allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: true, referrerpolicy: 'strict-origin-when-cross-origin' });
+    // A cross-origin iframe swallows touches, so YouTube items get edge strips to swipe on.
+    var swipeL = h('span', { class: 'lb-swipe lb-swipe-l' }), swipeR = h('span', { class: 'lb-swipe lb-swipe-r' });
+    var ytOpen = h('a', { class: 'btn btn-sm btn-icon', target: '_blank', rel: 'noopener', 'aria-label': t('openYoutube'), title: t('openYoutube') }, icon('link', 2.2));
     var count = h('span', { class: 'lb-count' });
     var who = h('span', { class: 'lb-who' });
     var dl = h('a', { class: 'btn btn-sm btn-icon', 'aria-label': t('download'), title: t('download') }, icon('download', 2));
@@ -1933,17 +1970,20 @@
     var root = h('div', { class: 'lb', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('photos') },
       h('div', { class: 'lb-bar' },
         h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: close }, icon('close', 2.2)),
-        count, h('span', { class: 'lb-spacer' }), web, dl, del),
-      h('div', { class: 'lb-stage' }, img, vid,
+        count, h('span', { class: 'lb-spacer' }), web, ytOpen, dl, del),
+      h('div', { class: 'lb-stage' }, img, vid, yt, swipeL, swipeR,
         h('button', { type: 'button', class: 'lb-nav lb-prev', 'aria-label': t('previous'), onclick: function () { show(i - 1); } }, icon('back', 2.2)),
         h('button', { type: 'button', class: 'lb-nav lb-next', 'aria-label': t('next'), onclick: function () { show(i + 1); } }, icon('chevron', 2.2))),
       who);
     function show(n) {
       i = (n + items.length) % items.length;
       var it = items[i];
-      var isVid = it.kind === 'video';
-      vid.pause(); img.hidden = isVid; vid.hidden = !isVid;
-      if (isVid) { img.removeAttribute('src'); vid.src = it.url; } else { vid.removeAttribute('src'); img.src = it.url; }
+      var isVid = it.kind === 'video', isYt = !!it.youtube;
+      vid.pause(); img.hidden = isVid || isYt; vid.hidden = !isVid; yt.hidden = !isYt; swipeL.hidden = swipeR.hidden = !isYt; ytOpen.hidden = !isYt; dl.hidden = isYt;
+      if (!isVid) vid.removeAttribute('src');
+      if (!isYt && yt.src) yt.src = 'about:blank';
+      if (isYt) { img.removeAttribute('src'); yt.src = 'https://www.youtube-nocookie.com/embed/' + it.youtube + '?autoplay=1&playsinline=1&rel=0'; ytOpen.href = it.url; }
+      else if (isVid) { img.removeAttribute('src'); vid.src = it.url; } else img.src = it.url;
       count.textContent = (i + 1) + ' / ' + items.length; who.textContent = [it.title, addedBy(it)].filter(Boolean).join(' · ');
       dl.href = it.download || it.url; del.hidden = !it.can_edit;
       web.hidden = !mediaWebAction(it); web.classList.toggle('is-on', !!it.website); web.classList.toggle('is-pending', !it.website && !!it.suggested);

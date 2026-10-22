@@ -5,10 +5,10 @@ import { sql, one } from './_lib/db.js';
 import { MEMBER_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, safeLink, toItem, removeFiles, canPublish, websiteFlags } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
-  const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city FROM events WHERE id = $1', [id]);
+  const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
   if (!ev || (me.role !== 'admin' && !MEMBER_VISIBLE.includes(ev.status))) throw httpError(404, 'Gig not found');
   // Owners bypass: a gig with media that gets moved later would otherwise lock its files away.
   if (!galleryOpen(ev) && me.role !== 'admin') throw httpError(403, 'This gig’s gallery opens when the gig starts');
@@ -66,8 +66,9 @@ export default route({
         count(m.id) FILTER (WHERE m.kind = 'photo')::int AS photos,
         count(m.id) FILTER (WHERE m.kind IN ('video','link'))::int AS videos,
         (count(m.id) FILTER (WHERE m.kind = 'audio') + (SELECT count(*) FROM event_songs s WHERE s.event_id = e.id))::int AS songs,
-        (SELECT c.thumb_key FROM media c WHERE c.event_id = e.id AND c.ready AND c.kind = 'photo' AND c.thumb_key IS NOT NULL
-          ORDER BY c.created_at DESC LIMIT 1) AS cover_key
+        (SELECT json_agg(x) FROM (SELECT c.kind, c.thumb_key, c.url FROM media c
+          WHERE c.event_id = e.id AND c.ready AND ((c.kind = 'photo' AND c.thumb_key IS NOT NULL) OR (c.kind = 'link' AND c.url ~* '^https://([a-z]+\\.)?(youtube\\.com|youtube-nocookie\\.com|youtu\\.be)/'))
+          ORDER BY c.id IS NOT DISTINCT FROM e.cover_media_id DESC, c.kind = 'photo' DESC, c.created_at DESC LIMIT 5) x) AS cover_rows
       FROM events e LEFT JOIN media m ON m.event_id = e.id AND m.ready
       WHERE e.status = ANY($1) AND e.event_date <= current_date + 1
       GROUP BY e.id ORDER BY e.event_date DESC, e.id DESC`, [MEMBER_VISIBLE]);
@@ -75,7 +76,7 @@ export default route({
       ? (await sql(`SELECT m.*, e.title AS event_title, e.event_date FROM media m JOIN events e ON e.id = m.event_id
           WHERE m.suggested AND NOT m.website AND m.ready ORDER BY m.created_at`)).map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_date: r.event_date }))
       : undefined;
-    ok(res, { ...base, review, gigs: gigs.filter((g) => galleryOpen(g)).map(({ cover_key, start_time, call_time, ...g }) => ({ ...g, cover: cover_key && storageReady() ? signedUrl('GET', cover_key) : null })) });
+    ok(res, { ...base, review, gigs: gigs.filter((g) => galleryOpen(g)).map(({ cover_rows, start_time, call_time, ...g }) => ({ ...g, cover: (cover_rows || []).map(coverUrl).find(Boolean) || null })) });
   },
 
   async POST(req, res) {
@@ -151,6 +152,21 @@ export default route({
         [eventId, str(b.title, 200) || (youtubeId(url) ? null : new URL(url).hostname.replace(/^www\./, '')), url, familyOf(me), uploaderOf(me),
           flags.website, flags.suggested]);
       return ok(res, { item: toItem(row, me) });
+    }
+
+    if (b.action === 'cover') {
+      await requireAdmin(req);
+      const eventId = int(b.event_id);
+      if (!eventId) throw httpError(400, 'Pick a gig');
+      const mediaId = b.media_id == null ? null : int(b.media_id);
+      if (b.media_id != null && !mediaId) throw httpError(400, 'Pick a photo or YouTube video from this gig');
+      if (mediaId) {
+        const row = await one('SELECT * FROM media WHERE id = $1 AND event_id = $2 AND ready', [mediaId, eventId]);
+        if (!coverUrl(row)) throw httpError(400, 'Pick a photo or YouTube video from this gig');
+      }
+      const ev = await one('UPDATE events SET cover_media_id = $2 WHERE id = $1 RETURNING id', [eventId, mediaId]);
+      if (!ev) throw httpError(404, 'Gig not found');
+      return ok(res);
     }
 
     if (b.action === 'setlist') {

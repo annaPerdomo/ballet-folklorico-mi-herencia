@@ -60,6 +60,13 @@ export function toItem(row, me) {
   return item;
 }
 
+export function coverUrl(row) {
+  if (!row) return null;
+  if (row.kind === 'photo') return row.thumb_key && storageReady() ? signedUrl('GET', row.thumb_key) : null;
+  const yt = row.kind === 'link' && youtubeId(row.url);
+  return yt ? `https://i.ytimg.com/vi/${yt}/hqdefault.jpg` : null;
+}
+
 // Music stays in the group. A photo's thumbnail proves the browser re-encoded it, stripping EXIF GPS.
 export function canPublish(kind, thumbKey) {
   return ['photo', 'video', 'link'].includes(kind) && (kind !== 'photo' || Boolean(thumbKey));
