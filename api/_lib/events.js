@@ -1,7 +1,8 @@
 import { sql, one } from './db.js';
 import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOpen } from './ics.js';
 
-export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled'];
+export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled', 'lapsed'];
+const LAPSE_AFTER_DAYS = 14;
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
 // A folder is a gallery-only event: never in Gigs, calendars or GroupMe.
 export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder'];
@@ -20,6 +21,7 @@ const AVAIL_JSON = `
   (SELECT count(*) FROM media m WHERE m.event_id = e.id AND m.ready AND m.kind <> 'audio')::int AS media_count`;
 
 export async function listEvents({ admin, includePast = false }) {
+  if (admin) await lapseStaleInquiries();
   const where = admin
     ? (includePast ? `e.status <> 'folder'` : `(e.status IN ('inquiry','open','confirmed') OR (e.status <> 'folder' AND e.updated_at > now() - interval '60 days'))`)
     : `e.status = ANY($1) AND (e.event_date IS NULL OR e.event_date >= current_date - 14)`;
@@ -30,6 +32,13 @@ export async function listEvents({ admin, includePast = false }) {
        ORDER BY CASE e.status WHEN 'inquiry' THEN 0 WHEN 'open' THEN 1 WHEN 'confirmed' THEN 1 ELSE 2 END,
                 e.event_date NULLS LAST, e.id DESC`, params);
   return rows.map(withCalendarLinks);
+}
+
+// The updated_at guard spares inquiries reopened or edited after the lapse point.
+export async function lapseStaleInquiries() {
+  await sql(`UPDATE events SET status = 'lapsed', updated_at = now()
+              WHERE status = 'inquiry' AND event_date IS NOT NULL AND event_date < current_date - $1::int
+                AND updated_at < event_date + $1::int`, [LAPSE_AFTER_DAYS]);
 }
 
 export async function getEvent(id, { admin }) {

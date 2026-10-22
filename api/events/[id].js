@@ -7,12 +7,13 @@ import { cleanPatch } from '../events.js';
 import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
-  publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'confirmed'] },
+  publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'lapsed', 'confirmed'] },
   confirm:  { to: 'confirmed', from: ['open', 'inquiry', 'cancelled'] },
   decline:  { to: 'declined',  from: ['inquiry', 'open'] },
+  lapse:    { to: 'lapsed',    from: ['inquiry'] },
   cancel:   { to: 'cancelled', from: ['open', 'confirmed'] },
   done:     { to: 'done',      from: ['confirmed', 'open'] },
-  reopen:   { to: 'inquiry',   from: ['declined', 'cancelled', 'done'] },
+  reopen:   { to: 'inquiry',   from: ['declined', 'cancelled', 'lapsed', 'done'] },
 };
 
 // Signed, so tapping it out of GroupMe reaches the gig and the picker with no password.

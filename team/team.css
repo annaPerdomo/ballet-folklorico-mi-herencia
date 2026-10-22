@@ -135,7 +135,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .pill-open { background: rgba(232,67,147,0.22); color: #ff9ecb; }
 .pill-confirmed { background: rgba(46,205,167,0.18); color: var(--teal-light); }
 .pill-done { background: rgba(255,255,255,0.09); color: var(--muted); }
-.pill-declined, .pill-cancelled { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); }
+.pill-declined, .pill-cancelled, .pill-lapsed { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.45); }
 
 /* ── buttons ────────────────────────────────────────────── */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 44px; padding: 0 1rem;

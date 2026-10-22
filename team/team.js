@@ -27,7 +27,7 @@
     en: {
       months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      status: { inquiry: 'New inquiry', open: 'Open', confirmed: 'Confirmed', done: 'Done', declined: 'Declined', cancelled: 'Cancelled' },
+      status: { inquiry: 'New inquiry', open: 'Open', confirmed: 'Confirmed', done: 'Done', declined: 'Declined', cancelled: 'Cancelled', lapsed: 'No reply' },
       types: { festival: 'Cultural Festival', quinceanera: 'Quinceañera', wedding: 'Wedding', private: 'Private Event', corporate: 'Corporate Event', school: 'School Assembly', classes: 'Classes', team: 'Group gathering', other: 'Other' },
       dateTbd: 'Date TBD', date: 'Date', tbd: 'TBD', performance: 'Performance', untitled: 'Untitled',
       callTime: 'Call time', dancersNeeded: '{n} dancers needed', pay: 'Pay', rehearsals: 'Rehearsals', whosIn: "Who's in",
@@ -61,13 +61,13 @@
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
       filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
-      archived: 'Declined / cancelled', posted: 'Posted to the team',
+      archived: 'Didn’t happen', archivedHint: 'Declined, cancelled, or the client never got back to us. Inquiries move here on their own two weeks after their date passes.', posted: 'Posted to the team',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
       askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
-      postToTeam: 'Post to team', addQuietly: 'Add to Gigs without posting', addQuietlyNew: 'Add straight to Gigs — no GroupMe post', confirmPost: 'Post the confirmation to GroupMe', edit: 'Edit', decline: 'Decline', reopen: 'Reopen as inquiry', del: 'Delete',
+      postToTeam: 'Post to team', addQuietly: 'Add to Gigs without posting', addQuietlyNew: 'Add straight to Gigs — no GroupMe post', confirmPost: 'Post the confirmation to GroupMe', edit: 'Edit', decline: 'Decline', lapse: 'No reply — didn’t happen', reopen: 'Reopen as inquiry', del: 'Delete',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
       requiredTag: 'required', optionalHead: 'Optional — fill in what you know',
       payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
@@ -181,7 +181,7 @@
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
       days: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-      status: { inquiry: 'Nueva solicitud', open: 'Abierto', confirmed: 'Confirmado', done: 'Terminado', declined: 'Rechazado', cancelled: 'Cancelado' },
+      status: { inquiry: 'Nueva solicitud', open: 'Abierto', confirmed: 'Confirmado', done: 'Terminado', declined: 'Rechazado', cancelled: 'Cancelado', lapsed: 'Sin respuesta' },
       types: { festival: 'Festival cultural', quinceanera: 'Quinceañera', wedding: 'Boda', private: 'Evento privado', corporate: 'Evento corporativo', school: 'Asamblea escolar', classes: 'Clases', team: 'Convivio del grupo', other: 'Otro' },
       dateTbd: 'Fecha por confirmar', date: 'Fecha', tbd: '¿?', performance: 'Presentación', untitled: 'Sin título',
       callTime: 'Hora de llegada', dancersNeeded: 'Se necesitan {n} bailarines', pay: 'Pago', rehearsals: 'Ensayos', whosIn: 'Quién va',
@@ -215,13 +215,13 @@
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
       filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
-      archived: 'Rechazados / cancelados', posted: 'Publicados al equipo',
+      archived: 'No se hicieron', archivedHint: 'Rechazados, cancelados o el cliente nunca respondió. Las solicitudes pasan aquí solas dos semanas después de su fecha.', posted: 'Publicados al equipo',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
       askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
-      postToTeam: 'Publicar al equipo', addQuietly: 'Agregar a Eventos sin publicar', addQuietlyNew: 'Agregar directo a Eventos — sin publicar en GroupMe', confirmPost: 'Publicar la confirmación en GroupMe', edit: 'Editar', decline: 'Rechazar', reopen: 'Reabrir como solicitud', del: 'Eliminar',
+      postToTeam: 'Publicar al equipo', addQuietly: 'Agregar a Eventos sin publicar', addQuietlyNew: 'Agregar directo a Eventos — sin publicar en GroupMe', confirmPost: 'Publicar la confirmación en GroupMe', edit: 'Editar', decline: 'Rechazar', lapse: 'Sin respuesta — no se hizo', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
       requiredTag: 'obligatorio', optionalHead: 'Opcional — llena lo que sepas',
       payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
@@ -1165,9 +1165,10 @@
         h('button', { class: 'btn btn-sm', text: t('clearFilters'), onclick: function () { setInbox({ range: 'all', from: '', to: '', pick: false }); } })));
     }
     shown.forEach(function (ev) { app.appendChild(adminCard(ev)); });
-    var archived = state.events.filter(function (e) { return e.status === 'declined' || e.status === 'cancelled'; });
+    var archived = state.events.filter(function (e) { return ['declined', 'cancelled', 'lapsed'].indexOf(e.status) !== -1; });
     if (archived.length) {
       app.appendChild(section(t('archived'), archived.length));
+      app.appendChild(h('p', { class: 'hint', text: t('archivedHint') }));
       archived.forEach(function (ev) { app.appendChild(adminCard(ev)); });
     }
   }
@@ -1513,6 +1514,7 @@
     return [
       addQuietly(ev),
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
+      { label: t('lapse'), icon: 'clock', onclick: function () { doAction(ev, 'lapse').then(closeDetail); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } },
     ];
