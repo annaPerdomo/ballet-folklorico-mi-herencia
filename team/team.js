@@ -155,7 +155,7 @@
       gigGalleries: 'Gig & event galleries', noGalleryGigs: 'No gigs yet.',
       newFolder: 'New folder', folderHint: 'For photos and videos from group events that aren’t gigs — a posada, a trip, a practice. It won’t show in Gigs or calendars.',
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
-      deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', nothingYet: 'Nothing yet — be the first to add something',
+      deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
@@ -310,7 +310,7 @@
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.',
       newFolder: 'Nueva carpeta', folderHint: 'Para fotos y videos de eventos del grupo que no son presentaciones: una posada, un viaje, un ensayo. No aparece en Eventos ni en los calendarios.',
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
-      deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', nothingYet: 'Nada todavía; sé el primero en agregar algo',
+      deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
@@ -2048,7 +2048,7 @@
       h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('gallery') }),
         h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' })),
       d && isOwner() && d.items.some(coverable) ? h('button', { type: 'button', class: 'btn btn-sm gal-cover-btn', onclick: function () { coverSheet(d); } }, icon('image', 2), h('span', { text: t('cover') })) : null,
-      d && isOwner() && d.event.status === 'folder' ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('folderMenu'),
+      d && isOwner() && isFolderish(d.event) ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('folderMenu'),
         onclick: function () { folderActions(d.event); } }, icon('more', 2)) : null));
     if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
 
@@ -2123,7 +2123,8 @@
   function folderSheet(ev) {
     var pop = popSheet(t(ev ? 'editFolder' : 'newFolder'), ev ? null : t('folderHint'));
     var title = h('input', { value: ev ? ev.title || '' : '', placeholder: t('folderTitlePh'), 'aria-label': t('titleLabel'), maxlength: 300, required: true });
-    var date = h('input', { type: 'date', value: ev ? ev.event_date || '' : todayIso(), 'aria-label': t('dateLabel') });
+    var dated = ev && ev.status !== 'folder';
+    var date = h('input', { type: 'date', value: ev ? ev.event_date || '' : todayIso(), 'aria-label': t('dateLabel'), required: dated });
     pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
       e.preventDefault();
       var body = { title: title.value.trim(), event_date: date.value || null };
@@ -2131,22 +2132,24 @@
         : api('/api/events', { method: 'POST', body: Object.assign({ status: 'folder', event_type: 'team' }, body) });
       req.then(function (r) {
         pop.close(); toast(t('saved'));
-        if (ev) return reloadMedia();
+        if (ev) { if (dated && gal) gal.dirty = true; return reloadMedia(); }
         return loadMediaIndex().then(function () { if (isMediaTab()) render(); openGallery(r.id); });
       }).catch(function (x) { toast(x.message, true); });
     } }, h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), title),
       h('label', { class: 'f full' }, h('span', { text: t('dateLabel') }), date),
-      h('p', { class: 'hint full', text: t('folderDateHint') }),
+      dated ? null : h('p', { class: 'hint full', text: t('folderDateHint') }),
       h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t(ev ? 'save' : 'add') }),
         h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
     title.focus();
   }
+  function isFolderish(ev) { return ev.status === 'folder' || ev.event_type === 'team'; }
   function folderActions(ev) {
     actionSheet(evTitle(ev), [{ label: t('editFolder'), icon: 'edit', onclick: function () { folderSheet(ev); } },
       { label: t('deleteFolder'), icon: 'trash', cls: 'danger', onclick: function () {
-        confirmSheet(t('deleteFolderAsk'), t('del'), true).then(function (yes) {
+        var folder = ev.status === 'folder';
+        confirmSheet(folder ? t('deleteFolderAsk') : t('deleteGatheringAsk', { title: evTitle(ev) }), t('del'), true).then(function (yes) {
           if (!yes) return;
-          api('/api/events/' + ev.id, { method: 'DELETE' }).then(function () { toast(t('deleted')); closeGallery(); })
+          api('/api/events/' + ev.id, { method: 'DELETE' }).then(function () { toast(t('deleted')); if (!folder && gal) gal.dirty = true; closeGallery(); })
             .catch(function (e) { toast(e.message, true); });
         });
       } }]);
