@@ -1,5 +1,5 @@
-import { route, readJson, ok, bad, cookie, clearCookie, int, str, query } from './_lib/http.js';
-import { checkAdminPassword, makeAdminToken, memberToken, verifyCalendarSig, ADMIN_COOKIE, FAMILY_COOKIE } from './_lib/auth.js';
+import { route, readJson, ok, bad, cookie, clearCookie, parseCookies, int, str, query } from './_lib/http.js';
+import { checkAdminPassword, makeAdminToken, verifyAdminToken, memberToken, verifyCalendarSig, requireAdmin, ADMIN_COOKIE, FAMILY_COOKIE } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 
 const ANSWERABLE = ['open', 'confirmed'];
@@ -31,7 +31,14 @@ export default route({
     const body = await readJson(req);
     if (body.password !== undefined) {
       if (!checkAdminPassword(body.password)) return bad(res, 'Wrong password', 401);
-      return ok(res, { role: 'admin' }, { 'Set-Cookie': [cookie(ADMIN_COOKIE, makeAdminToken(), { maxAge: SESSION_MAX_AGE }), clearCookie(FAMILY_COOKIE)] });
+      const kept = verifyAdminToken(parseCookies(req)[ADMIN_COOKIE]);
+      return ok(res, { role: 'admin' }, { 'Set-Cookie': [cookie(ADMIN_COOKIE, makeAdminToken(kept && kept.familyId), { maxAge: SESSION_MAX_AGE }), clearCookie(FAMILY_COOKIE)] });
+    }
+    if (body.as_family !== undefined) {
+      await requireAdmin(req);
+      const fam = body.as_family === null ? null : await one('SELECT id, name FROM families WHERE id = $1', [int(body.as_family)]);
+      if (body.as_family !== null && !fam) return bad(res, 'Family not found', 404);
+      return ok(res, { role: 'admin', family: fam }, { 'Set-Cookie': cookie(ADMIN_COOKIE, makeAdminToken(fam && fam.id), { maxAge: SESSION_MAX_AGE }) });
     }
     // The signature proves they came off the GroupMe post — the same "whoever is in the chat"
     // trust the bot already reads answers under. What it grants is answer-only: see requireManage.

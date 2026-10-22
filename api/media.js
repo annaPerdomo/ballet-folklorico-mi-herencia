@@ -22,7 +22,8 @@ async function ownRow(id, me) {
   return row;
 }
 
-const uploaderOf = (me) => (me.role === 'admin' ? 'owners' : me.family.name);
+const uploaderOf = (me) => (me.family ? me.family.name : 'owners');
+// Owners' rows stay owner-only: /familia is open, so a family id would let anyone edit them.
 const familyOf = (me) => (me.role === 'admin' ? null : me.family.id);
 
 function extOf(name, type) {

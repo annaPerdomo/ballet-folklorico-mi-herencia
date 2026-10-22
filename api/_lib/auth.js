@@ -30,18 +30,20 @@ export function checkAdminPassword(password) {
 // phone without rotating SESSION_SECRET and breaking the links already posted in GroupMe.
 const adminEpoch = () => sign(`admin.${process.env.ADMIN_PASSWORD || ''}`).slice(0, 8);
 
-export function makeAdminToken() {
-  const payload = `admin.${adminEpoch()}`;
+// An owner may also say which family they are, so "Added by" names that family instead of
+// "the owners". Only the label changes; the family gets no rights over what the owner adds.
+export function makeAdminToken(familyId = null) {
+  const payload = familyId ? `admin.${adminEpoch()}.${familyId}` : `admin.${adminEpoch()}`;
   return `${payload}.${sign(payload)}`;
 }
 
 export function verifyAdminToken(token) {
-  if (!token) return false;
+  if (!token) return null;
   const parts = String(token).split('.');
-  if (parts.length !== 3 || parts[0] !== 'admin') return false;
-  const payload = `${parts[0]}.${parts[1]}`;
-  if (!safeEqual(sign(payload), parts[2])) return false;
-  return safeEqual(parts[1], adminEpoch());
+  if ((parts.length !== 3 && parts.length !== 4) || parts[0] !== 'admin') return null;
+  const sig = parts.pop();
+  if (!safeEqual(sign(parts.join('.')), sig) || !safeEqual(parts[1], adminEpoch())) return null;
+  return { familyId: parts[2] ? parseInt(parts[2], 10) || null : null };
 }
 
 export function newFamilyToken() {
@@ -114,7 +116,11 @@ async function asMember(family, scope) {
 
 export async function whoami(req) {
   const c = parseCookies(req);
-  if (verifyAdminToken(c[ADMIN_COOKIE])) return { role: 'admin', scope: 'admin' };
+  const admin = verifyAdminToken(c[ADMIN_COOKIE]);
+  if (admin) {
+    const family = admin.familyId && await one('SELECT id, name FROM families WHERE id = $1', [admin.familyId]);
+    return family ? { role: 'admin', scope: 'admin', family } : { role: 'admin', scope: 'admin' };
+  }
   const raw = c[FAMILY_COOKIE];
   if (raw) {
     const claim = verifyMemberToken(raw);

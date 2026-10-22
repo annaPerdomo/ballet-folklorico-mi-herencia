@@ -154,7 +154,9 @@
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', titleLabel: 'Title',
+      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners',
+      youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
+      youFamily: 'Your family', youNone: 'None — show as “the owners”', youSaved: 'Saved', titleLabel: 'Title',
       deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
       photos: 'Photos', videos: 'Videos', addMedia: 'Photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
       openPhoto: 'Open photo {n}', openVideo: 'Play video {n}', previous: 'Previous', next: 'Next',
@@ -303,7 +305,9 @@
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
-      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', titleLabel: 'Título',
+      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños',
+      youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
+      youFamily: 'Tu familia', youNone: 'Ninguna — mostrar como “los dueños”', youSaved: 'Guardado', titleLabel: 'Título',
       deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
       photos: 'Fotos', videos: 'Videos', addMedia: 'Fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
       openPhoto: 'Abrir foto {n}', openVideo: 'Ver video {n}', previous: 'Anterior', next: 'Siguiente',
@@ -2140,6 +2144,18 @@
     } },
       field(t('newFamily'), name), field(t('dancers'), dancers, true),
       h('div', { class: 'full card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('addFamily') })));
+
+    var meSel = h('select', { onchange: function () {
+      var id = meSel.value ? Number(meSel.value) : null;
+      api('/api/auth', { method: 'POST', body: { as_family: id } })
+        .then(function (r) { state.me.family = r.family || undefined; toast(t('youSaved')); })
+        .catch(function (x) { toast(x.message, true); meSel.value = state.me.family ? String(state.me.family.id) : ''; });
+    } }, h('option', { value: '', text: t('youNone') }), state.families.map(function (f) {
+      return h('option', { value: String(f.id), text: f.name, selected: Boolean(state.me.family && state.me.family.id === f.id) });
+    }));
+    app.appendChild(section(t('youTitle')));
+    app.appendChild(h('p', { class: 'tm-sub', text: t('youSub') }));
+    app.appendChild(h('div', { class: 'card form-grid' }, field(t('youFamily'), meSel, true)));
 
     app.appendChild(section(t('families'), state.families.length,
       h('button', { class: 'btn btn-sm btn-gold', text: t('addAFamily'), onclick: function () { form.hidden = !form.hidden; if (!form.hidden) name.focus(); } })));
