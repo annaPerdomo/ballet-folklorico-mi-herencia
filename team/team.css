@@ -671,15 +671,13 @@ body.has-gal { overflow: hidden; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dance-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.4rem; }
-.music-fold { margin: 1.2rem 0 0; }
-.music-fold[open] .music-add { display: flex; justify-content: flex-end; margin-bottom: 0.6rem; }
-.music-add { display: none; }
+.gal-fold { margin-top: 1.2rem; }
+.gal-fold:first-child { margin-top: 0.2rem; }
+.music-add { display: flex; justify-content: flex-end; margin-bottom: 0.6rem; }
 .storage { margin-top: 1.7rem; }
 .dance-chip { cursor: pointer; font: inherit; font-size: 0.82rem; min-height: 36px; }
 .dance-chip:hover, .dance-chip:focus-visible { border-color: var(--gold); color: var(--text); }
 .dance-chip svg { color: var(--gold-light); width: 11px; height: 11px; }
-.dance-more { display: none; grid-column: 1 / -1; min-height: var(--tap); border-radius: 12px; border: 1px dashed var(--line); background: none;
-  color: var(--gold-light); font: inherit; font-size: 0.8rem; cursor: pointer; }
 .dance-item { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
 .dance-gig { display: flex; flex-direction: column; gap: 1px; padding: 0 0.15rem; min-width: 0; }
 .dance-gig b { font-weight: 500; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -753,8 +751,6 @@ body.has-gal { overflow: hidden; }
   .dance-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.45rem; }
   .dance-chip { min-height: var(--tap); border-radius: 12px; }
   .dance-name { flex: 1; min-width: 0; overflow-wrap: anywhere; line-height: 1.25; text-align: left; }
-  .dance-chips.is-capped .is-extra { display: none; }
-  .dance-more { display: block; }
   .galgrid { grid-template-columns: 1fr; gap: 0.55rem; }
   .galcard { flex-direction: row; align-items: center; }
   .galcard-cover { width: 84px; height: 84px; aspect-ratio: auto; flex-shrink: 0; }
