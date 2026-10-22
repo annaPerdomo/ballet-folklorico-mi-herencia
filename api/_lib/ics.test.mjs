@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseTime, ptOffset, utcStamp, utcStampPlus, esc, fold, eventSpan, eventVevent, rehearsalVevents, googleEventUrl, outlookEventUrl } from './ics.js';
+import { parseTime, ptOffset, utcStamp, utcStampPlus, esc, fold, eventSpan, eventVevent, rehearsalVevents, googleEventUrl, outlookEventUrl, galleryOpen } from './ics.js';
 
 const lines = (s) => s.split('\r\n');
 const val = (s, key) => lines(s).find((l) => l.startsWith(key + ':'))?.slice(key.length + 1);
@@ -82,4 +82,15 @@ test('Google and Outlook links carry the span with an exclusive all-day end', ()
   assert.equal(ot.searchParams.get('startdt'), '2026-07-05T01:00:00Z');
   assert.equal(ot.searchParams.get('subject'), 'Boda, Salinas & Co');
   assert.equal(googleEventUrl({ id: 9, title: 'No date' }), null);
+});
+
+test('galleryOpen waits for the gig to start in Pacific time', () => {
+  const at = (iso) => Date.parse(iso);
+  const gig = { event_date: '2026-10-24', start_time: '5:00 PM', call_time: '4:30 PM' };
+  assert.equal(galleryOpen(gig, at('2026-10-24T23:59:00Z')), false);
+  assert.equal(galleryOpen(gig, at('2026-10-25T00:00:00Z')), true);
+  assert.equal(galleryOpen({ event_date: '2026-10-24', call_time: '4:30 PM' }, at('2026-10-24T23:30:00Z')), true);
+  assert.equal(galleryOpen({ event_date: '2026-10-24' }, at('2026-10-24T06:59:00Z')), false);
+  assert.equal(galleryOpen({ event_date: '2026-10-24' }, at('2026-10-24T07:00:00Z')), true);
+  assert.equal(galleryOpen({ event_date: null }, at('2030-01-01T00:00:00Z')), false);
 });

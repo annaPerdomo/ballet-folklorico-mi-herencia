@@ -4,11 +4,14 @@ import { requireUser, requireAdmin } from './_lib/auth.js';
 import { sql, one } from './_lib/db.js';
 import { MEMBER_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
+import { galleryOpen } from './_lib/ics.js';
 import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, safeLink, toItem, removeFiles, canPublish, websiteFlags } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
-  const ev = await one('SELECT id, title, event_type, event_date, status, venue, city FROM events WHERE id = $1', [id]);
+  const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city FROM events WHERE id = $1', [id]);
   if (!ev || (me.role !== 'admin' && !MEMBER_VISIBLE.includes(ev.status))) throw httpError(404, 'Gig not found');
+  // Owners bypass: a gig with media that gets moved later would otherwise lock its files away.
+  if (!galleryOpen(ev) && me.role !== 'admin') throw httpError(403, 'This gig’s gallery opens when the gig starts');
   return ev;
 }
 
@@ -59,20 +62,20 @@ export default route({
     }
 
     const gigs = await sql(`
-      SELECT e.id, e.title, e.event_type, e.event_date, e.status, e.venue, e.city,
+      SELECT e.id, e.title, e.event_type, e.event_date, e.start_time, e.call_time, e.status, e.venue, e.city,
         count(m.id) FILTER (WHERE m.kind = 'photo')::int AS photos,
         count(m.id) FILTER (WHERE m.kind IN ('video','link'))::int AS videos,
         (count(m.id) FILTER (WHERE m.kind = 'audio') + (SELECT count(*) FROM event_songs s WHERE s.event_id = e.id))::int AS songs,
         (SELECT c.thumb_key FROM media c WHERE c.event_id = e.id AND c.ready AND c.kind = 'photo' AND c.thumb_key IS NOT NULL
           ORDER BY c.created_at DESC LIMIT 1) AS cover_key
       FROM events e LEFT JOIN media m ON m.event_id = e.id AND m.ready
-      WHERE e.status = ANY($1)
-      GROUP BY e.id ORDER BY e.event_date DESC NULLS FIRST, e.id DESC`, [MEMBER_VISIBLE]);
+      WHERE e.status = ANY($1) AND e.event_date <= current_date + 1
+      GROUP BY e.id ORDER BY e.event_date DESC, e.id DESC`, [MEMBER_VISIBLE]);
     const review = me.role === 'admin'
       ? (await sql(`SELECT m.*, e.title AS event_title, e.event_date FROM media m JOIN events e ON e.id = m.event_id
           WHERE m.suggested AND NOT m.website AND m.ready ORDER BY m.created_at`)).map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_date: r.event_date }))
       : undefined;
-    ok(res, { ...base, review, gigs: gigs.map(({ cover_key, ...g }) => ({ ...g, cover: cover_key && storageReady() ? signedUrl('GET', cover_key) : null })) });
+    ok(res, { ...base, review, gigs: gigs.filter((g) => galleryOpen(g)).map(({ cover_key, start_time, call_time, ...g }) => ({ ...g, cover: cover_key && storageReady() ? signedUrl('GET', cover_key) : null })) });
   },
 
   async POST(req, res) {

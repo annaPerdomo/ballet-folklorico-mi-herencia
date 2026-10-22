@@ -1,5 +1,5 @@
 import { sql, one } from './db.js';
-import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl } from './ics.js';
+import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOpen } from './ics.js';
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled'];
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
@@ -39,8 +39,9 @@ export async function getEvent(id, { admin }) {
 // links, so they work with no cookie and no redirect — the installed app and in-app browsers
 // (GroupMe, Safari's sheet) don't reliably carry the sign-in through /api/calendar.
 export function withCalendarLinks(ev) {
-  if (!ev || !ev.event_date) return ev;
-  return { ...ev, calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev), google_day: googleDayUrl(ev), outlook_day: outlookDayUrl(ev) } };
+  if (!ev) return ev;
+  if (!ev.event_date) return { ...ev, gallery_open: false };
+  return { ...ev, gallery_open: galleryOpen(ev), calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev), google_day: googleDayUrl(ev), outlook_day: outlookDayUrl(ev) } };
 }
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',

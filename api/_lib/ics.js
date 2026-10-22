@@ -39,6 +39,12 @@ function utcMs(dateStr, time) {
   return Date.UTC(y, mo - 1, d, t.h + ptOffset(y, mo, d), t.m);
 }
 
+export function galleryOpen(ev, now = Date.now()) {
+  if (!ev || !ev.event_date) return false;
+  const ms = utcMs(ev.event_date, ev.start_time || ev.call_time);
+  return ms != null && ms <= now;
+}
+
 const stampOf = (ms) => {
   const dt = new Date(ms);
   return `${dt.getUTCFullYear()}${pad(dt.getUTCMonth() + 1)}${pad(dt.getUTCDate())}T${pad(dt.getUTCHours())}${pad(dt.getUTCMinutes())}00Z`;
