@@ -28,9 +28,10 @@ img, svg { max-width: 100%; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
 
 /* ── header ─────────────────────────────────────────────── */
+/* No backdrop-filter anywhere: the installed iOS app renders it and everything over it fuzzy. */
 .tm-header { order: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: calc(0.7rem + var(--safe-t)) 0.9rem 0.7rem;
   border-bottom: 1px solid var(--line); background: linear-gradient(120deg, rgba(198,42,110,0.14), rgba(8,3,17,0.9) 45%);
-  backdrop-filter: blur(10px); flex-shrink: 0; z-index: 20; }
+  flex-shrink: 0; z-index: 20; }
 .tm-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
 .tm-logo { width: 40px; height: 40px; flex-shrink: 0; object-fit: contain;
   filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3)); }
@@ -390,7 +391,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tm-block .kv { margin: 0; }
 
 /* ── modal → sheet ──────────────────────────────────────── */
-.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 30; display: flex; align-items: center; justify-content: center;
+.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 30; display: flex; align-items: center; justify-content: center;
   padding: 1.5rem 0.8rem; overscroll-behavior: none; }
 .modal { background: var(--bg-card); border: 1px solid var(--gold-dark); border-radius: 18px; width: 100%; max-width: 720px; max-height: min(92dvh, 100%);
   display: flex; flex-direction: column; box-shadow: 0 30px 80px rgba(0,0,0,0.6); overflow: hidden; }
@@ -400,7 +401,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .modal-x:hover { background: rgba(255,255,255,0.06); color: var(--text); }
 .modal-x svg { width: 20px; height: 20px; }
 .modal-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: none; touch-action: pan-y; padding: 1rem 1.1rem 1.2rem; }
-.modal-foot { flex-shrink: 0; padding: 0.7rem 1rem calc(0.7rem + var(--safe-b)); border-top: 1px solid var(--hair); background: rgba(8,3,17,0.6); backdrop-filter: blur(8px); }
+.modal-foot { flex-shrink: 0; padding: 0.7rem 1rem calc(0.7rem + var(--safe-b)); border-top: 1px solid var(--hair); background: rgba(8,3,17,0.6); }
 .foot-btns { display: flex; gap: 0.5rem; }
 
 .pop-back { align-items: flex-end; z-index: 40; padding: 0; }
@@ -596,7 +597,7 @@ details[open] > .summary::before { transform: rotate(45deg); }
   /* Half the safe inset: the bar's ground runs to the true bottom of the screen and the
      tabs sit just above the home indicator, rather than a full 34px clear of it. */
   .tm-tabs { order: 3; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0; padding: 0.3rem 0.3rem calc(var(--safe-b) * 0.5); overflow: visible;
-    border-bottom: 0; border-top: 1px solid var(--line); background: rgba(8,3,17,0.92); backdrop-filter: blur(14px); }
+    border-bottom: 0; border-top: 1px solid var(--line); background: rgba(8,3,17,0.92); }
   .tm-tab { flex-direction: column; justify-content: center; gap: 3px; padding: 0.45rem 0.2rem 0.3rem; border-bottom: 0; border-radius: 12px;
     font-size: 0.58rem; letter-spacing: 0.08em; min-height: 54px; }
   .tm-tab.is-active { background: rgba(201,168,76,0.1); }
@@ -667,8 +668,6 @@ details[open] > .summary::before { transform: rotate(45deg); }
 
 .gal { position: fixed; inset: 0; z-index: 35; background: var(--bg-primary); display: flex; flex-direction: column; padding-top: var(--safe-t); }
 body.has-gal { overflow: hidden; }
-/* iOS composites a backdrop-filter above later fixed layers, so the frosted bars smear through the gallery. */
-body.has-gal .tm-header, body.has-gal .tm-tabs, body.has-gal .modal-back:not(.pop-back) { visibility: hidden; }
 .gal-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
