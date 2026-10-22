@@ -1726,6 +1726,72 @@
       : /\(/.test(it.uploader) ? it.uploader : t('theFamily', { name: it.uploader }));
     return t('addedBy', { who: who });
   }
+  /* iOS can paint a cancelled load half-drawn: hide until decoded, and let a repaint reuse the
+     in-flight <img>, keyed without the signed query since that rotates. */
+  var thumbPool = {}, thumbRoots = [], POOL_MAX = 300;
+  function thumbImg(src, full) {
+    var key = src.split('?')[0];
+    var img = thumbPool[key];
+    // claimed: the tree being built isn't in the document yet, so isConnected misses a repeat in this paint
+    if (img && (img.isConnected || img.claimed || img.classList.contains('is-failed'))) img = null;
+    if (img && img.dataset.src !== src && !img.classList.contains('is-loaded')) img = null;
+    if (!img) {
+      img = h('img', { alt: '', class: 'thumb', decoding: 'async' });
+      img.dataset.src = src; img.tries = 0; img.full = !!full;
+      delete thumbPool[key];
+      thumbPool[key] = img;
+      prunePool();
+    }
+    img.claimed = true;
+    queueMicrotask(function () { img.claimed = false; if (!img.getAttribute('src')) watchThumb(img); });
+    return img;
+  }
+  /* rootMargin only reaches past the viewport, so observe against the box that actually scrolls. */
+  function watchThumb(img) {
+    if (img.io) { img.io.unobserve(img); img.io = null; }
+    if (!img.isConnected) return;
+    if (!('IntersectionObserver' in window)) return startThumb(img);
+    var root = img.parentElement;
+    while (root && root !== document.body && !/(auto|scroll)/.test(getComputedStyle(root).overflowY)) root = root.parentElement;
+    if (root === document.body) root = null;
+    var hit = thumbRoots.filter(function (r) { return r.root === root; })[0];
+    if (!hit) {
+      hit = { root: root, io: new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { hit.io.unobserve(en.target); en.target.io = null; startThumb(en.target); } });
+      }, { root: root, rootMargin: '600px 0px' }) };
+      thumbRoots = thumbRoots.filter(function (r) { return !r.root || r.root.isConnected; }).concat(hit);
+    }
+    img.io = hit.io; hit.io.observe(img);
+  }
+  function prunePool() {
+    var keys = Object.keys(thumbPool), extra = keys.length - POOL_MAX;
+    for (var i = 0; extra > 0 && i < keys.length; i++) {
+      if (!thumbPool[keys[i]].isConnected) { delete thumbPool[keys[i]]; extra--; }
+    }
+  }
+  function startThumb(img) {
+    clearTimeout(img.stall);
+    img.onload = function () {
+      clearTimeout(img.stall);
+      if (!img.naturalWidth) return retryThumb(img);
+      (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () { img.classList.add('is-loaded'); });
+    };
+    img.onerror = function () { retryThumb(img); };
+    // An original (no thumb) can be 25 MB, so only small thumbs get the stall watchdog.
+    if (!img.full) img.stall = setTimeout(function () { retryThumb(img); }, 45000);
+    img.src = img.dataset.src;
+  }
+  function retryThumb(img) {
+    clearTimeout(img.stall);
+    if (img.classList.contains('is-loaded')) return;
+    if (++img.tries > 3) {
+      img.classList.add('is-failed');
+      if (img.parentNode) img.parentNode.insertBefore(h('span', { class: 'thumb-fail' }, icon('image', 1.5)), img.nextSibling);
+      return;
+    }
+    img.removeAttribute('src');
+    setTimeout(function () { startThumb(img); }, 1500 * img.tries * img.tries);
+  }
   function loadMediaIndex() {
     if (!media.loading) {
       media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {
@@ -1762,7 +1828,7 @@
         var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null]
           .filter(Boolean).join(' · ');
         return h('button', { type: 'button', class: 'galcard', onclick: function () { openGallery(g.id); } },
-          h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? h('img', { src: g.cover, alt: '', loading: 'lazy' }) : icon('image', 1.5)),
+          h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? thumbImg(g.cover) : icon('image', 1.5)),
           h('span', { class: 'galcard-text' },
             h('b', { text: evTitle(g) }),
             g.event_date || g.status !== 'folder' ? h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }) : null,
@@ -1838,7 +1904,7 @@
         : function () { window.open(it.url, '_blank', 'noopener'); };
       return h('div', { class: 'review-item' },
         h('button', { type: 'button', class: 'review-thumb', 'aria-label': t('photos'), onclick: open },
-          it.thumb ? h('img', { src: it.thumb, alt: '', loading: 'lazy' }) : icon('play', 2)),
+          it.thumb ? thumbImg(it.thumb) : icon('play', 2)),
         h('div', { class: 'review-text' }, h('b', { text: it.title || evTitle({ title: it.event_title }) }),
           h('span', { class: 'song-sub', text: [it.title ? it.event_title : null, addedBy(it)].filter(Boolean).join(' · ') })),
         h('div', { class: 'review-btns' },
@@ -2005,10 +2071,10 @@
       onclick: function (e) { e.stopPropagation(); actionSheet(it.title || t('videos'), itemActions(it)); } }, icon('more', 2)) : null;
     var plainLink = it.kind === 'link' && !it.youtube;
     var kindText = h('span', { text: it.youtube ? 'YouTube' : plainLink ? t('linkKind') : t('video') });
-    var pic = it.kind === 'photo' ? h('img', { src: it.thumb || it.url, alt: '', loading: 'lazy' })
+    var pic = it.kind === 'photo' ? (it.thumb ? thumbImg(it.thumb) : thumbImg(it.url, true))
       : it.kind === 'video' ? h('video', { muted: true, playsinline: true, preload: 'metadata', src: it.url + '#t=0.1',
         onloadedmetadata: function () { if (isFinite(this.duration)) kindText.textContent = fmtDuration(this.duration); } })
-      : it.thumb ? h('img', { src: it.thumb, alt: '', loading: 'lazy' }) : null;
+      : it.thumb ? thumbImg(it.thumb) : null;
     var cap = it.kind === 'photo' ? null : h('span', { class: 'tile-cap' },
       h('span', { class: 'tile-kind' + (it.youtube ? ' is-yt' : '') }, icon(plainLink ? 'link' : 'play', 2.4), kindText),
       it.kind === 'link' ? h('span', { class: 'tile-cap-text', text: it.title || it.url.replace(/^https:\/\/(www\.)?/, '').slice(0, 60) }) : null);
@@ -2064,7 +2130,7 @@
       var on = it.id === current;
       return h('button', { type: 'button', class: 'cover-pick' + (on ? ' is-on' : ''), 'aria-pressed': on ? 'true' : 'false',
         'aria-label': it.title || t(it.kind === 'photo' ? 'photos' : 'videos'), onclick: function () { pick(it.id); } },
-        h('img', { src: it.thumb, alt: '', loading: 'lazy' }), on ? h('span', { class: 'cover-check' }, icon('yes', 3)) : null);
+        thumbImg(it.thumb), on ? h('span', { class: 'cover-check' }, icon('yes', 3)) : null);
     })));
     if (current) pop.body.appendChild(h('button', { type: 'button', class: 'btn btn-wide', text: t('coverAuto'), onclick: function () { pick(null); } }));
   }

@@ -632,8 +632,17 @@ details[open] > .summary::before { transform: rotate(45deg); }
   .hero-legend { font-size: 0.74rem; gap: 0.3rem 0.6rem; }
   .form-grid { grid-template-columns: 1fr; }
 }
+img.thumb { opacity: 0; transition: opacity 0.25s ease; }
+img.thumb.is-loaded { opacity: 1; }
+img.thumb.is-failed { display: none; }
+.thumb-fail { display: grid; place-items: center; width: 100%; height: 100%; color: rgba(201,168,76,0.45); }
+.thumb-fail svg { width: 26px; height: 26px; }
+:has(> img.thumb:not(.is-loaded):not(.is-failed)) { background-image: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%);
+  background-size: 250% 100%; animation: thumb-shimmer 1.4s linear infinite; }
+@keyframes thumb-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
 @media (prefers-reduced-motion: reduce) {
   .modal, .pop, .ring-fg { animation: none; transition: none; }
+  img.thumb, :has(> img.thumb) { animation: none; transition: none; }
   .tm-twirl .tw, .tm-twirl .tw-core { animation-duration: 3.5s; }
 }
 @media (max-width: 700px) {
