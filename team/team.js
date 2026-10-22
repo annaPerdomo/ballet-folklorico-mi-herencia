@@ -150,18 +150,17 @@
       printShareMsg: 'Gig roster',
       tabMedia: 'Gallery', gallery: 'Photos & videos', galleryN: 'Photos & videos ({n})', mediaLoading: 'Loading the gallery…',
       storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
+      dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
-      photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 song', songMany: '{n} songs',
+      photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', titleLabel: 'Title',
       deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
-      photos: 'Photos', videos: 'Videos', music: 'Music', addMedia: 'Photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
+      photos: 'Photos', videos: 'Videos', addMedia: 'Photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
       openPhoto: 'Open photo {n}', openVideo: 'Play video {n}', previous: 'Previous', next: 'Next',
       addLink: 'Add YouTube link', openYoutube: 'Open in YouTube', linkKind: 'Link', cover: 'Cover', coverTitle: 'Folder cover', coverHint: 'Pick the picture everyone sees on this gig’s folder.', coverAuto: 'Choose automatically', coverSet: 'Cover updated', addLinkShort: 'YouTube', video: 'Video',
       videoHint: 'Photos and clips up to 150 MB upload here. For full performances, add an Unlisted YouTube link.',
-      addTrack: 'Upload a track', fromLibrary: 'From the library', noTracks: 'No music for this gig yet.', unlink: 'Remove from this gig', fromLibraryTag: 'Library',
       linkHint: 'Anyone with the bfmh.dance/familia address can see this gallery. Set YouTube videos to Unlisted so they stay off search.', linkUrl: 'Link', linkTitlePh: 'e.g. Jalisco — full set',
-      pickSongs: 'Songs for this gig', pickSongsHint: 'Tap to add or remove songs from the music library.', noLibrary: 'The music library is empty. Add songs from the Gallery tab first.',
       uploadingN: 'Uploading {n} of {total}…', uploadFailed: '{n} didn’t upload.', uploadedOne: 'Uploaded', uploadedMany: '{n} uploaded',
       uploadRefused: 'storage refused it ({n})', uploadNetwork: 'the connection dropped',
       familiesLoading: 'Loading families…', dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
@@ -300,18 +299,17 @@
       printShareMsg: 'Lista de eventos',
       tabMedia: 'Galería', gallery: 'Fotos y videos', galleryN: 'Fotos y videos ({n})', mediaLoading: 'Cargando la galería…',
       storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
+      dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
-      photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos', songOne: '1 canción', songMany: '{n} canciones',
+      photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', titleLabel: 'Título',
       deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
-      photos: 'Fotos', videos: 'Videos', music: 'Música', addMedia: 'Fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
+      photos: 'Fotos', videos: 'Videos', addMedia: 'Fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
       openPhoto: 'Abrir foto {n}', openVideo: 'Ver video {n}', previous: 'Anterior', next: 'Siguiente',
       addLink: 'Agregar enlace de YouTube', openYoutube: 'Abrir en YouTube', linkKind: 'Enlace', cover: 'Portada', coverTitle: 'Portada de la carpeta', coverHint: 'Elige la imagen que todos ven en la carpeta de este evento.', coverAuto: 'Elegir automáticamente', coverSet: 'Portada actualizada', addLinkShort: 'YouTube', video: 'Video',
       videoHint: 'Sube fotos y clips de hasta 150 MB aquí. Para presentaciones completas, agrega un enlace de YouTube "No listado".',
-      addTrack: 'Subir una pista', fromLibrary: 'De la biblioteca', noTracks: 'Todavía no hay música para este evento.', unlink: 'Quitar de este evento', fromLibraryTag: 'Biblioteca',
       linkHint: 'Cualquiera con la dirección bfmh.dance/familia puede ver esta galería. Pon los videos de YouTube como "No listado" para que no salgan en búsquedas.', linkUrl: 'Enlace', linkTitlePh: 'p. ej. Jalisco — presentación completa',
-      pickSongs: 'Canciones para este evento', pickSongsHint: 'Toca para agregar o quitar canciones de la biblioteca de música.', noLibrary: 'La biblioteca de música está vacía. Primero agrega canciones desde la pestaña Galería.',
       uploadingN: 'Subiendo {n} de {total}…', uploadFailed: '{n} no se subieron.', uploadedOne: 'Subido', uploadedMany: '{n} subidos',
       uploadRefused: 'el almacenamiento lo rechazó ({n})', uploadNetwork: 'se cortó la conexión',
       familiesLoading: 'Cargando familias…', dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
@@ -1627,7 +1625,27 @@
   }
 
   /* ── gallery & music ───────────────────────────────────── */
-  var media = { index: null, library: null, loading: null };
+  var media = { index: null, library: null, videos: null, loading: null };
+  /* Videos are matched to a dance by title ("Jarabe Tapatío - Arcadia Elks 5/8/26"); aliases catch spellings in use. */
+  var DANCES = [
+    ['Jarabe Tapatío', 'jarabe'], ['El Son de la Negra', 'son de la negra', 'la negra'], ['La Chona'], ['El Potro'],
+    ['Tranchete', 'tranchete', 'tranchette'], ['Colas'], ['Zapateado'], ['El Huateque', 'huateque', 'guateque'],
+    ['La Llorona'], ['Las Calaveras'], ['La Bruja'], ['Chumbala Cachumbala', 'chumbala'], ['Santa Rita'], ['Jesusita'],
+    ['Evangelina'], ['El Circo', 'circo'], ['La Botella', 'botella', 'botela'], ['Relámpago'], ['Fantasía', 'fantasia', 'fantacia'],
+    ['Espejeando'], ['María Chuchena'], ['La Raspa'], ['Rascapetate', 'rascapetate', 'rescapetate'], ['El Toro Mambo', 'toro mambo'],
+    ['Baile de los Viejitos', 'viejitos'], ['Charolas'], ['Sonajas'], ['El Sauce y la Palma', 'sauce y la palma'], ['Acuérdate'],
+    ['El Sapo y la Rana', 'sapo y la rana'], ['Chiapanecas'], ['Vaquería'], ['El Mariachi'], ['Un Poco Loco']
+  ].map(function (d) {
+    var names = (d.length > 1 ? d.slice(1) : [d[0]]).map(fold);
+    return { name: d[0], re: new RegExp('(^|[^a-z])(' + names.join('|') + ')(?![a-z])') };
+  });
+  function fold(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' '); }
+  /* The dance named earliest in the title wins. */
+  function danceOf(it) {
+    var title = fold(it.title), best = null, at = Infinity;
+    DANCES.forEach(function (d) { var m = d.re.exec(title); if (m && m.index < at) { at = m.index; best = d.name; } });
+    return best;
+  }
   /* UI only: websiteFlags in api/_lib/media.js is what keeps families to suggesting. */
   function isOwner() { return state.me && state.me.role === 'admin'; }
   function setWebsite(it, on) {
@@ -1659,8 +1677,8 @@
   function addedBy(it) { return t('addedBy', { who: it.uploader === 'owners' ? t('theOwners') : it.uploader }); }
   function loadMediaIndex() {
     if (!media.loading) {
-      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1')]).then(function (r) {
-        media.index = r[0]; media.library = r[1].songs; media.loading = null;
+      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {
+        media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.loading = null;
       }, function (e) { media.loading = null; throw e; });
     }
     return media.loading;
@@ -1691,21 +1709,39 @@
     if (idx.review && idx.review.length) renderReview(idx.review);
 
     app.appendChild(section(t('musicLibrary'), media.library.length || null,
-      idx.storage ? pickButton(t('addSongs'), 'audio/*', function (files) { uploadFiles(files, null, function () { return 'audio'; }); }) : null));
+      idx.storage ? pickButton(t('addSongs'), AUDIO_ACCEPT, function (files) { uploadFiles(files, null, function () { return 'audio'; }); }) : null));
     if (!media.library.length) app.appendChild(emptyState('music', t('noSongs')));
     else app.appendChild(h('div', { class: 'songs' }, media.library.map(function (s) { return songRow(s, libraryActions(s)); })));
+
+    renderDances();
 
     app.appendChild(section(t('gigGalleries'), idx.gigs.length || null));
     if (!idx.gigs.length) { app.appendChild(emptyState('image', t('noGalleryGigs'))); return; }
     app.appendChild(h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
-      var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null,
-        g.songs ? plural(g.songs, 'songOne', 'songMany') : null].filter(Boolean).join(' · ');
+      var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null]
+        .filter(Boolean).join(' · ');
       return h('button', { type: 'button', class: 'galcard', onclick: function () { openGallery(g.id); } },
         h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? h('img', { src: g.cover, alt: '', loading: 'lazy' }) : icon('image', 1.5)),
         h('span', { class: 'galcard-text' },
           h('b', { text: evTitle(g) }),
           h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }),
           h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
+    })));
+  }
+
+  function videosOf(dance) { return media.videos.filter(function (it) { return danceOf(it) === dance; }); }
+  function renderDances() {
+    if (!media.videos) return;
+    var counts = {};
+    media.videos.forEach(function (it) { var d = danceOf(it); if (d) counts[d] = (counts[d] || 0) + 1; });
+    var names = DANCES.map(function (d) { return d.name; }).filter(function (n) { return counts[n]; })
+      .sort(function (a, b) { return a.localeCompare(b, state.lang); });
+    if (!names.length) return;
+    app.appendChild(section(t('dances'), names.length));
+    app.appendChild(h('p', { class: 'hint', text: t('dancesHint') }));
+    app.appendChild(h('div', { class: 'dance-chips' }, names.map(function (n) {
+      return h('button', { type: 'button', class: 'chip dance-chip', onclick: function () { openGallery(null, n); } },
+        icon('play', 2.4), h('span', { text: n }), h('span', { class: 'gal-n', text: counts[n] }));
     })));
   }
 
@@ -1744,12 +1780,12 @@
     return [{ label: t('rename'), icon: 'edit', onclick: function () { renameSheet(s, reloadMedia); } },
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteItem(s, reloadMedia); } }];
   }
-  function songRow(s, actions, tag) {
+  function songRow(s, actions) {
     return h('div', { class: 'song' },
       h('div', { class: 'song-top' },
         h('span', { class: 'song-ico' }, icon('music', 2)),
         h('span', { class: 'song-name' }, h('b', { text: s.title || t('untitledSong') }),
-          h('span', { class: 'song-sub', text: [tag, addedBy(s)].filter(Boolean).join(' · ') })),
+          h('span', { class: 'song-sub', text: addedBy(s) })),
         s.download ? h('a', { class: 'btn btn-sm btn-icon', href: s.download, 'aria-label': t('download'), title: t('download') }, icon('download', 2)) : null,
         actions ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(s.title || t('untitledSong'), actions); } }, icon('more', 2)) : null),
       s.url ? h('audio', { controls: true, preload: 'none', src: s.url }) : null);
@@ -1784,12 +1820,12 @@
   }
 
   /* ── one gig's gallery (full-screen layer over the app) ── */
-  function openGallery(eventId, tab) {
+  function openGallery(eventId, dance) {
     closeGallery(true);
-    gal = { id: eventId, data: null, tab: tab || 'media', root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
+    gal = { id: eventId, dance: dance || null, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
     document.body.appendChild(gal.root);
     document.body.classList.add('has-gal');
-    try { history.pushState({ gal: eventId }, ''); gal.pushed = true; } catch (e) {}
+    try { history.pushState({ gal: eventId || 'dance' }, ''); gal.pushed = true; } catch (e) {}
     paintGallery();
     loadGallery().then(paintGallery, function (e) { toast(e.message, true); closeGallery(); });
   }
@@ -1804,12 +1840,19 @@
   }
   window.addEventListener('popstate', function () { if (gal) { gal.pushed = false; closeGallery(); } });
   function loadGallery() {
-    var id = gal.id;
-    return api('/api/media?event=' + id).then(function (d) { if (gal && gal.id === id) gal.data = d; });
+    var g = gal;
+    if (g.dance) {
+      if (media.videos && !g.data) g.data = videosOf(g.dance);
+      return loadMediaIndex().then(function () {
+        if (gal === g) g.data = videosOf(g.dance);
+      });
+    }
+    return api('/api/media?event=' + g.id).then(function (d) { if (gal === g) g.data = d; });
   }
 
   function paintGallery() {
     if (!gal) return;
+    if (gal.dance) { paintDance(); return; }
     var d = gal.data, root = gal.root;
     var tray = document.getElementById('upload-tray');
     root.innerHTML = '';
@@ -1822,13 +1865,6 @@
     if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
 
     var shown = d.items.filter(function (i) { return i.kind !== 'audio'; });
-    var tracks = d.items.filter(function (i) { return i.kind === 'audio'; });
-    var tabs = [['media', t('gallery'), shown.length], ['music', t('music'), tracks.length + d.setlist.length]];
-    root.appendChild(h('div', { class: 'gal-tabs', role: 'tablist' }, tabs.map(function (tb) {
-      return h('button', { type: 'button', role: 'tab', class: gal.tab === tb[0] ? 'is-on' : '', 'aria-selected': gal.tab === tb[0] ? 'true' : 'false',
-        onclick: function () { gal.tab = tb[0]; paintGallery(); } }, tb[1], tb[2] ? h('span', { class: 'gal-n', text: tb[2] }) : null);
-    })));
-
     var body = h('div', { class: 'gal-body' });
     root.appendChild(body);
     var eid = gal.id;
@@ -1837,31 +1873,37 @@
     body.appendChild(bar);
     if (!canUpload) body.appendChild(h('p', { class: 'hint', text: t('storageOff') }));
 
-    if (gal.tab === 'media') {
-      if (canUpload) bar.appendChild(pickButton(t('addMedia'), 'image/*,video/*', function (files) { uploadFiles(files, eid, kindOf); }));
-      bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('addLink'), onclick: function () { linkSheet(eid); } }, icon('link', 2.2), h('span', { text: t('addLinkShort') })));
-      body.appendChild(h('p', { class: 'hint', text: t('videoHint') }));
-      var photos = shown.filter(function (i) { return i.kind === 'photo'; });
-      var clips = shown.filter(function (i) { return i.kind !== 'photo'; });
-      var viewable = photos.concat(clips).filter(function (i) { return i.kind !== 'link' || i.youtube; });
-      if (!shown.length) body.appendChild(emptyState('image', t('noMedia')));
-      [[t('photos'), photos], [t('videos'), clips]].forEach(function (sec) {
-        if (!sec[1].length) return;
-        body.appendChild(h('h3', { class: 'gal-sec' }, sec[0], h('span', { class: 'gal-n', text: sec[1].length })));
-        body.appendChild(h('div', { class: 'photogrid' }, sec[1].map(function (it) { return mediaTile(it, viewable); })));
-      });
-    } else {
-      if (canUpload) bar.appendChild(pickButton(t('addTrack'), 'audio/*', function (files) { uploadFiles(files, eid, function () { return 'audio'; }); }));
-      if (state.me.role === 'admin') bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', onclick: function () { setlistSheet(eid); } }, icon('music', 2), t('fromLibrary')));
-      if (!tracks.length && !d.setlist.length) body.appendChild(emptyState('music', t('noTracks')));
-      var songs = h('div', { class: 'songs' });
-      d.setlist.forEach(function (s) {
-        songs.appendChild(songRow(s, state.me.role === 'admin' ? [{ label: t('unlink'), icon: 'no', cls: 'danger', onclick: function () { setSong(eid, s.id, false).then(reloadMedia); } }] : null, t('fromLibraryTag')));
-      });
-      tracks.forEach(function (s) { songs.appendChild(songRow(s, itemActions(s))); });
-      body.appendChild(songs);
-    }
+    if (canUpload) bar.appendChild(pickButton(t('addMedia'), 'image/*,video/*', function (files) { uploadFiles(files, eid, kindOf); }));
+    bar.appendChild(h('button', { type: 'button', class: 'btn btn-sm', 'aria-label': t('addLink'), onclick: function () { linkSheet(eid); } }, icon('link', 2.2), h('span', { text: t('addLinkShort') })));
+    body.appendChild(h('p', { class: 'hint', text: t('videoHint') }));
+    var photos = shown.filter(function (i) { return i.kind === 'photo'; });
+    var clips = shown.filter(function (i) { return i.kind !== 'photo'; });
+    var viewable = photos.concat(clips).filter(function (i) { return i.kind !== 'link' || i.youtube; });
+    if (!shown.length) body.appendChild(emptyState('image', t('noMedia')));
+    [[t('photos'), photos], [t('videos'), clips]].forEach(function (sec) {
+      if (!sec[1].length) return;
+      body.appendChild(h('h3', { class: 'gal-sec' }, sec[0], h('span', { class: 'gal-n', text: sec[1].length })));
+      body.appendChild(h('div', { class: 'photogrid' }, sec[1].map(function (it) { return mediaTile(it, viewable); })));
+    });
     if (tray) root.appendChild(tray);
+  }
+  function paintDance() {
+    var list = gal.data, root = gal.root;
+    root.innerHTML = '';
+    root.appendChild(h('header', { class: 'gal-head' },
+      h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
+      h('div', { class: 'gal-title' }, h('b', { text: gal.dance }),
+        h('span', { class: 'card-meta', text: list ? plural(list.length, 'videoOne', 'videoMany') : t('danceVideos') }))));
+    if (!list) { root.appendChild(loader(t('mediaLoading'))); return; }
+    var body = h('div', { class: 'gal-body' });
+    root.appendChild(body);
+    if (!list.length) { body.appendChild(emptyState('play', t('noDanceVideos'))); return; }
+    var viewable = list.filter(function (i) { return i.kind !== 'link' || i.youtube; });
+    body.appendChild(h('div', { class: 'photogrid' }, list.map(function (it) {
+      return h('div', { class: 'dance-item' }, mediaTile(it, viewable),
+        h('span', { class: 'dance-gig' }, h('b', { text: evTitle({ title: it.event_title, event_type: it.event_type }) }),
+          it.event_date ? h('span', { class: 'card-meta', text: fmtDate(it.event_date) }) : null));
+    })));
   }
   function itemActions(it) {
     if (!it.can_edit) return null;
@@ -1917,42 +1959,13 @@
     pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
       e.preventDefault();
       api('/api/media', { method: 'POST', body: { action: 'link', event_id: eventId, url: url.value, title: title.value } })
-        .then(function () { pop.close(); toast(t('saved')); if (gal) gal.dirty = true; gal && (gal.tab = 'media'); return reloadMedia(); })
+        .then(function () { pop.close(); toast(t('saved')); if (gal) gal.dirty = true; return reloadMedia(); })
         .catch(function (x) { toast(x.message, true); });
     } }, h('label', { class: 'f full' }, h('span', { text: t('linkUrl') }), url),
       h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), title),
       h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t('add') }),
         h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
     url.focus();
-  }
-
-  function setSong(eventId, mediaId, on) {
-    return api('/api/media', { method: 'POST', body: { action: 'setlist', event_id: eventId, media_id: mediaId, on: on } })
-      .catch(function (e) { toast(e.message, true); });
-  }
-  function setlistSheet(eventId) {
-    var pop = popSheet(t('pickSongs'), t('pickSongsHint'));
-    var linked = {}; (gal && gal.data ? gal.data.setlist : []).forEach(function (s) { linked[s.id] = true; });
-    var changed = false;
-    function fill(songs) {
-      pop.body.innerHTML = '';
-      if (!songs.length) { pop.body.appendChild(h('p', { class: 'pop-msg', text: t('noLibrary') })); return; }
-      var list = h('div', { class: 'acts' });
-      songs.forEach(function (s) {
-        var row = h('button', { type: 'button', class: 'pop-toggle' + (linked[s.id] ? ' is-on' : ''), role: 'switch', 'aria-checked': linked[s.id] ? 'true' : 'false',
-          onclick: function () {
-            linked[s.id] = !linked[s.id]; changed = true;
-            row.classList.toggle('is-on', linked[s.id]); row.setAttribute('aria-checked', linked[s.id] ? 'true' : 'false');
-            setSong(eventId, s.id, linked[s.id]);
-          } }, icon('music', 2), h('span', { class: 'site-label', text: s.title || t('untitledSong') }), h('span', { class: 'switch' }));
-        list.appendChild(row);
-      });
-      pop.body.appendChild(list);
-      pop.body.appendChild(h('button', { type: 'button', class: 'btn btn-wide btn-gold', text: t('done'), onclick: function () { pop.close(); if (changed) reloadMedia(); } }));
-    }
-    pop.el.addEventListener('click', function (e) { if (e.target === pop.el && changed) reloadMedia(); });
-    var have = media.library;
-    if (have) fill(have); else loadMediaIndex().then(function () { fill(media.library); }, function (e) { toast(e.message, true); });
   }
 
   /* ── lightbox ──────────────────────────────────────────── */
@@ -2052,7 +2065,14 @@
       x.send(blob);
     });
   }
+  // iOS greys out audio files in the Files picker for a bare audio/*, and some browsers report no type at all.
+  var AUDIO_EXT = { mp3: 'audio/mpeg', m4a: 'audio/mp4', aac: 'audio/aac', wav: 'audio/wav', aif: 'audio/aiff', aiff: 'audio/aiff', flac: 'audio/flac', ogg: 'audio/ogg', oga: 'audio/ogg', opus: 'audio/ogg' };
+  var AUDIO_ACCEPT = 'audio/*,' + Object.keys(AUDIO_EXT).map(function (x) { return '.' + x; }).join(',');
   function uploadOne(file, kind, eventId, onProgress) {
+    if (kind === 'audio' && !/^audio\//.test(file.type)) {
+      var guess = AUDIO_EXT[(file.name.match(/\.([a-z0-9]+)$/i) || ['', ''])[1].toLowerCase()];
+      if (guess) file = new File([file], file.name, { type: guess });
+    }
     var prep = kind === 'photo' ? shrinkPhoto(file).catch(function () { return { blob: file }; }) : Promise.resolve({ blob: file });
     return prep.then(function (p) {
       var name = p.blob === file ? file.name : file.name.replace(/\.[^.]+$/, '') + '.jpg';

@@ -670,10 +670,13 @@ body.has-gal { overflow: hidden; }
 .gal-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gal-tabs { display: flex; gap: 0.3rem; padding: 0.55rem 0.9rem 0; flex-shrink: 0; border-bottom: 1px solid var(--hair); }
-.gal-tabs button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 0.8rem; min-height: 28px;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; }
-.gal-tabs button.is-on { color: var(--gold-light); border-color: var(--gold); }
+.dance-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.4rem; }
+.dance-chip { cursor: pointer; font: inherit; font-size: 0.82rem; min-height: 36px; }
+.dance-chip:hover, .dance-chip:focus-visible { border-color: var(--gold); color: var(--text); }
+.dance-chip svg { color: var(--gold-light); width: 11px; height: 11px; }
+.dance-item { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.dance-gig { display: flex; flex-direction: column; gap: 1px; padding: 0 0.15rem; min-width: 0; }
+.dance-gig b { font-weight: 500; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gal-n { font-size: 0.66rem; padding: 0 0.45em; border-radius: 999px; background: rgba(255,255,255,0.1); color: var(--text); letter-spacing: 0; }
 .gal-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0.9rem 0.9rem calc(5rem + var(--safe-b)); }
 .gal-body > * { max-width: 1100px; margin-left: auto; margin-right: auto; }

@@ -48,24 +48,32 @@ export default route({
     const base = { storage: storageReady(), usage: await usage(me) };
 
     if (q.library !== undefined) {
-      const rows = await sql(`SELECT * FROM media WHERE kind = 'audio' AND event_id IS NULL AND ready ORDER BY lower(title), id`);
+      // Includes tracks once attached to a gig, from before music moved to the library only.
+      const rows = await sql(`SELECT * FROM media WHERE kind = 'audio' AND ready ORDER BY lower(title), id`);
       return ok(res, { ...base, songs: rows.map((r) => toItem(r, me)) });
+    }
+
+    if (q.videos !== undefined) {
+      const rows = await sql(`SELECT m.*, e.title AS event_title, e.event_type, e.event_date, e.start_time, e.call_time
+        FROM media m JOIN events e ON e.id = m.event_id
+        WHERE m.kind IN ('video','link') AND m.ready AND e.status = ANY($1)
+        ORDER BY e.event_date DESC, m.created_at, m.id`, [MEMBER_VISIBLE]);
+      const videos = rows.filter((r) => me.role === 'admin' || galleryOpen(r))
+        .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date }));
+      return ok(res, { ...base, videos });
     }
 
     const eventId = int(q.event);
     if (eventId) {
       const event = await visibleEvent(eventId, me);
-      const rows = await sql('SELECT * FROM media WHERE event_id = $1 AND ready ORDER BY created_at, id', [eventId]);
-      const linked = await sql(`SELECT m.* FROM event_songs s JOIN media m ON m.id = s.media_id
-        WHERE s.event_id = $1 AND m.ready ORDER BY s.position, lower(m.title)`, [eventId]);
-      return ok(res, { ...base, event, items: rows.map((r) => toItem(r, me)), setlist: linked.map((r) => toItem(r, me)) });
+      const rows = await sql(`SELECT * FROM media WHERE event_id = $1 AND kind <> 'audio' AND ready ORDER BY created_at, id`, [eventId]);
+      return ok(res, { ...base, event, items: rows.map((r) => toItem(r, me)) });
     }
 
     const gigs = await sql(`
       SELECT e.id, e.title, e.event_type, e.event_date, e.start_time, e.call_time, e.status, e.venue, e.city,
         count(m.id) FILTER (WHERE m.kind = 'photo')::int AS photos,
         count(m.id) FILTER (WHERE m.kind IN ('video','link'))::int AS videos,
-        (count(m.id) FILTER (WHERE m.kind = 'audio') + (SELECT count(*) FROM event_songs s WHERE s.event_id = e.id))::int AS songs,
         (SELECT json_agg(x) FROM (SELECT c.kind, c.thumb_key, c.url FROM media c
           WHERE c.event_id = e.id AND c.ready AND ((c.kind = 'photo' AND c.thumb_key IS NOT NULL) OR (c.kind = 'link' AND c.url ~* '^https://([a-z]+\\.)?(youtube\\.com|youtube-nocookie\\.com|youtu\\.be)/'))
           ORDER BY c.id IS NOT DISTINCT FROM e.cover_media_id DESC, c.kind = 'photo' DESC, c.created_at DESC LIMIT 5) x) AS cover_rows
@@ -94,7 +102,7 @@ export default route({
         throw httpError(413, kind === 'video' ? 'This video is too big — put it on YouTube (unlisted) and add the link instead'
           : `Files like this can be up to ${Math.round(LIMITS[kind] / 1048576)} MB`);
       }
-      const eventId = int(b.event_id);
+      const eventId = kind === 'audio' ? null : int(b.event_id);
       if (eventId) await visibleEvent(eventId, me);
       else if (kind !== 'audio') throw httpError(400, 'Photos and videos belong to a gig');
       if (!storageReady()) throw httpError(503, 'Media storage is not set up yet');
@@ -166,19 +174,6 @@ export default route({
       }
       const ev = await one('UPDATE events SET cover_media_id = $2 WHERE id = $1 RETURNING id', [eventId, mediaId]);
       if (!ev) throw httpError(404, 'Gig not found');
-      return ok(res);
-    }
-
-    if (b.action === 'setlist') {
-      await requireAdmin(req);
-      const eventId = int(b.event_id); const mediaId = int(b.media_id);
-      const song = await one(`SELECT id FROM media WHERE id = $1 AND kind = 'audio' AND event_id IS NULL`, [mediaId]);
-      if (!eventId || !song) throw httpError(400, 'Pick a song from the library');
-      if (b.on === false) await sql('DELETE FROM event_songs WHERE event_id = $1 AND media_id = $2', [eventId, mediaId]);
-      else {
-        await sql(`INSERT INTO event_songs (event_id, media_id, position)
-          VALUES ($1, $2, (SELECT COALESCE(max(position), 0) + 1 FROM event_songs WHERE event_id = $1)) ON CONFLICT DO NOTHING`, [eventId, mediaId]);
-      }
       return ok(res);
     }
 
