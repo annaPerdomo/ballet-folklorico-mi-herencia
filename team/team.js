@@ -154,7 +154,7 @@
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners',
+      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
       youFamily: 'Your family', youNone: 'None — show as “the owners”', youSaved: 'Saved', titleLabel: 'Title',
       deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
@@ -305,7 +305,7 @@
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
-      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños',
+      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
       youFamily: 'Tu familia', youNone: 'Ninguna — mostrar como “los dueños”', youSaved: 'Guardado', titleLabel: 'Título',
       deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
@@ -1678,7 +1678,12 @@
   var gal = null;
   function plural(n, one, many) { return t(n === 1 ? one : many, { n: n }); }
   function fmtBytes(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : Math.max(1, Math.round(b / 1048576)) + ' MB'; }
-  function addedBy(it) { return t('addedBy', { who: it.uploader === 'owners' ? t('theOwners') : it.uploader }); }
+  function addedBy(it) {
+    var who = it.credit || (!it.uploader || it.uploader === 'owners' ? t('theOwners')
+      // "Cindy (Zamyra & Zaryna)" names people, not a surname, so it can't take "the … family".
+      : /\(/.test(it.uploader) ? it.uploader : t('theFamily', { name: it.uploader }));
+    return t('addedBy', { who: who });
+  }
   function loadMediaIndex() {
     if (!media.loading) {
       media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {

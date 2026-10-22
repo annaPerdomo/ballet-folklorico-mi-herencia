@@ -45,7 +45,7 @@ export function toItem(row, me) {
   const item = {
     id: row.id, kind: row.kind, title: row.title, note: row.note, event_id: row.event_id,
     mime: row.mime, bytes: Number(row.bytes) || 0, width: row.width, height: row.height,
-    uploader: row.uploader, created_at: row.created_at, can_edit: Boolean(mine), website: Boolean(row.website), suggested: Boolean(row.suggested),
+    uploader: row.uploader, credit: row.credit || null, created_at: row.created_at, can_edit: Boolean(mine), website: Boolean(row.website), suggested: Boolean(row.suggested),
   };
   if (row.kind === 'link') {
     item.url = row.url;
