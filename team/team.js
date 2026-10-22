@@ -150,7 +150,7 @@
       printShareMsg: 'Gig roster',
       tabMedia: 'Gallery', gallery: 'Photos & videos', galleryN: 'Photos & videos ({n})', mediaLoading: 'Loading the gallery…',
       storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
-      dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', noDanceVideos: 'No videos of this dance yet.',
+      dances: 'Dances', allDances: 'Show all {n} dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
@@ -301,7 +301,7 @@
       printShareMsg: 'Lista de eventos',
       tabMedia: 'Galería', gallery: 'Fotos y videos', galleryN: 'Fotos y videos ({n})', mediaLoading: 'Cargando la galería…',
       storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
-      dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', noDanceVideos: 'Todavía no hay videos de este baile.',
+      dances: 'Bailes', allDances: 'Ver los {n} bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
@@ -1629,7 +1629,7 @@
   }
 
   /* ── gallery & music ───────────────────────────────────── */
-  var media = { index: null, library: null, videos: null, loading: null, musicOpen: false };
+  var media = { index: null, library: null, videos: null, loading: null, musicOpen: false, dancesAll: false };
   /* Videos are matched to a dance by title ("Jarabe Tapatío - Arcadia Elks 5/8/26"); aliases catch spellings in use. */
   var DANCES = [
     ['Jarabe Tapatío', 'jarabe'], ['El Son de la Negra', 'son de la negra', 'la negra'], ['La Chona'], ['El Potro'],
@@ -1749,6 +1749,7 @@
   }
 
   function videosOf(dance) { return media.videos.filter(function (it) { return danceOf(it) === dance; }); }
+  var DANCES_SHOWN = 6;
   function renderDances() {
     if (!media.videos) return;
     var counts = {};
@@ -1758,10 +1759,15 @@
     if (!names.length) return;
     app.appendChild(section(t('dances'), names.length));
     app.appendChild(h('p', { class: 'hint', text: t('dancesHint') }));
-    app.appendChild(h('div', { class: 'dance-chips' }, names.map(function (n) {
-      return h('button', { type: 'button', class: 'chip dance-chip', onclick: function () { openGallery(null, n); } },
-        icon('play', 2.4), h('span', { text: n }), h('span', { class: 'gal-n', text: counts[n] }));
-    })));
+    var capped = !media.dancesAll && names.length > DANCES_SHOWN + 1;
+    app.appendChild(h('div', { class: 'dance-chips' + (capped ? ' is-capped' : '') }, names.map(function (n, i) {
+      return h('button', { type: 'button', class: 'chip dance-chip' + (i >= DANCES_SHOWN ? ' is-extra' : ''), onclick: function () { openGallery(null, n); } },
+        icon('play', 2.4), h('span', { class: 'dance-name', text: n }), h('span', { class: 'gal-n', text: counts[n] }));
+    }), capped ? h('button', { type: 'button', class: 'dance-more', text: t('allDances', { n: names.length }),
+      onclick: function () {
+        media.dancesAll = true; render();
+        var first = app.querySelectorAll('.dance-chip')[DANCES_SHOWN]; if (first) first.focus();
+      } }) : null));
   }
 
   function renderReview(list) {
