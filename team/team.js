@@ -173,6 +173,7 @@
       webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webBadge: 'On bfmh.dance',
       webOn: 'Now on bfmh.dance — it shows up within a few minutes', webOff: 'Removed from bfmh.dance',
       webSuggest: 'Suggest for bfmh.dance', webWithdraw: 'Withdraw suggestion', webApprove: 'Approve for bfmh.dance', webPending: 'Waiting for an owner’s OK',
+      lbShow: 'Show on site', lbHide: 'Hide from site', lbSuggest: 'Suggest for site', lbWithdraw: 'Withdraw',
       webSuggested: 'Suggested — an owner will look at it before it goes on bfmh.dance',
       reviewTitle: 'Waiting for your OK', reviewHint: 'Families suggested these for bfmh.dance. Nothing goes public until you approve it.',
       approve: 'Approve', webDeclined: 'Kept off bfmh.dance',
@@ -327,6 +328,7 @@
       webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webBadge: 'En bfmh.dance',
       webOn: 'Ya está en bfmh.dance; aparece en unos minutos', webOff: 'Se quitó de bfmh.dance',
       webSuggest: 'Sugerir para bfmh.dance', webWithdraw: 'Retirar sugerencia', webApprove: 'Aprobar para bfmh.dance', webPending: 'Esperando el visto bueno de un dueño',
+      lbShow: 'Mostrar en web', lbHide: 'Quitar de web', lbSuggest: 'Sugerir para web', lbWithdraw: 'Retirar',
       webSuggested: 'Sugerido; un dueño lo revisará antes de ponerlo en bfmh.dance',
       reviewTitle: 'Esperando tu visto bueno', reviewHint: 'Las familias sugirieron esto para bfmh.dance. Nada se publica hasta que lo apruebes.',
       approve: 'Aprobar', webDeclined: 'No se pondrá en bfmh.dance',
@@ -1721,6 +1723,12 @@
     if (st === 'suggested') return isOwner() ? t('webApprove') : t('webWithdraw');
     return isOwner() ? t('webShow') : t('webSuggest');
   }
+  function webShortLabel(it) {
+    var st = webState(it);
+    if (st === 'on') return t('lbHide');
+    if (st === 'suggested') return isOwner() ? t('approve') : t('lbWithdraw');
+    return isOwner() ? t('lbShow') : t('lbSuggest');
+  }
   function webToggle(it) { return setWebsite(it, isOwner() ? !it.website : !(it.website || it.suggested)); }
   function mediaWebAction(it) {
     if (!it.can_edit || it.kind === 'audio' || (it.kind === 'photo' && !it.thumb)) return null;
@@ -2219,7 +2227,7 @@
       count.textContent = (i + 1) + ' / ' + items.length; who.textContent = [it.title, addedBy(it)].filter(Boolean).join(' · ');
       dl.href = it.download || it.url; del.hidden = !it.can_edit;
       web.hidden = !mediaWebAction(it); web.classList.toggle('is-on', !!it.website); web.classList.toggle('is-pending', !it.website && !!it.suggested);
-      web.lastChild.textContent = webLabel(it);
+      web.lastChild.textContent = webShortLabel(it); web.title = webLabel(it);
       var next = items[(i + 1) % items.length]; if (next && next.kind === 'photo') { var pre = new Image(); pre.src = next.url; }
     }
     var x0 = null;
