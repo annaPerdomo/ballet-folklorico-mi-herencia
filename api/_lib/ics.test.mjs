@@ -93,4 +93,6 @@ test('galleryOpen waits for the gig to start in Pacific time', () => {
   assert.equal(galleryOpen({ event_date: '2026-10-24' }, at('2026-10-24T06:59:00Z')), false);
   assert.equal(galleryOpen({ event_date: '2026-10-24' }, at('2026-10-24T07:00:00Z')), true);
   assert.equal(galleryOpen({ event_date: null }, at('2030-01-01T00:00:00Z')), false);
+  assert.equal(galleryOpen({ status: 'folder', event_date: null }), true);
+  assert.equal(galleryOpen({ status: 'folder', event_date: '2099-01-01' }), true);
 });

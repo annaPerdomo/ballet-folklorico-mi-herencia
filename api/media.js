@@ -2,14 +2,14 @@ import crypto from 'node:crypto';
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
 import { requireUser, requireAdmin } from './_lib/auth.js';
 import { sql, one } from './_lib/db.js';
-import { MEMBER_VISIBLE } from './_lib/events.js';
+import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
 import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
-  if (!ev || (me.role !== 'admin' && !MEMBER_VISIBLE.includes(ev.status))) throw httpError(404, 'Gig not found');
+  if (!ev || (me.role !== 'admin' && !GALLERY_VISIBLE.includes(ev.status))) throw httpError(404, 'Gig not found');
   // Owners bypass: a gig with media that gets moved later would otherwise lock its files away.
   if (!galleryOpen(ev) && me.role !== 'admin') throw httpError(403, 'This gig’s gallery opens when the gig starts');
   return ev;
@@ -55,10 +55,10 @@ export default route({
     }
 
     if (q.videos !== undefined) {
-      const rows = await sql(`SELECT m.*, e.title AS event_title, e.event_type, e.event_date, e.start_time, e.call_time
+      const rows = await sql(`SELECT m.*, e.title AS event_title, e.event_type, e.event_date, e.start_time, e.call_time, e.status
         FROM media m JOIN events e ON e.id = m.event_id
         WHERE m.kind IN ('video','link') AND m.ready AND e.status = ANY($1)
-        ORDER BY e.event_date DESC, m.created_at, m.id`, [MEMBER_VISIBLE]);
+        ORDER BY e.event_date DESC NULLS LAST, m.created_at, m.id`, [GALLERY_VISIBLE]);
       const videos = rows.filter((r) => me.role === 'admin' || galleryOpen(r))
         .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date }));
       return ok(res, { ...base, videos });
@@ -79,8 +79,8 @@ export default route({
           WHERE c.event_id = e.id AND c.ready AND ((c.kind = 'photo' AND c.thumb_key IS NOT NULL) OR (c.kind = 'link' AND c.url ~* '^https://([a-z]+\\.)?(youtube\\.com|youtube-nocookie\\.com|youtu\\.be)/'))
           ORDER BY c.id IS NOT DISTINCT FROM e.cover_media_id DESC, c.kind = 'photo' DESC, c.created_at DESC LIMIT 5) x) AS cover_rows
       FROM events e LEFT JOIN media m ON m.event_id = e.id AND m.ready
-      WHERE e.status = ANY($1) AND e.event_date <= current_date + 1
-      GROUP BY e.id ORDER BY e.event_date DESC, e.id DESC`, [MEMBER_VISIBLE]);
+      WHERE e.status = ANY($1) AND (e.status = 'folder' OR e.event_date <= current_date + 1)
+      GROUP BY e.id ORDER BY e.event_date DESC NULLS FIRST, e.id DESC`, [GALLERY_VISIBLE]);
     const review = me.role === 'admin'
       ? (await sql(`SELECT m.*, e.title AS event_title, e.event_date FROM media m JOIN events e ON e.id = m.event_id
           WHERE m.suggested AND NOT m.website AND m.ready ORDER BY m.created_at`)).map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_date: r.event_date }))

@@ -23,7 +23,7 @@ export default route({
     const media = (await sql(
       `SELECT m.id, m.kind, m.title, m.url, m.storage_key, m.thumb_key, m.width, m.height, m.event_id
          FROM media m JOIN events e ON e.id = m.event_id
-        WHERE m.website AND m.ready AND m.kind IN ('photo','video','link') AND e.status IN ('confirmed','done','open')
+        WHERE m.website AND m.ready AND m.kind IN ('photo','video','link') AND e.status IN ('confirmed','done','open','folder')
         ORDER BY e.event_date DESC NULLS LAST, m.created_at DESC LIMIT 200`)).map(publicItem).filter(Boolean);
     const byEvent = {};
     media.forEach((m) => { (byEvent[m.event_id] = byEvent[m.event_id] || []).push(m); });

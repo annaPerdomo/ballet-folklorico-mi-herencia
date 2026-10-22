@@ -82,6 +82,7 @@ export default route({
 
     let notified = null;
     const action = str(body.action, 20);
+    if (action && current.status === 'folder') throw httpError(400, 'Folders have no gig actions');
     if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));

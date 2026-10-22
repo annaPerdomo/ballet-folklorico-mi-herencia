@@ -3,6 +3,8 @@ import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOp
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled'];
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
+// A folder is a gallery-only event: never in Gigs, calendars or GroupMe.
+export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder'];
 
 const ADMIN_COLS = `e.*`;
 // Pay is deliberately absent from MEMBER_COLS: what a gig pays is the owners' business.
@@ -19,7 +21,7 @@ const AVAIL_JSON = `
 
 export async function listEvents({ admin, includePast = false }) {
   const where = admin
-    ? (includePast ? 'TRUE' : `(e.status IN ('inquiry','open','confirmed') OR e.updated_at > now() - interval '60 days')`)
+    ? (includePast ? `e.status <> 'folder'` : `(e.status IN ('inquiry','open','confirmed') OR (e.status <> 'folder' AND e.updated_at > now() - interval '60 days'))`)
     : `e.status = ANY($1) AND (e.event_date IS NULL OR e.event_date >= current_date - 14)`;
   const params = admin ? [] : [MEMBER_VISIBLE];
   const rows = await sql(

@@ -152,7 +152,10 @@
       storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
       dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
-      gigGalleries: 'Gig galleries', noGalleryGigs: 'No gigs yet.', nothingYet: 'Nothing yet — be the first to add something',
+      gigGalleries: 'Gig & event galleries', noGalleryGigs: 'No gigs yet.',
+      newFolder: 'New folder', folderHint: 'For photos and videos from group events that aren’t gigs — a posada, a trip, a practice. It won’t show in Gigs or calendars.',
+      folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
+      deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
@@ -303,7 +306,10 @@
       storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
       dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
-      gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
+      gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.',
+      newFolder: 'Nueva carpeta', folderHint: 'Para fotos y videos de eventos del grupo que no son presentaciones: una posada, un viaje, un ensayo. No aparece en Eventos ni en los calendarios.',
+      folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
+      deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
@@ -377,6 +383,7 @@
   }
   function fmtTime(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
   function fmtWhere(ev) { return [ev.venue, ev.city].filter(Boolean).join(' · '); }
+  function todayIso() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
   function isPast(ev) { var d = parseDate(ev.event_date); return d && d < new Date(new Date().setHours(0, 0, 0, 0)); }
   function newestFirst(a, b) { return (b.event_date || '').localeCompare(a.event_date || ''); }
   function typeLabel(k) { return t('types')[k] || k; }
@@ -1744,7 +1751,10 @@
     renderDances();
     renderMusic(idx.storage);
 
-    foldSection('gigs', t('gigGalleries'), idx.gigs.length, true, !idx.gigs.length ? emptyState('image', t('noGalleryGigs'))
+    foldSection('gigs', t('gigGalleries'), idx.gigs.length, true,
+      isOwner() ? h('button', { type: 'button', class: 'btn btn-sm btn-icon btn-gold sec-add', 'aria-label': t('newFolder'), title: t('newFolder'),
+        onclick: function (e) { e.preventDefault(); e.stopPropagation(); folderSheet(null); } }, icon('plus', 2.5)) : null,
+      !idx.gigs.length ? emptyState('image', t('noGalleryGigs'))
       : h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
         var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null]
           .filter(Boolean).join(' · ');
@@ -1752,7 +1762,7 @@
           h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? h('img', { src: g.cover, alt: '', loading: 'lazy' }) : icon('image', 1.5)),
           h('span', { class: 'galcard-text' },
             h('b', { text: evTitle(g) }),
-            h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }),
+            g.event_date || g.status !== 'folder' ? h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }) : null,
             h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
       })));
 
@@ -1767,17 +1777,17 @@
 
   function renderMusic(storage) {
     var songs = media.library;
-    foldSection('music', t('musicLibrary'), songs.length, false,
+    foldSection('music', t('musicLibrary'), songs.length, false, null,
       storage ? h('div', { class: 'music-add' },
         pickButton(t('addSongs'), AUDIO_ACCEPT, function (files) { uploadFiles(files, null, function () { return 'audio'; }); })) : null,
       !songs.length ? emptyState('music', t('noSongs'))
         : h('div', { class: 'songs' }, songs.map(function (s) { return songRow(s, libraryActions(s)); })));
   }
-  function foldSection(key, label, count, openByDefault) {
-    var sec = section(label, count || null);
+  function foldSection(key, label, count, openByDefault, extra) {
+    var sec = section(label, count || null, extra);
     sec.className += ' tm-sec-fold';
     var det = h('details', { class: 'tm-fold gal-fold', ontoggle: function () { media.open[key] = det.open; } },
-      h('summary', { class: 'tm-fold-summary' }, sec), Array.prototype.slice.call(arguments, 4));
+      h('summary', { class: 'tm-fold-summary' }, sec), Array.prototype.slice.call(arguments, 5));
     det.open = key in media.open ? media.open[key] : openByDefault;
     app.appendChild(det);
   }
@@ -1789,7 +1799,7 @@
     media.videos.forEach(function (it) { var d = danceOf(it); if (d) counts[d] = (counts[d] || 0) + 1; });
     var names = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b, state.lang); });
     if (!names.length) return;
-    foldSection('dances', t('dances'), names.length, false,
+    foldSection('dances', t('dances'), names.length, false, null,
       h('p', { class: 'hint', text: t('dancesHint') }),
       h('div', { class: 'dance-chips' }, names.map(function (n) {
         return h('button', { type: 'button', class: 'chip dance-chip', onclick: function () { openGallery(null, n); } },
@@ -1913,7 +1923,9 @@
       h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
       h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('gallery') }),
         h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' })),
-      d && isOwner() && d.items.some(coverable) ? h('button', { type: 'button', class: 'btn btn-sm gal-cover-btn', onclick: function () { coverSheet(d); } }, icon('image', 2), h('span', { text: t('cover') })) : null));
+      d && isOwner() && d.items.some(coverable) ? h('button', { type: 'button', class: 'btn btn-sm gal-cover-btn', onclick: function () { coverSheet(d); } }, icon('image', 2), h('span', { text: t('cover') })) : null,
+      d && isOwner() && d.event.status === 'folder' ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('folderMenu'),
+        onclick: function () { folderActions(d.event); } }, icon('more', 2)) : null));
     if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
 
     var shown = d.items.filter(function (i) { return i.kind !== 'audio'; });
@@ -1984,6 +1996,37 @@
       webBadge(it), more);
   }
 
+  function folderSheet(ev) {
+    var pop = popSheet(t(ev ? 'editFolder' : 'newFolder'), ev ? null : t('folderHint'));
+    var title = h('input', { value: ev ? ev.title || '' : '', placeholder: t('folderTitlePh'), 'aria-label': t('titleLabel'), maxlength: 300, required: true });
+    var date = h('input', { type: 'date', value: ev ? ev.event_date || '' : todayIso(), 'aria-label': t('dateLabel') });
+    pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault();
+      var body = { title: title.value.trim(), event_date: date.value || null };
+      var req = ev ? api('/api/events/' + ev.id, { method: 'PATCH', body: body })
+        : api('/api/events', { method: 'POST', body: Object.assign({ status: 'folder', event_type: 'team' }, body) });
+      req.then(function (r) {
+        pop.close(); toast(t('saved'));
+        if (ev) return reloadMedia();
+        return loadMediaIndex().then(function () { if (isMediaTab()) render(); openGallery(r.id); });
+      }).catch(function (x) { toast(x.message, true); });
+    } }, h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), title),
+      h('label', { class: 'f full' }, h('span', { text: t('dateLabel') }), date),
+      h('p', { class: 'hint full', text: t('folderDateHint') }),
+      h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t(ev ? 'save' : 'add') }),
+        h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
+    title.focus();
+  }
+  function folderActions(ev) {
+    actionSheet(evTitle(ev), [{ label: t('editFolder'), icon: 'edit', onclick: function () { folderSheet(ev); } },
+      { label: t('deleteFolder'), icon: 'trash', cls: 'danger', onclick: function () {
+        confirmSheet(t('deleteFolderAsk'), t('del'), true).then(function (yes) {
+          if (!yes) return;
+          api('/api/events/' + ev.id, { method: 'DELETE' }).then(function () { toast(t('deleted')); closeGallery(); })
+            .catch(function (e) { toast(e.message, true); });
+        });
+      } }]);
+  }
   function coverable(it) { return (it.kind === 'photo' && it.thumb) || !!it.youtube; }
   function coverSheet(d) {
     var pop = popSheet(t('coverTitle'), t('coverHint'));

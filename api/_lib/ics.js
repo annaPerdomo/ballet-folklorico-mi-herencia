@@ -40,6 +40,7 @@ function utcMs(dateStr, time) {
 }
 
 export function galleryOpen(ev, now = Date.now()) {
+  if (ev && ev.status === 'folder') return true;
   if (!ev || !ev.event_date) return false;
   const ms = utcMs(ev.event_date, ev.start_time || ev.call_time);
   return ms != null && ms <= now;
