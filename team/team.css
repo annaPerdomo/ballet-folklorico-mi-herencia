@@ -10,6 +10,9 @@
   --safe-b: env(safe-area-inset-bottom, 0px); --safe-t: env(safe-area-inset-top, 0px);
   --tap: 48px;
 }
+/* iOS blurs a band below the status bar in the installed app, deeper than the inset. 16px is by eye;
+   min() keeps it off installs with no status-bar inset (desktop, Android, iPhone landscape). */
+@media (display-mode: standalone) { :root { --safe-t: calc(env(safe-area-inset-top, 0px) + min(16px, env(safe-area-inset-top, 0px))); } }
 * { box-sizing: border-box; }
 html { color-scheme: dark; }
 /* The page itself never moves: the shell is locked to the viewport and only .tm-main scrolls,
