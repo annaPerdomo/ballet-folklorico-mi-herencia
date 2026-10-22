@@ -78,6 +78,9 @@
         "cross1": "Folclórico para bodas",
         "cross2": "Guía de precios",
         "cross3": "Clases de danza",
+        "cross4": "Folclórico para Día de los Muertos",
+        "cross5": "Folclórico para Cinco de Mayo",
+        "cross6": "Mes de la Herencia Hispana",
         "shared.cta.getQuote": "Obtén una cotización gratis",
         "shared.cta.watch": "Míranos bailar",
         "shared.cta.checkDate": "Consulta tu fecha",
@@ -148,6 +151,9 @@
         "cross1": "結婚式向けフォルクローリコ",
         "cross2": "料金ガイド",
         "cross3": "ダンス教室",
+        "cross4": "死者の日のフォルクローリコ",
+        "cross5": "シンコ・デ・マヨのフォルクローリコ",
+        "cross6": "ヒスパニック文化遺産月間",
         "shared.cta.getQuote": "無料お見積もりを取る",
         "shared.cta.watch": "踊る様子を見る",
         "shared.cta.checkDate": "空き状況を確認",
@@ -218,6 +224,9 @@
         "cross1": "婚礼民俗舞",
         "cross2": "价格指南",
         "cross3": "舞蹈课程",
+        "cross4": "亡灵节民俗舞",
+        "cross5": "五月五日节民俗舞",
+        "cross6": "西班牙裔传统月",
         "shared.cta.getQuote": "获取免费报价",
         "shared.cta.watch": "观看我们的舞蹈",
         "shared.cta.checkDate": "查询您的日期",
@@ -288,6 +297,9 @@
         "cross1": "婚禮民俗舞",
         "cross2": "價格指南",
         "cross3": "舞蹈課程",
+        "cross4": "亡靈節民俗舞",
+        "cross5": "五月五日節民俗舞",
+        "cross6": "西班牙裔傳統月",
         "shared.cta.getQuote": "獲取免費報價",
         "shared.cta.watch": "觀看我們的舞蹈",
         "shared.cta.checkDate": "查詢您的日期",
@@ -343,7 +355,10 @@
         "form.msgPh": "Lugar, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
         "cross1": "Folklórico para quinceañeras",
         "cross2": "Guía de precios",
-        "cross3": "Clases de baile"
+        "cross3": "Clases de baile",
+        "cross4": "Folklórico para Día de los Muertos",
+        "cross5": "Folklórico para Cinco de Mayo",
+        "cross6": "Mes de la Herencia Hispana"
       },
       "ja": {
         "meta.title": "結婚式のフォルクローリコダンサー | ロサンゼルス・南カリフォルニア",
@@ -393,7 +408,10 @@
         "form.msgPh": "会場、おおよそのゲスト数、公演してほしい瞬間など…",
         "cross1": "キンセアニェーラのフォルクローリコ",
         "cross2": "料金ガイド",
-        "cross3": "ダンス教室"
+        "cross3": "ダンス教室",
+        "cross4": "死者の日のフォルクローリコ",
+        "cross5": "シンコ・デ・マヨのフォルクローリコ",
+        "cross6": "ヒスパニック文化遺産月間"
       },
       "zh": {
         "meta.title": "婚礼墨西哥民俗舞蹈演出 | 洛杉矶及南加州",
@@ -443,7 +461,10 @@
         "form.msgPh": "场地、大致来宾人数，以及您希望我们表演的时刻……",
         "cross1": "成人礼（Quinceañera）民俗舞蹈",
         "cross2": "价格指南",
-        "cross3": "舞蹈课程"
+        "cross3": "舞蹈课程",
+        "cross4": "亡灵节民俗舞",
+        "cross5": "五月五日节民俗舞",
+        "cross6": "西班牙裔传统月"
       },
       "zht": {
         "meta.title": "婚禮墨西哥民俗舞蹈演出 | 洛杉磯及南加州",
@@ -493,7 +514,10 @@
         "form.msgPh": "場地、大致來賓人數，以及您希望我們表演的時刻……",
         "cross1": "成年禮（Quinceañera）民俗舞蹈",
         "cross2": "價格指南",
-        "cross3": "舞蹈課程"
+        "cross3": "舞蹈課程",
+        "cross4": "亡靈節民俗舞",
+        "cross5": "五月五日節民俗舞",
+        "cross6": "西班牙裔傳統月"
       }
     },
     "pricing": {
@@ -557,7 +581,10 @@
         "form.msgPh": "p. ej. 26 de sept. en Whittier, salón de banquetes, ~150 invitados, pensando en 2–3 bailes…",
         "cross1": "Folklórico para quinceañeras",
         "cross2": "Bodas",
-        "cross3": "Clases de baile"
+        "cross3": "Clases de baile",
+        "cross4": "Folklórico para Día de los Muertos",
+        "cross5": "Folklórico para Cinco de Mayo",
+        "cross6": "Mes de la Herencia Hispana"
       },
       "ja": {
         "meta.title": "フォルクローリコのダンサーを雇う費用は? | 料金ガイド — ロサンゼルス",
@@ -619,7 +646,10 @@
         "form.msgPh": "例: 9月26日、Whittierの宴会場、ゲスト約150名、2〜3曲を検討中…",
         "cross1": "quinceañera向けフォルクローリコ",
         "cross2": "結婚式",
-        "cross3": "ダンスクラス"
+        "cross3": "ダンスクラス",
+        "cross4": "死者の日のフォルクローリコ",
+        "cross5": "シンコ・デ・マヨのフォルクローリコ",
+        "cross6": "ヒスパニック文化遺産月間"
       },
       "zh": {
         "meta.title": "聘请墨西哥民俗舞舞者要多少钱? | 价格指南 — 洛杉矶",
@@ -681,7 +711,10 @@
         "form.msgPh": "例如: 9月26日在Whittier,宴会厅,约150位宾客,考虑2–3支舞蹈…",
         "cross1": "quinceañera民俗舞",
         "cross2": "婚礼",
-        "cross3": "舞蹈课程"
+        "cross3": "舞蹈课程",
+        "cross4": "亡灵节民俗舞",
+        "cross5": "五月五日节民俗舞",
+        "cross6": "西班牙裔传统月"
       },
       "zht": {
         "meta.title": "聘請墨西哥民俗舞舞者要多少錢? | 價格指南 — 洛杉磯",
@@ -743,7 +776,10 @@
         "form.msgPh": "例如: 9月26日在Whittier,宴會廳,約150位賓客,考慮2–3支舞蹈…",
         "cross1": "quinceañera民俗舞",
         "cross2": "婚禮",
-        "cross3": "舞蹈課程"
+        "cross3": "舞蹈課程",
+        "cross4": "亡靈節民俗舞",
+        "cross5": "五月五日節民俗舞",
+        "cross6": "西班牙裔傳統月"
       }
     },
     "dance-classes": {
@@ -798,7 +834,10 @@
         "form.submit": "Reservar mis sesiones gratis",
         "cross1": "Folclórico para quinceañeras",
         "cross2": "Bodas",
-        "cross3": "Guía de precios"
+        "cross3": "Guía de precios",
+        "cross4": "Folclórico para Día de los Muertos",
+        "cross5": "Folclórico para Cinco de Mayo",
+        "cross6": "Mes de la Herencia Hispana"
       },
       "ja": {
         "meta.title": "フォルクローリコダンス教室 | 子ども・ティーン・大人向けレッスン — Hacienda Heights, CA",
@@ -851,7 +890,10 @@
         "form.submit": "無料レッスンを予約する",
         "cross1": "キンセアニェーラ向けフォルクローリコ",
         "cross2": "結婚式",
-        "cross3": "料金ガイド"
+        "cross3": "料金ガイド",
+        "cross4": "死者の日のフォルクローリコ",
+        "cross5": "シンコ・デ・マヨのフォルクローリコ",
+        "cross6": "ヒスパニック文化遺産月間"
       },
       "zh": {
         "meta.title": "墨西哥民俗舞蹈课程 | 儿童、青少年及成人班 — Hacienda Heights, CA",
@@ -904,7 +946,10 @@
         "form.submit": "预约我的免费课程",
         "cross1": "quinceañera民俗舞",
         "cross2": "婚礼",
-        "cross3": "价格指南"
+        "cross3": "价格指南",
+        "cross4": "亡灵节民俗舞",
+        "cross5": "五月五日节民俗舞",
+        "cross6": "西班牙裔传统月"
       },
       "zht": {
         "meta.title": "墨西哥民俗舞蹈課程 | 兒童、青少年及成人班 — Hacienda Heights, CA",
@@ -957,17 +1002,176 @@
         "form.submit": "預約我的免費課程",
         "cross1": "quinceañera民俗舞",
         "cross2": "婚禮",
-        "cross3": "價格指南"
+        "cross3": "價格指南",
+        "cross4": "亡靈節民俗舞",
+        "cross5": "五月五日節民俗舞",
+        "cross6": "西班牙裔傳統月"
       }
     },
     "dia-de-los-muertos": {
-      "es": {}
+      "es": {
+        "meta.title": "Bailarines de folclórico para Día de los Muertos | LA y OC",
+        "meta.description": "Bailarines de folclórico para el Día de los Muertos. Danza mexicana para festivales, iglesias y empresas en el sur de California. Cotizaciones gratis.",
+        "meta.ogTitle": "Bailarines de Día de los Muertos | Ballet Folklórico Mi Herencia",
+        "meta.ogDescription": "Folclórico en vivo para festivales de Día de los Muertos, carnavales de iglesia y celebraciones de empresa. Con sede en Hacienda Heights, al servicio de todo el sur de California.",
+        "bc": "Folclórico para Día de los Muertos",
+        "nav3": "La presentación",
+        "hero.h1": "Bailarines de folclórico para el &lt;em&gt;Día de los Muertos&lt;/em&gt; en Los Ángeles y OC",
+        "hero.lede": "Festivales municipales y en parques, carnavales de iglesia y empresas de Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange contratan a Ballet Folklórico Mi Herencia para celebrar el Día de los Muertos. Llevamos danza folclórica mexicana tradicional en vivo, con vestuario lleno de color, incluyendo la Danza de los Viejitos de Michoacán.",
+        "hero.trust": "Calificación 5.0 en &lt;a href=\"https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w\" target=\"_blank\" rel=\"noopener noreferrer\"&gt;GigSalad&lt;/a&gt; · Con sede en Hacienda Heights · Viajamos",
+        "s1.label": "Temporada de recuerdo",
+        "s1.heading": "Quién nos contrata para el Día de los Muertos.",
+        "s1.card1t": "Festivales y parques",
+        "s1.card1d": "Festivales de Día de los Muertos de ciudades y condados, desde presentaciones en el escenario principal hasta días de actividades familiares.",
+        "s1.card2t": "Iglesias y comunidad",
+        "s1.card2d": "Festivales de la cosecha y carnavales que combinan el folclórico con las tradiciones de la temporada.",
+        "s1.card3t": "Empresas y centros comerciales",
+        "s1.card3d": "Celebraciones de oficina, eventos en centros comerciales, y altares y fiestas familiares.",
+        "s1.where": "Hemos bailado para el Día de los Muertos en Heritage Park en Santa Fe Springs, Bella Terra en Huntington Beach y el festival de la cosecha de la iglesia St. John Vianney en Hacienda Heights, y este año bailaremos en Hollywood Forever Cemetery en Los Ángeles.",
+        "s2.label": "La presentación",
+        "s2.heading": "Qué esperar el día del evento.",
+        "s2.li1": "&lt;strong&gt;Presentaciones de 15 a 30 minutos&lt;/strong&gt;: a menudo una o dos presentaciones cortas, con 3 a 8 bailarines según tu evento.",
+        "s2.li2": "&lt;strong&gt;Danza de los Viejitos&lt;/strong&gt;: esta danza de Michoacán es una de las favoritas del Día de los Muertos, junto con danzas de Jalisco, Veracruz y otras regiones.",
+        "s2.li3": "&lt;strong&gt;Necesitas un espacio plano de 12x12 pies&lt;/strong&gt;: además de un enchufe para nuestra bocina o el uso de tu propio sistema de sonido, y un área para cambiarnos.",
+        "s2.li4": "&lt;strong&gt;Viajamos por todo el sur de California&lt;/strong&gt;: Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "s2.li5": "&lt;strong&gt;Reserva con 6 a 8 semanas de anticipación&lt;/strong&gt;: esta es una de nuestras temporadas más ocupadas, aunque siempre intentaremos atender fechas de último momento.",
+        "s2.li6": "&lt;strong&gt;El precio depende de tu fecha y la duración de la presentación&lt;/strong&gt;: consulta nuestra &lt;a href=\"/pricing/\"&gt;guía de precios&lt;/a&gt; para conocer los rangos.",
+        "faq.label": "Preguntas frecuentes",
+        "faq.heading": "Preguntas para reservar el Día de los Muertos.",
+        "faq1.q": "¿Con cuánta anticipación debemos reservar para el Día de los Muertos?",
+        "faq1.a": "El Día de los Muertos es una de nuestras temporadas más ocupadas, así que recomendamos reservar con 6 a 8 semanas de anticipación. Para fechas de último momento, escríbenos de todos modos: haremos todo lo posible por atenderte.",
+        "faq2.q": "¿Pueden presentarse al aire libre, como en un parque o un evento en un cementerio?",
+        "faq2.a": "Sí. Nos presentamos tanto al aire libre como en interiores. Solo necesitamos un espacio plano de aproximadamente 12x12 pies y, si usamos nuestra bocina, un enchufe cerca.",
+        "faq3.q": "¿Pueden bailar con una banda de mariachi en vivo o con la música de nuestro DJ?",
+        "faq3.a": "Sí. Coordinamos con regularidad con una banda de mariachi en vivo, un DJ o el sistema de sonido propio de tu evento. Solo avísanos al reservar.",
+        "faq4.q": "¿Pueden incluir una breve introducción educativa sobre las tradiciones del Día de los Muertos?",
+        "faq4.a": "Sí. Podemos abrir con una breve explicación, apta para toda la familia, de las tradiciones de esta celebración y de las danzas antes de presentarnos, un bonito detalle para un público mixto.",
+        "faq5.q": "¿Cuántos bailarines se presentan y cuánto dura el show?",
+        "faq5.a": "La mayoría de las reservas duran de 15 a 30 minutos con 3 a 8 bailarines, a menudo como una o dos presentaciones cortas. Cuéntanos sobre tu evento y te recomendaremos cuántos bailarines y qué danzas.",
+        "faq6.q": "¿Cuándo están disponibles?",
+        "faq6.a": "Tardes y fines de semana todo el año, y entre semana por la tarde para eventos de empresa. Nuestros bailarines trabajan y estudian durante el día, así que las presentaciones entre semana en horario de día (incluidas las asambleas escolares) rara vez son posibles. Si tu evento es entre semana por la tarde o en fin de semana, pregúntanos.",
+        "form.label": "Consulta tu fecha",
+        "form.heading": "Obtén una cotización gratis para el Día de los Muertos.",
+        "form.lede": "Cuéntanos tu fecha, ciudad y lugar del evento, y te responderemos en 1 o 2 días hábiles con una cotización personalizada. ¿Prefieres el correo? Escríbenos a &lt;a href=\"mailto:balletfolkloricomiherencia@gmail.com\" style=\"color:var(--gold-light);\"&gt;balletfolkloricomiherencia@gmail.com&lt;/a&gt;.",
+        "form.legend": "Lleva el Día de los Muertos a tu evento",
+        "form.dateLabel": "Fecha y ciudad del evento",
+        "form.datePh": "p. ej. 1 de nov. — Pomona",
+        "form.msgLabel": "Cuéntanos sobre tu evento (opcional)",
+        "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
+        "cross1": "Folclórico para Cinco de Mayo",
+        "cross2": "Mes de la Herencia Hispana",
+        "cross3": "Guía de precios"
+      }
     },
     "cinco-de-mayo": {
-      "es": {}
+      "es": {
+        "meta.title": "Bailarines de folclórico para Cinco de Mayo | LA, SGV y OC",
+        "meta.description": "Bailarines de folclórico para el Cinco de Mayo. Danza mexicana para ferias, restaurantes y fiestas en LA, SGV y OC. Cotizaciones gratis.",
+        "meta.ogTitle": "Bailarines de folclórico para Cinco de Mayo | Ballet Folklórico Mi Herencia",
+        "meta.ogDescription": "Folclórico en vivo para ferias, restaurantes, cervecerías y fiestas de empresa en Cinco de Mayo. Con sede en Hacienda Heights, al servicio de todo el sur de California.",
+        "bc": "Folclórico para Cinco de Mayo",
+        "nav3": "La presentación",
+        "hero.h1": "Bailarines de folclórico para el &lt;em&gt;Cinco de Mayo&lt;/em&gt; en Los Ángeles y OC",
+        "hero.lede": "Ferias y festivales, restaurantes y cervecerías, y empresas de Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange contratan a Ballet Folklórico Mi Herencia para el Cinco de Mayo. Llevamos danza folclórica mexicana tradicional en vivo, con vestuario lleno de color, directo a tu celebración.",
+        "hero.trust": "Calificación 5.0 en &lt;a href=\"https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w\" target=\"_blank\" rel=\"noopener noreferrer\"&gt;GigSalad&lt;/a&gt; · Con sede en Hacienda Heights · Viajamos",
+        "s1.label": "Infaltable en la fiesta",
+        "s1.heading": "Quién nos contrata para el Cinco de Mayo.",
+        "s1.card1t": "Ferias y festivales",
+        "s1.card1d": "Ferias y festivales municipales de Cinco de Mayo, en el escenario principal o en una presentación corta entre actos.",
+        "s1.card2t": "Restaurantes y cervecerías",
+        "s1.card2d": "Un show en vivo que convierte un especial de Cinco de Mayo en un evento que tus clientes van a recordar.",
+        "s1.card3t": "Empresas, logias y familias",
+        "s1.card3d": "Fiestas de empresa, logias y organizaciones comunitarias, y celebraciones familiares.",
+        "s1.where": "Hemos bailado para el Cinco de Mayo en la LA County Fair en Pomona, Bella Terra en Huntington Beach y el Arcadia Elks Lodge.",
+        "s2.label": "La presentación",
+        "s2.heading": "Qué esperar el día del evento.",
+        "s2.li1": "&lt;strong&gt;Presentaciones de 15 a 30 minutos&lt;/strong&gt;: a menudo una o dos presentaciones cortas, con 3 a 8 bailarines según tu evento.",
+        "s2.li2": "&lt;strong&gt;Danzas de todo México&lt;/strong&gt;: Jalisco, Veracruz, Sinaloa y más, las regiones más pedidas para el Cinco de Mayo.",
+        "s2.li3": "&lt;strong&gt;Necesitas un espacio plano de 12x12 pies&lt;/strong&gt;: además de un enchufe para nuestra bocina o el uso de tu propio sistema de sonido, y un área para cambiarnos.",
+        "s2.li4": "&lt;strong&gt;Viajamos por todo el sur de California&lt;/strong&gt;: Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "s2.li5": "&lt;strong&gt;Reserva con 6 a 8 semanas de anticipación&lt;/strong&gt;: el fin de semana de Cinco de Mayo se llena rápido, aunque siempre intentaremos atender fechas de último momento.",
+        "s2.li6": "&lt;strong&gt;El precio depende de tu fecha y la duración de la presentación&lt;/strong&gt;: consulta nuestra &lt;a href=\"/pricing/\"&gt;guía de precios&lt;/a&gt; para conocer los rangos.",
+        "faq.label": "Preguntas frecuentes",
+        "faq.heading": "Preguntas para reservar el Cinco de Mayo.",
+        "faq1.q": "¿Con cuánta anticipación debemos reservar para el Cinco de Mayo?",
+        "faq1.a": "El fin de semana de Cinco de Mayo es una de nuestras fechas más ocupadas, así que recomendamos reservar con 6 a 8 semanas de anticipación. Para fechas de último momento, escríbenos de todos modos: haremos todo lo posible por atenderte.",
+        "faq2.q": "¿Pueden presentarse al aire libre, en una feria, festival o patio?",
+        "faq2.a": "Sí. Nos presentamos tanto al aire libre como en interiores. Solo necesitamos un espacio plano de aproximadamente 12x12 pies y, si usamos nuestra bocina, un enchufe cerca.",
+        "faq3.q": "¿Pueden bailar con una banda de mariachi en vivo o con la música de nuestro DJ?",
+        "faq3.a": "Sí. Coordinamos con regularidad con una banda de mariachi en vivo, un DJ o el sistema de sonido del lugar del evento. Solo avísanos al reservar.",
+        "faq4.q": "¿Pueden incluir una breve introducción educativa sobre el Cinco de Mayo?",
+        "faq4.a": "Sí. Podemos abrir con una breve explicación, apta para toda la familia, de lo que celebra el Cinco de Mayo y de las danzas que estamos a punto de presentar.",
+        "faq5.q": "¿Cuántos bailarines se presentan y cuánto dura el show?",
+        "faq5.a": "La mayoría de las reservas duran de 15 a 30 minutos con 3 a 8 bailarines, a menudo como una o dos presentaciones cortas. Cuéntanos sobre tu evento y te recomendaremos cuántos bailarines y qué danzas.",
+        "faq6.q": "¿Cuándo están disponibles?",
+        "faq6.a": "Tardes y fines de semana todo el año, y entre semana por la tarde para eventos de empresa. Nuestros bailarines trabajan y estudian durante el día, así que las presentaciones entre semana en horario de día (incluidas las asambleas escolares) rara vez son posibles. Si tu evento es entre semana por la tarde o en fin de semana, pregúntanos.",
+        "form.label": "Consulta tu fecha",
+        "form.heading": "Obtén una cotización gratis para el Cinco de Mayo.",
+        "form.lede": "Cuéntanos tu fecha, ciudad y lugar del evento, y te responderemos en 1 o 2 días hábiles con una cotización personalizada. ¿Prefieres el correo? Escríbenos a &lt;a href=\"mailto:balletfolkloricomiherencia@gmail.com\" style=\"color:var(--gold-light);\"&gt;balletfolkloricomiherencia@gmail.com&lt;/a&gt;.",
+        "form.legend": "Lleva la fiesta a tu Cinco de Mayo",
+        "form.dateLabel": "Fecha y ciudad del evento",
+        "form.datePh": "p. ej. 2 de mayo — Whittier",
+        "form.msgLabel": "Cuéntanos sobre tu evento (opcional)",
+        "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
+        "cross1": "Folclórico para Día de los Muertos",
+        "cross2": "Mes de la Herencia Hispana",
+        "cross3": "Guía de precios"
+      }
     },
     "hispanic-heritage-month": {
-      "es": {}
+      "es": {
+        "meta.title": "Folclórico para el Mes de la Herencia Hispana | LA y OC",
+        "meta.description": "Artistas de folclórico para el Mes de la Herencia Hispana. Danza mexicana para empresas y oficinas en el sur de California. Cotizaciones gratis.",
+        "meta.ogTitle": "Folclórico para el Mes de la Herencia Hispana | Ballet Folklórico Mi Herencia",
+        "meta.ogDescription": "Folclórico en vivo para el Mes de la Herencia Hispana en empresas, oficinas de ciudad, hospitales y organizaciones sin fines de lucro. Con sede en Hacienda Heights, al servicio de todo el sur de California.",
+        "bc": "Folclórico para el Mes de la Herencia Hispana",
+        "nav3": "La presentación",
+        "hero.h1": "Artistas de folclórico para el &lt;em&gt;Mes de la Herencia Hispana&lt;/em&gt; en LA y OC",
+        "hero.lede": "Empresas, grupos de recursos para empleados y dependencias municipales de Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange contratan a Ballet Folklórico Mi Herencia para el Mes de la Herencia Hispana (del 15 de septiembre al 15 de octubre). Llevamos danza folclórica mexicana tradicional en vivo, con vestuario lleno de color, a tu celebración.",
+        "hero.trust": "Calificación 5.0 en &lt;a href=\"https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w\" target=\"_blank\" rel=\"noopener noreferrer\"&gt;GigSalad&lt;/a&gt; · Con sede en Hacienda Heights · Viajamos",
+        "s1.label": "Mes de la Herencia Hispana",
+        "s1.heading": "Quién nos contrata para el Mes de la Herencia Hispana.",
+        "s1.card1t": "Empresas y ERG",
+        "s1.card1d": "Grupos de recursos para empleados y celebraciones de toda la empresa.",
+        "s1.card2t": "Gobiernos municipales, condados y oficinas públicas",
+        "s1.card2d": "Dependencias municipales y del condado, hospitales y bibliotecas que celebran el mes.",
+        "s1.card3t": "Centros comerciales y organizaciones sin fines de lucro",
+        "s1.card3d": "Eventos en centros comerciales y celebraciones de organizaciones comunitarias sin fines de lucro.",
+        "s1.where": "Hemos bailado para el Mes de la Herencia Hispana en Stonewood Center en Downey y en una celebración de empleados de Paramount Pictures.",
+        "s2.label": "La presentación",
+        "s2.heading": "Qué esperar el día del evento.",
+        "s2.li1": "&lt;strong&gt;Presentaciones de 15 a 30 minutos&lt;/strong&gt;: a menudo una o dos presentaciones cortas, con 3 a 8 bailarines según tu evento.",
+        "s2.li2": "&lt;strong&gt;Danzas de todo México&lt;/strong&gt;: Jalisco, Veracruz, Sinaloa, Michoacán y más, con una breve explicación de cada región si así lo deseas.",
+        "s2.li3": "&lt;strong&gt;Necesitas un espacio plano de 12x12 pies&lt;/strong&gt;: además de un enchufe para nuestra bocina o el uso de tu propio sistema de sonido, y un área para cambiarnos.",
+        "s2.li4": "&lt;strong&gt;Viajamos por todo el sur de California&lt;/strong&gt;: Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "s2.li5": "&lt;strong&gt;Reserva con 6 a 8 semanas de anticipación&lt;/strong&gt;: septiembre y octubre son dos de nuestros meses más ocupados, aunque siempre intentaremos atender fechas de último momento.",
+        "s2.li6": "&lt;strong&gt;El precio depende de tu fecha y la duración de la presentación&lt;/strong&gt;: consulta nuestra &lt;a href=\"/pricing/\"&gt;guía de precios&lt;/a&gt; para conocer los rangos.",
+        "faq.label": "Preguntas frecuentes",
+        "faq.heading": "Preguntas para reservar el Mes de la Herencia Hispana.",
+        "faq1.q": "¿Con cuánta anticipación debemos reservar para el Mes de la Herencia Hispana?",
+        "faq1.a": "Septiembre y octubre son dos de nuestros meses más ocupados, así que recomendamos reservar con 6 a 8 semanas de anticipación. Para fechas de último momento, escríbenos de todos modos: haremos todo lo posible por atenderte.",
+        "faq2.q": "¿Pueden presentarse en una oficina, un vestíbulo o un evento de empresa?",
+        "faq2.a": "Sí. Podemos presentarnos en interiores o al aire libre: oficinas, vestíbulos, hospitales, bibliotecas, centros comerciales y parques. Solo necesitamos un espacio plano de aproximadamente 12x12 pies y, si usamos nuestra bocina, un enchufe cerca.",
+        "faq3.q": "¿Pueden bailar con una banda de mariachi en vivo o con la música de nuestro DJ?",
+        "faq3.a": "Sí. Coordinamos con regularidad con una banda de mariachi en vivo, un DJ o el sistema de sonido del lugar del evento. Solo avísanos al reservar.",
+        "faq4.q": "¿Pueden incluir una breve introducción educativa para una empresa o un grupo de recursos para empleados?",
+        "faq4.a": "Sí. Podemos abrir con una breve explicación de las danzas y de las regiones de México de donde vienen, un complemento popular para eventos de ERG y de oficina.",
+        "faq5.q": "¿Cuántos bailarines se presentan y cuánto dura el show?",
+        "faq5.a": "La mayoría de las reservas duran de 15 a 30 minutos con 3 a 8 bailarines, a menudo como una o dos presentaciones cortas. Cuéntanos sobre tu evento y te recomendaremos cuántos bailarines y qué danzas.",
+        "faq6.q": "¿Cuándo están disponibles?",
+        "faq6.a": "Tardes y fines de semana todo el año, y entre semana por la tarde para eventos de empresa. Nuestros bailarines trabajan y estudian durante el día, así que las presentaciones entre semana en horario de día (incluidas las asambleas escolares) rara vez son posibles. Si tu evento es entre semana por la tarde o en fin de semana, pregúntanos.",
+        "form.label": "Consulta tu fecha",
+        "form.heading": "Obtén una cotización gratis para el Mes de la Herencia Hispana.",
+        "form.lede": "Cuéntanos tu fecha, ciudad y lugar del evento, y te responderemos en 1 o 2 días hábiles con una cotización personalizada. ¿Prefieres el correo? Escríbenos a &lt;a href=\"mailto:balletfolkloricomiherencia@gmail.com\" style=\"color:var(--gold-light);\"&gt;balletfolkloricomiherencia@gmail.com&lt;/a&gt;.",
+        "form.legend": "Lleva el folclórico a tu celebración",
+        "form.dateLabel": "Fecha y ciudad del evento",
+        "form.datePh": "p. ej. 20 de sept. — Downey",
+        "form.msgLabel": "Cuéntanos sobre tu evento (opcional)",
+        "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
+        "cross1": "Folclórico para Cinco de Mayo",
+        "cross2": "Folclórico para Día de los Muertos",
+        "cross3": "Guía de precios"
+      }
     }
   };
 
