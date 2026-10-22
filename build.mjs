@@ -124,11 +124,16 @@ function render(lang, now) {
       }));
     } else if (data['@type'] === 'FAQPage') {
       data.inLanguage = m.htmlLang;
-      data.mainEntity = [1, 2, 3, 4, 5, 6].map((i) => ({
-        '@type': 'Question',
-        name: S['faq.q' + i],
-        acceptedAnswer: { '@type': 'Answer', text: S['faq.a' + i] }
-      }));
+      const faqItems = [];
+      for (let i = 1; S['faq.q' + i] !== undefined; i++) {
+        if (S['faq.a' + i] === undefined) throw new Error(lang + ': faq.a' + i + ' missing');
+        faqItems.push({
+          '@type': 'Question',
+          name: S['faq.q' + i],
+          acceptedAnswer: { '@type': 'Answer', text: S['faq.a' + i] }
+        });
+      }
+      data.mainEntity = faqItems;
     } else {
       return block; // Event ItemList: dates/venues are proper nouns — untouched
     }

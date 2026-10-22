@@ -9,7 +9,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/" />
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -21,7 +21,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/" />
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -33,7 +33,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/" />
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -45,7 +45,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/" />
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -57,7 +57,7 @@
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://bfmh.dance/zh/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/" />
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -298,6 +298,78 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://bfmh.dance/zh-hant/dance-classes/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dance-classes/" />
     <lastmod>2026-07-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/dia-de-los-muertos/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/dia-de-los-muertos/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/cinco-de-mayo/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/cinco-de-mayo/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/cinco-de-mayo/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/cinco-de-mayo/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/hispanic-heritage-month/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/hispanic-heritage-month/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/performances/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/performances/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/performances/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/performances/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/performances/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/performances/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/performances/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/performances/" />
+    <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -42,6 +42,16 @@ function setMeta(html, selector, value) {
   return html.replace(re, `$1${escAttr(value)}$2`);
 }
 
+function hreflangBlock(page) {
+  const langs = page.langs || LANGS;
+  const lines = [`  <link rel="alternate" hreflang="en" href="${BASE}${page.path}" />`];
+  for (const lang of langs) {
+    lines.push(`  <link rel="alternate" hreflang="${HTMLLANG[lang]}" href="${BASE}${PREFIX[lang]}${page.path}" />`);
+  }
+  lines.push(`  <link rel="alternate" hreflang="x-default" href="${BASE}${page.path}" />`);
+  return lines.join('\n') + '\n';
+}
+
 // Merge homepage strings + landing shared + this page's strings for one language.
 function dictFor(pageKey, lang) {
   return Object.assign(
@@ -50,6 +60,15 @@ function dictFor(pageKey, lang) {
     (LAND.shared && LAND.shared[lang]) || {},
     LAND.pages[pageKey].lang[lang] || {}
   );
+}
+
+function usedKeys(template) {
+  const keys = new Set();
+  for (const re of [/\bdata-i18n-html="([^"]+)"/g, /\bdata-i18n="([^"]+)"/g, /\bdata-placeholder-i18n="([^"]+)"/g]) {
+    let m;
+    while ((m = re.exec(template))) keys.add(m[1]);
+  }
+  return keys;
 }
 
 // ── per-language render ──────────────────────────────────────────────
@@ -61,8 +80,17 @@ function render(pageKey, lang, template) {
   const homeUrl = BASE + PREFIX[lang] + '/';
   let out = template;
 
+  const missing = [...usedKeys(template)].filter((k) => D[k] === undefined);
+  if (missing.length) console.log(`  ! ${PREFIX[lang]}${page.path} missing ${lang} key(s): ${missing.join(', ')}`);
+
   // ── <html lang> ──
   out = out.replace(/<html lang="[^"]*">/, `<html lang="${HTMLLANG[lang]}">`);
+
+  // ── hreflang block: only the languages this page has ──
+  out = out.replace(
+    /(?:  <link rel="alternate" hreflang="[^"]*" href="[^"]*" \/>\n?)+/,
+    hreflangBlock(page)
+  );
 
   // ── head: title + meta ──
   out = out.replace(/<title>[\s\S]*?<\/title>/, `<title>${escText(M.title)}</title>`);
@@ -149,7 +177,11 @@ for (const pageKey of Object.keys(LAND.pages)) {
   const page = LAND.pages[pageKey];
   const template = readFileSync(new URL('./' + page.file, import.meta.url), 'utf8');
   const slug = page.path.replace(/^\/|\/$/g, '');
-  for (const lang of LANGS) {
+  for (const lang of page.langs ?? LANGS) {
+    if (!Object.keys(page.lang[lang] || {}).length) {
+      console.log(`  ! skipped ${PREFIX[lang].replace(/^\//, '')}/${slug}/index.html — no ${lang} translations yet`);
+      continue;
+    }
     const html = render(pageKey, lang, template);
     const folder = PREFIX[lang].replace(/^\//, '') + '/' + slug;
     mkdirSync(new URL('./' + folder + '/', import.meta.url), { recursive: true });

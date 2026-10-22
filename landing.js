@@ -105,7 +105,10 @@
       if (slug === seg || slug.indexOf(seg + '/') === 0) { curLang = k; slug = slug.slice(seg.length + 1); break; }
     }
     var pref = norm(navigator.language || navigator.userLanguage || '');
-    if (!slug || pref === curLang || !SUGGEST[pref]) return; // already in their language
+    // Pages that only exist in a subset of languages (data-langs="en,es" on
+    // <body>) must never suggest a language the page doesn't have.
+    var pageLangs = ((document.body.getAttribute('data-langs') || 'en,es,ja,zh,zht').split(','));
+    if (!slug || pref === curLang || !SUGGEST[pref] || pageLangs.indexOf(pref) === -1) return; // already in their language
     // Don't nag if they already have a language preference or dismissed the bar.
     try { if (localStorage.getItem('bfmh-lang') || localStorage.getItem('bfmh-suggest-dismissed')) return; } catch (e) {}
     var bar = document.getElementById('langSuggest');
@@ -173,4 +176,39 @@
       } catch (e) {}
     });
   }
+
+  // ── Upcoming performances, fetched client-side (/performances/ only) ──
+  (function () {
+    var box = document.querySelector('[data-upcoming]');
+    if (!box) return;
+    var lang = (document.documentElement.lang || 'en').indexOf('es') === 0 ? 'es' : 'en';
+    var MONTHS = {
+      en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+    };
+    var FALLBACK = {
+      en: 'Nothing public on the calendar right now. Ask about your date.',
+      es: 'Por ahora no hay nada público en el calendario. Pregúntanos por tu fecha.'
+    };
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function showFallback() {
+      box.innerHTML = '<p class="lp-lede"><a href="#quote">' + esc(FALLBACK[lang]) + '</a></p>';
+    }
+    if (!window.fetch) { showFallback(); return; }
+    fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      var events = (d && d.events) || [];
+      var now = new Date();
+      now.setHours(0, 0, 0, 0);
+      var upcoming = events.filter(function (ev) { return ev.date && new Date(ev.date + 'T00:00:00') >= now; })
+        .sort(function (a, b) { return new Date(a.date) - new Date(b.date); });
+      if (!upcoming.length) { showFallback(); return; }
+      box.innerHTML = '<ul class="lp-check">' + upcoming.map(function (ev) {
+        var d = new Date(ev.date + 'T00:00:00');
+        var dateStr = MONTHS[lang][d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+        var name = esc((ev.name && (ev.name[lang] || ev.name.en)) || (lang === 'es' ? 'Presentación' : 'Performance'));
+        var place = esc(ev.city ? (ev.venue ? ev.venue + ', ' + ev.city : ev.city) : (ev.location && (ev.location[lang] || ev.location.en)) || '');
+        return '<li><strong>' + name + '</strong>: ' + dateStr + (place ? ' · ' + place : '') + '</li>';
+      }).join('') + '</ul>';
+    }).catch(showFallback);
+  })();
 })();
