@@ -301,4 +301,58 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://bfmh.dance/dia-de-los-muertos/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/dia-de-los-muertos/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/dia-de-los-muertos/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/dia-de-los-muertos/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/cinco-de-mayo/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/cinco-de-mayo/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/cinco-de-mayo/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/cinco-de-mayo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/cinco-de-mayo/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/hispanic-heritage-month/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/hispanic-heritage-month/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/hispanic-heritage-month/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/hispanic-heritage-month/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
