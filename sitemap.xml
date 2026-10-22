@@ -355,4 +355,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://bfmh.dance/performances/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/performances/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/performances/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/performances/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bfmh.dance/es/performances/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bfmh.dance/performances/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bfmh.dance/es/performances/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bfmh.dance/performances/" />
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

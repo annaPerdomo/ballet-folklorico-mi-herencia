@@ -1118,6 +1118,45 @@
         "cross3": "Guía de precios"
       }
     },
+    "performances": {
+      "es": {
+        "meta.title": "Dónde hemos bailado | Ballet Folklórico Mi Herencia",
+        "meta.description": "Ballet Folklórico Mi Herencia se ha presentado en la Feria del Condado de Los Ángeles, Bella Terra, Heritage Park, Hollywood Forever Cemetery y la iglesia St. John Vianney, llevando danza folclórica mexicana en vivo por Los Ángeles y el Condado de Orange desde 2016.",
+        "meta.ogTitle": "Dónde hemos bailado | Ballet Folklórico Mi Herencia",
+        "meta.ogDescription": "Mira dónde ha bailado Ballet Folklórico Mi Herencia: la Feria del Condado de Los Ángeles, Bella Terra, Heritage Park, Hollywood Forever Cemetery y más, por Los Ángeles y el Condado de Orange.",
+        "bc": "Dónde hemos bailado",
+        "nav.upcoming": "Próximas fechas",
+        "nav.history": "Por año",
+        "hero.h1": "Dónde hemos bailado",
+        "hero.lede": "Ballet Folklórico Mi Herencia ha bailado en ferias, festivales, iglesias, estudios y celebraciones familiares por Los Ángeles y el Condado de Orange desde 2016.",
+        "hero.trust": "Calificación 5.0 en &lt;a href=\"https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w\" target=\"_blank\" rel=\"noopener noreferrer\"&gt;GigSalad&lt;/a&gt; · Con sede en Hacienda Heights · Viajamos",
+        "s0.label": "En el calendario",
+        "s0.heading": "Próximas presentaciones.",
+        "s0.loading": "Cargando próximas presentaciones…",
+        "s1.label": "Una década bailando",
+        "s1.heading": "Dónde hemos bailado, año por año.",
+        "y2026": "Hollywood Forever Cemetery, Día de los Muertos, Los Ángeles · Celebración del Mes de la Herencia Hispana de Paramount Pictures, Los Ángeles · St. John Vianney Church Harvest in the Heights, Hacienda Heights · Mes de la Herencia Hispana en Stonewood Center, Downey · Knott's Berry Farm Hotel, Buena Park · Centenario de Pico Rivera Water District, Pico Rivera · Feria del Condado de Los Ángeles (Fairplex), Pomona · Cinco de Mayo en Arcadia Elks Lodge, Arcadia",
+        "y2025": "Celebración de Día de los Muertos en La Serna High School, Whittier · Carnaval de la iglesia St. John Vianney, Hacienda Heights · Stonewood Center, Downey · Feria del Condado de Los Ángeles, Pomona · Arcadia Elks Lodge, Arcadia",
+        "y2024": "Lake Forest Sun and Sail Club, Lake Forest · Celebración de Día de los Muertos en La Serna High School, Whittier · Iglesia St. John Vianney, Hacienda Heights · Buena Park Library, Buena Park · Arcadia Elks Lodge, Arcadia · Cinco de Mayo en la Feria del Condado de Los Ángeles, Pomona",
+        "y2023": "Celebración de Día de los Muertos en La Serna High School, Whittier · St. John Vianney Harvest in the Heights, Hacienda Heights · Día de los Muertos en Heritage Park, Santa Fe Springs · Relay for Life, La Mirada · Fiestas Patrias en Los Nietos Park, Santa Fe Springs · Feria del Condado de Los Ángeles, Pomona · Cinco de Mayo en Bella Terra, Huntington Beach · Calvary Chapel, Santa Fe Springs · Festival del Mariachi en Artesia Park, Artesia",
+        "y2022": "Celebración de Día de los Muertos en La Serna High School, Whittier · Carnaval de la iglesia St. Agatha, Los Ángeles · St. John Vianney Harvest Festival, Hacienda Heights · Día de los Muertos en Heritage Park, Santa Fe Springs · Downey City Library \"Beyond the Book\", Downey · Fiestas Patrias en Los Nietos Park, Santa Fe Springs · Bella Terra, Huntington Beach",
+        "y2019": "Espectáculo navideño y de Día de los Muertos en Bella Terra, Huntington Beach · Festival del Mariachi en Artesia Towne Center, Artesia · Día de los Muertos en Heritage Park, Santa Fe Springs · Buena Park Library, Buena Park · Feria del Condado de Los Ángeles, Pomona · Carnaval de la iglesia St. John Vianney, Hacienda Heights · Westside Children's Center, Culver City · Cinco de Mayo en Bella Terra, Huntington Beach",
+        "y2018": "Espectáculo de Día de los Muertos y recital anual · SoCal Post Acute Care, Whittier",
+        "s2.repeat": "La iglesia St. John Vianney nos ha invitado cada año desde 2019. Hemos bailado en la Feria del Condado de Los Ángeles cinco veces, en Arcadia Elks Lodge tres años consecutivos y en Stonewood Center dos años seguidos.",
+        "form.label": "Consulta tu fecha",
+        "form.heading": "Obtén una cotización gratis.",
+        "form.lede": "Cuéntanos tu fecha, ciudad y lugar del evento, y te responderemos en 1 o 2 días hábiles con una cotización personalizada. ¿Prefieres el correo? Escríbenos a &lt;a href=\"mailto:balletfolkloricomiherencia@gmail.com\" style=\"color:var(--gold-light);\"&gt;balletfolkloricomiherencia@gmail.com&lt;/a&gt;.",
+        "form.legend": "Lleva el folclórico a tu evento",
+        "form.dateLabel": "Fecha y ciudad del evento",
+        "form.datePh": "p. ej. 1 de nov. — Pomona",
+        "form.msgLabel": "Cuéntanos sobre tu evento (opcional)",
+        "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
+        "cross1": "Ve nuestra galería",
+        "cross2": "Folclórico para Día de los Muertos",
+        "cross3": "Folclórico para Cinco de Mayo",
+        "cross4": "Mes de la Herencia Hispana"
+      }
+    },
     "hispanic-heritage-month": {
       "es": {
         "meta.title": "Folclórico para el Mes de la Herencia Hispana | LA y OC",
@@ -1182,7 +1221,8 @@
     "dance-classes":            { file: "dance-classes/index.html",            path: "/dance-classes/" },
     "dia-de-los-muertos":       { file: "dia-de-los-muertos/index.html",       path: "/dia-de-los-muertos/",       langs: ["es"] },
     "cinco-de-mayo":            { file: "cinco-de-mayo/index.html",            path: "/cinco-de-mayo/",            langs: ["es"] },
-    "hispanic-heritage-month":  { file: "hispanic-heritage-month/index.html",  path: "/hispanic-heritage-month/",  langs: ["es"] }
+    "hispanic-heritage-month":  { file: "hispanic-heritage-month/index.html",  path: "/hispanic-heritage-month/",  langs: ["es"] },
+    "performances":             { file: "performances/index.html",             path: "/performances/",             langs: ["es"] }
   };
   const LANGS = ["es", "ja", "zh", "zht"];
   const unesc = (s) => String(s).replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");

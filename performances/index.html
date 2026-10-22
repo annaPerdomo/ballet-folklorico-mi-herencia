@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--
+  Landing page: where we've performed, a public gig history (English).
+  Shares styles.css + landing.css + landing.js with the other landing pages.
+  English is the template + served page. Run: node build-landing.mjs
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Microsoft Clarity -->
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xiy5zi7mqw");
+  </script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9QH42X2S4F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9QH42X2S4F');
+  </script>
+
+  <!-- ═══ PRIMARY SEO TAGS ═══ -->
+  <title>Where We've Performed | Ballet Folklórico Mi Herencia</title>
+  <meta name="description" content="Ballet Folklórico Mi Herencia has performed at the LA County Fair, Bella Terra, Heritage Park, Hollywood Forever Cemetery, and St. John Vianney Church, bringing live Mexican folk dance across Los Angeles and Orange County since 2016." />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <link rel="canonical" href="https://bfmh.dance/performances/" />
+  <link rel="alternate" hreflang="en" href="https://bfmh.dance/performances/" />
+  <link rel="alternate" hreflang="es" href="https://bfmh.dance/es/performances/" />
+  <link rel="alternate" hreflang="x-default" href="https://bfmh.dance/performances/" />
+
+  <!-- ═══ FAVICON ═══ -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/images/favicon.png" />
+  <meta name="theme-color" content="#080311" />
+
+  <!-- ═══ OPEN GRAPH / TWITTER ═══ -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bfmh.dance/performances/" />
+  <meta property="og:title" content="Where We've Performed | Ballet Folklórico Mi Herencia" />
+  <meta property="og:description" content="See where Ballet Folklórico Mi Herencia has danced: the LA County Fair, Bella Terra, Heritage Park, Hollywood Forever Cemetery, and more across Los Angeles and Orange County." />
+  <meta property="og:image" content="https://bfmh.dance/og-image.jpg?v=6" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Ballet Folklórico Mi Herencia" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Where We've Performed | Ballet Folklórico Mi Herencia" />
+  <meta name="twitter:description" content="See where Ballet Folklórico Mi Herencia has danced: the LA County Fair, Bella Terra, Heritage Park, Hollywood Forever Cemetery, and more across Los Angeles and Orange County." />
+  <meta name="twitter:image" content="https://bfmh.dance/og-image.jpg?v=6" />
+
+  <!-- ═══ GEO META TAGS ═══ -->
+  <meta name="geo.region" content="US-CA" />
+  <meta name="geo.placename" content="Hacienda Heights, CA" />
+  <meta name="geo.position" content="33.9939;-117.9733" />
+  <meta name="ICBM" content="33.9939, -117.9733" />
+
+  <!-- ═══ FONTS & STYLES ═══ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600;700&family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/landing.css" />
+
+  <!-- ═══ JSON-LD — BREADCRUMBS ═══ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bfmh.dance/" },
+    { "@type": "ListItem", "position": 2, "name": "Where We've Performed", "item": "https://bfmh.dance/performances/" }
+  ]
+}
+  </script>
+</head>
+<body data-page="performances" data-langs="en,es">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header role="banner">
+    <div class="container header-inner">
+      <a href="/" class="site-wordmark" aria-label="Ballet Folklórico Mi Herencia — Home">
+        <img src="/images/optimized/logo-dancers-color.webp" alt="Ballet Folklórico Mi Herencia logo" class="nav-logo">
+        <span class="wordmark-text notranslate" translate="no">Ballet Folklórico<span>Mi Herencia</span></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="/" data-i18n="nav.home">Home</a></li>
+          <li><a href="/#gallery" data-i18n="nav.gallery">Gallery</a></li>
+          <li><a href="#upcoming" data-i18n="nav.upcoming">Upcoming</a></li>
+          <li><a href="#history" data-i18n="nav.history">By Year</a></li>
+          <li><a href="/pricing/" data-i18n="footer.svc.pricing">Pricing</a></li>
+        </ul>
+      </nav>
+      <div class="header-controls">
+        <div class="lang-switch" id="langSwitch">
+          <button type="button" class="lang-switch-btn" id="langSwitchBtn"
+                  aria-haspopup="true" aria-expanded="false" aria-label="Choose language">
+            <svg class="lang-switch-globe" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>
+            <span class="lang-switch-current" id="langSwitchCurrent">English</span>
+            <svg class="lang-switch-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <ul class="lang-switch-menu" id="langSwitchMenu" role="menu">
+            <li role="none"><a role="menuitem" data-lang="en" aria-current="true" hreflang="en" lang="en" href="/performances/">English</a></li>
+            <li role="none"><a role="menuitem" data-lang="es" hreflang="es" lang="es" href="/es/performances/">Español</a></li>
+          </ul>
+        </div>
+        <a href="#quote" class="header-cta" data-i18n="cta.getQuote">Get a Free Quote</a>
+        <button class="hamburger" id="mobileMenuToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile nav drawer -->
+  <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation" hidden>
+    <ul>
+      <li><a href="/" data-i18n="nav.home">Home</a></li>
+      <li><a href="/#gallery" data-i18n="nav.gallery">Gallery</a></li>
+      <li><a href="#upcoming" data-i18n="nav.upcoming">Upcoming</a></li>
+      <li><a href="#history" data-i18n="nav.history">By Year</a></li>
+      <li><a href="/pricing/" data-i18n="footer.svc.pricing">Pricing</a></li>
+      <li><a href="#quote" style="color:var(--gold-light);" data-i18n="cta.getQuote">Get a Free Quote</a></li>
+    </ul>
+  </nav>
+
+  <!-- Language suggestion bar (filled + revealed by JS; no redirect) -->
+  <div class="lang-suggest" id="langSuggest" hidden>
+    <div class="container lang-suggest-inner">
+      <a class="lang-suggest-link" id="langSuggestLink" href="#"></a>
+      <button type="button" class="lang-suggest-close" id="langSuggestClose" aria-label="Dismiss">&times;</button>
+    </div>
+  </div>
+
+  <main id="main-content">
+
+    <!-- ── HERO ── -->
+    <section class="lp-hero" id="top" aria-labelledby="page-heading">
+      <div class="lp-hero-bg" style="background-image:url('/images/optimized/hero-mariachi.webp');" aria-hidden="true"></div>
+      <div class="container">
+        <nav class="lp-breadcrumb" aria-label="Breadcrumb">
+          <a href="/" data-i18n="nav.home">Home</a><span aria-hidden="true">&#10022;</span><span data-i18n="bc">Where We've Performed</span>
+        </nav>
+        <h1 id="page-heading" data-i18n="hero.h1">Where we've performed</h1>
+        <p class="lp-lede" data-i18n="hero.lede">Ballet Folklórico Mi Herencia has danced at fairs, festivals, churches, studios, and family celebrations across Los Angeles and Orange County since 2016.</p>
+        <p class="lp-trust"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span data-i18n-html="hero.trust">5.0 rated on <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer">GigSalad</a> · Based in Hacienda Heights · We travel</span></p>
+        <div class="lp-cta-group">
+          <a href="#quote" class="btn btn-gold" data-i18n="cta.getQuote">Get a Free Quote</a>
+          <a href="/#gallery" class="btn btn-outline" data-i18n="cta.watch">Watch Us Dance</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── UPCOMING ── -->
+    <section class="lp-section" id="upcoming" aria-labelledby="upcoming-heading">
+      <div class="container text-center">
+        <span class="section-label" data-i18n="s0.label">On the Calendar</span>
+        <h2 class="section-heading" id="upcoming-heading" data-i18n="s0.heading">Upcoming performances.</h2>
+        <div class="story-divider" style="margin-inline:auto;"></div>
+        <div data-upcoming aria-live="polite">
+          <p class="lp-lede" data-i18n="s0.loading">Loading upcoming performances…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider: gold flower rosette (same as homepage) -->
+    <div class="section-divider divider-rosette" aria-hidden="true">
+      <div class="divider-center">
+        <span class="divider-dot"></span>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(16,16)" opacity="0.75">
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(45 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(90 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(135 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(180 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(225 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(270 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(315 0 0)"/>
+          </g>
+          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.9"/>
+          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
+        </svg>
+        <span class="divider-dot"></span>
+      </div>
+    </div>
+
+    <!-- ── BY YEAR ── -->
+    <section class="lp-section lp-section--alt" id="history" aria-labelledby="history-heading">
+      <div class="container text-center">
+        <span class="section-label" data-i18n="s1.label">A Decade of Dancing</span>
+        <h2 class="section-heading" id="history-heading" data-i18n="s1.heading">Where we've danced, year by year.</h2>
+        <div class="story-divider" style="margin-inline:auto;"></div>
+        <div class="lp-prose" style="max-width:800px;">
+          <h3>2026</h3>
+          <p data-i18n="y2026">Hollywood Forever Cemetery Día de los Muertos, Los Angeles · Paramount Pictures Hispanic Heritage Month celebration, Los Angeles · St. John Vianney Church Harvest in the Heights, Hacienda Heights · Stonewood Center Hispanic Heritage Month, Downey · Knott's Berry Farm Hotel, Buena Park · Pico Rivera Water District 100th Anniversary, Pico Rivera · LA County Fair (Fairplex), Pomona · Arcadia Elks Lodge Cinco de Mayo, Arcadia</p>
+          <h3>2025</h3>
+          <p data-i18n="y2025">La Serna High School Día de los Muertos celebration, Whittier · St. John Vianney Church Carnival, Hacienda Heights · Stonewood Center, Downey · LA County Fair, Pomona · Arcadia Elks Lodge, Arcadia</p>
+          <h3>2024</h3>
+          <p data-i18n="y2024">Lake Forest Sun and Sail Club, Lake Forest · La Serna High School Día de los Muertos celebration, Whittier · St. John Vianney Church, Hacienda Heights · Buena Park Library, Buena Park · Arcadia Elks Lodge, Arcadia · LA County Fair Cinco de Mayo, Pomona</p>
+          <h3>2023</h3>
+          <p data-i18n="y2023">La Serna High School Día de los Muertos celebration, Whittier · St. John Vianney Harvest in the Heights, Hacienda Heights · Heritage Park Día de los Muertos, Santa Fe Springs · Relay for Life, La Mirada · Fiestas Patrias at Los Nietos Park, Santa Fe Springs · LA County Fair, Pomona · Bella Terra Cinco de Mayo, Huntington Beach · Calvary Chapel, Santa Fe Springs · Mariachi Festival at Artesia Park, Artesia</p>
+          <h3>2022</h3>
+          <p data-i18n="y2022">La Serna High School Día de los Muertos celebration, Whittier · St. Agatha Church Carnival, Los Angeles · St. John Vianney Harvest Festival, Hacienda Heights · Heritage Park Día de los Muertos, Santa Fe Springs · Downey City Library "Beyond the Book", Downey · Fiestas Patrias at Los Nietos Park, Santa Fe Springs · Bella Terra, Huntington Beach</p>
+          <h3>2019</h3>
+          <p data-i18n="y2019">Bella Terra Holiday Show and Día de los Muertos, Huntington Beach · Mariachi Festival at Artesia Towne Center, Artesia · Heritage Park Día de los Muertos, Santa Fe Springs · Buena Park Library, Buena Park · LA County Fair, Pomona · St. John Vianney Church Carnival, Hacienda Heights · Westside Children's Center, Culver City · Bella Terra Cinco de Mayo, Huntington Beach</p>
+          <h3>2018</h3>
+          <p data-i18n="y2018">Día de los Muertos show and annual recital · SoCal Post Acute Care, Whittier</p>
+        </div>
+
+        <figure class="lp-review">
+          <p class="lp-lede" data-i18n="s2.repeat" style="margin:0;">St. John Vianney has invited us back every year since 2019. We've danced at the LA County Fair five times, Arcadia Elks Lodge three years running, and Stonewood Center two years in a row.</p>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Divider: gold flower rosette (same as homepage) -->
+    <div class="section-divider divider-rosette" aria-hidden="true">
+      <div class="divider-center">
+        <span class="divider-dot"></span>
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(16,16)" opacity="0.75">
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(0 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(45 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(90 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(135 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(180 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(225 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#c9a84c" transform="rotate(270 0 0)"/>
+            <ellipse cx="0" cy="-7" rx="2.2" ry="5.5" fill="#e8c97a" transform="rotate(315 0 0)"/>
+          </g>
+          <circle cx="16" cy="16" r="3" fill="#c9a84c" opacity="0.9"/>
+          <circle cx="16" cy="16" r="1.2" fill="#e8c97a"/>
+        </svg>
+        <span class="divider-dot"></span>
+      </div>
+    </div>
+
+    <!-- ── QUOTE FORM ── -->
+    <section class="lp-section lp-section--alt" id="quote" aria-labelledby="quote-heading">
+      <div class="container text-center">
+        <span class="section-label" data-i18n="form.label">Check Your Date</span>
+        <h2 class="section-heading" id="quote-heading" data-i18n="form.heading">Get a free quote.</h2>
+        <div class="story-divider" style="margin-inline:auto;"></div>
+        <p class="lp-lede" data-i18n-html="form.lede">Tell us your date, city, and venue, and we'll get back to you within 1–2 business days with a personalized quote. Prefer email? Write to <a href="mailto:balletfolkloricomiherencia@gmail.com" style="color:var(--gold-light);">balletfolkloricomiherencia@gmail.com</a>.</p>
+
+        <div class="book-form-wrapper lp-form-wrap">
+          <form id="quoteForm" action="https://formspree.io/f/mgoqzqpo" method="POST" aria-label="Performance quote request form">
+            <fieldset>
+              <span class="form-corner form-corner--tl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+              <span class="form-corner form-corner--tr" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+              <span class="form-corner form-corner--bl" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+              <span class="form-corner form-corner--br" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M0 0 L24 0 L24 2.5 L2.5 2.5 L2.5 24 L0 24 Z" fill="#c9a84c" opacity="0.55"/></svg></span>
+              <legend>
+                <span data-i18n="form.legend">Bring Folklórico to Your Event</span>
+                <span class="form-flourish" aria-hidden="true"></span>
+              </legend>
+              <div class="form-fields">
+                <input type="hidden" name="subject" value="other" />
+                <input type="hidden" name="page" value="/performances/" />
+                <input type="hidden" name="_subject" value="New inquiry from performances page — bfmh.dance" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-name" data-i18n="contact.form.name">Full Name</label>
+                    <input type="text" id="contact-name" name="name" autocomplete="name" required data-placeholder-i18n="contact.form.name.placeholder" placeholder="Your full name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-email" data-i18n="contact.form.email">Email</label>
+                    <input type="email" id="contact-email" name="email" autocomplete="email" required placeholder="correo@ejemplo.com" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-phone" data-i18n="contact.form.phone">Phone Number</label>
+                    <input type="tel" id="contact-phone" name="phone" autocomplete="tel" placeholder="(626) 000-0000" />
+                  </div>
+                  <div class="form-group">
+                    <label for="event-date" data-i18n="form.dateLabel">Event Date &amp; City</label>
+                    <input type="text" id="event-date" name="event_date_city" data-placeholder-i18n="form.datePh" placeholder="e.g. Nov 1, Pomona" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="message" data-i18n="form.msgLabel">Tell us about your event (optional)</label>
+                  <textarea id="message" name="message" rows="5" data-placeholder-i18n="form.msgPh" placeholder="Venue, rough guest count, and the moment you'd like us to perform…"></textarea>
+                </div>
+                <button type="submit" class="btn btn-gold" style="width:100%;text-align:center;justify-content:center;" data-i18n="cta.requestQuote">Request My Free Quote</button>
+                <p class="form-notice" data-i18n="contact.form.notice">We typically respond within 1–2 business days.</p>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="lp-crosslinks" aria-label="More about us">
+          <a href="/#gallery" data-i18n="cross1">See Our Gallery</a>
+          <a href="/dia-de-los-muertos/" data-i18n="cross2">Folklorico for Día de los Muertos</a>
+          <a href="/cinco-de-mayo/" data-i18n="cross3">Folklorico for Cinco de Mayo</a>
+          <a href="/hispanic-heritage-month/" data-i18n="cross4">Hispanic Heritage Month</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <p class="footer-brand-name notranslate" translate="no">Ballet Folklórico Mi Herencia</p>
+          <address>
+            <p data-i18n="footer.location">Based in Hacienda Heights, CA
+Serving Los Angeles, SGV, Inland Empire &amp; Orange County</p>
+            <p style="margin-block-start:0.5rem;">
+              <a href="mailto:balletfolkloricomiherencia@gmail.com">balletfolkloricomiherencia@gmail.com</a>
+            </p>
+          </address>
+        </div>
+        <nav aria-label="Footer navigation">
+          <h3 data-i18n="footer.nav.heading">Quick Links</h3>
+          <ul>
+            <li><a href="/" data-i18n="nav.home">Home</a></li>
+            <li><a href="/quinceaneras/" data-i18n="footer.svc.quince">Quinceañeras</a></li>
+            <li><a href="/weddings/" data-i18n="footer.svc.weddings">Weddings</a></li>
+            <li><a href="/pricing/" data-i18n="footer.svc.pricing">Pricing</a></li>
+            <li><a href="/performances/" data-i18n="footer.svc.performances">Performances</a></li>
+            <li><a href="/dance-classes/" data-i18n="nav.classes">Classes</a></li>
+            <li><a href="/#contact" data-i18n="nav.contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-social">
+          <h3 data-i18n="footer.social.heading">Find Us Online</h3>
+          <div class="footer-social-icons">
+            <a href="https://www.youtube.com/@annaperdomo9160/videos" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="YouTube">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+            </a>
+          </div>
+          <ul style="margin-block-start:1rem;">
+            <li>
+              <a href="https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w" target="_blank" rel="noopener noreferrer" data-i18n="footer.social.gigsalad">GigSalad Profile</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; <span id="footerYear"></span>
+          <span class="notranslate" translate="no">Ballet Folklórico Mi Herencia</span> · Hacienda Heights, CA ·
+          <span data-i18n="footer.rights">All rights reserved.</span>
+        </p>
+        <p style="margin-block-start:0.5rem; font-style:italic;">
+          <span data-i18n="footer.made_with">Made with</span>
+          <svg class="beating-heart" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 512 512" fill="#ff6b9d" aria-hidden="true"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>
+          <span data-i18n="footer.by">by</span>
+          <a href="https://www.variationsonastring.com" target="_blank" rel="noopener noreferrer" style="color:var(--gold-light); text-decoration:none;">Variations on a String</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js"></script>
+</body>
+</html>
