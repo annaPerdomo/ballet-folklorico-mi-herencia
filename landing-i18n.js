@@ -959,14 +959,26 @@
         "cross2": "婚禮",
         "cross3": "價格指南"
       }
+    },
+    "dia-de-los-muertos": {
+      "es": {}
+    },
+    "cinco-de-mayo": {
+      "es": {}
+    },
+    "hispanic-heritage-month": {
+      "es": {}
     }
   };
 
   const PAGECONF = {
-    "quinceaneras":      { file: "quinceaneras/index.html",      path: "/quinceaneras/" },
-    "weddings":          { file: "weddings/index.html",          path: "/weddings/" },
-    "pricing":           { file: "pricing/index.html",           path: "/pricing/" },
-    "dance-classes":     { file: "dance-classes/index.html",     path: "/dance-classes/" }
+    "quinceaneras":             { file: "quinceaneras/index.html",             path: "/quinceaneras/" },
+    "weddings":                 { file: "weddings/index.html",                 path: "/weddings/" },
+    "pricing":                  { file: "pricing/index.html",                  path: "/pricing/" },
+    "dance-classes":            { file: "dance-classes/index.html",            path: "/dance-classes/" },
+    "dia-de-los-muertos":       { file: "dia-de-los-muertos/index.html",       path: "/dia-de-los-muertos/",       langs: ["es"] },
+    "cinco-de-mayo":            { file: "cinco-de-mayo/index.html",            path: "/cinco-de-mayo/",            langs: ["es"] },
+    "hispanic-heritage-month":  { file: "hispanic-heritage-month/index.html",  path: "/hispanic-heritage-month/",  langs: ["es"] }
   };
   const LANGS = ["es", "ja", "zh", "zht"];
   const unesc = (s) => String(s).replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
@@ -989,7 +1001,7 @@
       meta[L] = m;
       lang[L] = d;
     }
-    pages[pk] = { file: PAGECONF[pk].file, path: PAGECONF[pk].path, meta, lang };
+    pages[pk] = { file: PAGECONF[pk].file, path: PAGECONF[pk].path, langs: PAGECONF[pk].langs, meta, lang };
   }
 
   globalThis.__LANDING__ = { shared, pages };

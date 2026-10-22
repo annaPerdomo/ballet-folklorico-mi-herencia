@@ -105,7 +105,10 @@
       if (slug === seg || slug.indexOf(seg + '/') === 0) { curLang = k; slug = slug.slice(seg.length + 1); break; }
     }
     var pref = norm(navigator.language || navigator.userLanguage || '');
-    if (!slug || pref === curLang || !SUGGEST[pref]) return; // already in their language
+    // Pages that only exist in a subset of languages (data-langs="en,es" on
+    // <body>) must never suggest a language the page doesn't have.
+    var pageLangs = ((document.body.getAttribute('data-langs') || 'en,es,ja,zh,zht').split(','));
+    if (!slug || pref === curLang || !SUGGEST[pref] || pageLangs.indexOf(pref) === -1) return; // already in their language
     // Don't nag if they already have a language preference or dismissed the bar.
     try { if (localStorage.getItem('bfmh-lang') || localStorage.getItem('bfmh-suggest-dismissed')) return; } catch (e) {}
     var bar = document.getElementById('langSuggest');
