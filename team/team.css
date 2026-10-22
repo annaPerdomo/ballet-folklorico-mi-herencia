@@ -670,6 +670,7 @@ body.has-gal { overflow: hidden; }
 .gal-head { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dance-sort { margin: 0.7rem 0 0.8rem; }
 .dance-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.4rem; }
 .gal-fold { margin-top: 1.2rem; }
 .gal-fold:first-child { margin-top: 0.2rem; }
