@@ -150,7 +150,7 @@
       printShareMsg: 'Gig roster',
       tabMedia: 'Gallery', gallery: 'Photos & videos', galleryN: 'Photos & videos ({n})', mediaLoading: 'Loading the gallery…',
       storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
-      dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', sortMostDone: 'Most performed', sortAz: 'A–Z', danceGigsN: 'Performed at {n} gigs', danceVideosN: '{n} videos', noDanceVideos: 'No videos of this dance yet.',
+      dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', sortMostDone: 'Most performed', sortAz: 'A–Z', region: 'Region', allRegions: 'All', otherRegion: 'Other', danceGigsN: 'Performed at {n} gigs', danceVideosN: '{n} videos', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig & event galleries', noGalleryGigs: 'No gigs yet.',
       newFolder: 'New folder', folderHint: 'For photos and videos from group events that aren’t gigs — a posada, a trip, a practice. It won’t show in Gigs or calendars.',
@@ -304,7 +304,7 @@
       printShareMsg: 'Lista de eventos',
       tabMedia: 'Galería', gallery: 'Fotos y videos', galleryN: 'Fotos y videos ({n})', mediaLoading: 'Cargando la galería…',
       storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
-      dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', sortMostDone: 'Más bailados', sortAz: 'A–Z', danceGigsN: 'Bailado en {n} eventos', danceVideosN: '{n} videos', noDanceVideos: 'Todavía no hay videos de este baile.',
+      dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', sortMostDone: 'Más bailados', sortAz: 'A–Z', region: 'Región', allRegions: 'Todas', otherRegion: 'Otra', danceGigsN: 'Bailado en {n} eventos', danceVideosN: '{n} videos', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.',
       newFolder: 'Nueva carpeta', folderHint: 'Para fotos y videos de eventos del grupo que no son presentaciones: una posada, un viaje, un ensayo. No aparece en Eventos ni en los calendarios.',
@@ -1638,8 +1638,8 @@
   }
 
   /* ── gallery & music ───────────────────────────────────── */
-  var media = { index: null, library: null, videos: null, loading: null, open: {}, danceSort: 'most' };
-  try { if (localStorage.getItem('bfmh_team_dance_sort') === 'az') media.danceSort = 'az'; } catch (e) {}
+  var media = { index: null, library: null, videos: null, loading: null, open: {}, danceSort: 'most', danceRegion: null };
+  try { if (localStorage.getItem('bfmh_team_dance_sort') === 'az') media.danceSort = 'az'; media.danceRegion = localStorage.getItem('bfmh_team_dance_region'); } catch (e) {}
   /* Videos are matched to a dance by title ("Jarabe Tapatío - Arcadia Elks 5/8/26"); aliases catch spellings in use. */
   var DANCES = [
     ['Jarabe Tapatío', 'jarabe'], ['El Son de la Negra', 'son de la negra', 'la negra'], ['La Chona'], ['El Potro'],
@@ -1653,6 +1653,20 @@
     var names = (d.length > 1 ? d.slice(1) : [d[0]]).map(fold);
     return { name: d[0], re: new RegExp('(^|[^a-z])(' + names.join('|') + ')(?![a-z])') };
   });
+  /* Regions follow the costumes and the owners' lineups ("Sinaloa 1. Sauce 2. Acuérdate · Jalisco 3. Tranchete…"). */
+  var REGIONS = [
+    ['Jalisco', 'Jarabe Tapatío', 'El Son de la Negra', 'La Botella', 'Tranchete', 'La Raspa', 'Relámpago', 'El Mariachi', 'Un Poco Loco'],
+    ['Veracruz', 'Colas', 'Zapateado', 'El Huateque', 'La Bruja'],
+    ['Chiapas', 'Rascapetate', 'Chiapanecas', 'La Llorona', 'Las Calaveras', 'Chumbala Cachumbala'],
+    ['Sinaloa', 'Acuérdate', 'El Sauce y la Palma', 'El Toro Mambo'],
+    ['El Norte', 'Santa Rita', 'Evangelina', 'El Circo', 'Jesusita', 'Rio'],
+    ['Baja', 'El Potro', 'La Chona', 'María Chuchena', 'Espejeando'],
+    ['Michoacán', 'Baile de los Viejitos', 'Sonajas', 'Fantasía', 'El Sapo y la Rana'],
+    ['Yucatán', 'Charolas', 'Vaquería']
+  ];
+  var regionByDance = {};
+  REGIONS.forEach(function (r) { r.slice(1).forEach(function (d) { regionByDance[fold(d)] = r[0]; }); });
+  function regionOf(dance) { return regionByDance[fold(dance)] || null; }
   function fold(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' '); }
   /* The dance named earliest in the title wins. */
   function knownDance(it) {
@@ -1878,6 +1892,16 @@
     var names = Object.keys(counts).sort(!most ? alpha
       : function (a, b) { return nGigs(b) - nGigs(a) || counts[b] - counts[a] || alpha(a, b); });
     if (!names.length) return;
+    var present = REGIONS.map(function (r) { return r[0]; }).filter(function (r) { return names.some(function (n) { return regionOf(n) === r; }); });
+    var other = names.some(function (n) { return !regionOf(n); });
+    var region = media.danceRegion;
+    if (region && present.indexOf(region) === -1 && !(region === 'other' && other)) region = null;
+    var shown = !region ? names : names.filter(function (n) { return (regionOf(n) || 'other') === region; });
+    var setRegion = function (v) {
+      media.danceRegion = v;
+      try { if (v) localStorage.setItem('bfmh_team_dance_region', v); else localStorage.removeItem('bfmh_team_dance_region'); } catch (e) {}
+      render();
+    };
     var setSort = function (v) {
       media.danceSort = v;
       try { localStorage.setItem('bfmh_team_dance_sort', v); } catch (e) {}
@@ -1888,7 +1912,11 @@
       h('div', { class: 'frow dance-sort' }, h('span', { class: 'flabel', text: t('sortBy') }),
         chip(t('sortMostDone'), most, function () { setSort('most'); }),
         chip(t('sortAz'), !most, function () { setSort('az'); })),
-      h('div', { class: 'dance-chips' }, names.map(function (n) {
+      h('div', { class: 'frow dance-sort' }, h('span', { class: 'flabel', text: t('region') }),
+        chip(t('allRegions'), !region, function () { setRegion(null); }),
+        present.map(function (r) { return chip(r, region === r, function () { setRegion(r); }); }),
+        other ? chip(t('otherRegion'), region === 'other', function () { setRegion('other'); }) : null),
+      h('div', { class: 'dance-chips' }, shown.map(function (n) {
         var k = most ? nGigs(n) : counts[n];
         return h('button', { type: 'button', class: 'chip dance-chip', onclick: function () { openGallery(null, n); } },
           icon('play', 2.4), h('span', { class: 'dance-name', text: n }), h('span', { class: 'gal-n', text: k, title: t(most ? 'danceGigsN' : 'danceVideosN', { n: k }) }));
