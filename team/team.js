@@ -166,7 +166,7 @@
       uploadRefused: 'storage refused it ({n})', uploadNetwork: 'the connection dropped',
       dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
       dirEmpty: 'No families have been added yet.', ownersHere: 'Admins can sign in here', familiesHere: 'Families: find your family here',
-      webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webShowShort: 'Add to website', webBadge: 'On bfmh.dance', tileWebAdd: 'Add to website', tileWebSuggest: 'Suggest for website', tileWebOn: 'On website', tileWebPending: 'Suggested',
+      webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webBadge: 'On bfmh.dance',
       webOn: 'Now on bfmh.dance — it shows up within a few minutes', webOff: 'Removed from bfmh.dance',
       webSuggest: 'Suggest for bfmh.dance', webWithdraw: 'Withdraw suggestion', webApprove: 'Approve for bfmh.dance', webPending: 'Waiting for an owner’s OK',
       webSuggested: 'Suggested — an owner will look at it before it goes on bfmh.dance',
@@ -316,7 +316,7 @@
       uploadRefused: 'el almacenamiento lo rechazó ({n})', uploadNetwork: 'se cortó la conexión',
       dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
       dirEmpty: 'Todavía no se ha agregado ninguna familia.', ownersHere: 'Los administradores pueden entrar aquí', familiesHere: 'Familias: encuentren a su familia aquí',
-      webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webShowShort: 'Poner en la página', webBadge: 'En bfmh.dance', tileWebAdd: 'Poner en la página', tileWebSuggest: 'Sugerir para la página', tileWebOn: 'En la página', tileWebPending: 'Sugerido',
+      webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webBadge: 'En bfmh.dance',
       webOn: 'Ya está en bfmh.dance; aparece en unos minutos', webOff: 'Se quitó de bfmh.dance',
       webSuggest: 'Sugerir para bfmh.dance', webWithdraw: 'Retirar sugerencia', webApprove: 'Aprobar para bfmh.dance', webPending: 'Esperando el visto bueno de un dueño',
       webSuggested: 'Sugerido; un dueño lo revisará antes de ponerlo en bfmh.dance',
@@ -1640,8 +1640,8 @@
   }
   function webBadge(it) {
     var st = webState(it);
-    return st === 'off' ? null : h('span', { class: 'tile-web is-' + st, title: t(st === 'on' ? 'webBadge' : 'webPending') },
-      icon(st === 'on' ? 'yes' : 'clock', 2.4), h('span', { text: t(st === 'on' ? 'tileWebOn' : 'tileWebPending') }));
+    var label = t(st === 'on' ? 'webBadge' : 'webPending');
+    return st === 'off' ? null : h('span', { class: 'tile-web is-' + st, title: label, 'aria-label': label, role: 'img' }, icon(st === 'on' ? 'yes' : 'clock', 2.6));
   }
   var gal = null;
   function plural(n, one, many) { return t(n === 1 ? one : many, { n: n }); }
@@ -1852,14 +1852,6 @@
       { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteItem(it, function () { if (gal) gal.dirty = true; reloadMedia(); }); } }];
   }
   function kindOf(f) { return /^video\//.test(f.type) ? 'video' : 'photo'; }
-  function tileWebButton(it) {
-    if (!mediaWebAction(it)) return webBadge(it);
-    var st = webState(it);
-    return h('button', { type: 'button', class: 'tile-web is-' + st, 'aria-label': webLabel(it), title: webLabel(it), 'aria-pressed': st === 'off' ? 'false' : 'true',
-      onclick: function (e) { e.stopPropagation(); webToggle(it); } },
-      icon(st === 'on' ? 'yes' : st === 'suggested' ? 'clock' : 'website', 2.4),
-      h('span', { text: t(st === 'on' ? 'tileWebOn' : st === 'suggested' ? 'tileWebPending' : isOwner() ? 'tileWebAdd' : 'tileWebSuggest') }));
-  }
   function mediaTile(it, viewable) {
     var n = viewable.indexOf(it);
     var open = it.kind === 'link' ? function () { window.open(it.url, '_blank', 'noopener'); } : function () { lightbox(viewable, n); };
@@ -1872,7 +1864,7 @@
       h('button', { type: 'button', class: 'tile-open', 'aria-label': it.kind === 'photo' ? t('openPhoto', { n: n + 1 }) : it.title || t('openVideo', { n: n + 1 }), onclick: open },
         pic, it.kind === 'photo' ? null : h('span', { class: 'video-play' }, icon('play', 2)),
         it.kind === 'link' ? h('span', { class: 'tile-cap', text: it.title || it.url.replace(/^https:\/\/(www\.)?/, '').slice(0, 60) }) : null),
-      tileWebButton(it), more);
+      webBadge(it), more);
   }
 
   function linkSheet(eventId) {
