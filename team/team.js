@@ -164,7 +164,7 @@
       pickSongs: 'Songs for this gig', pickSongsHint: 'Tap to add or remove songs from the music library.', noLibrary: 'The music library is empty. Add songs from the Gallery tab first.',
       uploadingN: 'Uploading {n} of {total}…', uploadFailed: '{n} didn’t upload.', uploadedOne: 'Uploaded', uploadedMany: '{n} uploaded',
       uploadRefused: 'storage refused it ({n})', uploadNetwork: 'the connection dropped',
-      dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
+      familiesLoading: 'Loading families…', dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
       dirEmpty: 'No families have been added yet.', ownersHere: 'Admins can sign in here', familiesHere: 'Families: find your family here',
       webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webBadge: 'On bfmh.dance',
       webOn: 'Now on bfmh.dance — it shows up within a few minutes', webOff: 'Removed from bfmh.dance',
@@ -314,7 +314,7 @@
       pickSongs: 'Canciones para este evento', pickSongsHint: 'Toca para agregar o quitar canciones de la biblioteca de música.', noLibrary: 'La biblioteca de música está vacía. Primero agrega canciones desde la pestaña Galería.',
       uploadingN: 'Subiendo {n} de {total}…', uploadFailed: '{n} no se subieron.', uploadedOne: 'Subido', uploadedMany: '{n} subidos',
       uploadRefused: 'el almacenamiento lo rechazó ({n})', uploadNetwork: 'se cortó la conexión',
-      dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
+      familiesLoading: 'Cargando familias…', dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
       dirEmpty: 'Todavía no se ha agregado ninguna familia.', ownersHere: 'Los administradores pueden entrar aquí', familiesHere: 'Familias: encuentren a su familia aquí',
       webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webBadge: 'En bfmh.dance',
       webOn: 'Ya está en bfmh.dance; aparece en unos minutos', webOff: 'Se quitó de bfmh.dance',
@@ -541,11 +541,19 @@
     api('/api/auth', { method: 'DELETE' }).then(function () { location.href = back; });
   }
 
+  function loader(text) {
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'tm-twirl'); svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML = '<circle class="tw tw-3" cx="50" cy="50" r="42"/><circle class="tw tw-2" cx="50" cy="50" r="31"/>'
+      + '<circle class="tw tw-1" cx="50" cy="50" r="20"/><circle class="tw-core" cx="50" cy="50" r="6"/>';
+    return h('div', { class: 'tm-boot', role: 'status' }, svg, h('p', { class: 'tm-boot-text', text: text }));
+  }
+
   function renderDirectory() {
     tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
     var err = h('p', { class: 'error' });
-    var grid = h('div', { class: 'pickgrid' });
+    var grid = h('div', { class: 'pickgrid' }, loader(t('familiesLoading')));
     app.appendChild(h('div', { class: 'card familia' },
       h('h3', { class: 'card-title', text: t('dirTitle') }),
       h('p', { class: 'card-meta', text: t('dirHint') }),
@@ -553,6 +561,7 @@
       h('p', { class: 'hint', text: t('pickNotListed') })));
     app.appendChild(h('p', { class: 'hint familia-owners' }, h('a', { href: '/team/', text: t('ownersHere') })));
     api('/api/auth?families').then(function (d) {
+      grid.innerHTML = '';
       if (!d.families.length) { grid.appendChild(h('p', { class: 'card-meta', text: t('dirEmpty') })); return; }
       d.families.forEach(function (f) {
         grid.appendChild(h('button', { class: 'btn pickbtn', type: 'button', onclick: function () {
@@ -561,11 +570,12 @@
             .catch(function (x) { err.textContent = x.message; });
         } }, h('b', { text: f.name }), h('span', { class: 'pickkids', text: f.dancers.join(', ') })));
       });
-    }, function (e) { err.textContent = e.message; });
+    }, function (e) { grid.innerHTML = ''; err.textContent = e.message; });
   }
 
   /* No password here — being in the GroupMe chat is the guest list. */
   function renderPicker(gig) {
+    state.pickerGig = gig;
     tabsEl.hidden = true; fabRoot.innerHTML = ''; paintBrandRole();
     headerRight.innerHTML = ''; headerRight.appendChild(langToggle()); app.innerHTML = '';
 
@@ -1664,7 +1674,7 @@
 
   function renderMediaTab() {
     if (!media.index) {
-      app.appendChild(h('div', { class: 'tm-boot' }, h('p', { class: 'tm-boot-text', text: t('mediaLoading') })));
+      app.appendChild(loader(t('mediaLoading')));
       loadMediaIndex().then(render, function (e) { toast(e.message, true); });
       return;
     }
@@ -1809,7 +1819,7 @@
       h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('gallery') }),
         h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' })),
       d && isOwner() && d.items.some(coverable) ? h('button', { type: 'button', class: 'btn btn-sm gal-cover-btn', onclick: function () { coverSheet(d); } }, icon('image', 2), h('span', { text: t('cover') })) : null));
-    if (!d) { root.appendChild(h('div', { class: 'tm-boot' }, h('p', { class: 'tm-boot-text', text: t('mediaLoading') }))); return; }
+    if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
 
     var shown = d.items.filter(function (i) { return i.kind !== 'audio'; });
     var tracks = d.items.filter(function (i) { return i.kind === 'audio'; });
@@ -2521,7 +2531,7 @@
 
   /* ── render dispatch ───────────────────────────────────── */
   function render() {
-    if (!state.me || state.me.role === 'anon') return renderLogin();
+    if (!state.me || state.me.role === 'anon') return state.pickerGig ? renderPicker(state.pickerGig) : FAMILIA ? renderDirectory() : renderLogin();
     /* #app is the scroller (team.css): a background repaint must not throw the list back to
        the top, but a tab change is a fresh view, so only the same tab keeps its place. */
     var view = state.me.role === 'admin' ? state.tab : state.mtab;

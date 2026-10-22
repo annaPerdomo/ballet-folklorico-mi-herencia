@@ -219,6 +219,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 
 /* ── "who's answering?" picker (signed gig link, no sign-in) ── */
 .pickgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 0.85rem; }
+.pickgrid > .tm-boot { grid-column: 1 / -1; padding: 2rem 1rem; }
+.pickgrid > .tm-boot .tm-twirl { width: 64px; height: 64px; }
 .pickbtn { flex-direction: column; align-items: flex-start; justify-content: center; gap: 0.15rem;
   min-height: 64px; padding: 0.6rem 0.8rem; text-align: left; text-transform: none; letter-spacing: 0; white-space: normal; }
 .pickbtn b { font-size: 0.95rem; font-weight: 700; overflow-wrap: anywhere; }
