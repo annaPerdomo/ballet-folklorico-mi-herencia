@@ -1645,10 +1645,42 @@
   });
   function fold(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' '); }
   /* The dance named earliest in the title wins. */
-  function danceOf(it) {
+  function knownDance(it) {
     var title = fold(it.title), best = null, at = Infinity;
     DANCES.forEach(function (d) { var m = d.re.exec(title); if (m && m.index < at) { at = m.index; best = d.name; } });
     return best;
+  }
+  /* A dance missing from DANCES is read off the title's lead: "Dance - Gig" or "Dance 10/20/24 …". */
+  function guessDance(it) {
+    if (it.event_type === 'team') return null;
+    var title = String(it.title || '').replace(/\s+/g, ' ').trim();
+    var cut = /\s+-\s*|\s*[—–]\s*|\s+(?=\d{1,2}\/\d)|\s+#/.exec(title);
+    if (!cut || !cut.index) return null;
+    var name = title.slice(0, cut.index).replace(/\s*\(\d+\)$/, '').replace(/\s+(pt\.?\s*\d+|from\s.+)$/i, '').trim();
+    if (!name || /\d/.test(name) || name.split(' ').length > 5 || /^(intro|audience participation)\b|\b(clip|playlist|demonstration)\b/i.test(name)) return null;
+    return it.event_title && fold(it.event_title).indexOf(fold(name)) !== -1 ? null : name;
+  }
+  var danceMemo = { list: null, byId: null };
+  function danceOf(it) {
+    var list = media.videos || [];
+    if (danceMemo.list !== list) {
+      var byId = {}, spellings = {};
+      list.forEach(function (v) {
+        var known = knownDance(v);
+        if (known) { byId[v.id] = known; return; }
+        var guess = guessDance(v);
+        if (!guess) return;
+        var key = fold(guess), seen = spellings[key] = spellings[key] || {};
+        seen[guess] = (seen[guess] || 0) + 1;
+        byId[v.id] = key;
+      });
+      Object.keys(byId).forEach(function (id) {
+        var seen = spellings[byId[id]];
+        if (seen) byId[id] = Object.keys(seen).sort(function (a, b) { return seen[b] - seen[a]; })[0];
+      });
+      danceMemo = { list: list, byId: byId };
+    }
+    return danceMemo.byId[it.id] || null;
   }
   /* UI only: websiteFlags in api/_lib/media.js is what keeps families to suggesting. */
   function isOwner() { return state.me && state.me.role === 'admin'; }
@@ -1755,8 +1787,7 @@
     if (!media.videos) return;
     var counts = {};
     media.videos.forEach(function (it) { var d = danceOf(it); if (d) counts[d] = (counts[d] || 0) + 1; });
-    var names = DANCES.map(function (d) { return d.name; }).filter(function (n) { return counts[n]; })
-      .sort(function (a, b) { return a.localeCompare(b, state.lang); });
+    var names = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b, state.lang); });
     if (!names.length) return;
     foldSection('dances', t('dances'), names.length, false,
       h('p', { class: 'hint', text: t('dancesHint') }),
