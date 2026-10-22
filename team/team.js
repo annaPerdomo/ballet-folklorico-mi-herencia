@@ -165,7 +165,7 @@
       openPhoto: 'Open photo {n}', openVideo: 'Play video {n}', previous: 'Previous', next: 'Next',
       addLink: 'Add YouTube link', openYoutube: 'Open in YouTube', linkKind: 'Link', cover: 'Cover', coverTitle: 'Folder cover', coverHint: 'Pick the picture everyone sees on this gig’s folder.', coverAuto: 'Choose automatically', coverSet: 'Cover updated', addLinkShort: 'YouTube', video: 'Video',
       videoHint: 'Photos and clips up to 150 MB upload here. For full performances, add an Unlisted YouTube link.',
-      linkHint: 'Anyone with the bfmh.dance/familia address can see this gallery. Set YouTube videos to Unlisted so they stay off search.', linkUrl: 'Link', linkTitlePh: 'e.g. Jalisco — full set',
+      linkHint: 'Anyone with the bfmh.dance/familia address can see this gallery. Set YouTube videos to Unlisted so they stay off search.', linkUrl: 'Link',
       uploadingN: 'Uploading {n} of {total}…', uploadFailed: '{n} didn’t upload.', uploadedOne: 'Uploaded', uploadedMany: '{n} uploaded',
       uploadRefused: 'storage refused it ({n})', uploadNetwork: 'the connection dropped',
       familiesLoading: 'Loading families…', dirTitle: 'Which family are you part of?', dirHint: 'Tap your family to see our gigs, photos, videos and music. This phone will remember you — add this page to your home screen to come back anytime.',
@@ -319,7 +319,7 @@
       openPhoto: 'Abrir foto {n}', openVideo: 'Ver video {n}', previous: 'Anterior', next: 'Siguiente',
       addLink: 'Agregar enlace de YouTube', openYoutube: 'Abrir en YouTube', linkKind: 'Enlace', cover: 'Portada', coverTitle: 'Portada de la carpeta', coverHint: 'Elige la imagen que todos ven en la carpeta de este evento.', coverAuto: 'Elegir automáticamente', coverSet: 'Portada actualizada', addLinkShort: 'YouTube', video: 'Video',
       videoHint: 'Sube fotos y clips de hasta 150 MB aquí. Para presentaciones completas, agrega un enlace de YouTube "No listado".',
-      linkHint: 'Cualquiera con la dirección bfmh.dance/familia puede ver esta galería. Pon los videos de YouTube como "No listado" para que no salgan en búsquedas.', linkUrl: 'Enlace', linkTitlePh: 'p. ej. Jalisco — presentación completa',
+      linkHint: 'Cualquiera con la dirección bfmh.dance/familia puede ver esta galería. Pon los videos de YouTube como "No listado" para que no salgan en búsquedas.', linkUrl: 'Enlace',
       uploadingN: 'Subiendo {n} de {total}…', uploadFailed: '{n} no se subieron.', uploadedOne: 'Subido', uploadedMany: '{n} subidos',
       uploadRefused: 'el almacenamiento lo rechazó ({n})', uploadNetwork: 'se cortó la conexión',
       familiesLoading: 'Cargando familias…', dirTitle: '¿De qué familia eres parte?', dirHint: 'Toca tu familia para ver nuestros eventos, fotos, videos y música. Este teléfono te recordará; agrega esta página a tu pantalla de inicio para volver cuando quieras.',
@@ -2166,14 +2166,12 @@
   function linkSheet(eventId) {
     var pop = popSheet(t('addLink'), t('linkHint'));
     var url = h('input', { type: 'url', inputmode: 'url', placeholder: 'https://youtu.be/…', 'aria-label': t('linkUrl'), required: true });
-    var title = h('input', { placeholder: t('linkTitlePh'), 'aria-label': t('titleLabel'), maxlength: 200 });
     pop.body.appendChild(h('form', { class: 'form-grid', onsubmit: function (e) {
       e.preventDefault();
-      api('/api/media', { method: 'POST', body: { action: 'link', event_id: eventId, url: url.value, title: title.value } })
+      api('/api/media', { method: 'POST', body: { action: 'link', event_id: eventId, url: url.value } })
         .then(function () { pop.close(); toast(t('saved')); if (gal) gal.dirty = true; return reloadMedia(); })
         .catch(function (x) { toast(x.message, true); });
     } }, h('label', { class: 'f full' }, h('span', { text: t('linkUrl') }), url),
-      h('label', { class: 'f full' }, h('span', { text: t('titleLabel') }), title),
       h('div', { class: 'pop-btns full' }, h('button', { class: 'btn btn-wide btn-gold', type: 'submit', text: t('add') }),
         h('button', { class: 'btn btn-wide', type: 'button', text: t('cancel'), onclick: pop.close }))));
     url.focus();

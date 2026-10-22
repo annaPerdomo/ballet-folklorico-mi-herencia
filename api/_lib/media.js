@@ -24,7 +24,24 @@ export function youtubeId(url) {
   else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
     id = u.searchParams.get('v') || (u.pathname.match(/^\/(?:shorts|live|embed)\/([^/?#]+)/) || [])[1] || null;
   }
-  return id && /^[\w-]{11}$/.test(id) ? id : null;
+  return id && id !== 'videoseries' && /^[\w-]{11}$/.test(id) ? id : null;
+}
+
+export function isPlaylist(url) {
+  try {
+    const u = new URL(String(url));
+    return /(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be)$/.test(u.hostname) && !youtubeId(url) && (u.searchParams.has('list') || u.pathname.startsWith('/playlist'));
+  } catch { return false; }
+}
+
+// oEmbed refuses private videos, so those links stay untitled.
+export async function youtubeTitle(id) {
+  try {
+    const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`, { signal: AbortSignal.timeout(4000) });
+    if (!r.ok) return null;
+    const { title } = await r.json();
+    return typeof title === 'string' && title.trim() ? title.trim().slice(0, 200) : null;
+  } catch { return null; }
 }
 
 export function safeLink(url) {

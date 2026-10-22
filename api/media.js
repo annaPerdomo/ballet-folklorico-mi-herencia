@@ -5,7 +5,7 @@ import { sql, one } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
@@ -155,10 +155,12 @@ export default route({
       await visibleEvent(eventId, me);
       const url = safeLink(b.url);
       if (!url) throw httpError(400, 'Paste a full https:// link');
+      if (isPlaylist(url)) throw httpError(400, 'Add the videos one at a time — playlists don’t show in the gallery');
+      const title = str(b.title, 200) || (youtubeId(url) ? await youtubeTitle(youtubeId(url)) : new URL(url).hostname.replace(/^www\./, ''));
       const flags = websiteFlags(me, b.website, true);
       const row = await one(`INSERT INTO media (event_id, kind, title, url, family_id, uploader, ready, website, suggested)
         VALUES ($1, 'link', $2, $3, $4, $5, true, $6, $7) RETURNING *`,
-        [eventId, str(b.title, 200) || (youtubeId(url) ? null : new URL(url).hostname.replace(/^www\./, '')), url, familyOf(me), uploaderOf(me),
+        [eventId, title, url, familyOf(me), uploaderOf(me),
           flags.website, flags.suggested]);
       return ok(res, { item: toItem(row, me) });
     }
