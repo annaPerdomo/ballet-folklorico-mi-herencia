@@ -671,6 +671,10 @@ body.has-gal { overflow: hidden; }
 .gal-title { display: flex; flex-direction: column; min-width: 0; }
 .gal-title b { font-weight: 500; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dance-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.4rem; }
+.music-fold { margin: 1.2rem 0 0; }
+.music-fold[open] .music-add { display: flex; justify-content: flex-end; margin-bottom: 0.6rem; }
+.music-add { display: none; }
+.storage { margin-top: 1.7rem; }
 .dance-chip { cursor: pointer; font: inherit; font-size: 0.82rem; min-height: 36px; }
 .dance-chip:hover, .dance-chip:focus-visible { border-color: var(--gold); color: var(--text); }
 .dance-chip svg { color: var(--gold-light); width: 11px; height: 11px; }
@@ -744,6 +748,9 @@ body.has-gal { overflow: hidden; }
   box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 0.8rem; }
 @media (max-width: 700px) { body:not(.has-gal) .upload-tray { bottom: calc(76px + var(--safe-b) * 0.5); } }
 @media (max-width: 700px) {
+  .dance-chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 -0.8rem; padding: 0 0.8rem 0.2rem; touch-action: pan-x pan-y; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .dance-chips::-webkit-scrollbar { display: none; }
+  .dance-chip { flex-shrink: 0; }
   .galgrid { grid-template-columns: 1fr; gap: 0.55rem; }
   .galcard { flex-direction: row; align-items: center; }
   .galcard-cover { width: 84px; height: 84px; aspect-ratio: auto; flex-shrink: 0; }

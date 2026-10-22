@@ -1629,7 +1629,7 @@
   }
 
   /* ── gallery & music ───────────────────────────────────── */
-  var media = { index: null, library: null, videos: null, loading: null };
+  var media = { index: null, library: null, videos: null, loading: null, musicOpen: false };
   /* Videos are matched to a dance by title ("Jarabe Tapatío - Arcadia Elks 5/8/26"); aliases catch spellings in use. */
   var DANCES = [
     ['Jarabe Tapatío', 'jarabe'], ['El Son de la Negra', 'son de la negra', 'la negra'], ['La Chona'], ['El Potro'],
@@ -1707,26 +1707,14 @@
     }
     var idx = media.index;
     if (!idx.storage) app.appendChild(h('div', { class: 'card' }, h('p', { class: 'card-meta', text: t('storageOff') })));
-    if (idx.usage) {
-      var pct = Math.min(100, Math.round(idx.usage.used / idx.usage.quota * 100));
-      app.appendChild(h('div', { class: 'card quiet storage' },
-        h('div', { class: 'storage-line' }, h('span', { class: 'tm-label', text: t('storageLabel') }),
-          h('span', { class: 'card-meta', text: t('storageUsed', { used: fmtBytes(idx.usage.used), quota: fmtBytes(idx.usage.quota) }) })),
-        h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:' + (pct > 85 ? 'var(--no)' : 'var(--gold)') }), h('i', { style: 'flex:' + (100 - pct) }))));
-    }
-
     if (idx.review && idx.review.length) renderReview(idx.review);
 
-    app.appendChild(section(t('musicLibrary'), media.library.length || null,
-      idx.storage ? pickButton(t('addSongs'), AUDIO_ACCEPT, function (files) { uploadFiles(files, null, function () { return 'audio'; }); }) : null));
-    if (!media.library.length) app.appendChild(emptyState('music', t('noSongs')));
-    else app.appendChild(h('div', { class: 'songs' }, media.library.map(function (s) { return songRow(s, libraryActions(s)); })));
-
     renderDances();
+    renderMusic(idx.storage);
 
     app.appendChild(section(t('gigGalleries'), idx.gigs.length || null));
-    if (!idx.gigs.length) { app.appendChild(emptyState('image', t('noGalleryGigs'))); return; }
-    app.appendChild(h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
+    if (!idx.gigs.length) app.appendChild(emptyState('image', t('noGalleryGigs')));
+    else app.appendChild(h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
       var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null]
         .filter(Boolean).join(' · ');
       return h('button', { type: 'button', class: 'galcard', onclick: function () { openGallery(g.id); } },
@@ -1736,6 +1724,28 @@
           h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }),
           h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
     })));
+
+    if (idx.usage) {
+      var pct = Math.min(100, Math.round(idx.usage.used / idx.usage.quota * 100));
+      app.appendChild(h('div', { class: 'card quiet storage' },
+        h('div', { class: 'storage-line' }, h('span', { class: 'tm-label', text: t('storageLabel') }),
+          h('span', { class: 'card-meta', text: t('storageUsed', { used: fmtBytes(idx.usage.used), quota: fmtBytes(idx.usage.quota) }) })),
+        h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:' + (pct > 85 ? 'var(--no)' : 'var(--gold)') }), h('i', { style: 'flex:' + (100 - pct) }))));
+    }
+  }
+
+  function renderMusic(storage) {
+    var songs = media.library;
+    var body = !songs.length ? emptyState('music', t('noSongs'))
+      : h('div', { class: 'songs' }, songs.map(function (s) { return songRow(s, libraryActions(s)); }));
+    var add = storage ? h('div', { class: 'music-add' },
+      pickButton(t('addSongs'), AUDIO_ACCEPT, function (files) { uploadFiles(files, null, function () { return 'audio'; }); })) : null;
+    var sec = section(t('musicLibrary'), songs.length || null);
+    sec.className += ' tm-sec-fold';
+    var det = h('details', { class: 'tm-fold music-fold', ontoggle: function () { media.musicOpen = det.open; } },
+      h('summary', { class: 'tm-fold-summary' }, sec), add, body);
+    det.open = !!media.musicOpen;
+    app.appendChild(det);
   }
 
   function videosOf(dance) { return media.videos.filter(function (it) { return danceOf(it) === dance; }); }
