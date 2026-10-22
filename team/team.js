@@ -1815,6 +1815,13 @@
     }
     var idx = media.index;
     if (!idx.storage) app.appendChild(h('div', { class: 'card' }, h('p', { class: 'card-meta', text: t('storageOff') })));
+    if (idx.usage && !FAMILIA) {
+      var pct = Math.min(100, Math.round(idx.usage.used / idx.usage.quota * 100));
+      app.appendChild(h('div', { class: 'card quiet storage' },
+        h('div', { class: 'storage-line' }, h('span', { class: 'tm-label', text: t('storageLabel') }),
+          h('span', { class: 'card-meta', text: t('storageUsed', { used: fmtBytes(idx.usage.used), quota: fmtBytes(idx.usage.quota) }) })),
+        h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:' + (pct > 85 ? 'var(--no)' : 'var(--gold)') }), h('i', { style: 'flex:' + (100 - pct) }))));
+    }
     if (idx.review && idx.review.length) renderReview(idx.review);
 
     renderDances();
@@ -1835,13 +1842,6 @@
             h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
       })));
 
-    if (idx.usage) {
-      var pct = Math.min(100, Math.round(idx.usage.used / idx.usage.quota * 100));
-      app.appendChild(h('div', { class: 'card quiet storage' },
-        h('div', { class: 'storage-line' }, h('span', { class: 'tm-label', text: t('storageLabel') }),
-          h('span', { class: 'card-meta', text: t('storageUsed', { used: fmtBytes(idx.usage.used), quota: fmtBytes(idx.usage.quota) }) })),
-        h('div', { class: 'meter' }, h('i', { style: 'flex:' + pct + ';background:' + (pct > 85 ? 'var(--no)' : 'var(--gold)') }), h('i', { style: 'flex:' + (100 - pct) }))));
-    }
   }
 
   function renderMusic(storage) {

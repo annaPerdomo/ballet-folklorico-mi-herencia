@@ -688,7 +688,7 @@ body.has-gal { overflow: hidden; }
 .gal-fold { margin-top: 1.2rem; }
 .gal-fold:first-child { margin-top: 0.2rem; }
 .music-add { display: flex; justify-content: flex-end; margin-bottom: 0.6rem; }
-.storage { margin-top: 1.7rem; }
+.storage { margin: 0.2rem 0 0.4rem; }
 .dance-chip { cursor: pointer; font: inherit; font-size: 0.82rem; min-height: 36px; }
 .dance-chip:hover, .dance-chip:focus-visible { border-color: var(--gold); color: var(--text); }
 .dance-chip svg { color: var(--gold-light); width: 11px; height: 11px; }
