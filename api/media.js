@@ -5,7 +5,7 @@ import { sql, one } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
@@ -58,7 +58,7 @@ export default route({
       const rows = await sql(`SELECT m.*, e.title AS event_title, e.event_type, e.event_date, e.start_time, e.call_time, e.status
         FROM media m JOIN events e ON e.id = m.event_id
         WHERE m.kind IN ('video','link') AND m.ready AND e.status = ANY($1)
-        ORDER BY e.event_date DESC NULLS LAST, m.created_at, m.id`, [GALLERY_VISIBLE]);
+        ORDER BY e.event_date DESC NULLS LAST, e.id, ${FEATURED_FIRST}, m.created_at, m.id`, [GALLERY_VISIBLE]);
       const videos = rows.filter((r) => me.role === 'admin' || galleryOpen(r))
         .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date }));
       return ok(res, { ...base, videos });
@@ -67,7 +67,7 @@ export default route({
     const eventId = int(q.event);
     if (eventId) {
       const event = await visibleEvent(eventId, me);
-      const rows = await sql(`SELECT * FROM media WHERE event_id = $1 AND kind <> 'audio' AND ready ORDER BY created_at, id`, [eventId]);
+      const rows = await sql(`SELECT * FROM media m WHERE event_id = $1 AND kind <> 'audio' AND ready ORDER BY ${FEATURED_FIRST}, created_at, id`, [eventId]);
       return ok(res, { ...base, event, items: rows.map((r) => toItem(r, me)) });
     }
 

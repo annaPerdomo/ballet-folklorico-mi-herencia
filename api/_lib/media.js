@@ -7,6 +7,10 @@ export const LIMITS = { photo: 25 * MB, video: 150 * MB, audio: 60 * MB };
 export const THUMB_MAX = MB;
 export const TYPES = { photo: /^image\//, video: /^video\//, audio: /^audio\// };
 
+// Anna's tripod recordings lead a gig's videos; photos keep upload order.
+export const FEATURED_FIRST = `COALESCE(m.kind <> 'photo' AND (m.credit = 'Anna Mendez Perdomo'
+  OR (m.credit IS NULL AND m.uploader IN ('owners', 'Mendez Perdomo'))), false) DESC`;
+
 // R2's free tier is 10 GB-month. Stop a little short so a busy month never turns into a bill.
 export const quotaBytes = () => Math.round((Number(process.env.MEDIA_QUOTA_GB) || 9) * 1024 * MB);
 
