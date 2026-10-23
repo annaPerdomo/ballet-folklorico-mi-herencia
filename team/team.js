@@ -495,6 +495,7 @@
     var params = new URLSearchParams(location.search);
     var key = params.get('k');
     if (params.get('lang') === 'es' || params.get('lang') === 'en') setLangSilently(params.get('lang'));
+    paintBrandRole();
     var chain = Promise.resolve();
     if (key) {
       chain = api('/api/auth', { method: 'POST', body: { key: key } }).then(function () {
@@ -522,7 +523,13 @@
     });
   }
   function setLangSilently(l) { state.lang = l; document.documentElement.lang = l; try { localStorage.setItem('bfmh_team_lang', l); } catch (e) {} }
-  function paintBrandRole() { var el = document.getElementById('brand-role'); if (el) el.textContent = t(FAMILIA ? 'familia' : 'roleTeam'); }
+  function paintBrandRole() {
+    var el = document.getElementById('brand-role'); if (!el) return;
+    el.textContent = t(FAMILIA ? 'familia' : 'roleTeam');
+    var link = el.closest('a');
+    link.href = FAMILIA || state.pickerGig ? '/familia' : '/team/';
+    link.setAttribute('aria-label', 'Ballet Folklórico Mi Herencia — ' + el.textContent);
+  }
 
   /* ── login ──────────────────────────────────────────────── */
   /* A lone password box is a credential a password manager cannot finish: iOS keeps asking for
