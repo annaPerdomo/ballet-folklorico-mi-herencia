@@ -129,6 +129,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .card-date .w { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .card-body { margin-top: 0.75rem; }
 .card-text { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text-2); font-size: 0.85rem; line-height: 1.6; margin: 0.6rem 0 0; }
+.twin-hint { display: flex; align-items: center; gap: 0.55rem; width: 100%; margin: 0.75rem 0 0; padding: 0.6rem 0.75rem; border-radius: 12px;
+  border: 1px dashed var(--line); background: rgba(255,255,255,0.03); color: var(--text-2); font-size: 0.8rem; line-height: 1.4; text-align: left; }
+.twin-hint svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--gold); }
+.twin-hint span { flex: 1; }
+.twin-hint b { color: var(--gold-light); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .card-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.8rem; }
 
 .tm-block { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--hair); }
@@ -449,6 +454,8 @@ a.act { text-decoration: none; }
 .act-ico { width: 22px; display: inline-flex; justify-content: center; color: var(--gold); }
 .act-ico svg { width: 18px; height: 18px; }
 .act.danger { color: #ff9ecb; } .act.danger .act-ico { color: var(--magenta-light); }
+.act-sub { display: block; margin-top: 0.15rem; color: var(--muted); font-size: 0.74rem; font-weight: 400; }
+.act:has(.act-sub) { padding-block: 0.55rem; }
 .act-close { margin-top: 0.9rem; width: 100%; min-height: 50px; border-radius: 14px; border: 1px solid var(--line);
   background: rgba(255,255,255,0.04); color: var(--text-2); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 

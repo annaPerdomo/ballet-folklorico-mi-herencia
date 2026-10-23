@@ -1,7 +1,7 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
 import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { sql } from '../_lib/db.js';
-import { getEvent, updateEvent, rosterFor } from '../_lib/events.js';
+import { getEvent, updateEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
 import { takeEventMedia, removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
 import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
@@ -76,6 +76,14 @@ export default route({
     const body = await readJson(req);
     const current = await getEvent(id, { admin: true });
     if (!current) throw httpError(404, 'Not found');
+
+    // A merge deletes this row, so edits sent alongside it would be lost or land outside the transaction.
+    if (body.action === 'merge') {
+      const into = int(body.into);
+      if (!into) throw httpError(400, 'Pick a gig to merge into');
+      await mergeInquiry(id, into);
+      return ok(res, { event: await getEvent(into, { admin: true }), roster: await rosterFor(into), notified: null });
+    }
 
     const patch = cleanPatch(body);
     if (Object.keys(patch).length) await updateEvent(id, patch);

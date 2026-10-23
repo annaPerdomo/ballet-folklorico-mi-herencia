@@ -68,6 +68,10 @@
       askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team', addQuietly: 'Add to Gigs without posting', addQuietlyNew: 'Add straight to Gigs — no GroupMe post', confirmPost: 'Post the confirmation to GroupMe', edit: 'Edit', decline: 'Decline', lapse: 'No reply — didn’t happen', reopen: 'Reopen as inquiry', del: 'Delete',
+      mergeIntoGig: 'This became a gig…', mergePick: 'Which gig did this inquiry become?', mergeSub: 'Its contact info and message move onto the gig.',
+      mergeNone: 'No gigs to merge into yet.', sameDay: 'same day', mergeGo: 'Merge',
+      mergeConfirm: 'Merge “{inq}” into “{gig}”? The client’s contact info and message move onto the gig, and the inquiry leaves the inbox.',
+      mergeDone: 'Merged into {gig}', sameDayHint: 'Same day as {gig}. The same job?',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
       requiredTag: 'required', optionalHead: 'Optional — fill in what you know',
       payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
@@ -223,6 +227,10 @@
       askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo', addQuietly: 'Agregar a Eventos sin publicar', addQuietlyNew: 'Agregar directo a Eventos — sin publicar en GroupMe', confirmPost: 'Publicar la confirmación en GroupMe', edit: 'Editar', decline: 'Rechazar', lapse: 'Sin respuesta — no se hizo', reopen: 'Reabrir como solicitud', del: 'Eliminar',
+      mergeIntoGig: 'Esto se volvió un evento…', mergePick: '¿En qué evento se convirtió esta solicitud?', mergeSub: 'Sus datos de contacto y su mensaje pasan al evento.',
+      mergeNone: 'Todavía no hay eventos para unir.', sameDay: 'mismo día', mergeGo: 'Unir',
+      mergeConfirm: '¿Unir “{inq}” con “{gig}”? Los datos de contacto y el mensaje del cliente pasan al evento, y la solicitud sale de la bandeja.',
+      mergeDone: 'Unido con {gig}', sameDayHint: 'Mismo día que {gig}. ¿Es el mismo trabajo?',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
       requiredTag: 'obligatorio', optionalHead: 'Opcional — llena lo que sepas',
       payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
@@ -1283,6 +1291,9 @@
       card.appendChild(clientBlock(ev, true));
       if (ev.message) card.appendChild(h('p', { class: 'card-text', text: ev.message }));
     }
+    var twin = ev.status === 'inquiry' && sameDayGig(ev);
+    if (twin) card.appendChild(h('button', { type: 'button', class: 'twin-hint', onclick: function () { mergeInto(ev, twin); } },
+      icon('link', 2.2), h('span', { text: t('sameDayHint', { gig: evTitle(twin) }) }), h('b', { text: t('mergeGo') })));
     var actions = h('div', { class: 'card-actions' });
     if (ev.status === 'inquiry') {
       actions.appendChild(ev.event_date
@@ -1512,9 +1523,48 @@
       doAction(ev, 'publish', { notify: false }).then(function (d) { if (d) { state.tab = 'gigs'; render(); } });
     } };
   }
+  var MERGE_INTO = ['open', 'confirmed', 'done', 'cancelled'];
+  function sameDayGig(ev) {
+    // A gig that already has a client came from its own inquiry, so it can't be this one's twin.
+    return ev.event_date && state.events.find(function (g) { return g.id !== ev.id && g.event_date === ev.event_date && MERGE_INTO.indexOf(g.status) !== -1 && !g.client_name && !g.client_email; });
+  }
+  function mergeAction(ev) { return { label: t('mergeIntoGig'), icon: 'link', onclick: function () { mergeSheet(ev); } }; }
+  function mergeSheet(ev) {
+    api('/api/events?all=1').then(function (d) {
+      var at = parseDate(ev.event_date) || new Date();
+      var gigs = d.events.filter(function (g) { return g.id !== ev.id && g.event_date && MERGE_INTO.indexOf(g.status) !== -1; })
+        .sort(function (a, b) { return Math.abs(parseDate(a.event_date) - at) - Math.abs(parseDate(b.event_date) - at); })
+        .slice(0, 8);
+      if (!gigs.length) return toast(t('mergeNone'), true);
+      var pop = popSheet(t('mergePick'), t('mergeSub'));
+      var list = h('div', { class: 'acts' });
+      gigs.forEach(function (g) {
+        var same = g.event_date === ev.event_date;
+        list.appendChild(h('button', { class: 'act', onclick: function () { pop.close(); mergeInto(ev, g); } },
+          h('span', { class: 'act-ico' }, icon('calendar', 2)),
+          h('span', {}, evTitle(g), h('small', { class: 'act-sub', text: fmtDate(g.event_date) + (same ? ' · ' + t('sameDay') : '') }))));
+      });
+      pop.body.appendChild(list);
+      pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
+    }).catch(function (e) { toast(e.message, true); });
+  }
+  function mergeInto(ev, gig) {
+    confirmSheet(t('mergeConfirm', { inq: evTitle(ev), gig: evTitle(gig) }), t('mergeGo')).then(function (yes) {
+      if (!yes) return;
+      api('/api/events/' + ev.id, { method: 'PATCH', body: { action: 'merge', into: gig.id } }).then(function () {
+        toast(t('mergeDone', { gig: evTitle(gig) }));
+        state.tab = 'gigs';
+        return refresh().then(function () {
+          // An old gig sits outside the default list, so there is no sheet to open for it.
+          if (state.events.some(function (e) { return e.id === gig.id; })) openDetail(gig.id);
+        });
+      }).catch(function (e) { toast(e.message, true); });
+    });
+  }
   function inquiryActions(ev) {
     return [
       addQuietly(ev),
+      mergeAction(ev),
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
       { label: t('lapse'), icon: 'clock', onclick: function () { doAction(ev, 'lapse').then(closeDetail); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },
@@ -1575,6 +1625,7 @@
       out.more = [
         // Re-sending 'cancel' on a cancelled gig is a no-op transition, so this only posts.
         s === 'cancelled' && canPost ? { label: t('postCancellation'), icon: 'chat', onclick: function () { doAction(ev, 'cancel', { notify: true }); } } : null,
+        s === 'lapsed' || s === 'declined' ? mergeAction(ev) : null,
         edit, { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteEvent(ev); } }];
     }
     return out;

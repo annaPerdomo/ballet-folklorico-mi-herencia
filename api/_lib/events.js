@@ -1,4 +1,5 @@
-import { sql, one } from './db.js';
+import { sql, one, getPool, ensureSchema } from './db.js';
+import { httpError } from './http.js';
 import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOpen } from './ics.js';
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled', 'lapsed'];
@@ -66,6 +67,51 @@ export async function updateEvent(id, patch) {
   }
   sets.push('updated_at = now()');
   return one(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 RETURNING id`, params);
+}
+
+export const MERGEABLE = ['inquiry', 'lapsed', 'declined'];
+export const MERGE_TARGETS = ['open', 'confirmed', 'done', 'cancelled'];
+const FILL = ['client_name', 'client_email', 'client_phone', 'message', 'event_type', 'event_date', 'date_text', 'venue', 'address', 'city', 'raw'];
+
+// An owner answered the inquiry by email and made the gig by hand, so the two rows tell one story.
+export async function mergeInquiry(fromId, intoId) {
+  await ensureSchema();
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const { rows } = await client.query('SELECT * FROM events WHERE id = ANY($1) ORDER BY id FOR UPDATE', [[fromId, intoId]]);
+    const from = rows.find((r) => r.id === fromId);
+    const into = rows.find((r) => r.id === intoId);
+    if (!from || !into) throw httpError(404, 'Not found');
+    if (!MERGEABLE.includes(from.status)) throw httpError(400, `Cannot merge an event that is ${from.status}`);
+    if (fromId === intoId || !MERGE_TARGETS.includes(into.status)) throw httpError(400, 'Pick a gig to merge into');
+    // COALESCE drops a differing client; the notes keep it.
+    const kept = ['client_name', 'client_email', 'client_phone', 'message']
+      .filter((c) => from[c] && into[c] && from[c] !== into[c]).map((c) => from[c]);
+    const merged = kept.length ? `From merged inquiry “${from.title}”:\n${kept.join('\n')}` : null;
+    const notes = [...new Set([into.notes, from.notes, merged].filter(Boolean))].join('\n') || null;
+    const params = [intoId, notes, from.created_at, from.source, from.source_ref];
+    const fill = FILL.map((c) => { params.push(c === 'raw' && from.raw ? JSON.stringify(from.raw) : c === 'event_type' && from[c] === 'other' ? null : from[c]); return `${c} = COALESCE(${c}, $${params.length})`; });
+    await client.query(
+      `UPDATE events SET ${fill.join(', ')}, notes = $2, created_at = LEAST(created_at, $3),
+              source = CASE WHEN source = 'manual' THEN $4 ELSE source END, source_ref = COALESCE(source_ref, $5), updated_at = now()
+        WHERE id = $1`, params);
+    await client.query(`INSERT INTO availability (event_id, dancer_id, status, note, self, updated_at)
+                        SELECT $2, dancer_id, status, note, self, updated_at FROM availability WHERE event_id = $1
+                        ON CONFLICT DO NOTHING`, [fromId, intoId]);
+    await client.query(`INSERT INTO event_songs (event_id, media_id, position)
+                        SELECT $2, media_id, position FROM event_songs WHERE event_id = $1
+                        ON CONFLICT DO NOTHING`, [fromId, intoId]);
+    await client.query('UPDATE media SET event_id = $2 WHERE event_id = $1', [fromId, intoId]);
+    await client.query('UPDATE groupme_messages SET event_id = $2 WHERE event_id = $1', [fromId, intoId]);
+    await client.query('DELETE FROM events WHERE id = $1', [fromId]);
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw e;
+  } finally {
+    client.release();
+  }
 }
 
 export async function rosterFor(eventId) {
