@@ -1053,10 +1053,10 @@
       align-items: stretch;
       border-left: 3px solid var(--card-accent, var(--gold));
     }
-    .event-card:nth-child(4n+1) { --card-accent: #c9a84c; }
-    .event-card:nth-child(4n+2) { --card-accent: #e84393; }
-    .event-card:nth-child(4n+3) { --card-accent: #2a9d8f; }
-    .event-card:nth-child(4n+4) { --card-accent: #c7295d; }
+    .event-card:nth-of-type(4n+1) { --card-accent: #c9a84c; }
+    .event-card:nth-of-type(4n+2) { --card-accent: #e84393; }
+    .event-card:nth-of-type(4n+3) { --card-accent: #2a9d8f; }
+    .event-card:nth-of-type(4n+4) { --card-accent: #c7295d; }
 
     .event-card:hover {
       transform: translateY(-4px);
@@ -1064,6 +1064,14 @@
       border-color: rgba(201,168,76,0.2);
     }
     .event-card.is-past { opacity: 0.45; filter: grayscale(0.3); }
+    .events-year {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.25rem 0 0; font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; color: var(--gold-light);
+    }
+    .events-year:first-child { margin-top: 0; }
+    .events-year-group { grid-column: 1 / -1; margin-block: 0; }
+    .events-year::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(201,168,76,0.4), transparent); }
 
     .event-date-badge {
       display: flex;

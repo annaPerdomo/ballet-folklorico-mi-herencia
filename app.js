@@ -375,8 +375,22 @@
       if (emptyMsg) emptyMsg.style.display = upcoming.length ? 'none' : '';
 
       // Past: show EVENTS_VISIBLE by default, most recent first
-      const visiblePast = eventsExpanded ? past : past.slice(0, EVENTS_VISIBLE);
-      pastGrid.innerHTML = visiblePast.map(ev => buildEventCard(ev, lang, now)).join('');
+      if (eventsExpanded) {
+        const years = [];
+        past.forEach(function (ev) {
+          const y = ev.date.slice(0, 4);
+          if (!years.length || years[years.length - 1].y !== y) years.push({ y: y, list: [] });
+          years[years.length - 1].list.push(ev);
+        });
+        pastGrid.removeAttribute('role');
+        pastGrid.innerHTML = years.map(function (g) {
+          return '<h3 class="events-year">' + g.y + '</h3><div class="events-grid events-year-group" role="list">'
+            + g.list.map(ev => buildEventCard(ev, lang, now)).join('') + '</div>';
+        }).join('');
+      } else {
+        pastGrid.setAttribute('role', 'list');
+        pastGrid.innerHTML = past.slice(0, EVENTS_VISIBLE).map(ev => buildEventCard(ev, lang, now)).join('');
+      }
       animateCards(pastGrid);
 
       // Toggle button for past events
@@ -408,24 +422,37 @@
     // Render events on initial load
     renderEvents(currentLang);
 
-    // Gigs flagged "Show on website" in /team/; a static i18n-data.js entry on the same date + name wins.
-    // Also merged into the page's Event JSON-LD ItemList (addEventsToJsonLd below) for rich results.
+    // Gigs flagged "Show on website" in /team/ plus every past gig; a static i18n-data.js entry on the same date wins.
+    // Upcoming ones are also merged into the page's Event JSON-LD ItemList (addEventsToJsonLd below) for rich results.
     if (window.fetch) {
       fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
         if (!d) return;
         addSharedMedia(d.media || []);
         if (!d.events || !d.events.length) return;
-        var have = {};
-        EVENTS.forEach(function (ev) { have[ev.date + '|' + (ev.name.en || '').toLowerCase()] = ev; });
+        var staticByDate = {}, apiPerDate = {};
+        EVENTS.forEach(function (ev) { staticByDate[ev.date] = ev; });
+        d.events.forEach(function (ev) { apiPerDate[ev.date] = (apiPerDate[ev.date] || 0) + 1; });
         var added = 0, newlyAdded = [];
+        var today = new Date(); today.setHours(0, 0, 0, 0);
         d.events.forEach(function (ev) {
-          var k = ev.date + '|' + (ev.name.en || '').toLowerCase();
-          if (have[k]) { if (ev.media.length) { have[k].id = ev.id; have[k].media = ev.media; added++; } return; }
-          have[k] = ev; EVENTS.push(ev); newlyAdded.push(ev); added++;
+          var mine = staticByDate[ev.date];
+          if (mine && (apiPerDate[ev.date] === 1 || sameGig(mine, ev))) {
+            if (ev.media.length) { mine.id = ev.id; mine.media = ev.media; added++; }
+            return;
+          }
+          var upcoming = new Date(ev.date + 'T00:00:00') >= today;
+          if (upcoming && ev.listed === false) return;
+          EVENTS.push(ev); added++;
+          if (upcoming) newlyAdded.push(ev);
         });
         if (added) renderEvents(currentLang);
         if (newlyAdded.length) addEventsToJsonLd(newlyAdded);
       }).catch(function () {});
+    }
+
+    function sameGig(a, b) {
+      var x = (a.name.en || '').toLowerCase(), v = (b.venue || '').toLowerCase();
+      return Boolean(x) && ((b.name.en || '').toLowerCase().indexOf(x) >= 0 || v.indexOf(x) >= 0 || Boolean(v) && x.indexOf(v) >= 0);
     }
 
     function addSharedMedia(list) {

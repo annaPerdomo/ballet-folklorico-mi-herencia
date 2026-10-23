@@ -177,15 +177,17 @@
     });
   }
 
-  // ── Upcoming performances, fetched client-side (/performances/ only) ──
+  // ── Upcoming performances and the dated history, fetched client-side (/performances/ only) ──
   (function () {
     var box = document.querySelector('[data-upcoming]');
     if (!box) return;
+    var history = document.querySelector('#history .lp-prose');
     var lang = (document.documentElement.lang || 'en').indexOf('es') === 0 ? 'es' : 'en';
     var MONTHS = {
       en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
     };
+    var ALL_DATES = { en: 'Every date', es: 'Todas las fechas' };
     var FALLBACK = {
       en: 'Nothing public on the calendar right now. Ask about your date.',
       es: 'Por ahora no hay nada público en el calendario. Pregúntanos por tu fecha.'
@@ -194,20 +196,55 @@
     function showFallback() {
       box.innerHTML = '<p class="lp-lede"><a href="#quote">' + esc(FALLBACK[lang]) + '</a></p>';
     }
+    function placeOf(ev, name) {
+      var place = ev.city ? (ev.venue ? ev.venue + ', ' + ev.city : ev.city) : (ev.location && (ev.location[lang] || ev.location.en)) || '';
+      return ev.city && name.indexOf(ev.city) >= 0 && (!ev.venue || name.indexOf(ev.venue) >= 0) ? '' : place;
+    }
+    function renderHistory(past) {
+      if (!history || !past.length) return;
+      var byYear = {};
+      past.forEach(function (ev) { (byYear[ev.date.slice(0, 4)] = byYear[ev.date.slice(0, 4)] || []).push(ev); });
+      var heads = {};
+      history.querySelectorAll('h3').forEach(function (h) { heads[h.textContent.trim()] = h; });
+      Object.keys(byYear).sort().reverse().forEach(function (y) {
+        var h = heads[y];
+        if (!h) {
+          h = document.createElement('h3');
+          h.textContent = y;
+          var after = Object.keys(heads).filter(function (k) { return k < y; }).sort().reverse()[0];
+          history.insertBefore(h, after ? heads[after] : null);
+          heads[y] = h;
+        }
+        var fold = document.createElement('details');
+        fold.className = 'lp-history';
+        fold.innerHTML = '<summary>' + esc(ALL_DATES[lang]) + ' (' + byYear[y].length + ')</summary><ul class="lp-check">' + byYear[y].map(function (ev) {
+          var d = new Date(ev.date + 'T00:00:00');
+          var name = (ev.name && (ev.name[lang] || ev.name.en)) || (lang === 'es' ? 'Presentación' : 'Performance');
+          var place = placeOf(ev, name);
+          var mon = MONTHS[lang][d.getMonth()].slice(0, 3);
+          return '<li><span class="lp-history-date">' + (lang === 'es' ? d.getDate() + ' ' + mon : mon + ' ' + d.getDate()) + '</span>'
+            + '<strong>' + esc(name) + '</strong>' + (place ? ' · ' + esc(place) : '') + '</li>';
+        }).join('') + '</ul>';
+        var p = h.nextElementSibling;
+        history.insertBefore(fold, p && p.tagName === 'P' ? p.nextSibling : h.nextSibling);
+      });
+    }
     if (!window.fetch) { showFallback(); return; }
     fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var events = (d && d.events) || [];
       var now = new Date();
       now.setHours(0, 0, 0, 0);
-      var upcoming = events.filter(function (ev) { return ev.date && new Date(ev.date + 'T00:00:00') >= now; })
+      renderHistory(events.filter(function (ev) { return ev.date && new Date(ev.date + 'T00:00:00') < now; })
+        .sort(function (a, b) { return a.date < b.date ? 1 : -1; }));
+      var upcoming = events.filter(function (ev) { return ev.listed !== false && ev.date && new Date(ev.date + 'T00:00:00') >= now; })
         .sort(function (a, b) { return new Date(a.date) - new Date(b.date); });
       if (!upcoming.length) { showFallback(); return; }
       box.innerHTML = '<ul class="lp-check">' + upcoming.map(function (ev) {
         var d = new Date(ev.date + 'T00:00:00');
         var dateStr = MONTHS[lang][d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-        var name = esc((ev.name && (ev.name[lang] || ev.name.en)) || (lang === 'es' ? 'Presentación' : 'Performance'));
-        var place = esc(ev.city ? (ev.venue ? ev.venue + ', ' + ev.city : ev.city) : (ev.location && (ev.location[lang] || ev.location.en)) || '');
-        return '<li><strong>' + name + '</strong>: ' + dateStr + (place ? ' · ' + place : '') + '</li>';
+        var name = (ev.name && (ev.name[lang] || ev.name.en)) || (lang === 'es' ? 'Presentación' : 'Performance');
+        var place = placeOf(ev, name);
+        return '<li><strong>' + esc(name) + '</strong>: ' + dateStr + (place ? ' · ' + esc(place) : '') + '</li>';
       }).join('') + '</ul>';
     }).catch(showFallback);
   })();
