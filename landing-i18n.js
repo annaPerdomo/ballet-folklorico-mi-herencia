@@ -81,6 +81,7 @@
         "cross4": "Folclórico para Día de los Muertos",
         "cross5": "Folclórico para Cinco de Mayo",
         "cross6": "Mes de la Herencia Hispana",
+        "cross7": "Folclórico para posadas y Navidad",
         "shared.cta.getQuote": "Obtén una cotización gratis",
         "shared.cta.watch": "Míranos bailar",
         "shared.cta.checkDate": "Consulta tu fecha",
@@ -154,6 +155,7 @@
         "cross4": "死者の日のフォルクローリコ",
         "cross5": "シンコ・デ・マヨのフォルクローリコ",
         "cross6": "ヒスパニック文化遺産月間",
+        "cross7": "ラス・ポサダスとクリスマスのフォルクローリコ",
         "shared.cta.getQuote": "無料お見積もりを取る",
         "shared.cta.watch": "踊る様子を見る",
         "shared.cta.checkDate": "空き状況を確認",
@@ -227,6 +229,7 @@
         "cross4": "亡灵节民俗舞",
         "cross5": "五月五日节民俗舞",
         "cross6": "西班牙裔传统月",
+        "cross7": "圣诞节与Las Posadas民俗舞",
         "shared.cta.getQuote": "获取免费报价",
         "shared.cta.watch": "观看我们的舞蹈",
         "shared.cta.checkDate": "查询您的日期",
@@ -300,6 +303,7 @@
         "cross4": "亡靈節民俗舞",
         "cross5": "五月五日節民俗舞",
         "cross6": "西班牙裔傳統月",
+        "cross7": "聖誕節與Las Posadas民俗舞",
         "shared.cta.getQuote": "獲取免費報價",
         "shared.cta.watch": "觀看我們的舞蹈",
         "shared.cta.checkDate": "查詢您的日期",
@@ -358,7 +362,8 @@
         "cross3": "Clases de baile",
         "cross4": "Folklórico para Día de los Muertos",
         "cross5": "Folklórico para Cinco de Mayo",
-        "cross6": "Mes de la Herencia Hispana"
+        "cross6": "Mes de la Herencia Hispana",
+        "cross7": "Folklórico para posadas y Navidad"
       },
       "ja": {
         "meta.title": "結婚式のフォルクローリコダンサー | ロサンゼルス・南カリフォルニア",
@@ -411,7 +416,8 @@
         "cross3": "ダンス教室",
         "cross4": "死者の日のフォルクローリコ",
         "cross5": "シンコ・デ・マヨのフォルクローリコ",
-        "cross6": "ヒスパニック文化遺産月間"
+        "cross6": "ヒスパニック文化遺産月間",
+        "cross7": "ラス・ポサダスとクリスマスのフォルクローリコ"
       },
       "zh": {
         "meta.title": "婚礼墨西哥民俗舞蹈演出 | 洛杉矶及南加州",
@@ -464,7 +470,8 @@
         "cross3": "舞蹈课程",
         "cross4": "亡灵节民俗舞",
         "cross5": "五月五日节民俗舞",
-        "cross6": "西班牙裔传统月"
+        "cross6": "西班牙裔传统月",
+        "cross7": "圣诞节与Las Posadas民俗舞"
       },
       "zht": {
         "meta.title": "婚禮墨西哥民俗舞蹈演出 | 洛杉磯及南加州",
@@ -517,7 +524,8 @@
         "cross3": "舞蹈課程",
         "cross4": "亡靈節民俗舞",
         "cross5": "五月五日節民俗舞",
-        "cross6": "西班牙裔傳統月"
+        "cross6": "西班牙裔傳統月",
+        "cross7": "聖誕節與Las Posadas民俗舞"
       }
     },
     "pricing": {
@@ -584,7 +592,8 @@
         "cross3": "Clases de baile",
         "cross4": "Folklórico para Día de los Muertos",
         "cross5": "Folklórico para Cinco de Mayo",
-        "cross6": "Mes de la Herencia Hispana"
+        "cross6": "Mes de la Herencia Hispana",
+        "cross7": "Folklórico para posadas y Navidad"
       },
       "ja": {
         "meta.title": "フォルクローリコのダンサーを雇う費用は? | 料金ガイド — ロサンゼルス",
@@ -649,7 +658,8 @@
         "cross3": "ダンスクラス",
         "cross4": "死者の日のフォルクローリコ",
         "cross5": "シンコ・デ・マヨのフォルクローリコ",
-        "cross6": "ヒスパニック文化遺産月間"
+        "cross6": "ヒスパニック文化遺産月間",
+        "cross7": "ラス・ポサダスとクリスマスのフォルクローリコ"
       },
       "zh": {
         "meta.title": "聘请墨西哥民俗舞舞者要多少钱? | 价格指南 — 洛杉矶",
@@ -714,7 +724,8 @@
         "cross3": "舞蹈课程",
         "cross4": "亡灵节民俗舞",
         "cross5": "五月五日节民俗舞",
-        "cross6": "西班牙裔传统月"
+        "cross6": "西班牙裔传统月",
+        "cross7": "圣诞节与Las Posadas民俗舞"
       },
       "zht": {
         "meta.title": "聘請墨西哥民俗舞舞者要多少錢? | 價格指南 — 洛杉磯",
@@ -779,7 +790,8 @@
         "cross3": "舞蹈課程",
         "cross4": "亡靈節民俗舞",
         "cross5": "五月五日節民俗舞",
-        "cross6": "西班牙裔傳統月"
+        "cross6": "西班牙裔傳統月",
+        "cross7": "聖誕節與Las Posadas民俗舞"
       }
     },
     "dance-classes": {
@@ -837,7 +849,8 @@
         "cross3": "Guía de precios",
         "cross4": "Folclórico para Día de los Muertos",
         "cross5": "Folclórico para Cinco de Mayo",
-        "cross6": "Mes de la Herencia Hispana"
+        "cross6": "Mes de la Herencia Hispana",
+        "cross7": "Folclórico para posadas y Navidad"
       },
       "ja": {
         "meta.title": "フォルクローリコダンス教室 | 子ども・ティーン・大人向けレッスン — Hacienda Heights, CA",
@@ -893,7 +906,8 @@
         "cross3": "料金ガイド",
         "cross4": "死者の日のフォルクローリコ",
         "cross5": "シンコ・デ・マヨのフォルクローリコ",
-        "cross6": "ヒスパニック文化遺産月間"
+        "cross6": "ヒスパニック文化遺産月間",
+        "cross7": "ラス・ポサダスとクリスマスのフォルクローリコ"
       },
       "zh": {
         "meta.title": "墨西哥民俗舞蹈课程 | 儿童、青少年及成人班 — Hacienda Heights, CA",
@@ -949,7 +963,8 @@
         "cross3": "价格指南",
         "cross4": "亡灵节民俗舞",
         "cross5": "五月五日节民俗舞",
-        "cross6": "西班牙裔传统月"
+        "cross6": "西班牙裔传统月",
+        "cross7": "圣诞节与Las Posadas民俗舞"
       },
       "zht": {
         "meta.title": "墨西哥民俗舞蹈課程 | 兒童、青少年及成人班 — Hacienda Heights, CA",
@@ -1005,7 +1020,8 @@
         "cross3": "價格指南",
         "cross4": "亡靈節民俗舞",
         "cross5": "五月五日節民俗舞",
-        "cross6": "西班牙裔傳統月"
+        "cross6": "西班牙裔傳統月",
+        "cross7": "聖誕節與Las Posadas民俗舞"
       }
     },
     "dia-de-los-muertos": {
@@ -1062,6 +1078,64 @@
         "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
         "cross1": "Folclórico para Cinco de Mayo",
         "cross2": "Mes de la Herencia Hispana",
+        "cross3": "Guía de precios",
+        "cross4": "Folclórico para posadas y Navidad"
+      }
+    },
+    "posadas-navidad": {
+      "es": {
+        "meta.title": "Bailarines de folclórico para posadas y Navidad | LA y OC",
+        "meta.description": "Bailarines de folclórico para las posadas, la Navidad y las fiestas decembrinas. Danza mexicana para iglesias, empresas y familias en LA y OC. Cotizaciones gratis.",
+        "meta.ogTitle": "Bailarines de folclórico para posadas y Navidad | Ballet Folklórico Mi Herencia",
+        "meta.ogDescription": "Folclórico en vivo para posadas parroquiales, fiestas navideñas de empresa y celebraciones familiares. Con sede en Hacienda Heights, al servicio de todo el sur de California.",
+        "bc": "Folclórico para posadas y Navidad",
+        "nav3": "La presentación",
+        "hero.h1": "Bailarines de folclórico para &lt;em&gt;las posadas y la Navidad&lt;/em&gt; en Los Ángeles y OC",
+        "hero.lede": "Ballet Folklórico Mi Herencia lleva danza folclórica mexicana tradicional en vivo, con vestuario lleno de color, a posadas, fiestas decembrinas y celebraciones de Navidad en Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "hero.trust": "Calificación 5.0 en &lt;a href=\"https://www.gigsalad.com/ballet_folklorico_mexican_folk_dance_w\" target=\"_blank\" rel=\"noopener noreferrer\"&gt;GigSalad&lt;/a&gt; · Con sede en Hacienda Heights · Viajamos",
+        "s1.label": "La temporada navideña",
+        "s1.heading": "Folclórico para todo tipo de celebración navideña.",
+        "s1.card1t": "Parroquias y comunidad",
+        "s1.card1d": "Posadas parroquiales y festivales navideños, en el salón o en el patio.",
+        "s1.card2t": "Empresas y centros comerciales",
+        "s1.card2d": "Fiestas navideñas de empresa y espectáculos navideños en centros comerciales.",
+        "s1.card3t": "Familias y vecindarios",
+        "s1.card3d": "Un momento especial en la posada familiar o del barrio, entre la procesión y la piñata.",
+        "s1.where": "Hemos bailado en el Bella Terra Holiday Show en Huntington Beach y en una celebración de diciembre en el Lake Forest Sun and Sail Club.",
+        "s2.label": "La presentación",
+        "s2.heading": "Qué esperar el día del evento.",
+        "s2.li1": "&lt;strong&gt;Presentaciones de 15 a 30 minutos&lt;/strong&gt;: a menudo una o dos presentaciones cortas, con 3 a 8 bailarines según tu evento.",
+        "s2.li2": "&lt;strong&gt;Danzas de todo México&lt;/strong&gt;: cada danza la presentan los bailarines que la conocen, así que el programa depende de quién esté disponible en tu fecha. Cuéntanos tus favoritas y te confirmaremos qué presentaremos cuando tengamos el elenco.",
+        "s2.li3": "&lt;strong&gt;Necesitas un espacio plano de 12x12 pies&lt;/strong&gt;: además de un enchufe para nuestra bocina o el uso de tu propio sistema de sonido, y un área para cambiarnos.",
+        "s2.li4": "&lt;strong&gt;Viajamos por todo el sur de California&lt;/strong&gt;: Los Ángeles, el Valle de San Gabriel, el Inland Empire y el Condado de Orange.",
+        "s2.li5": "&lt;strong&gt;Reserva con 6 a 8 semanas de anticipación&lt;/strong&gt;: los fines de semana de diciembre se llenan rápido, aunque siempre intentaremos atender fechas de último momento.",
+        "s2.li6": "&lt;strong&gt;El precio depende de tu fecha y la duración de la presentación&lt;/strong&gt;: consulta nuestra &lt;a href=\"/pricing/\"&gt;guía de precios&lt;/a&gt; para conocer los rangos.",
+        "faq.label": "Preguntas frecuentes",
+        "faq.heading": "Preguntas para reservar tu posada o fiesta navideña.",
+        "faq1.q": "¿Con cuánta anticipación debemos reservar para una posada o fiesta navideña?",
+        "faq1.a": "Los fines de semana de diciembre son de nuestras fechas más ocupadas, así que recomendamos reservar con 6 a 8 semanas de anticipación. Para fechas de último momento, escríbenos de todos modos: haremos todo lo posible por atenderte.",
+        "faq2.q": "¿Pueden presentarse en un salón parroquial, en una casa o al aire libre?",
+        "faq2.a": "Sí. Nos presentamos tanto en interiores como al aire libre. Solo necesitamos un espacio plano de aproximadamente 12x12 pies y, si usamos nuestra bocina, un enchufe cerca.",
+        "faq3.q": "¿Pueden bailar con una banda de mariachi en vivo o con la música de nuestro DJ?",
+        "faq3.a": "Sí. Coordinamos con regularidad con una banda de mariachi en vivo, un DJ o el sistema de sonido propio de tu evento. Solo avísanos al reservar.",
+        "faq4.q": "¿Pueden incluir una breve introducción sobre las posadas?",
+        "faq4.a": "Sí. Podemos abrir con una breve explicación, apta para toda la familia, de las posadas y de las danzas antes de presentarnos, un bonito detalle para un público mixto.",
+        "faq5.q": "¿Podemos pedir una danza específica?",
+        "faq5.a": "Cuéntanos qué te encantaría ver. Cada danza la presentan los bailarines que la conocen, así que el programa depende de quién esté disponible en tu fecha y no podemos prometer una danza específica de antemano. Cuando tengamos el elenco, te diremos qué presentaremos.",
+        "faq6.q": "¿Cuántos bailarines se presentan y cuánto dura el show?",
+        "faq6.a": "La mayoría de las reservas duran de 15 a 30 minutos con 3 a 8 bailarines, a menudo como una o dos presentaciones cortas. Cuéntanos sobre tu evento y te recomendaremos cuántos bailarines.",
+        "faq7.q": "¿Cuándo están disponibles en diciembre?",
+        "faq7.a": "Tardes y fines de semana, y entre semana por la tarde para fiestas navideñas de empresa. Nuestros bailarines trabajan y estudian durante el día, así que las presentaciones entre semana en horario de día rara vez son posibles. Si tu evento es entre semana por la tarde o en fin de semana, pregúntanos.",
+        "form.label": "Consulta tu fecha",
+        "form.heading": "Obtén una cotización gratis para tu posada o fiesta navideña.",
+        "form.lede": "Cuéntanos tu fecha, ciudad y lugar del evento, y te responderemos en 1 o 2 días hábiles con una cotización personalizada. ¿Prefieres el correo? Escríbenos a &lt;a href=\"mailto:balletfolkloricomiherencia@gmail.com\" style=\"color:var(--gold-light);\"&gt;balletfolkloricomiherencia@gmail.com&lt;/a&gt;.",
+        "form.legend": "Lleva la Navidad a tu evento",
+        "form.dateLabel": "Fecha y ciudad del evento",
+        "form.datePh": "p. ej. 19 de dic. — Whittier",
+        "form.msgLabel": "Cuéntanos sobre tu evento (opcional)",
+        "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
+        "cross1": "Folclórico para Día de los Muertos",
+        "cross2": "Folclórico para Cinco de Mayo",
         "cross3": "Guía de precios"
       }
     },
@@ -1119,7 +1193,8 @@
         "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
         "cross1": "Folclórico para Día de los Muertos",
         "cross2": "Mes de la Herencia Hispana",
-        "cross3": "Guía de precios"
+        "cross3": "Guía de precios",
+        "cross4": "Folclórico para posadas y Navidad"
       }
     },
     "performances": {
@@ -1158,7 +1233,8 @@
         "cross1": "Ve nuestra galería",
         "cross2": "Folclórico para Día de los Muertos",
         "cross3": "Folclórico para Cinco de Mayo",
-        "cross4": "Mes de la Herencia Hispana"
+        "cross4": "Mes de la Herencia Hispana",
+        "cross5": "Folclórico para posadas y Navidad"
       }
     },
     "hispanic-heritage-month": {
@@ -1215,7 +1291,8 @@
         "form.msgPh": "Lugar del evento, número aproximado de invitados y el momento en que te gustaría que nos presentemos…",
         "cross1": "Folclórico para Cinco de Mayo",
         "cross2": "Folclórico para Día de los Muertos",
-        "cross3": "Guía de precios"
+        "cross3": "Guía de precios",
+        "cross4": "Folclórico para posadas y Navidad"
       }
     }
   };
@@ -1228,6 +1305,7 @@
     "dia-de-los-muertos":       { file: "dia-de-los-muertos/index.html",       path: "/dia-de-los-muertos/",       langs: ["es"] },
     "cinco-de-mayo":            { file: "cinco-de-mayo/index.html",            path: "/cinco-de-mayo/",            langs: ["es"] },
     "hispanic-heritage-month":  { file: "hispanic-heritage-month/index.html",  path: "/hispanic-heritage-month/",  langs: ["es"] },
+    "posadas-navidad":          { file: "posadas-navidad/index.html",          path: "/posadas-navidad/",          langs: ["es"] },
     "performances":             { file: "performances/index.html",             path: "/performances/",             langs: ["es"] }
   };
   const LANGS = ["es", "ja", "zh", "zht"];

@@ -105,7 +105,7 @@
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "Quick Links",
       "footer.svc.quince": "Quinceañeras", "footer.svc.weddings": "Weddings",
       "footer.svc.pricing": "Pricing", "footer.svc.performances": "Performances", "footer.svc.classes": "Dance Classes",
-      "footer.svc.dod": "Día de los Muertos", "footer.svc.cdm": "Cinco de Mayo", "footer.svc.hhm": "Hispanic Heritage Month",
+      "footer.svc.dod": "Día de los Muertos", "footer.svc.cdm": "Cinco de Mayo", "footer.svc.hhm": "Hispanic Heritage Month", "footer.svc.pos": "Las Posadas & Navidad",
       "footer.social.heading": "Find Us Online", "footer.social.gigsalad": "GigSalad Profile",
       "footer.rights": "All rights reserved.", "footer.made_with": "Made with", "footer.by": "by",
       "aria.openMenu": "Open navigation menu", "aria.langMenu": "Choose language"
@@ -203,7 +203,7 @@
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "Accesos Rápidos",
       "footer.svc.quince": "Quinceañeras", "footer.svc.weddings": "Bodas",
       "footer.svc.pricing": "Precios", "footer.svc.performances": "Presentaciones", "footer.svc.classes": "Clases de Danza",
-      "footer.svc.dod": "Día de los Muertos", "footer.svc.cdm": "Cinco de Mayo", "footer.svc.hhm": "Mes de la Herencia Hispana",
+      "footer.svc.dod": "Día de los Muertos", "footer.svc.cdm": "Cinco de Mayo", "footer.svc.hhm": "Mes de la Herencia Hispana", "footer.svc.pos": "Posadas y Navidad",
       "footer.social.heading": "Encuéntranos en Línea", "footer.social.gigsalad": "Perfil en GigSalad",
       "footer.rights": "Todos los derechos reservados.", "footer.made_with": "Hecho con", "footer.by": "por",
       "aria.openMenu": "Abrir menú de navegación", "aria.langMenu": "Elegir idioma"
@@ -301,7 +301,7 @@
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "クイックリンク",
       "footer.svc.quince": "キンセアニェーラ", "footer.svc.weddings": "結婚式",
       "footer.svc.pricing": "料金", "footer.svc.performances": "出演歴", "footer.svc.classes": "ダンス教室",
-      "footer.svc.dod": "死者の日", "footer.svc.cdm": "シンコ・デ・マヨ", "footer.svc.hhm": "ヒスパニック文化遺産月間",
+      "footer.svc.dod": "死者の日", "footer.svc.cdm": "シンコ・デ・マヨ", "footer.svc.hhm": "ヒスパニック文化遺産月間", "footer.svc.pos": "ラス・ポサダスとクリスマス",
       "footer.social.heading": "オンラインで見つける", "footer.social.gigsalad": "GigSalad プロフィール",
       "footer.rights": "All rights reserved.", "footer.made_with": "Made with", "footer.by": "by",
       "aria.openMenu": "ナビゲーションメニューを開く", "aria.langMenu": "言語を選択"
@@ -399,7 +399,7 @@
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "快速链接",
       "footer.svc.quince": "十五岁成人礼", "footer.svc.weddings": "婚礼",
       "footer.svc.pricing": "价格", "footer.svc.performances": "演出记录", "footer.svc.classes": "舞蹈课程",
-      "footer.svc.dod": "亡灵节", "footer.svc.cdm": "五月五日节", "footer.svc.hhm": "西班牙裔传统月",
+      "footer.svc.dod": "亡灵节", "footer.svc.cdm": "五月五日节", "footer.svc.hhm": "西班牙裔传统月", "footer.svc.pos": "圣诞节与Las Posadas",
       "footer.social.heading": "在线找到我们", "footer.social.gigsalad": "GigSalad 主页",
       "footer.rights": "版权所有。", "footer.made_with": "用心制作", "footer.by": "制作方",
       "aria.openMenu": "打开导航菜单", "aria.langMenu": "选择语言"
@@ -497,7 +497,7 @@
       "footer.email": "balletfolkloricomiherencia@gmail.com", "footer.nav.heading": "快速連結",
       "footer.svc.quince": "十五歲成人禮", "footer.svc.weddings": "婚禮",
       "footer.svc.pricing": "價格", "footer.svc.performances": "演出記錄", "footer.svc.classes": "舞蹈課程",
-      "footer.svc.dod": "亡靈節", "footer.svc.cdm": "五月五日節", "footer.svc.hhm": "西班牙裔傳統月",
+      "footer.svc.dod": "亡靈節", "footer.svc.cdm": "五月五日節", "footer.svc.hhm": "西班牙裔傳統月", "footer.svc.pos": "聖誕節與Las Posadas",
       "footer.social.heading": "線上找到我們", "footer.social.gigsalad": "GigSalad 主頁",
       "footer.rights": "版權所有。", "footer.made_with": "用心製作", "footer.by": "製作方",
       "aria.openMenu": "開啟導覽選單", "aria.langMenu": "選擇語言"
