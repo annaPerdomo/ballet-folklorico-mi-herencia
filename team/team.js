@@ -88,7 +88,7 @@
       confirmAsk: 'Confirm this gig? Families who said yes will be notified (if a channel is connected).', cancelGig: 'Cancel gig', cancelAsk: 'Cancel this gig?',
       cancelPost: 'Have La Chona post “Gig cancelled” to GroupMe', postCancellation: 'Post the cancellation',
       postConfirmation: 'Post the confirmation', markDone: 'Mark done', gig: 'Gig',
-      botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer', botPaused: 'Sent by a paused dancer — not applied', botKept: 'Kept the answers already there (newer, or the dancer’s own)',
+      botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botGuessedTag: 'Guessed the latest gig', chgToday: 'Today', chgYesterday: 'Yesterday', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer', botPaused: 'Sent by a paused dancer — not applied', botKept: 'Kept the answers already there (newer, or the dancer’s own)',
       addFamilyFrom: 'Add this family', reread: 'Read again', addFamilyHint: 'From GroupMe name “{name}”. Check the spelling of each dancer — the bot matches these names in the chat.',
       pickWho: 'Who’s answering?', pickHint: 'Tap your family. We’ll remember you on this phone.', pickNotListed: 'Don’t see your family? Just reply in GroupMe and the owners will add you.',
       pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.',
@@ -254,7 +254,7 @@
       confirmAsk: '¿Confirmar este evento? Se avisará a las familias que dijeron que sí (si hay un canal conectado).', cancelGig: 'Cancelar evento', cancelAsk: '¿Cancelar este evento?',
       cancelPost: 'Que La Chona publique “Evento cancelado” en GroupMe', postCancellation: 'Publicar la cancelación',
       postConfirmation: 'Publicar la confirmación', markDone: 'Marcar terminado', gig: 'Evento',
-      botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta', botPaused: 'Lo envió un bailarín en pausa — no se aplicó', botKept: 'Se quedaron las respuestas que ya había (más nuevas, o del propio bailarín)',
+      botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botGuessedTag: 'Supuso el evento más reciente', chgToday: 'Hoy', chgYesterday: 'Ayer', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta', botPaused: 'Lo envió un bailarín en pausa — no se aplicó', botKept: 'Se quedaron las respuestas que ya había (más nuevas, o del propio bailarín)',
       addFamilyFrom: 'Agregar esta familia', reread: 'Leer de nuevo', addFamilyHint: 'Del nombre de GroupMe “{name}”. Revisa cómo se escribe cada bailarín — el bot busca esos nombres en el chat.',
       pickWho: '¿Quién responde?', pickHint: 'Toca tu familia. Te recordaremos en este teléfono.', pickNotListed: '¿No ves a tu familia? Responde en GroupMe y los dueños te agregan.',
       pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
@@ -404,6 +404,10 @@
     var M = t('months'), D = t('days');
     return state.lang === 'es' ? D[d.getDay()] + ' ' + d.getDate() + ' ' + M[d.getMonth()].toLowerCase() + ' ' + d.getFullYear()
                               : D[d.getDay()] + ', ' + M[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  function fmtDateShort(s) {
+    var full = fmtDate(s);
+    return s.slice(0, 4) === String(new Date().getFullYear()) ? full.replace(/,? \d{4}$/, '') : full;
   }
   function fmtTime(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
   function fmtWhere(ev) { return [ev.venue, ev.city].filter(Boolean).join(' · '); }
@@ -1753,12 +1757,25 @@
       pop.body.appendChild(h('div', { class: 'card-actions' }, btn));
     }
   }
+  function dayLabel(iso) {
+    var d = new Date(iso), today = new Date(); today.setHours(0, 0, 0, 0);
+    var days = Math.round((today - new Date(d.getFullYear(), d.getMonth(), d.getDate())) / 86400000);
+    if (days === 0) return t('chgToday');
+    if (days === 1) return t('chgYesterday');
+    var local = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    return fmtDateShort(local);
+  }
   function renderChangesList(container, changes, evId) {
     container.innerHTML = '';
     var expanded = historyUI.expanded[evId];
     var shown = expanded ? changes : changes.slice(0, 10);
     var list = h('div', { class: 'chg-list' }); container.appendChild(list);
-    shown.forEach(function (c) { list.appendChild(changeLine(c)); });
+    var lastDay = null;
+    shown.forEach(function (c) {
+      var day = dayLabel(c.changed_at);
+      if (day !== lastDay) { list.appendChild(h('div', { class: 'chg-day', text: day })); lastDay = day; }
+      list.appendChild(changeLine(c));
+    });
     if (!expanded && changes.length > 10) {
       container.appendChild(h('button', { class: 'btn btn-sm chg-more', text: t('changesMore') + ' · ' + changes.length, onclick: function () {
         historyUI.expanded[evId] = true;
@@ -2714,21 +2731,44 @@
   }
 
   var MARK = { yes: '✓', maybe: '?', no: '✗' };
+  function groupBotUpdates(r) {
+    var byEv = {}, order = [];
+    (r.updates || []).forEach(function (u) {
+      var k = u.event_date || u.event_title || u.event_id;
+      if (!byEv[k]) { byEv[k] = []; order.push(k); }
+      byEv[k].push(u);
+    });
+    order.sort();
+    return { byEv: byEv, order: order };
+  }
   function botResultText(m) {
     var r = m.result || {};
     if (m.applied) {
-      var byEv = {}; var order = [];
-      (r.updates || []).forEach(function (u) {
-        var k = u.event_date || u.event_title || u.event_id;
-        if (!byEv[k]) { byEv[k] = []; order.push(k); }
-        byEv[k].push(u.dancer_name.split(' ')[0] + ' ' + MARK[u.status]);
-      });
-      order.sort();
-      return order.map(function (k) { return (/^\d{4}-/.test(k) ? fmtDate(k) : k) + ': ' + byEv[k].join(' · '); }).join('  ·  ') + (r.event_guessed ? ' ' + t('botGuessed') : '');
+      var g = groupBotUpdates(r);
+      return g.order.map(function (k) {
+        return (/^\d{4}-/.test(k) ? fmtDate(k) : k) + ': ' + g.byEv[k].map(function (u) { return u.dancer_name.split(' ')[0] + ' ' + MARK[u.status]; }).join(' · ');
+      }).join('  ·  ') + (r.event_guessed ? ' ' + t('botGuessed') : '');
     }
     var why = { 'no-intent': t('botIgnored'), 'no-dancers': t('botNoDancers'), 'unknown-sender': t('botUnknownSender'), 'no-open-event': t('botNoEvent'), 'no-event-for-date': t('botNoDate'), 'too-vague': t('botVague'), 'announcement': t('botAnnouncement'), 'paused-sender': t('botPaused'), 'kept-existing': t('botKept') }[r.reason] || t('botIgnored');
     if (r.ambiguous && r.ambiguous.length) why += ' — ' + t('botAmbiguous', { names: r.ambiguous.join(', ') });
     return why;
+  }
+  function botResultNode(m) {
+    var r = m.result || {};
+    if (!m.applied) return h('p', { class: 'logskip', text: botResultText(m) });
+    var g = groupBotUpdates(r);
+    var box = h('div', { class: 'logres' });
+    g.order.forEach(function (k) {
+      var chips = h('div', { class: 'logres-chips' });
+      g.byEv[k].forEach(function (u) {
+        var first = u.dancer_name.split(' ')[0];
+        chips.appendChild(h('span', { class: 'chip chip-xs ' + u.status, 'aria-label': first + ' — ' + t(u.status) }, icon(u.status, 3), first));
+      });
+      box.appendChild(h('div', { class: 'logres-ev' },
+        h('span', { class: 'logres-date', text: /^\d{4}-/.test(k) ? fmtDateShort(k) : String(k) }), chips));
+    });
+    if (r.event_guessed) box.appendChild(h('span', { class: 'logguess' }, icon('maybe', 2.5), t('botGuessedTag')));
+    return box;
   }
   /* Bold runs come through as **…** so each explainer stays one translatable string. */
   function rich(s) {
@@ -2906,8 +2946,9 @@
   function botLogRow(m) {
     var r = m.result || {};
     var open = !!botUI.expanded[m.id];
-    var msg = h('button', { type: 'button', class: 'logmsg' + (open ? '' : ' clamp'), text: m.text || '',
-      onclick: function () { botUI.expanded[m.id] = !botUI.expanded[m.id]; msg.classList.toggle('clamp', !botUI.expanded[m.id]); } });
+    var msg = h('button', { type: 'button', class: 'logmsg' + (open ? '' : ' clamp'),
+      onclick: function () { botUI.expanded[m.id] = !botUI.expanded[m.id]; msg.classList.toggle('clamp', !botUI.expanded[m.id]); } },
+      h('span', { class: 'logmsg-text', text: m.text || '' }));
     var actions = [];
     if (botNeedsLook(m)) {
       var known = state.families.some(function (f) {
@@ -2921,9 +2962,8 @@
     return h('div', { class: 'logrow' + (m.applied ? ' applied' : '') + (m.undone_at ? ' undone' : '') },
       h('div', { class: 'loghead' }, h('b', { text: m.sender_name || '?' }), h('span', { class: 'logtime', text: timeAgo(m.created_at || m.received_at || Date.now()) })),
       msg,
-      h('div', { class: 'logout' },
-        h('span', { class: m.applied ? 'ok' : 'skip', text: botResultText(m) }),
-        actions.length ? h('div', { class: 'logacts' }, actions) : null));
+      botResultNode(m),
+      actions.length ? h('div', { class: 'logacts' }, actions) : null);
   }
 
   // Group display names look like "Folk-Maricela Orozco (Ashley Emily & Sharlene)".
