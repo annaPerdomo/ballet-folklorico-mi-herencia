@@ -7,7 +7,8 @@ if (!DB_URL) {
 } else {
   process.env.DATABASE_URL = DB_URL;
   const { sql, one, withSource, getPool } = await import('./db.js');
-  const { ingestMessage } = await import('./groupme-ingest.js');
+  const { ingestMessage, recordIngest } = await import('./groupme-ingest.js');
+  const { undoMessage } = await import('./groupme-undo.js');
   const { deleteEvent } = await import('./events.js');
 
   async function makeFixtures() {
@@ -205,6 +206,307 @@ if (!DB_URL) {
       assert.equal(del.actor, 'History Test Family');
     } finally {
       await cleanup(fx);
+    }
+  });
+
+  async function makeTwoDancerFixtures() {
+    const family = await one(`INSERT INTO families (name, access_token) VALUES ('History Test Family', $1) RETURNING id`, [`hist-${Date.now()}-${Math.random()}`]);
+    const a = await one(`INSERT INTO dancers (family_id, name) VALUES ($1, 'History Test Dancer A') RETURNING id`, [family.id]);
+    const b = await one(`INSERT INTO dancers (family_id, name) VALUES ($1, 'History Test Dancer B') RETURNING id`, [family.id]);
+    const event = await one(`INSERT INTO events (title, status, venue) VALUES ('History Test Event', 'open', 'Original Venue') RETURNING id`);
+    return { familyId: family.id, dancerAId: a.id, dancerBId: b.id, eventId: event.id };
+  }
+
+  async function cleanupTwo({ familyId, eventId }, messageIds = []) {
+    if (messageIds.length) await sql(`DELETE FROM groupme_messages WHERE id = ANY($1)`, [messageIds]);
+    await sql(`DELETE FROM availability WHERE event_id = $1`, [eventId]);
+    await sql(`DELETE FROM events WHERE id = $1`, [eventId]);
+    await sql(`DELETE FROM dancers WHERE family_id = $1`, [familyId]);
+    await sql(`DELETE FROM families WHERE id = $1`, [familyId]);
+    await sql(`DELETE FROM availability_history WHERE event_id = $1`, [eventId]);
+    await sql(`DELETE FROM events_history WHERE event_id = $1`, [eventId]);
+  }
+
+  test('undoMessage restores an existing answer and deletes an inserted one', async () => {
+    const fx = await makeTwoDancerFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family', actor: 'History Test Family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status, note, self) VALUES ($1, $2, 'yes', 'original note', true)`, [fx.eventId, fx.dancerAId]));
+      const [before] = await sql(`SELECT updated_at FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerAId]);
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'Someone', 'History Test Dancer A and History Test Dancer B cant make History Test Event') RETURNING id`,
+        [`hist-undo1-${Date.now()}-${Math.random()}`])).id;
+      const res = await ingestMessage({
+        text: 'History Test Dancer A and History Test Dancer B cant make History Test Event', senderName: 'Someone', senderUserId: null, sentAt: null, messageId: gm,
+      });
+      assert.ok(res.applied);
+
+      const undo = await undoMessage(gm);
+      assert.equal(undo.restored.length, 2);
+      const a = undo.restored.find((r) => r.dancer_id === fx.dancerAId);
+      const b = undo.restored.find((r) => r.dancer_id === fx.dancerBId);
+      assert.equal(a.to, 'yes');
+      assert.equal(b.to, null);
+
+      const [rowA] = await sql(`SELECT * FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerAId]);
+      assert.equal(rowA.status, 'yes');
+      assert.equal(rowA.note, 'original note');
+      assert.equal(rowA.self, true);
+      assert.equal(rowA.updated_at.getTime(), before.updated_at.getTime());
+      const rowB = await sql(`SELECT * FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerBId]);
+      assert.equal(rowB.length, 0);
+
+      const [msg] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
+      assert.ok(msg.undone_at);
+    } finally {
+      await cleanupTwo(fx, gm ? [gm] : []);
+    }
+  });
+
+  test('undoMessage leaves an answer changed since the bot write alone', async () => {
+    const fx = await makeTwoDancerFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family', actor: 'History Test Family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerAId]));
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'Someone', 'History Test Dancer A and History Test Dancer B cant make History Test Event') RETURNING id`,
+        [`hist-undo2-${Date.now()}-${Math.random()}`])).id;
+      await ingestMessage({
+        text: 'History Test Dancer A and History Test Dancer B cant make History Test Event', senderName: 'Someone', senderUserId: null, sentAt: null, messageId: gm,
+      });
+
+      await withSource({ source: 'family', actor: 'History Test Family' }, (q) =>
+        q(`UPDATE availability SET status = 'maybe' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerBId]));
+
+      const undo = await undoMessage(gm);
+      assert.equal(undo.restored.length, 1);
+      assert.equal(undo.restored[0].dancer_id, fx.dancerAId);
+      assert.equal(undo.skipped.length, 1);
+      assert.equal(undo.skipped[0].dancer_id, fx.dancerBId);
+      assert.equal(undo.skipped[0].reason, 'changed-since');
+
+      const [rowB] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerBId]);
+      assert.equal(rowB.status, 'maybe');
+    } finally {
+      await cleanupTwo(fx, gm ? [gm] : []);
+    }
+  });
+
+  test('undoMessage restores to the state before the first of two bot rows for the same message', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) => q(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]));
+      gm = (await one(`INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'Someone', 'edited') RETURNING id`, [`hist-undo3-${Date.now()}-${Math.random()}`])).id;
+      await withSource({ source: 'bot', actor: 'Someone', messageId: gm }, (q) => q(`UPDATE availability SET status = 'no' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]));
+      await withSource({ source: 'bot', actor: 'Someone', messageId: gm }, (q) => q(`UPDATE availability SET status = 'maybe' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]));
+
+      const undo = await undoMessage(gm);
+      assert.equal(undo.restored.length, 1);
+      assert.equal(undo.restored[0].to, 'yes');
+      const [row] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.status, 'yes');
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('undoMessage rejects a second undo, a message with no history, and an unknown id', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) => q(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]));
+      gm = (await one(`INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'Someone', 'edited') RETURNING id`, [`hist-undo4-${Date.now()}-${Math.random()}`])).id;
+      await withSource({ source: 'bot', actor: 'Someone', messageId: gm }, (q) => q(`UPDATE availability SET status = 'no' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]));
+
+      await undoMessage(gm);
+      await assert.rejects(undoMessage(gm), (e) => e.status === 409);
+
+      const gm2 = (await one(`INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'Someone', 'no history') RETURNING id`, [`hist-undo4b-${Date.now()}-${Math.random()}`])).id;
+      await assert.rejects(undoMessage(gm2), (e) => e.status === 409);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm2]);
+
+      await assert.rejects(undoMessage(999999999), (e) => e.status === 404);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('re-reading a message after undo re-applies it and clears undone_at', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status, note, self) VALUES ($1, $2, 'yes', 'original note', true)`, [fx.eventId, fx.dancerId]));
+      const [before] = await sql(`SELECT updated_at FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      const sentAt = new Date(before.updated_at.getTime() + 60000);
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', 'History is a no for History Test Event') RETURNING id`,
+        [`hist-undo5-${Date.now()}-${Math.random()}`])).id;
+      const res1 = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt, messageId: gm });
+      assert.ok(res1.applied);
+      await recordIngest(gm, { applied: res1.applied, result: res1.result, eventId: res1.eventId });
+
+      await undoMessage(gm);
+      let [row] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.status, 'yes');
+
+      const res2 = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt, messageId: gm });
+      assert.ok(res2.applied);
+      await recordIngest(gm, { applied: res2.applied, result: res2.result, eventId: res2.eventId });
+
+      [row] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.status, 'no');
+      const [msg] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
+      assert.equal(msg.undone_at, null);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('undo, re-read, undo again restores the pre-message state without replaying the first application', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status, note, self) VALUES ($1, $2, 'yes', 'original note', true)`, [fx.eventId, fx.dancerId]));
+      const [before] = await sql(`SELECT updated_at FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      const sentAt = new Date(before.updated_at.getTime() + 60000);
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', 'History is a no for History Test Event') RETURNING id`,
+        [`hist-undo6-${Date.now()}-${Math.random()}`])).id;
+      const res1 = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt, messageId: gm });
+      assert.ok(res1.applied);
+      await recordIngest(gm, { applied: res1.applied, result: res1.result, eventId: res1.eventId });
+
+      const undo1 = await undoMessage(gm);
+      assert.equal(undo1.restored.length, 1);
+      assert.equal(undo1.restored[0].to, 'yes');
+
+      const res2 = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt, messageId: gm });
+      assert.ok(res2.applied);
+      await recordIngest(gm, { applied: res2.applied, result: res2.result, eventId: res2.eventId });
+      let [row] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.status, 'no');
+
+      const undo2 = await undoMessage(gm);
+      assert.equal(undo2.restored.length, 1);
+      assert.equal(undo2.restored[0].from, 'no');
+      assert.equal(undo2.restored[0].to, 'yes');
+      assert.equal(undo2.skipped.length, 0);
+
+      [row] = await sql(`SELECT * FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.status, 'yes');
+      assert.equal(row.note, 'original note');
+      assert.equal(row.self, true);
+      assert.equal(row.updated_at.getTime(), before.updated_at.getTime());
+
+      const [msg] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
+      assert.ok(msg.undone_at);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('undo never rolls back past a change someone else made after a delete and a re-read reinserted it', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]));
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', 'History is a no for History Test Event') RETURNING id`,
+        [`hist-undo7-${Date.now()}-${Math.random()}`])).id;
+      await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt: null, messageId: gm });
+
+      await withSource({ source: 'family' }, (q) => q(`DELETE FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]));
+
+      await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt: null, messageId: gm });
+      const [reread] = await sql(`SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(reread.status, 'no');
+
+      const undo = await undoMessage(gm);
+      assert.equal(undo.restored.length, 1);
+      assert.equal(undo.restored[0].to, null);
+      const row = await sql(`SELECT * FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      assert.equal(row.length, 0);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('undoMessage still sets undone_at when every pair is skipped, and a later cycle restores correctly', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      await withSource({ source: 'family' }, (q) =>
+        q(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]));
+
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', 'History is a no for History Test Event') RETURNING id`,
+        [`hist-undo8-${Date.now()}-${Math.random()}`])).id;
+      await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt: null, messageId: gm });
+
+      await withSource({ source: 'family' }, (q) => q(`UPDATE availability SET status = 'maybe' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]));
+
+      const undo1 = await undoMessage(gm);
+      assert.equal(undo1.restored.length, 0);
+      assert.equal(undo1.skipped.length, 1);
+      assert.equal(undo1.skipped[0].reason, 'changed-since');
+      const [msg1] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
+      assert.ok(msg1.undone_at);
+
+      const [current] = await sql(`SELECT updated_at FROM availability WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      const sentAt = new Date(current.updated_at.getTime() + 60000);
+      const res2 = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt, messageId: gm });
+      assert.ok(res2.applied);
+      await recordIngest(gm, { applied: res2.applied, result: res2.result, eventId: res2.eventId });
+
+      const undo2 = await undoMessage(gm);
+      assert.equal(undo2.restored.length, 1);
+      assert.equal(undo2.restored[0].from, 'no');
+      assert.equal(undo2.restored[0].to, 'maybe');
+      assert.equal(undo2.skipped.length, 0);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('undoMessage skips a dancer deleted since the bot write instead of resurrecting the row', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', 'History is a no for History Test Event') RETURNING id`,
+        [`hist-undo9-${Date.now()}-${Math.random()}`])).id;
+      const res = await ingestMessage({ text: 'History is a no for History Test Event', senderName: 'History Test Dancer', senderUserId: null, sentAt: null, messageId: gm });
+      assert.ok(res.applied);
+
+      await withSource({ source: 'family' }, (q) => q('DELETE FROM dancers WHERE id = $1', [fx.dancerId]));
+
+      const undo = await undoMessage(gm);
+      assert.equal(undo.restored.length, 0);
+      assert.equal(undo.skipped.length, 1);
+      assert.equal(undo.skipped[0].reason, 'dancer-deleted');
+      assert.equal(undo.skipped[0].dancer_name, null);
+      const [msg] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
+      assert.ok(msg.undone_at);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
     }
   });
 
