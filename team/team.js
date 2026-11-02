@@ -1787,10 +1787,12 @@
         loading = false; errMsg = e.message; paint();
       });
     }
+    var sec = section(t('changesTitle'));
+    sec.className += ' tm-sec-fold';
     var det = h('details', { class: 'tm-fold', ontoggle: function () {
       historyUI.open[ev.id] = det.open;
       if (det.open) fetchHistory();
-    } }, h('summary', { class: 'tm-fold-summary' }, t('changesTitle')), box);
+    } }, h('summary', { class: 'tm-fold-summary' }, sec), box);
     det.open = !!historyUI.open[ev.id];
     if (det.open) fetchHistory();
     return det;
