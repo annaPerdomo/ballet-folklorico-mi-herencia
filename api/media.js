@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
 import { requireUser, requireAdmin } from './_lib/auth.js';
-import { sql, one } from './_lib/db.js';
+import { sql, one, withSource } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
@@ -137,7 +137,9 @@ export default route({
       const declared = Number(row.bytes) - row.thumb_bytes;
       if (size !== declared) {
         await removeFiles([row]);
-        await sql('DELETE FROM media WHERE id = $1', [row.id]);
+        const actor = me.role === 'admin' ? 'owner' : me.family.name;
+        await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, (q) =>
+          q('DELETE FROM media WHERE id = $1', [row.id]));
         throw httpError(400, 'The upload did not arrive — try again');
       }
       const keepThumb = thumb === row.thumb_bytes && thumb > 0;
@@ -175,7 +177,9 @@ export default route({
         const row = await one('SELECT * FROM media WHERE id = $1 AND event_id = $2 AND ready', [mediaId, eventId]);
         if (!coverUrl(row)) throw httpError(400, 'Pick a photo or YouTube video from this gig');
       }
-      const ev = await one('UPDATE events SET cover_media_id = $2 WHERE id = $1 RETURNING id', [eventId, mediaId]);
+      const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+        q('UPDATE events SET cover_media_id = $2 WHERE id = $1 RETURNING id', [eventId, mediaId]));
+      const ev = rows[0] || null;
       if (!ev) throw httpError(404, 'Gig not found');
       return ok(res);
     }
@@ -202,7 +206,9 @@ export default route({
   async DELETE(req, res) {
     const me = await requireUser(req);
     const row = await ownRow(int(query(req).id), me);
-    await sql('DELETE FROM media WHERE id = $1', [row.id]);
+    const actor = me.role === 'admin' ? 'owner' : me.family.name;
+    await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, (q) =>
+      q('DELETE FROM media WHERE id = $1', [row.id]));
     await removeFiles([row]);
     ok(res);
   },

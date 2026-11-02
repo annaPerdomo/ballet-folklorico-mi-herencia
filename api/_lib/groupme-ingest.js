@@ -1,8 +1,15 @@
-import { sql } from './db.js';
+import { sql, withSource } from './db.js';
 import { parseMessage } from './groupme-parse.js';
 import { str } from './http.js';
 
-export async function ingestMessage({ text, senderName, senderUserId, sentAt }) {
+export async function recordIngest(messageId, { applied, result, eventId }) {
+  await sql(
+    `UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4,
+        undone_at = CASE WHEN $2 THEN NULL ELSE undone_at END WHERE id = $1`,
+    [messageId, applied, JSON.stringify(result), eventId]);
+}
+
+export async function ingestMessage({ text, senderName, senderUserId, sentAt, messageId }) {
   const [dancers, families, events] = await Promise.all([
     sql('SELECT id, family_id, name, active, groupme_user_id FROM dancers'),
     sql('SELECT id, name, groupme_user_id FROM families'),
@@ -12,13 +19,19 @@ export async function ingestMessage({ text, senderName, senderUserId, sentAt }) 
   const r = parseMessage({ text, senderName, senderUserId }, { dancers, families, events });
 
   let applied = false; const skipped = []; const changed = [];
-  if (r.updates.length) {
-    const note = `via GroupMe (${str(senderName, 60) || 'unknown'}): ${text.slice(0, 160)}`;
-    for (const u of r.updates) {
+  const note = `via GroupMe (${str(senderName, 60) || 'unknown'}): ${text.slice(0, 160)}`;
+  await withSource({ source: 'bot', actor: str(senderName, 60), messageId }, async (q) => {
+    // Takes the same row lock as undoMessage's first statement, so a re-read and an undo of the
+    // same message can never interleave.
+    if (messageId != null) await q('SELECT 1 FROM groupme_messages WHERE id = $1 FOR UPDATE', [messageId]);
+    if (!r.updates.length) return;
+    // Lock event/dancer pairs in a fixed order so a concurrent undo locking the same pairs can't deadlock.
+    const ordered = [...r.updates].sort((a, b) => a.event.id - b.event.id || a.dancer.id - b.dancer.id);
+    for (const u of ordered) {
       // Re-reading an old message must not overwrite a newer answer, and a parent's unnamed
       // "we can't" must not overwrite what a dancer on their own account already said.
       const keepSelf = u.wholeFamily && Boolean(u.dancer.groupme_user_id);
-      const row = await sql(
+      const row = await q(
         `WITH old AS (SELECT status FROM availability WHERE event_id = $1 AND dancer_id = $2)
          INSERT INTO availability (event_id, dancer_id, status, note, self) VALUES ($1,$2,$3,$4,$6)
          ON CONFLICT (event_id, dancer_id) DO UPDATE SET status = EXCLUDED.status, note = EXCLUDED.note, self = EXCLUDED.self, updated_at = now()
@@ -38,9 +51,9 @@ export async function ingestMessage({ text, senderName, senderUserId, sentAt }) 
     if (applied && uid && fam && !fam.groupme_user_id && (r.sender.how === 'family-name' || (r.sender.how === 'dancer-name' && famSize === 1))) linkFamily = fam.id;
     else if (applied && uid && fam && fam.groupme_user_id && r.sender.how === 'dancer-name') linkDancer = r.sender.dancer.id;
     const unclaimed = 'NOT EXISTS (SELECT 1 FROM dancers WHERE groupme_user_id = $2) AND NOT EXISTS (SELECT 1 FROM families WHERE groupme_user_id = $2)';
-    if (linkDancer) await sql(`UPDATE dancers SET groupme_user_id = $2 WHERE id = $1 AND groupme_user_id IS NULL AND ${unclaimed}`, [linkDancer, uid]);
-    if (linkFamily) await sql(`UPDATE families SET groupme_user_id = $2 WHERE id = $1 AND groupme_user_id IS NULL AND ${unclaimed}`, [linkFamily, uid]);
-  }
+    if (linkDancer) await q(`UPDATE dancers SET groupme_user_id = $2 WHERE id = $1 AND groupme_user_id IS NULL AND ${unclaimed}`, [linkDancer, uid]);
+    if (linkFamily) await q(`UPDATE families SET groupme_user_id = $2 WHERE id = $1 AND groupme_user_id IS NULL AND ${unclaimed}`, [linkFamily, uid]);
+  });
   const eventIds = [...new Set(r.updates.map((u) => u.event.id))];
   const result = {
     intent: r.intent, reason: r.reason || (r.updates.length && !applied ? 'kept-existing' : null), event_guessed: r.eventGuessed,

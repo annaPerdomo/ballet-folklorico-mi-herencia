@@ -509,6 +509,7 @@ label.f textarea { min-height: 90px; resize: vertical; }
 input[type=date] { color-scheme: dark; }
 .rehrow { display: grid; grid-template-columns: 1fr 1fr 1.4fr auto; gap: 0.4rem; margin: 0.45rem 0; align-items: center; }
 .hint { color: var(--muted); font-size: 0.76rem; margin: 0.35rem 0 0; line-height: 1.55; }
+.change-line { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
 .askmeta { display: flex; flex-wrap: wrap; column-gap: 0.9rem; row-gap: 0; margin: 0; }
 .askmeta span { white-space: nowrap; }
 .site-row { margin-top: 0.8rem; }
