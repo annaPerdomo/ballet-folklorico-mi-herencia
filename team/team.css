@@ -460,19 +460,27 @@ a.act { text-decoration: none; }
   background: rgba(255,255,255,0.04); color: var(--text-2); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 
 /* ── bot log ────────────────────────────────────────────── */
+.logfilter { margin: 0 0 0.7rem; }
 .log { border: 1px solid var(--line); border-radius: 14px; background: var(--bg-deep); overflow: hidden; margin-bottom: 0.9rem; }
-.logrow { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1rem; align-items: start;
-  padding: 0.75rem 1rem; border-top: 1px solid var(--hair); font-size: 0.82rem; }
+.logrow { display: flex; flex-direction: column; gap: 0.35rem; padding: 0.8rem 1rem; border-top: 1px solid var(--hair); font-size: 0.84rem; }
 .logrow:first-child { border-top: 0; }
-.logrow.applied { background: rgba(46,205,167,0.05); }
-.logmsg { color: var(--text-2); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
-.logmsg b { color: var(--text); font-weight: 600; }
-.logout { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.75rem; overflow-wrap: anywhere; }
+.logrow.applied { background: rgba(46,205,167,0.05); box-shadow: inset 3px 0 0 var(--teal); }
+.logrow.undone { box-shadow: inset 3px 0 0 var(--muted); }
+.loghead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+.loghead b { color: var(--text); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logtime { flex: none; font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
+.logmsg { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: none; font: inherit; text-align: left; color: var(--text-2); line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; cursor: pointer; }
+.logmsg:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+.logmsg.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.logout { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 0.8rem; margin-top: 0.15rem; font-size: 0.78rem; overflow-wrap: anywhere; }
 .logout .ok { color: var(--teal-light); font-weight: 600; }
 .logout .skip { color: var(--muted); }
-.logout .logtime { font-size: 0.68rem; color: rgba(255,255,255,0.34); letter-spacing: 0.04em; }
+.logacts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-left: auto; }
+.btn-undo { border-color: rgba(232,67,147,0.45); color: #ff9ecb; }
+.btn-undo:hover { border-color: var(--magenta-light); background: rgba(232,67,147,0.12); }
+.logtag { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.logmore { padding: 0.7rem 1rem; display: flex; justify-content: center; border-top: 1px solid var(--hair); }
 .logempty { padding: 1.1rem; color: var(--muted); font-size: 0.82rem; }
-@media (max-width: 640px) { .logrow { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; } }
 
 /* ── families grid ──────────────────────────────────────── */
 .famgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.9rem; align-items: start; margin-bottom: 0.9rem; }

@@ -185,6 +185,7 @@
       undoTitle: 'Undo La Chona’s changes from this message?', undoConfirm: 'Undo', undoDone: 'Restored {n}',
       undoSkipped: '{n} kept: changed since', undoDeleted: '{n} skipped: dancer removed', undoneTag: 'Undone',
       undoAlready: 'Already undone', undoNotFound: 'Message not found', undoFailed: 'Could not undo — try again',
+      logChanges: 'Changes she made', logAttention: 'Needs a look', logAll: 'Everything', logNone: 'Nothing here yet', logShowMore: 'Show more', guideFold: 'How La Chona works',
       changesTitle: 'Recent changes', changesMore: 'Show all', changesEmpty: 'No changes yet', changesLoading: 'Loading…',
       changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
@@ -347,6 +348,7 @@
       reviewTitle: 'Esperando tu visto bueno', reviewHint: 'Las familias sugirieron esto para bfmh.dance. Nada se publica hasta que lo apruebes.',
       approve: 'Aprobar', webDeclined: 'No se pondrá en bfmh.dance',
       printNoGigs: 'Publica un evento primero y luego imprime la lista.', printMax: 'Caben hasta 10 eventos en una página; quita algunos para continuar.',
+      logChanges: 'Cambios que hizo', logAttention: 'Por revisar', logAll: 'Todo', logNone: 'Nada por aquí todavía', logShowMore: 'Ver más', guideFold: 'Cómo funciona La Chona',
       undoTitle: '¿Deshacer los cambios de La Chona de este mensaje?', undoConfirm: 'Deshacer', undoDone: 'Restauradas: {n}',
       undoSkipped: '{n} sin tocar: cambiaron después', undoDeleted: '{n} sin tocar: se quitó al bailarín', undoneTag: 'Deshecho',
       undoAlready: 'Ya se deshizo', undoNotFound: 'No se encontró el mensaje', undoFailed: 'No se pudo deshacer — inténtalo de nuevo',
@@ -477,7 +479,7 @@
   function loadMe() { return api('/api/me').then(function (me) { state.me = me; return me; }); }
   function loadEvents() { return api('/api/events').then(function (d) { state.events = d.events; state.roster = d.roster || 0; }); }
   function loadFamilies() { return api('/api/families').then(function (d) { state.families = d.families; }); }
-  function loadBotLog() { return api('/api/groupme?limit=40').then(function (d) { state.botLog = d.messages; }).catch(function () { state.botLog = []; }); }
+  function loadBotLog() { return api('/api/groupme?limit=120').then(function (d) { state.botLog = d.messages; }).catch(function () { state.botLog = []; }); }
   function refresh() {
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
@@ -2841,6 +2843,8 @@
     if (!posting) app.appendChild(h('p', { class: 'tm-sub', text: t('groupmeOff') }));
     if (!listening) app.appendChild(h('p', { class: 'tm-sub', text: t('botSubOff') }));
 
+    renderBotLog(listening);
+
     var steps = h('ol', { class: 'guide-steps' },
       [t('guideStep1'), t('guideStep2'), t('guideStep3'), t('guideStep4')].map(function (x) { return h('li', {}, rich(x)); }));
 
@@ -2857,7 +2861,7 @@
     var misses = h('ul', { class: 'guide-no' },
       [t('guideM1'), t('guideM2'), t('guideM3'), t('guideM4')].map(function (x) { return h('li', { text: x }); }));
 
-    app.appendChild(h('div', { class: 'card guide-body' },
+    var guide = h('div', { class: 'card guide-body' },
       h('span', { class: 'tm-label', text: t('guideSteps') }), steps,
       h('span', { class: 'tm-label', text: t('guidePosts') }),
       h('p', { class: 'guide-sub', text: t('guidePostsSub') }), says,
@@ -2865,40 +2869,61 @@
       h('p', { class: 'guide-sub', text: t('guideReadsSub') }), reads,
       h('span', { class: 'tm-label', text: t('guideMisses') }), misses,
       h('p', { class: 'hint', text: t('guideNeedDate') }),
-      h('p', { class: 'guide-fix', text: t('guideFix') })));
-
-    renderBotLog(listening);
+      h('p', { class: 'guide-fix', text: t('guideFix') }));
+    var sec = section(t('guideFold')); sec.className += ' tm-sec-fold';
+    var det = h('details', { class: 'tm-fold', ontoggle: function () { botUI.guideOpen = det.open; } },
+      h('summary', { class: 'tm-fold-summary' }, sec), guide);
+    det.open = botUI.guideOpen;
+    app.appendChild(det);
   }
 
+  var botUI = { filter: 'changes', guideOpen: false, shown: 25, expanded: {} };
+  function botNeedsLook(m) { var r = m.result || {}; return !m.applied && !!r.intent && !!m.user_id; }
   function renderBotLog(listening) {
     app.appendChild(section(t('botHeard')));
     if (!listening) return;
+    var bar = h('div', { class: 'frow logfilter' });
     var box = h('div', { class: 'log' });
-    app.appendChild(box);
+    app.appendChild(bar); app.appendChild(box);
+    function setFilter(f) { botUI.filter = f; botUI.shown = 25; fill(); }
     function fill() {
-      box.innerHTML = '';
-      if (!state.botLog || !state.botLog.length) { box.appendChild(h('p', { class: 'logempty', text: t('botEmpty') })); return; }
-      state.botLog.forEach(function (m) {
-        var r = m.result || {};
-        var out = h('div', { class: 'logout' },
-          h('span', { class: m.applied ? 'ok' : 'skip', text: botResultText(m) }),
-          h('span', { class: 'logtime', text: timeAgo(m.created_at || m.received_at || Date.now()) }));
-        var actions = [];
-        if (!m.applied && r.intent && m.user_id) {
-          var known = state.families.some(function (f) {
-            return f.groupme_user_id === m.user_id || f.dancers.some(function (d) { return d.groupme_user_id === m.user_id; });
-          });
-          if (!known) actions.push(h('button', { class: 'btn btn-sm btn-gold', text: t('addFamilyFrom'), onclick: function () { addFamilyFromGroupMe(m); } }));
-          actions.push(h('button', { class: 'btn btn-sm', text: t('reread'), onclick: function () { rereadMessage(m); } }));
-        }
-        if (m.undoable) { var undoBtn = h('button', { class: 'btn btn-sm', text: t('undoConfirm'), onclick: function () { undoBotMessage(m, undoBtn); } }); actions.push(undoBtn); }
-        else if (m.undone_at) actions.push(h('span', { class: 'hint', text: t('undoneTag') }));
-        if (actions.length) out.appendChild(h('div', { class: 'card-actions', style: 'margin-top:0.35rem' }, actions));
-        box.appendChild(h('div', { class: 'logrow' + (m.applied ? ' applied' : '') },
-          h('div', { class: 'logmsg' }, h('b', { text: m.sender_name || '?' }), document.createTextNode(': ' + m.text)), out));
+      bar.innerHTML = ''; box.innerHTML = '';
+      var all = state.botLog || [];
+      var counts = { changes: all.filter(function (m) { return m.applied; }).length, attention: all.filter(botNeedsLook).length, all: all.length };
+      [['changes', 'logChanges'], ['attention', 'logAttention'], ['all', 'logAll']].forEach(function (f) {
+        var c = chip(t(f[1]) + (counts[f[0]] ? ' · ' + counts[f[0]] : ''), botUI.filter === f[0], function () { setFilter(f[0]); });
+        bar.appendChild(c);
       });
+      var rows = botUI.filter === 'changes' ? all.filter(function (m) { return m.applied; })
+        : botUI.filter === 'attention' ? all.filter(botNeedsLook) : all;
+      if (!rows.length) { box.appendChild(h('p', { class: 'logempty', text: t(all.length ? 'logNone' : 'botEmpty') })); return; }
+      rows.slice(0, botUI.shown).forEach(function (m) { box.appendChild(botLogRow(m)); });
+      if (rows.length > botUI.shown) box.appendChild(h('div', { class: 'logmore' },
+        h('button', { class: 'btn btn-sm', text: t('logShowMore'), onclick: function () { botUI.shown += 25; fill(); } })));
     }
     if (state.botLog === null) loadBotLog().then(fill); else fill();
+  }
+  function botLogRow(m) {
+    var r = m.result || {};
+    var open = !!botUI.expanded[m.id];
+    var msg = h('button', { type: 'button', class: 'logmsg' + (open ? '' : ' clamp'), text: m.text || '',
+      onclick: function () { botUI.expanded[m.id] = !botUI.expanded[m.id]; msg.classList.toggle('clamp', !botUI.expanded[m.id]); } });
+    var actions = [];
+    if (botNeedsLook(m)) {
+      var known = state.families.some(function (f) {
+        return f.groupme_user_id === m.user_id || f.dancers.some(function (d) { return d.groupme_user_id === m.user_id; });
+      });
+      if (!known) actions.push(h('button', { class: 'btn btn-sm btn-gold', text: t('addFamilyFrom'), onclick: function () { addFamilyFromGroupMe(m); } }));
+      actions.push(h('button', { class: 'btn btn-sm', text: t('reread'), onclick: function () { rereadMessage(m); } }));
+    }
+    if (m.undoable) { var undoBtn = h('button', { class: 'btn btn-sm btn-undo', text: t('undoConfirm'), onclick: function () { undoBotMessage(m, undoBtn); } }); actions.push(undoBtn); }
+    else if (m.undone_at) actions.push(h('span', { class: 'logtag', text: t('undoneTag') }));
+    return h('div', { class: 'logrow' + (m.applied ? ' applied' : '') + (m.undone_at ? ' undone' : '') },
+      h('div', { class: 'loghead' }, h('b', { text: m.sender_name || '?' }), h('span', { class: 'logtime', text: timeAgo(m.created_at || m.received_at || Date.now()) })),
+      msg,
+      h('div', { class: 'logout' },
+        h('span', { class: m.applied ? 'ok' : 'skip', text: botResultText(m) }),
+        actions.length ? h('div', { class: 'logacts' }, actions) : null));
   }
 
   // Group display names look like "Folk-Maricela Orozco (Ashley Emily & Sharlene)".
