@@ -155,6 +155,33 @@ test('chit-chat and announcements are ignored', () => {
   assert.deepEqual(st(P('We can definitely go', 'Folk-Claudia Marin (DT & Lia)', '64889724')), { 'Lia:11-04': 'yes', 'Donatien:11-04': 'yes', 'Isaias:11-04': 'yes' });
 });
 
+test('a numbered packing list is an announcement, even with an unspaced "7. No bangs"', () => {
+  const packingList = 'Please continue to bring the following:\n1.sneakers \n2.dance shoes \n3. Skirts\n4. Rebosos\n5. Water\n6. Work out attire\nPreferably black & dance tshirts & dance jackets. \n7. No bangs \n\nAlso, church policy';
+  const r = P(packingList, 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023');
+  assert.deepEqual(st(r), {});
+  assert.equal(r.reason, 'announcement');
+});
+
+test('"11/4 : Yes" with spaces around the colon still parses', () => {
+  assert.deepEqual(st(P('11/4 : Yes', 'Folk-Johanna Aceves (Kiley)', '65115438')), { 'Kiley:11-04': 'yes' });
+});
+
+test('a numbered list of dated answers still parses, dates override the announcement count', () => {
+  const r = P('1. 11/4 yes\n2. 9/19 no\n3. 9/25 yes', 'Folk-Johanna Aceves (Kiley)', '65115438');
+  assert.deepEqual(st(r), { 'Kiley:11-04': 'yes', 'Kiley:09-19': 'no', 'Kiley:09-25': 'yes' });
+});
+
+test('a numbered list naming dancers still parses, names override the announcement count', () => {
+  const r = P('1. Tati yes\n2. Nati no\n3. Sebas yes', 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023');
+  assert.deepEqual(st(r), { 'Tati:11-04': 'yes', 'Nati:11-04': 'no', 'Sebas:11-04': 'yes' });
+});
+
+test('a numbered list naming no dancers is still an announcement', () => {
+  const r = P('1. Yes\n2. No\n3. Yes', 'Mayra Ramirez(Tati, Nati, Sebas)', '62268023');
+  assert.deepEqual(st(r), {});
+  assert.equal(r.reason, 'announcement');
+});
+
 test('"no September" is a no, not "no sé"', () => {
   assert.deepEqual(st(P('Isabella no September 25', 'CYNTHIA ALVAREZ (Isabella)', '136328681')), { 'Isabella:09-25': 'no' });
   assert.equal(detectIntent('no sé todavía'), 'maybe');

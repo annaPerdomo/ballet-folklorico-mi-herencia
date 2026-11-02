@@ -40,6 +40,8 @@ const EXPLICIT = [/\byes\b/, /\bno\b(?! (?:problem|worries|rush|way|idea|thanks)
 // Practice reminders read like "-No bangs" / "work out attire only"; a broadcast is never an answer.
 const ANNOUNCE = [/\breminders?\b/, /\brecordatorio/, /^(?:hi|hello|hey|hola|buen[oa]s (?:dias|tardes|noches))[ ,!]*(?:everyone|everybody|all|team|familias?|families|a todos|todos|padres|parents)\b/];
 const bulletLines = (text) => String(text || '').split(/\n/).filter((l) => /^\s*[-•*–]\s*\S/.test(l)).length;
+// "11/4: Yes" never matches: the character after the digits is "/", not "." or ")".
+const NUMBERED_LINE = /^\s*\d{1,2}[.)]\s*\S/;
 const isAnnouncement = (text) => bulletLines(text) >= 2 || any(ANNOUNCE, norm(text));
 
 const REQUEST = [/\blet (?:me|us) know\b/, /\bplease (?:reply|respond|confirm|let)\b/, /\bavisenme\b/, /\bavisame\b/, /\bconfirmen\b/, /\bwho (?:can|is)\b/, /\bquien(?:es)? (?:puede|va)/];
@@ -221,8 +223,9 @@ export function parseMessage({ text, senderName, senderUserId }, { dancers, fami
     const lineDates = clauses.flatMap((c) => c.dates);
     const lineNames = clauses.flatMap((c) => c.found);
     const all = any(ALL_WORDS, norm(raw)) && !lineDates.length;
+    const numbered = NUMBERED_LINE.test(raw);
     if (intents.length <= 1) {
-      return { units: [{ intent: intents[0] || null, names: lineNames, dates: lineDates, all, self: any(SELF_WORDS, n), explicit: any(EXPLICIT, n) }], ambiguous: clauses.flatMap((c) => c.ambiguous) };
+      return { units: [{ intent: intents[0] || null, names: lineNames, dates: lineDates, all, self: any(SELF_WORDS, n), explicit: any(EXPLICIT, n) }], ambiguous: clauses.flatMap((c) => c.ambiguous), numbered };
     }
     const units = []; let pendingNames = [];
     for (const c of clauses) {
@@ -230,12 +233,16 @@ export function parseMessage({ text, senderName, senderUserId }, { dancers, fami
       units.push({ intent: c.intent, names: pendingNames.concat(c.found), dates: c.dates.length ? c.dates : lineDates, all, self: any(SELF_WORDS, norm(c.text)), explicit: any(EXPLICIT, norm(c.text)) });
       pendingNames = [];
     }
-    return { units, ambiguous: clauses.flatMap((c) => c.ambiguous) };
+    return { units, ambiguous: clauses.flatMap((c) => c.ambiguous), numbered };
   });
 
   const messageHasDates = lines.some((l) => l.units.some((u) => u.dates.length));
+  const numberedLines = lines.filter((l) => l.numbered);
+  const namedUnit = (u) => u.intent && u.explicit && u.names.length;
+  const numberedIsAnswers = numberedLines.length >= 3 && numberedLines.filter((l) => l.units.some(namedUnit)).length > numberedLines.length / 2;
   // "Hi everyone, Kiley can't make 9/19" still counts; a reminder with no dated answer does not.
-  if (isAnnouncement(text) && !(messageHasDates && lines.some((l) => l.units.some((u) => u.intent && u.explicit && u.dates.length)))) {
+  const datedOverride = messageHasDates && lines.some((l) => l.units.some((u) => u.intent && u.explicit && u.dates.length));
+  if ((isAnnouncement(text) || (numberedLines.length >= 3 && !numberedIsAnswers)) && !datedOverride) {
     return { intent: null, sender, updates: [], ambiguous: [], reason: 'announcement', eventGuessed: false };
   }
   const ambiguous = new Set(lines.flatMap((l) => l.ambiguous));
