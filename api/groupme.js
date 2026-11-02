@@ -1,7 +1,7 @@
 import { route, ok, query, int, readJson, httpError } from './_lib/http.js';
 import { one } from './_lib/db.js';
 import { ingestMessage, recordIngest } from './_lib/groupme-ingest.js';
-import { undoMessage } from './_lib/groupme-undo.js';
+import { undoMessage, undoableSql } from './_lib/groupme-undo.js';
 import { requireAdmin } from './_lib/auth.js';
 import { sql } from './_lib/db.js';
 
@@ -11,11 +11,7 @@ export default route({
     const limit = Math.min(int(query(req).limit) || 40, 200);
     const messages = await sql(
       `SELECT g.id, g.message_id, g.user_id, g.sender_name, g.text, g.event_id, e.title AS event_title, e.event_date, g.applied, g.result, g.created_at, g.undone_at,
-              (g.undone_at IS NULL AND EXISTS (
-                 SELECT 1 FROM availability_history h
-                  WHERE h.groupme_message_id = g.id AND h.source = 'bot'
-                    AND h.id > COALESCE((SELECT max(id) FROM availability_history WHERE groupme_message_id = g.id AND source = 'undo'), 0)
-               )) AS undoable
+              ${undoableSql('g.id', 'g.undone_at')} AS undoable
          FROM groupme_messages g LEFT JOIN events e ON e.id = g.event_id
         ORDER BY g.id DESC LIMIT $1`, [limit]);
     ok(res, { messages });

@@ -1,6 +1,15 @@
 import { withSource } from './db.js';
 import { httpError } from './http.js';
 
+// Shared by api/groupme.js and api/_lib/history.js so "undoable" can't drift between the bot log and the gig history.
+export function undoableSql(idExpr, undoneAtExpr) {
+  return `(${undoneAtExpr} IS NULL AND EXISTS (
+     SELECT 1 FROM availability_history uh
+      WHERE uh.groupme_message_id = ${idExpr} AND uh.source = 'bot'
+        AND uh.id > COALESCE((SELECT max(id) FROM availability_history WHERE groupme_message_id = ${idExpr} AND source = 'undo'), 0)
+   ))`;
+}
+
 export async function undoMessage(messageId) {
   return withSource({ source: 'undo', actor: 'owner', messageId }, async (q) => {
     const [msg] = await q('SELECT * FROM groupme_messages WHERE id = $1 FOR UPDATE', [messageId]);

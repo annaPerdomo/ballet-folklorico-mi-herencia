@@ -9,6 +9,7 @@ if (!DB_URL) {
   const { sql, one, withSource, getPool } = await import('./db.js');
   const { ingestMessage, recordIngest } = await import('./groupme-ingest.js');
   const { undoMessage } = await import('./groupme-undo.js');
+  const { eventChanges } = await import('./history.js');
   const { deleteEvent } = await import('./events.js');
 
   async function makeFixtures() {
@@ -504,6 +505,87 @@ if (!DB_URL) {
       assert.equal(undo.skipped[0].dancer_name, null);
       const [msg] = await sql(`SELECT undone_at FROM groupme_messages WHERE id = $1`, [gm]);
       assert.ok(msg.undone_at);
+    } finally {
+      await cleanup(fx);
+      await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);
+    }
+  });
+
+  test('eventChanges merges answers and gig edits newest first and respects the limit', async () => {
+    const fx = await makeFixtures();
+    try {
+      await sql(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]);
+      await sql(`UPDATE events SET venue = 'Venue A' WHERE id = $1`, [fx.eventId]);
+      await sql(`UPDATE availability SET status = 'no' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+      await sql(`UPDATE events SET venue = 'Venue B' WHERE id = $1`, [fx.eventId]);
+      await sql(`UPDATE availability SET status = 'maybe' WHERE event_id = $1 AND dancer_id = $2`, [fx.eventId, fx.dancerId]);
+
+      const all = await eventChanges(fx.eventId);
+      assert.ok(all.length >= 5);
+      for (let i = 1; i < all.length; i++) assert.ok(new Date(all[i - 1].changed_at) >= new Date(all[i].changed_at));
+
+      const limited = await eventChanges(fx.eventId, 3);
+      assert.equal(limited.length, 3);
+      assert.deepEqual(limited.map((c) => c.id), all.slice(0, 3).map((c) => c.id));
+    } finally {
+      await cleanup(fx);
+    }
+  });
+
+  test('eventChanges drops a changed=[asked_at,ask_count]-only update but keeps one that also changes a real column', async () => {
+    const fx = await makeFixtures();
+    try {
+      const before = await eventChanges(fx.eventId);
+      await sql(`UPDATE events SET asked_at = now(), ask_count = ask_count + 1 WHERE id = $1`, [fx.eventId]);
+      const afterNoise = await eventChanges(fx.eventId);
+      assert.equal(afterNoise.length, before.length);
+
+      await sql(`UPDATE events SET asked_at = now(), ask_count = ask_count + 1, venue = 'Changed Venue' WHERE id = $1`, [fx.eventId]);
+      const afterMixed = await eventChanges(fx.eventId);
+      assert.equal(afterMixed.length, before.length + 1);
+      assert.deepEqual([...afterMixed[0].changed].sort(), ['ask_count', 'asked_at', 'venue']);
+    } finally {
+      await cleanup(fx);
+    }
+  });
+
+  test('eventChanges reports a NULL dancer_name once the dancer is deleted', async () => {
+    const fx = await makeFixtures();
+    try {
+      await sql(`INSERT INTO availability (event_id, dancer_id, status) VALUES ($1, $2, 'yes')`, [fx.eventId, fx.dancerId]);
+      await withSource({ source: 'family' }, (q) => q('DELETE FROM dancers WHERE id = $1', [fx.dancerId]));
+      const changes = await eventChanges(fx.eventId);
+      const del = changes.find((c) => c.kind === 'answer' && c.op === 'delete');
+      assert.ok(del);
+      assert.equal(del.dancer_name, null);
+    } finally {
+      await cleanup(fx);
+    }
+  });
+
+  test('eventChanges carries the full message text and the message undoable flag before and after undo', async () => {
+    const fx = await makeFixtures();
+    let gm;
+    try {
+      const longText = 'History is a no for History Test Event ' + 'x'.repeat(150);
+      gm = (await one(
+        `INSERT INTO groupme_messages (message_id, sender_name, text) VALUES ($1, 'History Test Dancer', $2) RETURNING id`,
+        [`hist-evch-${Date.now()}-${Math.random()}`, longText])).id;
+      const res = await ingestMessage({ text: longText, senderName: 'History Test Dancer', senderUserId: null, sentAt: null, messageId: gm });
+      assert.ok(res.applied);
+
+      let changes = await eventChanges(fx.eventId);
+      let row = changes.find((c) => c.kind === 'answer' && c.message && c.message.id === gm);
+      assert.ok(row);
+      assert.equal(row.message.text, longText);
+      assert.equal(row.message.text.length > 120, true);
+      assert.equal(row.message.undoable, true);
+
+      await undoMessage(gm);
+      changes = await eventChanges(fx.eventId);
+      row = changes.find((c) => c.kind === 'answer' && c.op === 'insert' && c.message && c.message.id === gm);
+      assert.ok(row);
+      assert.equal(row.message.undoable, false);
     } finally {
       await cleanup(fx);
       await sql(`DELETE FROM groupme_messages WHERE id = $1`, [gm]);

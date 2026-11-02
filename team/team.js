@@ -182,6 +182,15 @@
       reviewTitle: 'Waiting for your OK', reviewHint: 'Families suggested these for bfmh.dance. Nothing goes public until you approve it.',
       approve: 'Approve', webDeclined: 'Kept off bfmh.dance',
       printNoGigs: 'Post a gig first, then print the roster.', printMax: 'Up to 10 gigs fit on one page — uncheck some to continue.',
+      undoTitle: 'Undo La Chona’s changes from this message?', undoConfirm: 'Undo', undoDone: 'Restored {n}',
+      undoSkipped: '{n} kept: changed since', undoDeleted: '{n} skipped: dancer removed', undoneTag: 'Undone',
+      undoAlready: 'Already undone', undoNotFound: 'Message not found', undoFailed: 'Could not undo — try again',
+      changesTitle: 'Recent changes', changesMore: 'Show all', changesEmpty: 'No changes yet', changesLoading: 'Loading…',
+      changesLineAnswer: '{time} · {dancer}: {old} → {new} · {who}',
+      changesLineGigEdited: '{time} · {who} edited {fields}',
+      changesLineGigCreated: '{time} · {who} created this gig',
+      changesLineGigDeleted: '{time} · {who} deleted this gig',
+      whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -341,6 +350,15 @@
       reviewTitle: 'Esperando tu visto bueno', reviewHint: 'Las familias sugirieron esto para bfmh.dance. Nada se publica hasta que lo apruebes.',
       approve: 'Aprobar', webDeclined: 'No se pondrá en bfmh.dance',
       printNoGigs: 'Publica un evento primero y luego imprime la lista.', printMax: 'Caben hasta 10 eventos en una página; quita algunos para continuar.',
+      undoTitle: '¿Deshacer los cambios de La Chona de este mensaje?', undoConfirm: 'Deshacer', undoDone: 'Restauradas: {n}',
+      undoSkipped: '{n} sin tocar: cambiaron después', undoDeleted: '{n} sin tocar: se quitó al bailarín', undoneTag: 'Deshecho',
+      undoAlready: 'Ya se deshizo', undoNotFound: 'No se encontró el mensaje', undoFailed: 'No se pudo deshacer — inténtalo de nuevo',
+      changesTitle: 'Cambios recientes', changesMore: 'Ver todos', changesEmpty: 'Todavía no hay cambios', changesLoading: 'Cargando…',
+      changesLineAnswer: '{time} · {dancer}: {old} → {new} · {who}',
+      changesLineGigEdited: '{time} · {who} editó {fields}',
+      changesLineGigCreated: '{time} · {who} creó este evento',
+      changesLineGigDeleted: '{time} · {who} eliminó este evento',
+      whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
     },
   };
   function t(key, vars) {
@@ -1685,6 +1703,7 @@
     if (ev.message) body.appendChild(h('p', { class: 'card-text', text: '“' + ev.message + '”' }));
     if (ev.notes) body.appendChild(h('div', { class: 'tm-block' }, h('span', { class: 'tm-label', text: t('privateNotes') }), h('p', { class: 'card-text', style: 'margin:0', text: ev.notes })));
     var asked = askedDetail(ev); if (asked) body.appendChild(asked);
+    body.appendChild(changesSection(ev));
 
     var acts = primaryFor(ev, c);
     var foot = h('div', { class: 'foot-btns' },
@@ -1695,6 +1714,86 @@
     var prev = document.querySelector('#modal-root .modal-body'); var scrollTop = prev ? prev.scrollTop : 0;
     modal(title, body, foot, { cls: 'modal-detail', onclose: closeDetail, noFocus: true });
     var nb = document.querySelector('#modal-root .modal-body'); if (nb && scrollTop) nb.scrollTop = scrollTop;
+  }
+
+  // historyUI.last is only a loading placeholder — changesSection always refetches on open, never reads it as a cache.
+  var historyUI = { open: {}, last: {}, expanded: {} };
+  function fmtWhen(iso) { return new Date(iso).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US'); }
+  function statusWord(s) { return s ? t(s) : '—'; }
+  function whoLabel(c) {
+    if (c.source === 'bot') return t('whoBot', { sender: c.actor || '?' });
+    if (c.source === 'family') return c.actor || t('whoSystem');
+    if (c.source === 'owner') return t('owner');
+    if (c.source === 'undo') return t('whoUndo');
+    if (c.source === 'sql') return 'SQL';
+    return c.actor || t('whoSystem');
+  }
+  function changeLineText(c) {
+    var who = whoLabel(c);
+    if (c.kind === 'gig') {
+      if (c.op === 'insert') return t('changesLineGigCreated', { time: fmtWhen(c.changed_at), who: who });
+      if (c.op === 'delete') return t('changesLineGigDeleted', { time: fmtWhen(c.changed_at), who: who });
+      return t('changesLineGigEdited', { time: fmtWhen(c.changed_at), who: who, fields: (c.changed || []).join(', ') });
+    }
+    return t('changesLineAnswer', {
+      time: fmtWhen(c.changed_at), dancer: c.dancer_name || '—',
+      old: statusWord(c.old_status), new: statusWord(c.new_status), who: who,
+    });
+  }
+  function changeLine(c) {
+    var text = changeLineText(c);
+    if (c.kind !== 'answer' || !c.message) return h('p', { class: 'hint', text: text });
+    return h('button', { type: 'button', class: 'hint change-line', text: text, onclick: function () { openChangeMessage(c); } });
+  }
+  function openChangeMessage(c) {
+    var pop = popSheet(c.message.sender_name || '?');
+    pop.body.appendChild(h('p', { class: 'pop-msg', text: c.message.text || '' }));
+    if (c.message.undoable) {
+      var btn = h('button', { class: 'btn btn-sm', text: t('undoConfirm'),
+        onclick: function () { pop.close(); undoBotMessage({ id: c.message.id, result: null }, btn); } });
+      pop.body.appendChild(h('div', { class: 'card-actions' }, btn));
+    }
+  }
+  function renderChangesList(container, changes, evId) {
+    container.innerHTML = '';
+    var expanded = historyUI.expanded[evId];
+    var shown = expanded ? changes : changes.slice(0, 10);
+    shown.forEach(function (c) { container.appendChild(changeLine(c)); });
+    if (!expanded && changes.length > 10) {
+      container.appendChild(h('button', { class: 'btn btn-sm', text: t('changesMore'), onclick: function () {
+        historyUI.expanded[evId] = true;
+        renderChangesList(container, changes, evId);
+      } }));
+    }
+  }
+  function changesSection(ev) {
+    var box = h('div', { class: 'tm-fold-body' });
+    var loading = false, errMsg = null, loaded = null;
+    function paint() {
+      box.innerHTML = '';
+      var placeholder = loaded || (loading ? historyUI.last[ev.id] : null);
+      if (placeholder && placeholder.length) renderChangesList(box, placeholder, ev.id);
+      if (loading) box.appendChild(h('p', { class: 'hint', text: t('changesLoading') }));
+      else if (errMsg) box.appendChild(h('div', {},
+        h('p', { class: 'hint', text: errMsg }),
+        h('button', { class: 'btn btn-sm', text: t('tryAgain'), onclick: fetchHistory })));
+      else if (loaded && !loaded.length) box.appendChild(h('p', { class: 'hint', text: t('changesEmpty') }));
+    }
+    function fetchHistory() {
+      loading = true; errMsg = null; loaded = null; paint();
+      api('/api/events/' + ev.id + '?history=1').then(function (d) {
+        loading = false; loaded = d.changes; historyUI.last[ev.id] = d.changes; paint();
+      }).catch(function (e) {
+        loading = false; errMsg = e.message; paint();
+      });
+    }
+    var det = h('details', { class: 'tm-fold', ontoggle: function () {
+      historyUI.open[ev.id] = det.open;
+      if (det.open) fetchHistory();
+    } }, h('summary', { class: 'tm-fold-summary' }, t('changesTitle')), box);
+    det.open = !!historyUI.open[ev.id];
+    if (det.open) fetchHistory();
+    return det;
   }
 
   /* ── gallery & music ───────────────────────────────────── */
@@ -2784,14 +2883,17 @@
         var out = h('div', { class: 'logout' },
           h('span', { class: m.applied ? 'ok' : 'skip', text: botResultText(m) }),
           h('span', { class: 'logtime', text: timeAgo(m.created_at || m.received_at || Date.now()) }));
+        var actions = [];
         if (!m.applied && r.intent && m.user_id) {
           var known = state.families.some(function (f) {
             return f.groupme_user_id === m.user_id || f.dancers.some(function (d) { return d.groupme_user_id === m.user_id; });
           });
-          out.appendChild(h('div', { class: 'card-actions', style: 'margin-top:0.35rem' },
-            !known ? h('button', { class: 'btn btn-sm btn-gold', text: t('addFamilyFrom'), onclick: function () { addFamilyFromGroupMe(m); } }) : null,
-            h('button', { class: 'btn btn-sm', text: t('reread'), onclick: function () { rereadMessage(m); } })));
+          if (!known) actions.push(h('button', { class: 'btn btn-sm btn-gold', text: t('addFamilyFrom'), onclick: function () { addFamilyFromGroupMe(m); } }));
+          actions.push(h('button', { class: 'btn btn-sm', text: t('reread'), onclick: function () { rereadMessage(m); } }));
         }
+        if (m.undoable) { var undoBtn = h('button', { class: 'btn btn-sm', text: t('undoConfirm'), onclick: function () { undoBotMessage(m, undoBtn); } }); actions.push(undoBtn); }
+        else if (m.undone_at) actions.push(h('span', { class: 'hint', text: t('undoneTag') }));
+        if (actions.length) out.appendChild(h('div', { class: 'card-actions', style: 'margin-top:0.35rem' }, actions));
         box.appendChild(h('div', { class: 'logrow' + (m.applied ? ' applied' : '') },
           h('div', { class: 'logmsg' }, h('b', { text: m.sender_name || '?' }), document.createTextNode(': ' + m.text)), out));
       });
@@ -2837,6 +2939,27 @@
       toast(d.applied ? t('done') : botResultText({ result: d }));
       return loadBotLog().then(loadEvents).then(render);
     }).catch(function (e) { toast(e.message, true); });
+  }
+  function undoBotMessage(m, btn) {
+    var updates = (m.result && m.result.updates) || [];
+    var list = updates.map(function (u) { return u.dancer_name + ' → ' + t(u.status); }).join(', ');
+    confirmSheet(t('undoTitle') + (list ? ' — ' + list : ''), t('undoConfirm')).then(function (yes) {
+      if (!yes) return;
+      if (btn) btn.disabled = true;
+      api('/api/groupme', { method: 'POST', body: { id: m.id, action: 'undo' } }).then(function (d) {
+        var restored = (d.restored || []).length, skipped = d.skipped || [];
+        var changedSince = skipped.filter(function (s) { return s.reason === 'changed-since'; }).length;
+        var deleted = skipped.filter(function (s) { return s.reason === 'dancer-deleted'; }).length;
+        var msg = t('undoDone', { n: restored });
+        if (changedSince) msg += ' · ' + t('undoSkipped', { n: changedSince });
+        if (deleted) msg += ' · ' + t('undoDeleted', { n: deleted });
+        toast(msg);
+        return Promise.all([loadBotLog(), loadEvents()]).then(render);
+      }).catch(function (e) {
+        if (btn) btn.disabled = false;
+        toast(e.status === 409 ? t('undoAlready') : e.status === 404 ? t('undoNotFound') : t('undoFailed'), true);
+      });
+    });
   }
 
   /* ── render dispatch ───────────────────────────────────── */

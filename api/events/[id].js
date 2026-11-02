@@ -2,6 +2,7 @@ import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js
 import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
 import { withSource } from '../_lib/db.js';
 import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
+import { eventChanges } from '../_lib/history.js';
 import { removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
 import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
@@ -62,9 +63,13 @@ function cancelText(ev) {
 
 export default route({
   async GET(req, res) {
+    const id = int(query(req).id);
+    if (query(req).history) {
+      await requireAdmin(req);
+      return ok(res, { changes: await eventChanges(id) });
+    }
     const me = await whoami(req);
     if (me.role === 'anon') throw httpError(401, 'Sign in required');
-    const id = int(query(req).id);
     const ev = await getEvent(id, { admin: me.role === 'admin' });
     if (!ev) throw httpError(404, 'Not found');
     if (me.role !== 'admin' && !['open', 'confirmed', 'done'].includes(ev.status)) throw httpError(404, 'Not found');
