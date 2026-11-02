@@ -1,4 +1,4 @@
-import { one, sql } from './db.js';
+import { one, sql, withSource } from './db.js';
 import { str } from './http.js';
 
 const TYPE_TITLES = {
@@ -52,15 +52,16 @@ export async function recordInquiry(fields, { source, sourceRef, raw }) {
        AND created_at > now() - interval '10 minutes' ORDER BY id DESC LIMIT 1`,
     [n.client_email, n.message]);
   if (dup) {
-    if (sourceRef) await sql('UPDATE events SET source_ref = COALESCE(source_ref, $2) WHERE id = $1', [dup.id, sourceRef]);
+    if (sourceRef) await withSource({ source: 'inquiry', actor: source }, (q) =>
+      q('UPDATE events SET source_ref = COALESCE(source_ref, $2) WHERE id = $1', [dup.id, sourceRef]));
     return { id: dup.id, skipped: 'duplicate' };
   }
-  const row = await one(
+  const rows = await withSource({ source: 'inquiry', actor: source }, (q) => q(
     `INSERT INTO events (title, status, event_type, event_date, date_text, city, client_name, client_email, client_phone,
                          message, source, source_ref, raw, notes)
      VALUES ($1,'inquiry',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
     [n.title, n.event_type, n.event_date, n.date_text, n.city, n.client_name, n.client_email, n.client_phone,
      n.message, source, sourceRef || null, raw ? (JSON.stringify(raw).length <= 10000 ? JSON.stringify(raw) : JSON.stringify({ truncated: true })) : null,
-     n.source_page ? `Submitted from ${n.source_page}` : null]);
-  return { id: row.id };
+     n.source_page ? `Submitted from ${n.source_page}` : null]));
+  return { id: rows[0].id };
 }

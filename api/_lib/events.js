@@ -1,6 +1,7 @@
-import { sql, one, getPool, ensureSchema } from './db.js';
+import { sql, one, getPool, ensureSchema, withSource, tagSource } from './db.js';
 import { httpError } from './http.js';
 import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOpen } from './ics.js';
+import { takeEventMedia } from './media.js';
 
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled', 'lapsed'];
 const LAPSE_AFTER_DAYS = 14;
@@ -36,10 +37,14 @@ export async function listEvents({ admin, includePast = false }) {
 }
 
 // The updated_at guard spares inquiries reopened or edited after the lapse point.
+const LAPSE_WHERE = `status = 'inquiry' AND event_date IS NOT NULL AND event_date < current_date - $1::int
+  AND updated_at < event_date + $1::int`;
+
 export async function lapseStaleInquiries() {
-  await sql(`UPDATE events SET status = 'lapsed', updated_at = now()
-              WHERE status = 'inquiry' AND event_date IS NOT NULL AND event_date < current_date - $1::int
-                AND updated_at < event_date + $1::int`, [LAPSE_AFTER_DAYS]);
+  const due = await sql(`SELECT 1 FROM events WHERE ${LAPSE_WHERE} LIMIT 1`, [LAPSE_AFTER_DAYS]);
+  if (!due.length) return;
+  await withSource({ source: 'system', actor: 'auto-lapse' }, (q) =>
+    q(`UPDATE events SET status = 'lapsed', updated_at = now() WHERE ${LAPSE_WHERE}`, [LAPSE_AFTER_DAYS]));
 }
 
 export async function getEvent(id, { admin }) {
@@ -66,7 +71,19 @@ export async function updateEvent(id, patch) {
     params.push(v); sets.push(`${k} = $${params.length}`);
   }
   sets.push('updated_at = now()');
-  return one(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 RETURNING id`, params);
+  const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+    q(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 RETURNING id`, params));
+  return rows[0] || null;
+}
+
+// Media is deleted here, in the event's own transaction, so the FK's cover_media_id
+// SET NULL cascade is tagged too.
+export async function deleteEvent(id) {
+  return withSource({ source: 'owner', actor: 'owner' }, async (q) => {
+    const files = await takeEventMedia(id, q);
+    await q('DELETE FROM events WHERE id = $1', [id]);
+    return files;
+  });
 }
 
 export const MERGEABLE = ['inquiry', 'lapsed', 'declined'];
@@ -79,6 +96,8 @@ export async function mergeInquiry(fromId, intoId) {
   const client = await getPool().connect();
   try {
     await client.query('BEGIN');
+    const q = async (text, params) => (await client.query(text, params)).rows;
+    await tagSource(q, { source: 'merge', actor: 'owner' });
     const { rows } = await client.query('SELECT * FROM events WHERE id = ANY($1) ORDER BY id FOR UPDATE', [[fromId, intoId]]);
     const from = rows.find((r) => r.id === fromId);
     const into = rows.find((r) => r.id === intoId);

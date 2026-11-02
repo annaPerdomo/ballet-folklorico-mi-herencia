@@ -226,14 +226,18 @@ export function ensureSchema() {
   return schemaReady;
 }
 
+export async function tagSource(q, { source, actor = null, messageId = null }) {
+  await q('SELECT set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true)',
+    ['bfmh.source', source || '', 'bfmh.actor', actor || '', 'bfmh.message_id', messageId == null ? '' : String(messageId)]);
+}
+
 export async function withSource({ source, actor = null, messageId = null }, fn) {
   await ensureSchema();
   const client = await getPool().connect();
   try {
     await client.query('BEGIN');
-    await client.query('SELECT set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true)',
-      ['bfmh.source', source || '', 'bfmh.actor', actor || '', 'bfmh.message_id', messageId == null ? '' : String(messageId)]);
     const q = async (text, params) => (await client.query(text, params)).rows;
+    await tagSource(q, { source, actor, messageId });
     const result = await fn(q);
     const r = await client.query('COMMIT');
     if (r.command !== 'COMMIT') throw new Error('withSource: transaction aborted and rolled back');

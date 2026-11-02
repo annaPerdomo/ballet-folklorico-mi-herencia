@@ -105,6 +105,6 @@ export async function removeFiles(rows) {
 }
 
 // Delete rows before files, so a failed gig delete never leaves rows pointing at missing files.
-export function takeEventMedia(eventId) {
-  return sql('DELETE FROM media WHERE event_id = $1 RETURNING storage_key, thumb_key', [eventId]);
+export function takeEventMedia(eventId, q = sql) {
+  return q('DELETE FROM media WHERE event_id = $1 RETURNING storage_key, thumb_key', [eventId]);
 }

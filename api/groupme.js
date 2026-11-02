@@ -19,8 +19,10 @@ export default route({
     const b = await readJson(req);
     const row = await one('SELECT * FROM groupme_messages WHERE id = $1', [int(b.id)]);
     if (!row) throw httpError(404, 'Message not found');
-    const { applied, result, eventId } = await ingestMessage({ text: row.text, senderName: row.sender_name, senderUserId: row.user_id, sentAt: row.created_at });
-    await sql('UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4 WHERE id = $1', [row.id, applied, JSON.stringify(result), eventId]);
+    const { applied, result, eventId } = await ingestMessage({ text: row.text, senderName: row.sender_name, senderUserId: row.user_id, sentAt: row.created_at, messageId: row.id });
+    await sql(`UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4,
+        undone_at = CASE WHEN $2 THEN NULL ELSE undone_at END WHERE id = $1`,
+      [row.id, applied, JSON.stringify(result), eventId]);
     ok(res, { applied, ...result });
   },
 });

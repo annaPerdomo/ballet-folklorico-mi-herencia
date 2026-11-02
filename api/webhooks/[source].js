@@ -61,12 +61,14 @@ async function groupme(req, res) {
 
   let applied = false, changed = [], result, eventId = null;
   try {
-    ({ applied, changed, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null }));
+    ({ applied, changed, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null, messageId: claimed[0].id }));
   } catch (err) {
     console.error('groupme ingest', err);
     result = { reason: 'error', error: String(err.message || err) };
   }
-  await sql('UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4 WHERE id = $1', [claimed[0].id, applied, JSON.stringify(result), eventId]);
+  await sql(`UPDATE groupme_messages SET applied = $2, result = $3, event_id = $4,
+      undone_at = CASE WHEN $2 THEN NULL ELSE undone_at END WHERE id = $1`,
+    [claimed[0].id, applied, JSON.stringify(result), eventId]);
 
   if (changed.length && process.env.GROUPME_BOT_ACK !== '0') await postGroupMe(ackText(changed));
   ok(res, { applied, ...result });

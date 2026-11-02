@@ -1,8 +1,8 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
 import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
-import { sql } from '../_lib/db.js';
-import { getEvent, updateEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
-import { takeEventMedia, removeFiles } from '../_lib/media.js';
+import { withSource } from '../_lib/db.js';
+import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
+import { removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
 import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
@@ -26,7 +26,8 @@ async function notifyPublish(ev) {
     `\n\nMark your availability: ${teamLink(ev.id)}`;
   const posted = await postGroupMe(text);
   // Counts as an ask, so the UI offers Remind next and a later ask isn't posted as new.
-  if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]);
+  if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+    q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]));
   return { groupme: posted };
 }
 
@@ -87,7 +88,8 @@ export default route({
 
     const patch = cleanPatch(body);
     if (Object.keys(patch).length) await updateEvent(id, patch);
-    if (typeof body.website === 'boolean') await sql('UPDATE events SET website = $2, updated_at = now() WHERE id = $1', [id, body.website]);
+    if (typeof body.website === 'boolean') await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      q('UPDATE events SET website = $2, updated_at = now() WHERE id = $1', [id, body.website]));
 
     let notified = null;
     const action = str(body.action, 20);
@@ -95,15 +97,18 @@ export default route({
     if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));
-      if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
+      if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+        q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
       notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
-      if (current.status === 'inquiry') await sql(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]);
+      if (current.status === 'inquiry') await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+        q(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]));
       const text = askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) });
       const posted = await postGroupMe(text);
-      if (posted) await sql('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]);
+      if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+        q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
       notified = { groupme: posted };
     } else if (action === 'announce') {
       if (!['open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot announce an event that is ${current.status}`);
@@ -120,7 +125,8 @@ export default route({
       if (!t.from.includes(current.status) && current.status !== t.to) throw httpError(400, `Cannot ${action} an event that is ${current.status}`);
       const stamp = t.to === 'open' ? 'published_at = COALESCE(published_at, now()),' : t.to === 'confirmed' ? 'confirmed_at = now(),' : '';
       const quiet = action === 'publish' && body.notify === false && current.status === 'inquiry' ? 'quiet = true,' : '';
-      await sql(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1`, [id, t.to]);
+      await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+        q(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1`, [id, t.to]));
       const ev = await getEvent(id, { admin: true });
       if (body.notify !== false) {
         if (action === 'publish') notified = await notifyPublish(ev);
@@ -134,8 +140,7 @@ export default route({
   async DELETE(req, res) {
     await requireAdmin(req);
     const id = int(query(req).id);
-    const files = await takeEventMedia(id);
-    await sql('DELETE FROM events WHERE id = $1', [id]);
+    const files = await deleteEvent(id);
     await removeFiles(files);
     ok(res);
   },
