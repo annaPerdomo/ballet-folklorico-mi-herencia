@@ -28,7 +28,8 @@ export async function one(text, params) {
   return rows[0] || null;
 }
 
-const SCHEMA = `
+export const SCHEMA = `
+SELECT pg_advisory_xact_lock(7294110258);
 CREATE TABLE IF NOT EXISTS families (
   id serial PRIMARY KEY,
   name text NOT NULL,
@@ -130,6 +131,92 @@ CREATE TABLE IF NOT EXISTS event_songs (
   position int NOT NULL DEFAULT 0,
   PRIMARY KEY (event_id, media_id)
 );
+ALTER TABLE groupme_messages ADD COLUMN IF NOT EXISTS undone_at timestamptz;
+CREATE TABLE IF NOT EXISTS availability_history (
+  id bigserial PRIMARY KEY,
+  event_id int NOT NULL,
+  dancer_id int NOT NULL,
+  op text NOT NULL CHECK (op IN ('insert','update','delete')),
+  old_status text,
+  new_status text,
+  old_row jsonb,
+  new_row jsonb,
+  source text NOT NULL,
+  actor text,
+  groupme_message_id int,
+  changed_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS availability_history_event ON availability_history(event_id, id DESC);
+CREATE INDEX IF NOT EXISTS availability_history_message ON availability_history(groupme_message_id) WHERE groupme_message_id IS NOT NULL;
+CREATE TABLE IF NOT EXISTS events_history (
+  id bigserial PRIMARY KEY,
+  event_id int NOT NULL,
+  op text NOT NULL CHECK (op IN ('insert','update','delete')),
+  changed text[] NOT NULL DEFAULT '{}',
+  old_row jsonb,
+  new_row jsonb,
+  source text NOT NULL,
+  actor text,
+  groupme_message_id int,
+  changed_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS events_history_event ON events_history(event_id, id DESC);
+CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
+  SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
+$$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION bfmh_history_actor() RETURNS text AS $$
+  SELECT NULLIF(current_setting('bfmh.actor', true), '');
+$$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION bfmh_history_message_id() RETURNS int AS $$
+  SELECT NULLIF(current_setting('bfmh.message_id', true), '')::int;
+$$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION availability_history_log() RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'UPDATE' AND (to_jsonb(OLD) - 'updated_at') = (to_jsonb(NEW) - 'updated_at') THEN
+    RETURN NULL;
+  END IF;
+  INSERT INTO availability_history (event_id, dancer_id, op, old_status, new_status, old_row, new_row, source, actor, groupme_message_id)
+  VALUES (
+    COALESCE(NEW.event_id, OLD.event_id), COALESCE(NEW.dancer_id, OLD.dancer_id), lower(TG_OP),
+    OLD.status, NEW.status,
+    CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE to_jsonb(OLD) END,
+    CASE WHEN TG_OP = 'DELETE' THEN NULL ELSE to_jsonb(NEW) END,
+    bfmh_history_source(), bfmh_history_actor(), bfmh_history_message_id()
+  );
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE TRIGGER availability_history_trigger
+  AFTER INSERT OR UPDATE OR DELETE ON availability
+  FOR EACH ROW EXECUTE FUNCTION availability_history_log();
+CREATE OR REPLACE FUNCTION events_history_log() RETURNS trigger AS $$
+DECLARE
+  cols text[];
+BEGIN
+  IF TG_OP = 'UPDATE' THEN
+    IF (to_jsonb(OLD) - 'updated_at') = (to_jsonb(NEW) - 'updated_at') THEN
+      RETURN NULL;
+    END IF;
+    SELECT array_agg(key) INTO cols
+      FROM jsonb_each(to_jsonb(NEW) - 'updated_at') n
+      JOIN jsonb_each(to_jsonb(OLD) - 'updated_at') o USING (key)
+      WHERE n.value IS DISTINCT FROM o.value;
+  ELSE
+    cols := '{}';
+  END IF;
+  INSERT INTO events_history (event_id, op, changed, old_row, new_row, source, actor, groupme_message_id)
+  VALUES (
+    COALESCE(NEW.id, OLD.id), lower(TG_OP), COALESCE(cols, '{}'),
+    CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE to_jsonb(OLD) - 'raw' END,
+    CASE WHEN TG_OP = 'DELETE' THEN NULL ELSE to_jsonb(NEW) - 'raw' END,
+    bfmh_history_source(), bfmh_history_actor(), bfmh_history_message_id()
+  );
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE TRIGGER events_history_trigger
+  AFTER INSERT OR UPDATE OR DELETE ON events
+  FOR EACH ROW EXECUTE FUNCTION events_history_log();
 `;
 
 export function ensureSchema() {
@@ -137,4 +224,24 @@ export function ensureSchema() {
     schemaReady = getPool().query(SCHEMA).catch((e) => { schemaReady = null; throw e; });
   }
   return schemaReady;
+}
+
+export async function withSource({ source, actor = null, messageId = null }, fn) {
+  await ensureSchema();
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true)',
+      ['bfmh.source', source || '', 'bfmh.actor', actor || '', 'bfmh.message_id', messageId == null ? '' : String(messageId)]);
+    const q = async (text, params) => (await client.query(text, params)).rows;
+    const result = await fn(q);
+    const r = await client.query('COMMIT');
+    if (r.command !== 'COMMIT') throw new Error('withSource: transaction aborted and rolled back');
+    return result;
+  } catch (e) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw e;
+  } finally {
+    client.release();
+  }
 }
