@@ -509,7 +509,26 @@ label.f textarea { min-height: 90px; resize: vertical; }
 input[type=date] { color-scheme: dark; }
 .rehrow { display: grid; grid-template-columns: 1fr 1fr 1.4fr auto; gap: 0.4rem; margin: 0.45rem 0; align-items: center; }
 .hint { color: var(--muted); font-size: 0.76rem; margin: 0.35rem 0 0; line-height: 1.55; }
-.change-line { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
+/* ── gig recent changes ─────────────────────────────────── */
+.chg-list { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-deep); overflow: hidden; margin-top: 0.5rem; }
+.chg { display: flex; align-items: center; gap: 0.6rem; width: 100%; padding: 0.6rem 0.8rem; border: 0; border-top: 1px solid var(--hair);
+  background: none; color: inherit; font: inherit; text-align: left; }
+.chg:first-child { border-top: 0; }
+.chg-tap { cursor: pointer; }
+.chg-tap:hover, .chg-tap:focus-visible { background: var(--bg-card-hover); outline: none; }
+.chg-undo { box-shadow: inset 3px 0 0 var(--muted); }
+.chg-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.chg-main { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.84rem; }
+.chg-name { color: var(--text); font-weight: 600; margin-right: 0.15rem; }
+.chg-text { color: var(--text-2); line-height: 1.4; }
+.chg-arrow { color: var(--muted); font-size: 0.8rem; }
+.chip-xs { padding: 0.15rem 0.5rem; font-size: 0.7rem; gap: 0.25rem; }
+.chip-xs svg { width: 11px; height: 11px; }
+.chg-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; font-size: 0.7rem; color: var(--muted); }
+.chg-meta .chg-time::before { content: '·'; margin-right: 0.5rem; }
+.chg-go { flex: none; color: var(--muted); display: flex; }
+.chg-go svg { width: 14px; height: 14px; }
+.chg-more { margin-top: 0.6rem; }
 .askmeta { display: flex; flex-wrap: wrap; column-gap: 0.9rem; row-gap: 0; margin: 0; }
 .askmeta span { white-space: nowrap; }
 .site-row { margin-top: 0.8rem; }

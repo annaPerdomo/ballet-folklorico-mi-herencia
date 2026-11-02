@@ -186,10 +186,7 @@
       undoSkipped: '{n} kept: changed since', undoDeleted: '{n} skipped: dancer removed', undoneTag: 'Undone',
       undoAlready: 'Already undone', undoNotFound: 'Message not found', undoFailed: 'Could not undo — try again',
       changesTitle: 'Recent changes', changesMore: 'Show all', changesEmpty: 'No changes yet', changesLoading: 'Loading…',
-      changesLineAnswer: '{time} · {dancer}: {old} → {new} · {who}',
-      changesLineGigEdited: '{time} · {who} edited {fields}',
-      changesLineGigCreated: '{time} · {who} created this gig',
-      changesLineGigDeleted: '{time} · {who} deleted this gig',
+      changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
     },
     es: {
@@ -354,10 +351,7 @@
       undoSkipped: '{n} sin tocar: cambiaron después', undoDeleted: '{n} sin tocar: se quitó al bailarín', undoneTag: 'Deshecho',
       undoAlready: 'Ya se deshizo', undoNotFound: 'No se encontró el mensaje', undoFailed: 'No se pudo deshacer — inténtalo de nuevo',
       changesTitle: 'Cambios recientes', changesMore: 'Ver todos', changesEmpty: 'Todavía no hay cambios', changesLoading: 'Cargando…',
-      changesLineAnswer: '{time} · {dancer}: {old} → {new} · {who}',
-      changesLineGigEdited: '{time} · {who} editó {fields}',
-      changesLineGigCreated: '{time} · {who} creó este evento',
-      changesLineGigDeleted: '{time} · {who} eliminó este evento',
+      changesGigEdited: '{who} editó {fields}', changesGigCreated: '{who} creó este evento', changesGigDeleted: '{who} eliminó este evento',
       whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
     },
   };
@@ -1719,7 +1713,6 @@
   // historyUI.last is only a loading placeholder — changesSection always refetches on open, never reads it as a cache.
   var historyUI = { open: {}, last: {}, expanded: {} };
   function fmtWhen(iso) { return new Date(iso).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US'); }
-  function statusWord(s) { return s ? t(s) : '—'; }
   function whoLabel(c) {
     if (c.source === 'bot') return t('whoBot', { sender: c.actor || '?' });
     if (c.source === 'family') return c.actor || t('whoSystem');
@@ -1728,28 +1721,32 @@
     if (c.source === 'sql') return 'SQL';
     return c.actor || t('whoSystem');
   }
-  function changeLineText(c) {
-    var who = whoLabel(c);
-    if (c.kind === 'gig') {
-      if (c.op === 'insert') return t('changesLineGigCreated', { time: fmtWhen(c.changed_at), who: who });
-      if (c.op === 'delete') return t('changesLineGigDeleted', { time: fmtWhen(c.changed_at), who: who });
-      return t('changesLineGigEdited', { time: fmtWhen(c.changed_at), who: who, fields: (c.changed || []).join(', ') });
-    }
-    return t('changesLineAnswer', {
-      time: fmtWhen(c.changed_at), dancer: c.dancer_name || '—',
-      old: statusWord(c.old_status), new: statusWord(c.new_status), who: who,
-    });
+  function statusChip(st) {
+    if (!st) return h('span', { class: 'chip chip-xs none', text: t('noAnswer') });
+    return h('span', { class: 'chip chip-xs ' + st }, icon(st, 3), t(st));
   }
   function changeLine(c) {
-    var text = changeLineText(c);
-    if (c.kind !== 'answer' || !c.message) return h('p', { class: 'hint', text: text });
-    return h('button', { type: 'button', class: 'hint change-line', text: text, onclick: function () { openChangeMessage(c); } });
+    var who = whoLabel(c), main;
+    if (c.kind === 'gig') {
+      var key = c.op === 'insert' ? 'changesGigCreated' : c.op === 'delete' ? 'changesGigDeleted' : 'changesGigEdited';
+      main = h('div', { class: 'chg-main' }, h('span', { class: 'chg-text', text: t(key, { who: who, fields: (c.changed || []).join(', ').replace(/_/g, ' ') }) }));
+    } else {
+      main = h('div', { class: 'chg-main' }, h('b', { class: 'chg-name', text: c.dancer_name || '—' }),
+        statusChip(c.old_status), h('span', { class: 'chg-arrow', text: '→' }), statusChip(c.new_status));
+    }
+    var meta = h('div', { class: 'chg-meta', title: fmtWhen(c.changed_at) },
+      h('span', { class: 'chg-who', text: who }), h('span', { class: 'chg-time', text: timeAgo(c.changed_at) }));
+    var tappable = c.kind === 'answer' && c.message;
+    var row = h(tappable ? 'button' : 'div', { type: tappable ? 'button' : null, class: 'chg' + (tappable ? ' chg-tap' : '') + (c.source === 'undo' ? ' chg-undo' : '') },
+      h('div', { class: 'chg-body' }, main, meta), tappable ? h('span', { class: 'chg-go' }, icon('chevron', 2.5)) : null);
+    if (tappable) row.onclick = function () { openChangeMessage(c); };
+    return row;
   }
   function openChangeMessage(c) {
-    var pop = popSheet(c.message.sender_name || '?');
+    var pop = popSheet(c.message.sender_name || '?', fmtWhen(c.changed_at));
     pop.body.appendChild(h('p', { class: 'pop-msg', text: c.message.text || '' }));
     if (c.message.undoable) {
-      var btn = h('button', { class: 'btn btn-sm', text: t('undoConfirm'),
+      var btn = h('button', { class: 'btn btn-undo', text: t('undoConfirm'),
         onclick: function () { pop.close(); undoBotMessage({ id: c.message.id, result: null }, btn); } });
       pop.body.appendChild(h('div', { class: 'card-actions' }, btn));
     }
@@ -1758,9 +1755,10 @@
     container.innerHTML = '';
     var expanded = historyUI.expanded[evId];
     var shown = expanded ? changes : changes.slice(0, 10);
-    shown.forEach(function (c) { container.appendChild(changeLine(c)); });
+    var list = h('div', { class: 'chg-list' }); container.appendChild(list);
+    shown.forEach(function (c) { list.appendChild(changeLine(c)); });
     if (!expanded && changes.length > 10) {
-      container.appendChild(h('button', { class: 'btn btn-sm', text: t('changesMore'), onclick: function () {
+      container.appendChild(h('button', { class: 'btn btn-sm chg-more', text: t('changesMore') + ' · ' + changes.length, onclick: function () {
         historyUI.expanded[evId] = true;
         renderChangesList(container, changes, evId);
       } }));
