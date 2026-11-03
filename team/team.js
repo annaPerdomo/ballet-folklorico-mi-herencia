@@ -13,7 +13,7 @@
   var tabsEl = document.getElementById('tabs');
   var headerRight = document.getElementById('header-right');
   var fabRoot = document.getElementById('fab-root');
-  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', mtab: 'gigs', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0,
+  var state = { me: null, events: [], families: [], roster: 0, botLog: null, tab: 'inbox', mtab: 'gigs', focusEvent: null, detail: null, gigLink: null, lang: 'en', loadedAt: 0, feedFresh: 0,
     inbox: loadInboxPrefs() };
   function loadInboxPrefs() {
     var d = { sort: 'newest', range: 'all', from: '', to: '', pick: false };
@@ -161,6 +161,8 @@
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
       deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
+      feedTitle: 'Feed', feedSub: 'Photos, videos and music the group has shared', feedAll: 'See the whole feed', feedAdded: 'added {what}', feedAnd: ' and ',
+      feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
       youFamily: 'Your family', youNone: 'None — show as “the owners”', youSaved: 'Saved', titleLabel: 'Title',
@@ -327,6 +329,8 @@
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
       deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
+      feedTitle: 'Actividad', feedSub: 'Fotos, videos y música que el grupo ha compartido', feedAll: 'Ver toda la actividad', feedAdded: 'agregó {what}', feedAnd: ' y ',
+      feedNew: 'Nuevo', feedMore: 'más', feedOlder: 'Ver anteriores', feedEmpty: 'Todavía no se ha agregado nada.', songOne: '1 canción', songMany: '{n} canciones',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
       youFamily: 'Tu familia', youNone: 'Ninguna — mostrar como “los dueños”', youSaved: 'Guardado', titleLabel: 'Título',
@@ -488,7 +492,7 @@
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
     if (state.me.role === 'admin') { jobs.push(loadFamilies()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
-    if (isMediaTab()) jobs.push(loadMediaIndex());
+    if (isMediaTab()) jobs.push(loadMediaIndex()); else jobs.push(loadFeedCount());
     return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
   }
   function refreshIfStale() {
@@ -1001,7 +1005,7 @@
     [['gigs', 'tabGigs', 'calendar'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.mtab === tb[0] ? ' is-active' : ''), 'aria-current': state.mtab === tb[0] ? 'page' : false,
         onclick: function () { state.mtab = tb[0]; render(); } },
-        h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) })));
+        h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) }), tb[0] === 'media' ? feedBadge() : null));
     });
     headerRight.innerHTML = '';
     headerRight.appendChild(h('span', { class: 'tm-who' },
@@ -1165,7 +1169,8 @@
           ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
           : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
         h('span', { class: 'tm-tab-label', text: t(tb[1]) }),
-        tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null));
+        tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null,
+        tb[0] === 'media' ? feedBadge() : null));
     });
 
     fabRoot.innerHTML = '';
@@ -1918,12 +1923,12 @@
   var gal = null;
   function plural(n, one, many) { return t(n === 1 ? one : many, { n: n }); }
   function fmtBytes(b) { return b >= 1073741824 ? (b / 1073741824).toFixed(1) + ' GB' : Math.max(1, Math.round(b / 1048576)) + ' MB'; }
-  function addedBy(it) {
-    var who = it.credit || (!it.uploader || it.uploader === 'owners' ? t('theOwners')
+  function whoOf(it) {
+    return it.credit || (!it.uploader || it.uploader === 'owners' ? t('theOwners')
       // "Cindy (Zamyra & Zaryna)" names people, not a surname, so it can't take "the … family".
       : /\(/.test(it.uploader) ? it.uploader : t('theFamily', { name: it.uploader }));
-    return t('addedBy', { who: who });
   }
+  function addedBy(it) { return t('addedBy', { who: whoOf(it) }); }
   /* iOS can paint a cancelled load half-drawn: hide until decoded, and let a repaint reuse the
      in-flight <img>, keyed without the signed query since that rotates. */
   var thumbPool = {}, thumbRoots = [], POOL_MAX = 300;
@@ -1992,8 +1997,9 @@
   }
   function loadMediaIndex() {
     if (!media.loading) {
-      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {
-        media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.loading = null;
+      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1'),
+        api('/api/media?feed=1').catch(function () { return null; })]).then(function (r) {
+        media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.feed = r[3]; media.loading = null; state.feedFresh = 0;
       }, function (e) { media.loading = null; throw e; });
     }
     return media.loading;
@@ -2022,6 +2028,7 @@
     }
     if (idx.review && idx.review.length) renderReview(idx.review);
 
+    renderFeed();
     renderDances();
     renderMusic(idx.storage);
 
@@ -2040,6 +2047,103 @@
             h('span', { class: 'galcard-counts', text: counts || t('nothingYet') })));
       })));
 
+  }
+
+  /* ── feed: gallery uploads only; gig business (inquiries, availability) stays out ── */
+  var FEED_KEY = 'bfmh_team_feed_seen';
+  function feedSeen() {
+    try { var v = localStorage.getItem(FEED_KEY); if (v) return v; } catch (e) {}
+    return new Date(Date.now() - 7 * 864e5).toISOString().replace('Z', '000Z');
+  }
+  // Fixed for the visit, so cards stay marked New after the Gallery tab marks them seen.
+  media.feedPrev = feedSeen();
+  function loadFeedCount() {
+    return api('/api/media?feed=1&since=' + encodeURIComponent(feedSeen())).then(function (d) { state.feedFresh = d.fresh; }, function () {});
+  }
+  function markFeedSeen() {
+    var b = media.feed && media.feed.batches[0];
+    state.feedFresh = 0;
+    if (!b) return;
+    // The server's timestamp, so a phone with a wrong clock can't hide or replay posts.
+    try { if (b.stamp > (localStorage.getItem(FEED_KEY) || '')) localStorage.setItem(FEED_KEY, b.stamp); } catch (e) {}
+  }
+  function feedBadge() {
+    var n = state.feedFresh;
+    return n && !isMediaTab() ? h('span', { class: 'count', text: n > 99 ? '99+' : n, 'aria-label': t('feedNew') + ': ' + n }) : null;
+  }
+  function isFresh(b) { return !b.mine && b.stamp > media.feedPrev; }
+  function feedWhen(iso) {
+    if (Date.now() - new Date(iso).getTime() < 7 * 864e5) return timeAgo(iso);
+    var d = new Date(iso);
+    return fmtDateShort(d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2));
+  }
+  function feedWhat(b) {
+    var c = { photo: 0, video: 0, audio: 0 };
+    b.items.forEach(function (it) { c[it.kind === 'link' ? 'video' : it.kind]++; });
+    return [c.photo ? plural(c.photo, 'photoOne', 'photoMany') : null, c.video ? plural(c.video, 'videoOne', 'videoMany') : null,
+      c.audio ? plural(c.audio, 'songOne', 'songMany') : null].filter(Boolean).join(t('feedAnd'));
+  }
+  var FEED_TILES = 6;
+  function feedCard(b) {
+    var who = whoOf(b);
+    var songs = b.items.filter(function (i) { return i.kind === 'audio'; });
+    var vis = b.items.filter(function (i) { return i.kind !== 'audio'; });
+    var viewable = vis.filter(function (i) { return i.kind !== 'link' || i.youtube; });
+    var cut = vis.length > FEED_TILES ? FEED_TILES - 1 : FEED_TILES;
+    var openFolder = b.event ? function () { openGallery(b.event.id); } : null;
+    var tiles = vis.slice(0, cut).map(function (it) { return mediaTile(it, viewable); });
+    if (vis.length > cut) tiles.push(h('button', { type: 'button', class: 'photo feed-rest', onclick: openFolder },
+      h('b', { text: '+' + (vis.length - cut) }), h('span', { text: t('feedMore') })));
+    var ev = b.event;
+    return h('article', { class: 'feed-card' + (isFresh(b) ? ' is-new' : '') },
+      h('div', { class: 'feed-head' },
+        h('p', { class: 'feed-line' }, h('b', { text: who.charAt(0).toUpperCase() + who.slice(1) }), ' ' + t('feedAdded', { what: feedWhat(b) })),
+        isFresh(b) ? h('span', { class: 'feed-new', text: t('feedNew') }) : null,
+        h('span', { class: 'feed-time', text: feedWhen(b.at) })),
+      ev ? h('button', { type: 'button', class: 'feed-where', onclick: openFolder }, icon('image', 2),
+          h('span', { class: 'feed-where-name', text: evTitle(ev) }),
+          ev.event_date && ev.status !== 'folder' ? h('span', { class: 'card-meta', text: fmtDateShort(ev.event_date) }) : null)
+        : h('span', { class: 'feed-where' }, icon('music', 2), h('span', { class: 'feed-where-name', text: t('musicLibrary') })),
+      vis.length ? h('div', { class: 'feedgrid' }, tiles) : null,
+      songs.length ? h('div', { class: 'songs' }, songs.slice(0, 3).map(function (s) { return songRow(s, null); })) : null);
+  }
+  function renderFeed() {
+    var f = media.feed;
+    // The badge saw uploads newer than this feed, so fetch again before marking it seen.
+    if (state.feedFresh) { if (!media.loading) loadMediaIndex().then(render, function () {}); }
+    else markFeedSeen();
+    if (!f || !f.batches.length) return;
+    var fresh = f.batches.filter(isFresh).length;
+    foldSection('feed', t('feedTitle'), fresh, true, null,
+      h('div', { class: 'feed' }, f.batches.slice(0, 3).map(feedCard)),
+      f.batches.length > 3 || f.next ? h('button', { type: 'button', class: 'btn btn-wide feed-all', onclick: function () { openGallery(null, null, true); } },
+        icon('clock', 2), h('span', { text: t('feedAll') })) : null);
+  }
+  function paintFeed() {
+    var d = gal.data, root = gal.root;
+    root.innerHTML = '';
+    root.appendChild(h('header', { class: 'gal-head' },
+      h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
+      h('div', { class: 'gal-title' }, h('b', { text: t('feedTitle') }), h('span', { class: 'card-meta', text: t('feedSub') }))));
+    if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
+    var body = h('div', { class: 'gal-body' });
+    root.appendChild(body);
+    if (!d.batches.length && !d.next) { body.appendChild(emptyState('image', t('feedEmpty'))); return; }
+    var list = h('div', { class: 'feed' }, d.batches.map(feedCard));
+    body.appendChild(list);
+    // Older pages append in place: a repaint would throw away the scroll position.
+    var g = gal;
+    var more = h('button', { type: 'button', class: 'btn btn-wide feed-all', text: t('feedOlder'), onclick: function () {
+      more.disabled = true;
+      api('/api/media?feed=1&before=' + encodeURIComponent(d.next)).then(function (p) {
+        if (gal !== g || g.data !== d) return;
+        d.batches = d.batches.concat(p.batches); d.next = p.next;
+        p.batches.forEach(function (b) { list.appendChild(feedCard(b)); });
+        more.disabled = false; more.hidden = !d.next;
+      }, function (e) { more.disabled = false; toast(e.message, true); });
+    } });
+    more.hidden = !d.next;
+    body.appendChild(more);
   }
 
   function renderMusic(storage) {
@@ -2182,12 +2286,12 @@
   }
 
   /* ── one gig's gallery (full-screen layer over the app) ── */
-  function openGallery(eventId, dance) {
+  function openGallery(eventId, dance, feed) {
     closeGallery(true);
-    gal = { id: eventId, dance: dance || null, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
+    gal = { id: eventId, dance: dance || null, feed: !!feed, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
     document.body.appendChild(gal.root);
     document.body.classList.add('has-gal');
-    try { history.pushState({ gal: eventId || 'dance' }, ''); gal.pushed = true; } catch (e) {}
+    try { history.pushState({ gal: eventId || (feed ? 'feed' : 'dance') }, ''); gal.pushed = true; } catch (e) {}
     paintGallery();
     loadGallery().then(paintGallery, function (e) { toast(e.message, true); closeGallery(); });
   }
@@ -2203,6 +2307,7 @@
   window.addEventListener('popstate', function () { if (gal) { gal.pushed = false; closeGallery(); } });
   function loadGallery() {
     var g = gal;
+    if (g.feed) return api('/api/media?feed=1').then(function (d) { if (gal === g) g.data = d; });
     if (g.dance) {
       if (media.videos && !g.data) g.data = videosOf(g.dance);
       return loadMediaIndex().then(function () {
@@ -2214,6 +2319,7 @@
 
   function paintGallery() {
     if (!gal) return;
+    if (gal.feed) { paintFeed(); return; }
     if (gal.dance) { paintDance(); return; }
     var d = gal.data, root = gal.root;
     var tray = document.getElementById('upload-tray');

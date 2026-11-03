@@ -108,3 +108,24 @@ export async function removeFiles(rows) {
 export function takeEventMedia(eventId, q = sql) {
   return q('DELETE FROM media WHERE event_id = $1 RETURNING storage_key, thumb_key', [eventId]);
 }
+
+const FEED_GAP_MS = 60 * 60 * 1000;
+
+// Only a run's latest row can extend it, so batches never interleave and a page can end on any batch.
+export function feedBatches(rows, gapMs = FEED_GAP_MS) {
+  const out = [];
+  for (const r of rows) {
+    const key = [r.event_id, r.family_id, r.uploader, r.credit, r.kind === 'audio'].join('|');
+    const at = new Date(r.created_at).getTime();
+    const last = out[out.length - 1];
+    if (last && last.key === key && last.oldest - at <= gapMs) { last.rows.push(r); last.oldest = at; }
+    else out.push({ key, rows: [r], oldest: at });
+  }
+  return out.map((b) => b.rows);
+}
+
+// Owners share one login, so an owner's "mine" is whatever they add under their own family name.
+export function isMine(row, me) {
+  return me.role === 'admin' ? row.family_id == null && !row.credit && row.uploader === (me.family ? me.family.name : 'owners')
+    : row.family_id === me.family.id;
+}

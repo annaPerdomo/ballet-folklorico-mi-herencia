@@ -830,3 +830,28 @@ body.has-gal { overflow: hidden; }
 .review-text b { font-weight: 500; font-size: 0.88rem; overflow-wrap: anywhere; }
 .review-btns { display: flex; gap: 0.4rem; flex-shrink: 0; }
 @media (max-width: 480px) { .review-item { flex-wrap: wrap; } .review-btns { width: 100%; } .review-btns .btn { flex: 1; } }
+
+/* feed */
+.feed { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+.feed-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 0.7rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.feed-card.is-new { border-color: rgba(232,67,147,0.55); box-shadow: 0 0 0 1px rgba(232,67,147,0.18); }
+.feed-head { display: flex; align-items: baseline; gap: 0.5rem; }
+.feed-line { flex: 1; min-width: 0; margin: 0; font-size: 0.86rem; line-height: 1.35; color: var(--text-2); }
+.feed-line b { color: var(--text); font-weight: 600; }
+.feed-new { flex-shrink: 0; padding: 1px 7px; border-radius: 999px; background: var(--magenta); color: #fff; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.feed-time { flex-shrink: 0; font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.feed-where { all: unset; display: flex; align-items: center; gap: 0.4rem; min-width: 0; font-size: 0.78rem; color: var(--gold-light); }
+button.feed-where { cursor: pointer; }
+button.feed-where:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+.feed-where svg { width: 15px; height: 15px; flex-shrink: 0; }
+.feed-where-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.feed-where .card-meta { flex-shrink: 0; }
+.feedgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+@media (min-width: 700px) { .feedgrid { grid-template-columns: repeat(6, 1fr); } }
+.feed-rest { all: unset; cursor: pointer; position: relative; aspect-ratio: 1; border-radius: 10px; background: var(--bg-deep); border: 1px solid var(--hair);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--gold-light); }
+.feed-rest b { font-size: 1.2rem; }
+.feed-rest span { font-size: 0.7rem; color: var(--muted); }
+.feed-rest:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.feed-all { margin-top: 0.7rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.gal-body > .feed-all { margin-top: 0.9rem; }

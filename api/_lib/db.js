@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS media (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS media_event ON media(event_id, kind);
+CREATE INDEX IF NOT EXISTS media_created ON media(created_at DESC, id DESC);
 ALTER TABLE media ADD COLUMN IF NOT EXISTS website boolean NOT NULL DEFAULT false;
 ALTER TABLE media ADD COLUMN IF NOT EXISTS suggested boolean NOT NULL DEFAULT false;
 ALTER TABLE media ADD COLUMN IF NOT EXISTS thumb_bytes int NOT NULL DEFAULT 0;

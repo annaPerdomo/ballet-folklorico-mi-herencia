@@ -5,7 +5,7 @@ import { sql, one, withSource } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
@@ -42,6 +42,61 @@ async function usage(me) {
   return me.role === 'admin' ? { used: await usedBytes(), quota: quotaBytes() } : undefined;
 }
 
+const FEED_PAGE = 150;
+// Microsecond ISO: a JS Date drops the last three digits, so a row would match a cursor or seen mark taken from itself.
+const STAMP = `to_char(m.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS stamp`;
+const STAMP_RE = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d{1,6})?Z$/;
+const FEED_FROM = `FROM media m LEFT JOIN events e ON e.id = m.event_id WHERE m.ready AND (m.event_id IS NULL OR e.status = ANY($1))`;
+// Owners' pre-loaded gigs would otherwise fill a member's page; galleryOpen settles the day itself.
+const memberCut = (me) => (me.role === 'admin' ? '' : `AND (m.event_id IS NULL OR e.status = 'folder' OR e.event_date <= current_date + 1)`);
+const feedVisible = (r, me) => me.role === 'admin' || r.event_id == null || galleryOpen(r);
+
+function stampParam(v) {
+  if (!STAMP_RE.test(String(v))) throw httpError(400, 'Bad feed position');
+  return String(v);
+}
+
+async function feed(q, me) {
+  if (q.since !== undefined) {
+    const rows = await sql(`SELECT m.id, m.kind, m.created_at, m.event_id, m.family_id, m.uploader, m.credit, e.event_date, e.start_time, e.call_time, e.status
+      ${FEED_FROM} ${memberCut(me)} AND m.created_at > $2::timestamptz ORDER BY m.created_at DESC, m.id DESC LIMIT 500`, [GALLERY_VISIBLE, stampParam(q.since)]);
+    return { fresh: feedBatches(rows.filter((r) => feedVisible(r, me) && !isMine(r, me))).length };
+  }
+  let cursor = null;
+  if (q.before !== undefined) {
+    const [at, id] = String(q.before).split('_');
+    cursor = [stampParam(at), int(id)];
+    if (cursor[1] == null) throw httpError(400, 'Bad feed position');
+  }
+  const shown = [];
+  let next = null;
+  for (let tries = 0; tries < 5 && !shown.length; tries++) {
+    const rows = await sql(`SELECT m.*, ${STAMP}, e.title AS event_title, e.event_type, e.event_date, e.start_time, e.call_time, e.status
+      ${FEED_FROM} ${memberCut(me)} AND ($2::timestamptz IS NULL OR (m.created_at, m.id) < ($2::timestamptz, $3::int))
+      ORDER BY m.created_at DESC, m.id DESC LIMIT ${FEED_PAGE}`, [GALLERY_VISIBLE, cursor && cursor[0], cursor && cursor[1]]);
+    let batches = feedBatches(rows);
+    const more = rows.length === FEED_PAGE;
+    // A full page may have cut the oldest batch short; it comes back whole on the next page.
+    if (more && batches.length > 1) batches = batches.slice(0, -1);
+    shown.push(...batches.map((b) => b.filter((r) => feedVisible(r, me))).filter((b) => b.length));
+    const last = batches.length ? batches[batches.length - 1].at(-1) : null;
+    next = more && last ? `${last.stamp}_${last.id}` : null;
+    if (!next) break;
+    cursor = [last.stamp, last.id];
+  }
+  return {
+    next,
+    batches: shown.map((b) => {
+      const r = b[0];
+      return {
+        id: r.id, at: r.created_at, stamp: r.stamp, uploader: r.uploader, credit: r.credit || null, mine: isMine(r, me),
+        event: r.event_id ? { id: r.event_id, title: r.event_title, event_type: r.event_type, event_date: r.event_date, status: r.status } : null,
+        items: b.map((x) => toItem(x, me)),
+      };
+    }),
+  };
+}
+
 export default route({
   async GET(req, res) {
     const me = await requireUser(req);
@@ -63,6 +118,8 @@ export default route({
         .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date }));
       return ok(res, { ...base, videos });
     }
+
+    if (q.feed !== undefined) return ok(res, { ...base, ...(await feed(q, me)) });
 
     const eventId = int(q.event);
     if (eventId) {
