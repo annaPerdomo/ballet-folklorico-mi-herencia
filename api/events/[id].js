@@ -131,7 +131,7 @@ export default route({
       const stamp = t.to === 'open' ? 'published_at = COALESCE(published_at, now()),' : t.to === 'confirmed' ? 'confirmed_at = now(),' : '';
       const quiet = action === 'publish' && body.notify === false && current.status === 'inquiry' ? 'quiet = true,' : '';
       await withSource({ source: 'owner', actor: 'owner' }, (q) =>
-        q(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1`, [id, t.to]));
+        q(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id, t.to]));
       const ev = await getEvent(id, { admin: true });
       if (body.notify !== false) {
         if (action === 'publish') notified = await notifyPublish(ev);
@@ -145,6 +145,7 @@ export default route({
   async DELETE(req, res) {
     await requireAdmin(req);
     const id = int(query(req).id);
+    if (!(await getEvent(id, { admin: true }))) throw httpError(404, 'Not found');
     const files = await deleteEvent(id);
     await removeFiles(files);
     ok(res);

@@ -84,7 +84,7 @@ const availability = {
     if (!dancer) throw httpError(404, 'Dancer not found');
     if (me.role !== 'admin' && dancer.family_id !== me.family.id) throw httpError(403, 'Not your dancer');
 
-    const ev = await one('SELECT id, status FROM events WHERE id = $1', [eventId]);
+    const ev = await one(`SELECT id, status FROM events WHERE id = $1 AND status <> 'deleted'`, [eventId]);
     if (!ev) throw httpError(404, 'Event not found');
     if (me.role !== 'admin' && !['open', 'confirmed'].includes(ev.status)) throw httpError(400, 'This event is not taking answers');
 

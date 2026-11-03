@@ -10,7 +10,7 @@ if (!DB_URL) {
   const { ingestMessage, recordIngest } = await import('./groupme-ingest.js');
   const { undoMessage } = await import('./groupme-undo.js');
   const { eventChanges } = await import('./history.js');
-  const { deleteEvent } = await import('./events.js');
+  const { deleteEvent, getEvent } = await import('./events.js');
 
   async function makeFixtures() {
     const family = await one(`INSERT INTO families (name, access_token) VALUES ('History Test Family', $1) RETURNING id`, [`hist-${Date.now()}-${Math.random()}`]);
@@ -188,8 +188,11 @@ if (!DB_URL) {
       const rows = await sql(`SELECT * FROM events_history WHERE event_id = $1 AND id > $2 ORDER BY id`, [fx.eventId, before[0].id]);
       assert.equal(rows.length, 2);
       assert.deepEqual(rows[0].changed, ['cover_media_id']);
-      assert.equal(rows[1].op, 'delete');
+      assert.equal(rows[1].op, 'update');
+      assert.deepEqual([...rows[1].changed].sort(), ['deleted_at', 'status']);
       assert.ok(rows.every((r) => r.source === 'owner'));
+      assert.equal((await one(`SELECT status FROM events WHERE id = $1`, [fx.eventId])).status, 'deleted');
+      assert.equal(await getEvent(fx.eventId, { admin: true }), null);
     } finally {
       await cleanup(fx);
     }

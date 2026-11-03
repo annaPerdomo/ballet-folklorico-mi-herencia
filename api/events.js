@@ -39,7 +39,7 @@ export default route({
       } else {
         const ids = [...new Set(sheet.split(',').map((v) => int(v)).filter(Boolean))].slice(0, 10);
         events = ids.length
-          ? await sql(`SELECT ${cols} FROM events WHERE id = ANY($1) ORDER BY event_date NULLS LAST, id`, [ids])
+          ? await sql(`SELECT ${cols} FROM events WHERE id = ANY($1) AND status <> 'deleted' ORDER BY event_date NULLS LAST, id`, [ids])
           : [];
       }
       const dancers = await sql('SELECT d.id, d.name, f.name AS family FROM dancers d JOIN families f ON f.id = d.family_id WHERE d.active ORDER BY f.name, d.name');

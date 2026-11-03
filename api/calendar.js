@@ -79,7 +79,7 @@ export default route({
     const id = int(q.event);
 
     if (id) {
-      const ev = await one(`SELECT ${cols(admin)} FROM events WHERE id = $1`, [id]);
+      const ev = await one(`SELECT ${cols(admin)} FROM events WHERE id = $1 AND status <> 'deleted'`, [id]);
       if (!ev) throw httpError(404, 'Not found');
       if (!admin && !visible(ev)) throw httpError(404, 'Not found');
       if (!ev.event_date) throw httpError(400, 'This gig has no date yet');

@@ -25,7 +25,7 @@ const AVAIL_JSON = `
 export async function listEvents({ admin, includePast = false }) {
   if (admin) await lapseStaleInquiries();
   const where = admin
-    ? (includePast ? `e.status <> 'folder'` : `(e.status IN ('inquiry','open','confirmed') OR (e.status <> 'folder' AND e.updated_at > now() - interval '60 days'))`)
+    ? (includePast ? `e.status NOT IN ('folder','deleted')` : `(e.status IN ('inquiry','open','confirmed') OR (e.status NOT IN ('folder','deleted') AND e.updated_at > now() - interval '60 days'))`)
     : `e.status = ANY($1) AND (e.event_date IS NULL OR e.event_date >= current_date - 14)`;
   const params = admin ? [] : [MEMBER_VISIBLE];
   const rows = await sql(
@@ -48,7 +48,7 @@ export async function lapseStaleInquiries() {
 }
 
 export async function getEvent(id, { admin }) {
-  const ev = await one(`SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON} FROM events e WHERE e.id = $1`, [id]);
+  const ev = await one(`SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON} FROM events e WHERE e.id = $1 AND e.status <> 'deleted'`, [id]);
   return ev && withCalendarLinks(ev);
 }
 
@@ -72,16 +72,16 @@ export async function updateEvent(id, patch) {
   }
   sets.push('updated_at = now()');
   const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
-    q(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 RETURNING id`, params));
+    q(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 AND status <> 'deleted' RETURNING id`, params));
   return rows[0] || null;
 }
 
-// Media is deleted here, in the event's own transaction, so the FK's cover_media_id
-// SET NULL cascade is tagged too.
+// Soft, so website inquiries stay countable. Media goes in this transaction so the
+// cover_media_id SET NULL cascade is tagged too.
 export async function deleteEvent(id) {
   return withSource({ source: 'owner', actor: 'owner' }, async (q) => {
     const files = await takeEventMedia(id, q);
-    await q('DELETE FROM events WHERE id = $1', [id]);
+    await q(`UPDATE events SET status = 'deleted', deleted_at = now(), updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id]);
     return files;
   });
 }

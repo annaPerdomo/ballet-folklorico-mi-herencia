@@ -8,7 +8,7 @@ import { galleryOpen } from './_lib/ics.js';
 import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
-  const ev = await one('SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1', [id]);
+  const ev = await one(`SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1 AND status <> 'deleted'`, [id]);
   if (!ev || (me.role !== 'admin' && !GALLERY_VISIBLE.includes(ev.status))) throw httpError(404, 'Gig not found');
   // Owners bypass: a gig with media that gets moved later would otherwise lock its files away.
   if (!galleryOpen(ev) && me.role !== 'admin') throw httpError(403, 'This gig’s gallery opens when the gig starts');
@@ -235,7 +235,7 @@ export default route({
         if (!coverUrl(row)) throw httpError(400, 'Pick a photo or YouTube video from this gig');
       }
       const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
-        q('UPDATE events SET cover_media_id = $2 WHERE id = $1 RETURNING id', [eventId, mediaId]));
+        q(`UPDATE events SET cover_media_id = $2 WHERE id = $1 AND status <> 'deleted' RETURNING id`, [eventId, mediaId]));
       const ev = rows[0] || null;
       if (!ev) throw httpError(404, 'Gig not found');
       return ok(res);

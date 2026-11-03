@@ -7,6 +7,7 @@ export function undoableSql(idExpr, undoneAtExpr) {
      SELECT 1 FROM availability_history uh
       WHERE uh.groupme_message_id = ${idExpr} AND uh.source = 'bot'
         AND uh.id > COALESCE((SELECT max(id) FROM availability_history WHERE groupme_message_id = ${idExpr} AND source = 'undo'), 0)
+        AND EXISTS (SELECT 1 FROM events ue WHERE ue.id = uh.event_id AND ue.status <> 'deleted')
    ))`;
 }
 
@@ -21,7 +22,8 @@ export async function undoMessage(messageId) {
       [messageId]);
     const sinceId = lastUndo.id || 0;
     const rows = await q(
-      `SELECT * FROM availability_history WHERE groupme_message_id = $1 AND source = 'bot' AND id > $2 ORDER BY id`,
+      `SELECT h.* FROM availability_history h JOIN events e ON e.id = h.event_id AND e.status <> 'deleted'
+        WHERE h.groupme_message_id = $1 AND h.source = 'bot' AND h.id > $2 ORDER BY h.id`,
       [messageId, sinceId]);
     if (!rows.length) throw httpError(409, 'nothing to undo');
 
