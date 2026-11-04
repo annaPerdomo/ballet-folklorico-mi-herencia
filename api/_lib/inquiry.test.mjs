@@ -41,3 +41,15 @@ test('a fresh website copy uses server time; only a held-back copy keeps its sub
   assert.equal(queuedAt(31 * 24 * 3600 * 1000, now), null);
   assert.equal(queuedAt(3 * 3600 * 1000, now).toISOString(), '2026-11-04T09:00:00.000Z');
 });
+
+test('Anna’s own test submissions are recognized, real ones are not', async () => {
+  const { isTestInquiry } = await import('./inquiry.js');
+  assert.equal(isTestInquiry({ client_email: 'annamaliamiura@gmail.com', client_name: 'Anna' }), true);
+  assert.equal(isTestInquiry({ client_email: 'Anna.Malia.Miura+form@gmail.com' }), true);
+  assert.equal(isTestInquiry({ client_name: 'Test', client_email: 'x@y.com' }), true);
+  assert.equal(isTestInquiry({ client_name: 'Test Prep Academy PTA', client_email: 'pta@school.org' }), false);
+  assert.equal(isTestInquiry({ client_email: 'maria@example.com' }), true);
+  assert.equal(isTestInquiry({ client_name: 'Maria', client_email: 'm@y.com', message: 'testing' }), true);
+  assert.equal(isTestInquiry({ client_name: 'Celeste Testa', client_email: 'celeste@gmail.com', message: 'We would love a test run of the dance' }), false);
+  assert.equal(isTestInquiry({ client_name: 'Anna Rojas', client_email: 'grazideelementarypta@gmail.com' }), false);
+});

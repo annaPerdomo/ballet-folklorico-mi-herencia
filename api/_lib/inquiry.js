@@ -39,6 +39,26 @@ export function normalizeInquiry(f = {}) {
   };
 }
 
+// Anna's own form tests. Gmail ignores dots and +tags. Match only whole-field "test":
+// a name that merely contains it ("Test Prep Academy") is a real lead.
+const TEST_EMAILS = ['annamaliamiura@gmail.com'];
+const TEST_ONLY = /^\W*(test|testing|prueba)\W*$/i;
+const TEST_DOMAINS = /@(example\.(com|org|net)|test\.com)$/i;
+
+function canonEmail(email) {
+  const e = String(email || '').trim().toLowerCase();
+  const m = /^([^@+]+)(?:\+[^@]*)?@(gmail\.com|googlemail\.com)$/.exec(e);
+  return m ? `${m[1].replace(/\./g, '')}@gmail.com` : e;
+}
+
+export function isTestInquiry({ client_name: name, client_email: email, message } = {}) {
+  const extra = String(process.env.INQUIRY_TEST_EMAILS || '').split(',').map((x) => x.trim()).filter(Boolean);
+  const mine = [...TEST_EMAILS, ...extra].map(canonEmail);
+  if (email && mine.includes(canonEmail(email))) return true;
+  if (email && TEST_DOMAINS.test(String(email).trim())) return true;
+  return [name, message].some((v) => Boolean(v) && TEST_ONLY.test(String(v).trim()));
+}
+
 const MIN_LATE_MS = 2 * 60 * 1000;
 const MAX_LATE_MS = 30 * 24 * 3600 * 1000;
 
@@ -53,6 +73,7 @@ export function queuedAt(age, now = Date.now()) {
 export async function recordInquiry(fields, { source, sourceRef, raw, at = null }) {
   const n = normalizeInquiry(fields);
   if (!n.client_email && !n.client_name) return { skipped: 'empty' };
+  if (isTestInquiry(n)) return { skipped: 'test' };
   if (sourceRef) {
     const dupRef = await one('SELECT id FROM events WHERE source_ref = $1', [sourceRef]);
     if (dupRef) return { id: dupRef.id, skipped: 'duplicate' };
