@@ -56,7 +56,7 @@
       answerCleared: 'Answer cleared', dancers: 'Dancers', addDancerPh: 'Add a dancer (e.g. Sofia)', dancerName: 'Dancer name', add: 'Add',
       removeDancer: 'Remove {name} from your family?', remove: 'Remove', phone: 'Phone',
       saved: 'Saved', copied: 'Copied', copyFail: 'Could not copy',
-      tabInbox: 'Inbox', tabGigs: 'Gigs', tabTeam: 'Team', tabChona: 'La Chona',
+      tabInbox: 'Inbox', tabGigs: 'Gigs', tabFeed: 'Feed', tabTeam: 'Team', tabChona: 'La Chona',
       groupmeOn: 'La Chona is connected', groupmeOff: 'La Chona is not connected — set GROUPME_BOT_ID',
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
@@ -161,7 +161,7 @@
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
       deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      feedTitle: 'Feed', feedSub: 'Photos, videos and music the group has shared', feedAll: 'See the whole feed', feedAdded: 'added {what}', feedAnd: ' and ',
+      feedSub: 'Photos, videos and music the group has shared', feedAdded: 'added {what}', feedAnd: ' and ',
       feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
@@ -224,7 +224,7 @@
       answerCleared: 'Respuesta borrada', dancers: 'Bailarines', addDancerPh: 'Agregar bailarín (p. ej. Sofía)', dancerName: 'Nombre del bailarín', add: 'Agregar',
       removeDancer: '¿Quitar a {name} de tu familia?', remove: 'Quitar', phone: 'Teléfono',
       saved: 'Guardado', copied: 'Copiado', copyFail: 'No se pudo copiar',
-      tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabTeam: 'Equipo', tabChona: 'La Chona',
+      tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabFeed: 'Actividad', tabTeam: 'Equipo', tabChona: 'La Chona',
       groupmeOn: 'La Chona está conectada', groupmeOff: 'La Chona no está conectada — falta GROUPME_BOT_ID',
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
@@ -329,7 +329,7 @@
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
       deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
-      feedTitle: 'Actividad', feedSub: 'Fotos, videos y música que el grupo ha compartido', feedAll: 'Ver toda la actividad', feedAdded: 'agregó {what}', feedAnd: ' y ',
+      feedSub: 'Fotos, videos y música que el grupo ha compartido', feedAdded: 'agregó {what}', feedAnd: ' y ',
       feedNew: 'Nuevo', feedMore: 'más', feedOlder: 'Ver anteriores', feedEmpty: 'Todavía no se ha agregado nada.', songOne: '1 canción', songMany: '{n} canciones',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
@@ -492,7 +492,8 @@
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
     if (state.me.role === 'admin') { jobs.push(loadFamilies()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
-    if (isMediaTab()) jobs.push(loadMediaIndex()); else jobs.push(loadFeedCount());
+    if (isMediaTab()) jobs.push(loadMediaIndex());
+    jobs.push(isFeedTab() && !media.feedPaged ? loadFeed().catch(function () {}) : loadFeedCount());
     return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
   }
   function refreshIfStale() {
@@ -689,6 +690,7 @@
     home: '<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/>',
     chevron: '<path d="m9 5 7 7-7 7"/>',
     back: '<path d="m15 5-7 7 7 7"/>',
+    pulse: '<path d="M3 12h4l3-8 4 16 3-8h4"/>',
     image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>',
     music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
     play: '<path d="M7 4.5v15l13-7.5z" fill="currentColor"/>',
@@ -1002,10 +1004,10 @@
     paintBrandRole();
     if (state.focusEvent) state.mtab = 'gigs';
     tabsEl.hidden = false; tabsEl.innerHTML = '';
-    [['gigs', 'tabGigs', 'calendar'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
+    [['gigs', 'tabGigs', 'calendar'], ['feed', 'tabFeed', 'pulse'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.mtab === tb[0] ? ' is-active' : ''), 'aria-current': state.mtab === tb[0] ? 'page' : false,
-        onclick: function () { state.mtab = tb[0]; render(); } },
-        h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) }), tb[0] === 'media' ? feedBadge() : null));
+        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); state.mtab = tb[0]; render(); } },
+        h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) }), tb[0] === 'feed' ? feedBadge() : null));
     });
     headerRight.innerHTML = '';
     headerRight.appendChild(h('span', { class: 'tm-who' },
@@ -1014,6 +1016,7 @@
     headerRight.appendChild(h('button', { class: 'btn btn-sm', text: t('signOut'), onclick: signOut }));
     app.innerHTML = '';
     if (state.mtab === 'media') { renderMediaTab(); return; }
+    if (state.mtab === 'feed') { renderFeedTab(); return; }
     me.dancers.forEach(function (d) { d.family = me.family.name; d.family_id = me.family.id; });
 
     var mine = {}; me.dancers.forEach(function (d) { mine[d.id] = d; });
@@ -1145,7 +1148,7 @@
   }
 
   /* ── admin view ────────────────────────────────────────── */
-  var TABS = [['inbox', 'tabInbox', 'mail'], ['gigs', 'tabGigs', 'calendar'], ['media', 'tabMedia', 'image'], ['team', 'tabTeam', 'people'], ['chona', 'tabChona', null]];
+  var TABS = [['inbox', 'tabInbox', 'mail'], ['gigs', 'tabGigs', 'calendar'], ['feed', 'tabFeed', 'pulse'], ['media', 'tabMedia', 'image'], ['team', 'tabTeam', 'people'], ['chona', 'tabChona', null]];
   function renderAdmin() {
     paintBrandRole();
     headerRight.innerHTML = '';
@@ -1164,13 +1167,13 @@
     tabsEl.hidden = false; tabsEl.innerHTML = '';
     TABS.forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'aria-current': state.tab === tb[0] ? 'page' : false,
-        onclick: function () { state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
+        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
         tb[0] === 'chona'
           ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
           : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
         h('span', { class: 'tm-tab-label', text: t(tb[1]) }),
         tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null,
-        tb[0] === 'media' ? feedBadge() : null));
+        tb[0] === 'feed' ? feedBadge() : null));
     });
 
     fabRoot.innerHTML = '';
@@ -1183,6 +1186,7 @@
     else if (state.tab === 'gigs') renderGigs();
     else if (state.tab === 'chona') renderChona();
     else if (state.tab === 'media') renderMediaTab();
+    else if (state.tab === 'feed') renderFeedTab();
     else renderTeam();
     focusIfNeeded();
   }
@@ -1997,9 +2001,8 @@
   }
   function loadMediaIndex() {
     if (!media.loading) {
-      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1'),
-        api('/api/media?feed=1').catch(function () { return null; })]).then(function (r) {
-        media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.feed = r[3]; media.loading = null; state.feedFresh = 0;
+      media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {
+        media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.loading = null;
       }, function (e) { media.loading = null; throw e; });
     }
     return media.loading;
@@ -2028,7 +2031,6 @@
     }
     if (idx.review && idx.review.length) renderReview(idx.review);
 
-    renderFeed();
     renderDances();
     renderMusic(idx.storage);
 
@@ -2055,7 +2057,7 @@
     try { var v = localStorage.getItem(FEED_KEY); if (v) return v; } catch (e) {}
     return new Date(Date.now() - 7 * 864e5).toISOString().replace('Z', '000Z');
   }
-  // Fixed for the visit, so cards stay marked New after the Gallery tab marks them seen.
+  // Fixed for the visit, so cards stay marked New after the Feed tab marks them seen.
   media.feedPrev = feedSeen();
   function loadFeedCount() {
     return api('/api/media?feed=1&since=' + encodeURIComponent(feedSeen())).then(function (d) { state.feedFresh = d.fresh; }, function () {});
@@ -2069,7 +2071,7 @@
   }
   function feedBadge() {
     var n = state.feedFresh;
-    return n && !isMediaTab() ? h('span', { class: 'count', text: n > 99 ? '99+' : n, 'aria-label': t('feedNew') + ': ' + n }) : null;
+    return n && !isFeedTab() ? h('span', { class: 'count', text: n > 99 ? '99+' : n, 'aria-label': t('feedNew') + ': ' + n }) : null;
   }
   function isFresh(b) { return !b.mine && b.stamp > media.feedPrev; }
   function feedWhen(iso) {
@@ -2107,43 +2109,41 @@
       vis.length ? h('div', { class: 'feedgrid' }, tiles) : null,
       songs.length ? h('div', { class: 'songs' }, songs.slice(0, 3).map(function (s) { return songRow(s, null); })) : null);
   }
-  function renderFeed() {
-    var f = media.feed;
-    // The badge saw uploads newer than this feed, so fetch again before marking it seen.
-    if (state.feedFresh) { if (!media.loading) loadMediaIndex().then(render, function () {}); }
-    else markFeedSeen();
-    if (!f || !f.batches.length) return;
-    var fresh = f.batches.filter(isFresh).length;
-    foldSection('feed', t('feedTitle'), fresh, true, null,
-      h('div', { class: 'feed' }, f.batches.slice(0, 3).map(feedCard)),
-      f.batches.length > 3 || f.next ? h('button', { type: 'button', class: 'btn btn-wide feed-all', onclick: function () { openGallery(null, null, true); } },
-        icon('clock', 2), h('span', { text: t('feedAll') })) : null);
+  function loadFeed() {
+    if (!media.feedLoading) {
+      media.feedLoading = api('/api/media?feed=1').then(function (d) {
+        media.feed = d; media.feedPaged = false; media.feedStale = false; media.feedLoading = null;
+        if (isFeedTab()) state.feedFresh = 0;
+      }, function (e) { media.feedLoading = null; throw e; });
+    }
+    return media.feedLoading;
   }
-  function paintFeed() {
-    var d = gal.data, root = gal.root;
-    root.innerHTML = '';
-    root.appendChild(h('header', { class: 'gal-head' },
-      h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeGallery(); } }, icon('back', 2.2)),
-      h('div', { class: 'gal-title' }, h('b', { text: t('feedTitle') }), h('span', { class: 'card-meta', text: t('feedSub') }))));
-    if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
-    var body = h('div', { class: 'gal-body' });
-    root.appendChild(body);
-    if (!d.batches.length && !d.next) { body.appendChild(emptyState('image', t('feedEmpty'))); return; }
+  function freshFeedVisit() { media.feedPaged = false; media.feedStale = true; }
+  function renderFeedTab() {
+    var d = media.feed;
+    // The badge saw uploads newer than this feed, so fetch again before marking it seen.
+    if (!d || media.feedStale || (state.feedFresh && !media.feedPaged)) {
+      if (!d) app.appendChild(loader(t('mediaLoading')));
+      if (!media.feedLoading) loadFeed().then(render, function (e) { toast(e.message, true); });
+      if (!d) return;
+    } else markFeedSeen();
+    app.appendChild(h('p', { class: 'hint feed-sub', text: t('feedSub') }));
+    if (!d.batches.length && !d.next) { app.appendChild(emptyState('pulse', t('feedEmpty'))); return; }
     var list = h('div', { class: 'feed' }, d.batches.map(feedCard));
-    body.appendChild(list);
+    app.appendChild(list);
     // Older pages append in place: a repaint would throw away the scroll position.
-    var g = gal;
     var more = h('button', { type: 'button', class: 'btn btn-wide feed-all', text: t('feedOlder'), onclick: function () {
       more.disabled = true;
       api('/api/media?feed=1&before=' + encodeURIComponent(d.next)).then(function (p) {
-        if (gal !== g || g.data !== d) return;
-        d.batches = d.batches.concat(p.batches); d.next = p.next;
+        more.disabled = false;
+        if (media.feed !== d) return;
+        d.batches = d.batches.concat(p.batches); d.next = p.next; media.feedPaged = true;
         p.batches.forEach(function (b) { list.appendChild(feedCard(b)); });
-        more.disabled = false; more.hidden = !d.next;
+        more.hidden = !d.next;
       }, function (e) { more.disabled = false; toast(e.message, true); });
     } });
     more.hidden = !d.next;
-    body.appendChild(more);
+    app.appendChild(more);
   }
 
   function renderMusic(storage) {
@@ -2261,9 +2261,12 @@
     var jobs = [];
     if (gal) jobs.push(loadGallery());
     if (media.index || isMediaTab()) jobs.push(loadMediaIndex());
-    return Promise.all(jobs).then(function () { if (isMediaTab()) render(); if (gal) paintGallery(); });
+    if (media.feed && !media.feedPaged) jobs.push(loadFeed().catch(function () {}));
+    return Promise.all(jobs).then(function () { if (isMediaTab() || isFeedTab()) render(); if (gal) paintGallery(); });
   }
-  function isMediaTab() { return state.me && (state.me.role === 'admin' ? state.tab : state.mtab) === 'media'; }
+  function currentTab() { return state.me && (state.me.role === 'admin' ? state.tab : state.mtab); }
+  function isMediaTab() { return currentTab() === 'media'; }
+  function isFeedTab() { return currentTab() === 'feed'; }
 
   function renameSheet(it, after) {
     var pop = popSheet(t('rename'));
@@ -2286,12 +2289,12 @@
   }
 
   /* ── one gig's gallery (full-screen layer over the app) ── */
-  function openGallery(eventId, dance, feed) {
+  function openGallery(eventId, dance) {
     closeGallery(true);
-    gal = { id: eventId, dance: dance || null, feed: !!feed, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
+    gal = { id: eventId, dance: dance || null, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
     document.body.appendChild(gal.root);
     document.body.classList.add('has-gal');
-    try { history.pushState({ gal: eventId || (feed ? 'feed' : 'dance') }, ''); gal.pushed = true; } catch (e) {}
+    try { history.pushState({ gal: eventId || 'dance' }, ''); gal.pushed = true; } catch (e) {}
     paintGallery();
     loadGallery().then(paintGallery, function (e) { toast(e.message, true); closeGallery(); });
   }
@@ -2307,7 +2310,6 @@
   window.addEventListener('popstate', function () { if (gal) { gal.pushed = false; closeGallery(); } });
   function loadGallery() {
     var g = gal;
-    if (g.feed) return api('/api/media?feed=1').then(function (d) { if (gal === g) g.data = d; });
     if (g.dance) {
       if (media.videos && !g.data) g.data = videosOf(g.dance);
       return loadMediaIndex().then(function () {
@@ -2319,7 +2321,6 @@
 
   function paintGallery() {
     if (!gal) return;
-    if (gal.feed) { paintFeed(); return; }
     if (gal.dance) { paintDance(); return; }
     var d = gal.data, root = gal.root;
     var tray = document.getElementById('upload-tray');

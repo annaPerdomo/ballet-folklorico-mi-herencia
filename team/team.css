@@ -641,14 +641,16 @@ details[open] > .summary::before { transform: rotate(45deg); }
 
   /* Half the safe inset: the bar's ground runs to the true bottom of the screen and the
      tabs sit just above the home indicator, rather than a full 34px clear of it. */
-  .tm-tabs { order: 3; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0; padding: 0.3rem 0.3rem calc(var(--safe-b) * 0.5); overflow: visible;
+  .tm-tabs { order: 3; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; padding: 0.3rem 0.3rem calc(var(--safe-b) * 0.5); overflow: visible;
     border-bottom: 0; border-top: 1px solid var(--line); background: rgba(8,3,17,0.92); }
   .tm-tab { flex-direction: column; justify-content: center; gap: 3px; padding: 0.45rem 0.2rem 0.3rem; border-bottom: 0; border-radius: 12px;
     font-size: 0.58rem; letter-spacing: 0.08em; min-height: 54px; }
   .tm-tab.is-active { background: rgba(201,168,76,0.1); }
   .tm-tab-ico svg { width: 22px; height: 22px; }
   .tm-tab-face { width: 22px; height: 22px; }
+  .tm-tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .tm-tab .count { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 17px; height: 17px; line-height: 17px; padding: 0 5px; font-size: 0.62rem; }
+  @media (max-width: 400px) { .tm-tab { letter-spacing: 0; font-size: 0.54rem; padding-left: 0; padding-right: 0; } }
   .fab { display: flex; bottom: calc(70px + var(--safe-b) * 0.5); }
   /* Must clear the tab bar: a toast may not sit on the thumb targets. */
   .tm-toast { bottom: calc(70px + var(--safe-b) * 0.5); }
@@ -853,5 +855,5 @@ button.feed-where:focus-visible { outline: 2px solid var(--gold); outline-offset
 .feed-rest b { font-size: 1.2rem; }
 .feed-rest span { font-size: 0.7rem; color: var(--muted); }
 .feed-rest:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
-.feed-all { margin-top: 0.7rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
-.gal-body > .feed-all { margin-top: 0.9rem; }
+.feed-all { margin-top: 0.7rem; }
+.feed-sub { margin: 0.2rem 0 0.8rem; }
