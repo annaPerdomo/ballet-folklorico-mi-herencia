@@ -160,20 +160,67 @@
   document.querySelectorAll('a[href="#quote"], a[href$="#contact"]').forEach(function (el) {
     el.addEventListener('click', function () { track('contact_cta_click', {}); });
   });
+
+  // Keep identical in app.js and landing.js. Formspree only emails the owners, so a copy the inbox
+  // can't take is kept in this browser and re-sent on a later visit; _cid makes resends idempotent.
+  var INQUIRY_QUEUE = 'bfmh_inquiry_queue';
+  var SAVE_BUDGET_MS = 8000;
+  var QUEUE_MAX_AGE_MS = 30 * 24 * 3600 * 1000;
+  function readQueue() {
+    try {
+      var q = JSON.parse(localStorage.getItem(INQUIRY_QUEUE)) || [];
+      return q.filter(function (p) { return Date.now() - p._queued < QUEUE_MAX_AGE_MS; });
+    } catch (e) { return []; }
+  }
+  function writeQueue(q) { try { if (q.length) localStorage.setItem(INQUIRY_QUEUE, JSON.stringify(q.slice(-10))); else localStorage.removeItem(INQUIRY_QUEUE); } catch (e) {} }
+  function enqueue(p) { writeQueue(readQueue().filter(function (x) { return x._cid !== p._cid; }).concat([p])); }
+  function dequeue(cid) { writeQueue(readQueue().filter(function (x) { return x._cid !== cid; })); }
+  // _age, not a timestamp, so a wrong device clock cancels out.
+  function postInquiry(p) {
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 3500);
+    var body = JSON.stringify(Object.assign({}, p, { _age: Date.now() - p._queued }));
+    return fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true, signal: ctrl ? ctrl.signal : undefined })
+      .then(function (res) {
+        clearTimeout(timer);
+        if (res.status >= 500 || res.status === 408 || res.status === 429) throw new Error('inbox ' + res.status);
+        dequeue(p._cid);
+      }, function (e) { clearTimeout(timer); throw e; });
+  }
+  // Never waits past SAVE_BUDGET_MS: a hung inbox must not hold up the Formspree email.
+  function saveInquiry(form) {
+    var p = {};
+    new FormData(form).forEach(function (v, k) { p[k] = v; });
+    p.page = location.pathname;
+    p._cid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    p._queued = Date.now();
+    enqueue(p);
+    var tries = 0;
+    function attempt() {
+      return postInquiry(p).catch(function () {
+        if (++tries < 3) return new Promise(function (r) { setTimeout(r, 700 * tries); }).then(attempt);
+      });
+    }
+    return Promise.race([attempt(), new Promise(function (r) { setTimeout(r, SAVE_BUDGET_MS); })]);
+  }
+  readQueue().forEach(function (p) { postInquiry(p).catch(function () {}); });
   var form = document.getElementById('quoteForm');
   if (form) {
-    form.addEventListener('submit', function () {
+    var sending = false;
+    var button = form.querySelector('[type="submit"]');
+    function setSending(on) {
+      sending = on;
+      if (button) { button.disabled = on; if (on) button.setAttribute('aria-busy', 'true'); else button.removeAttribute('aria-busy'); }
+    }
+    // Back from Formspree's thank-you page restores this page from bfcache mid-send.
+    window.addEventListener('pageshow', function () { setSending(false); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (sending) return;
+      setSending(true);
       track('quote_form_submit', {});
-      // Must fire before the form navigates to Formspree.
-      try {
-        var payload = {};
-        new FormData(form).forEach(function (v, k) { payload[k] = v; });
-        payload.page = location.pathname;
-        var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-        if (!(navigator.sendBeacon && navigator.sendBeacon('/api/inquiry', blob))) {
-          fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true }).catch(function () {});
-        }
-      } catch (e) {}
+      // form.submit() skips this handler and continues the native post to Formspree.
+      saveInquiry(form).then(function () { form.submit(); }, function () { form.submit(); });
     });
   }
 

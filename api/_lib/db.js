@@ -12,7 +12,8 @@ export function getPool() {
     if (!url) throw new Error('DATABASE_URL is not set');
     // Hosted URLs (Neon) carry sslmode=require and are verified; a bare local URL gets no TLS.
     const hasSslMode = /[?&]sslmode=/.test(url);
-    pool = new pg.Pool({ connectionString: url, max: 3, ssl: hasSslMode ? undefined : false });
+    // pg waits forever for a connection by default; fail fast so callers can fall back.
+    pool = new pg.Pool({ connectionString: url, max: 3, ssl: hasSslMode ? undefined : false, connectionTimeoutMillis: 10000 });
   }
   return pool;
 }

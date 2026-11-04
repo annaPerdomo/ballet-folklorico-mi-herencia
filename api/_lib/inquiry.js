@@ -39,8 +39,18 @@ export function normalizeInquiry(f = {}) {
   };
 }
 
+const MIN_LATE_MS = 2 * 60 * 1000;
+const MAX_LATE_MS = 30 * 24 * 3600 * 1000;
+
+// Only a copy the visitor's browser held back keeps its submit time, derived from an age so a
+// wrong device clock cancels out.
+export function queuedAt(age, now = Date.now()) {
+  const ms = Number(age);
+  return Number.isFinite(ms) && ms > MIN_LATE_MS && ms < MAX_LATE_MS ? new Date(now - ms) : null;
+}
+
 // The site posts directly and Formspree may webhook the same submission, so dedupe within 10 minutes.
-export async function recordInquiry(fields, { source, sourceRef, raw }) {
+export async function recordInquiry(fields, { source, sourceRef, raw, at = null }) {
   const n = normalizeInquiry(fields);
   if (!n.client_email && !n.client_name) return { skipped: 'empty' };
   if (sourceRef) {
@@ -49,8 +59,8 @@ export async function recordInquiry(fields, { source, sourceRef, raw }) {
   }
   const dup = await one(
     `SELECT id FROM events WHERE client_email IS NOT DISTINCT FROM $1 AND message IS NOT DISTINCT FROM $2
-       AND created_at > now() - interval '10 minutes' ORDER BY id DESC LIMIT 1`,
-    [n.client_email, n.message]);
+       AND abs(extract(epoch FROM created_at - COALESCE($3::timestamptz, now()))) < 600 ORDER BY id DESC LIMIT 1`,
+    [n.client_email, n.message, at]);
   if (dup) {
     if (sourceRef) await withSource({ source: 'inquiry', actor: source }, (q) =>
       q('UPDATE events SET source_ref = COALESCE(source_ref, $2) WHERE id = $1', [dup.id, sourceRef]));
@@ -58,10 +68,10 @@ export async function recordInquiry(fields, { source, sourceRef, raw }) {
   }
   const rows = await withSource({ source: 'inquiry', actor: source }, (q) => q(
     `INSERT INTO events (title, status, event_type, event_date, date_text, city, client_name, client_email, client_phone,
-                         message, source, source_ref, raw, notes)
-     VALUES ($1,'inquiry',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
+                         message, source, source_ref, raw, notes, created_at)
+     VALUES ($1,'inquiry',$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, COALESCE($14::timestamptz, now())) RETURNING id`,
     [n.title, n.event_type, n.event_date, n.date_text, n.city, n.client_name, n.client_email, n.client_phone,
      n.message, source, sourceRef || null, raw ? (JSON.stringify(raw).length <= 10000 ? JSON.stringify(raw) : JSON.stringify({ truncated: true })) : null,
-     n.source_page ? `Submitted from ${n.source_page}` : null]));
+     n.source_page ? `Submitted from ${n.source_page}` : null, at]));
   return { id: rows[0].id };
 }

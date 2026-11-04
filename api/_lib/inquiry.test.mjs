@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeInquiry, cityFromDateText } from './inquiry.js';
+import { normalizeInquiry, cityFromDateText, queuedAt } from './inquiry.js';
 
 test('the main form sends city on its own and it is kept as-is', () => {
   const n = normalizeInquiry({ name: 'Maria', email: 'M@Example.com', subject: 'quinceanera', event_date: '2026-10-24', city: ' West Covina ' });
@@ -29,4 +29,15 @@ test('the landing pages send "date — city" in one box and the city is split ou
   const n = normalizeInquiry({ name: 'Ana', email: 'a@b.co', subject: 'wedding', event_date_city: 'Oct 24 — West Covina', page: '/weddings/' });
   assert.equal(n.city, 'West Covina');
   assert.equal(n.date_text, 'Oct 24 — West Covina', 'the original text is kept for the owners');
+});
+
+test('a fresh website copy uses server time; only a held-back copy keeps its submit time', () => {
+  const now = Date.parse('2026-11-04T12:00:00Z');
+  assert.equal(queuedAt(0, now), null);
+  assert.equal(queuedAt(90 * 1000, now), null);
+  assert.equal(queuedAt(undefined, now), null);
+  assert.equal(queuedAt('junk', now), null);
+  assert.equal(queuedAt(-5000, now), null);
+  assert.equal(queuedAt(31 * 24 * 3600 * 1000, now), null);
+  assert.equal(queuedAt(3 * 3600 * 1000, now).toISOString(), '2026-11-04T09:00:00.000Z');
 });
