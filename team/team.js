@@ -1211,9 +1211,12 @@
     shown.forEach(function (ev) { app.appendChild(adminCard(ev)); });
     var archived = state.events.filter(function (e) { return ['declined', 'cancelled', 'lapsed'].indexOf(e.status) !== -1; });
     if (archived.length) {
-      app.appendChild(section(t('archived'), archived.length));
-      app.appendChild(h('p', { class: 'hint', text: t('archivedHint') }));
-      archived.forEach(function (ev) { app.appendChild(adminCard(ev)); });
+      var archSec = section(t('archived'), archived.length);
+      archSec.className += ' tm-sec-fold';
+      var arch = h('details', { class: 'tm-fold', ontoggle: function () { state.archivedOpen = arch.open; } },
+        h('summary', { class: 'tm-fold-summary' }, archSec), h('p', { class: 'hint', text: t('archivedHint') }), archived.map(adminCard));
+      arch.open = !!state.archivedOpen;
+      app.appendChild(arch);
     }
   }
 
