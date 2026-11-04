@@ -41,3 +41,9 @@ test('isMine matches a family’s own rows, and an owner’s rows under their fa
   assert.equal(isMine({ family_id: null, uploader: 'Mendez Perdomo' }, { role: 'admin', family: { id: 8, name: 'Mendez Perdomo' } }), true);
   assert.equal(isMine({ family_id: null, uploader: 'Mendez Perdomo', credit: 'Anna Mendez Perdomo' }, { role: 'admin', family: { id: 8, name: 'Mendez Perdomo' } }), false);
 });
+
+test('on the admin site, “mine” means the items credited to Anna', () => {
+  const admin = { role: 'admin', insights: true };
+  assert.equal(isMine({ family_id: null, credit: 'Anna Mendez Perdomo', uploader: 'owners' }, admin), true);
+  assert.equal(isMine({ family_id: null, credit: null, uploader: 'owners' }, admin), false);
+});

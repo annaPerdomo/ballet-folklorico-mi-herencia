@@ -1,5 +1,5 @@
 import { route, readJson, ok, bad, cookie, clearCookie, parseCookies, int, str, query } from './_lib/http.js';
-import { checkAdminPassword, makeAdminToken, verifyAdminToken, memberToken, verifyCalendarSig, requireAdmin, ADMIN_COOKIE, FAMILY_COOKIE } from './_lib/auth.js';
+import { checkAdminPassword, checkInsightsPassword, makeAdminToken, makeInsightsToken, verifyAdminToken, memberToken, verifyCalendarSig, requireAdmin, ADMIN_COOKIE, FAMILY_COOKIE, INSIGHTS_COOKIE } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 
 const ANSWERABLE = ['open', 'confirmed'];
@@ -12,7 +12,7 @@ const ACTIVE_FAMILY = `SELECT f.id, f.name, f.access_token FROM families f
 
 function pickSession(res, fam) {
   return ok(res, { role: 'member', family: { id: fam.id, name: fam.name } },
-    { 'Set-Cookie': [cookie(FAMILY_COOKIE, memberToken(fam.id, fam.access_token), { maxAge: SESSION_MAX_AGE }), clearCookie(ADMIN_COOKIE)] });
+    { 'Set-Cookie': [cookie(FAMILY_COOKIE, memberToken(fam.id, fam.access_token), { maxAge: SESSION_MAX_AGE }), clearCookie(ADMIN_COOKIE), clearCookie(INSIGHTS_COOKIE)] });
 }
 
 export default route({
@@ -30,9 +30,12 @@ export default route({
   async POST(req, res) {
     const body = await readJson(req);
     if (body.password !== undefined) {
-      if (!checkAdminPassword(body.password)) return bad(res, 'Wrong password', 401);
+      const insights = checkInsightsPassword(body.password);
+      if (!insights && !checkAdminPassword(body.password)) return bad(res, 'Wrong password', 401);
       const kept = verifyAdminToken(parseCookies(req)[ADMIN_COOKIE]);
-      return ok(res, { role: 'admin' }, { 'Set-Cookie': [cookie(ADMIN_COOKIE, makeAdminToken(kept && kept.familyId), { maxAge: SESSION_MAX_AGE }), clearCookie(FAMILY_COOKIE)] });
+      const cookies = [cookie(ADMIN_COOKIE, makeAdminToken(kept && kept.familyId), { maxAge: SESSION_MAX_AGE }), clearCookie(FAMILY_COOKIE)];
+      cookies.push(insights ? cookie(INSIGHTS_COOKIE, makeInsightsToken(), { maxAge: SESSION_MAX_AGE }) : clearCookie(INSIGHTS_COOKIE));
+      return ok(res, { role: 'admin', insights }, { 'Set-Cookie': cookies });
     }
     if (body.as_family !== undefined) {
       await requireAdmin(req);
@@ -58,12 +61,12 @@ export default route({
     }
     if (body.key) {
       const fam = await one('SELECT id, name FROM families WHERE access_token = $1', [String(body.key)]);
-      if (!fam) return bad(res, 'That link is not valid anymore. Ask the owners for a new one.', 401);
-      return ok(res, { role: 'member', family: fam }, { 'Set-Cookie': [cookie(FAMILY_COOKIE, String(body.key)), clearCookie(ADMIN_COOKIE)] });
+      if (!fam) return bad(res, 'That link is not valid anymore. Ask Mayra or Angel for a new one.', 401);
+      return ok(res, { role: 'member', family: fam }, { 'Set-Cookie': [cookie(FAMILY_COOKIE, String(body.key)), clearCookie(ADMIN_COOKIE), clearCookie(INSIGHTS_COOKIE)] });
     }
     return bad(res, 'Nothing to sign in with');
   },
   async DELETE(_req, res) {
-    ok(res, { ok: true }, { 'Set-Cookie': [clearCookie(ADMIN_COOKIE), clearCookie(FAMILY_COOKIE)] });
+    ok(res, { ok: true }, { 'Set-Cookie': [clearCookie(ADMIN_COOKIE), clearCookie(FAMILY_COOKIE), clearCookie(INSIGHTS_COOKIE)] });
   },
 });

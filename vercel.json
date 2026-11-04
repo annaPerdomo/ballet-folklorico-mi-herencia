@@ -11,9 +11,18 @@
     {
       "source": "/familia",
       "destination": "/team/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/team/index.html"
     }
   ],
   "redirects": [
+    {
+      "source": "/admin/",
+      "destination": "/admin",
+      "permanent": true
+    },
     {
       "source": "/familia/",
       "destination": "/familia",

@@ -4,6 +4,7 @@ import { parseCookies, httpError } from './http.js';
 
 export const ADMIN_COOKIE = 'bfmh_admin';
 export const FAMILY_COOKIE = 'bfmh_family';
+export const INSIGHTS_COOKIE = 'bfmh_insights';
 
 function secret() {
   const s = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;
@@ -29,6 +30,24 @@ export function checkAdminPassword(password) {
 // ADMIN_PASSWORD moves this epoch and drops every owner session, which is the way to boot a lost
 // phone without rotating SESSION_SECRET and breaking the links already posted in GroupMe.
 const adminEpoch = () => sign(`admin.${process.env.ADMIN_PASSWORD || ''}`).slice(0, 8);
+
+export function checkInsightsPassword(password) {
+  const expected = process.env.INSIGHTS_PASSWORD;
+  return Boolean(expected) && Boolean(password) && safeEqual(password, expected);
+}
+
+const insightsEpoch = () => sign(`insights.${process.env.INSIGHTS_PASSWORD || ''}`).slice(0, 8);
+
+export function makeInsightsToken() {
+  const payload = `insights.${insightsEpoch()}`;
+  return `${payload}.${sign(payload)}`;
+}
+
+export function verifyInsightsToken(token) {
+  if (!process.env.INSIGHTS_PASSWORD || !token) return false;
+  const p = String(token).split('.');
+  return p.length === 3 && p[0] === 'insights' && safeEqual(sign(`${p[0]}.${p[1]}`), p[2]) && safeEqual(p[1], insightsEpoch());
+}
 
 // An owner may also say which family they are, so "Added by" names that family instead of
 // "the owners". Only the label changes; the family gets no rights over what the owner adds.
@@ -119,7 +138,8 @@ export async function whoami(req) {
   const admin = verifyAdminToken(c[ADMIN_COOKIE]);
   if (admin) {
     const family = admin.familyId && await one('SELECT id, name FROM families WHERE id = $1', [admin.familyId]);
-    return family ? { role: 'admin', scope: 'admin', family } : { role: 'admin', scope: 'admin' };
+    const insights = verifyInsightsToken(c[INSIGHTS_COOKIE]);
+    return family ? { role: 'admin', scope: 'admin', insights, family } : { role: 'admin', scope: 'admin', insights };
   }
   const raw = c[FAMILY_COOKIE];
   if (raw) {
@@ -141,7 +161,13 @@ export async function whoami(req) {
 
 export async function requireAdmin(req) {
   const me = await whoami(req);
-  if (me.role !== 'admin') throw httpError(401, 'Owner login required');
+  if (me.role !== 'admin') throw httpError(401, 'Team login required');
+  return me;
+}
+
+export async function requireInsights(req) {
+  const me = await requireAdmin(req);
+  if (!me.insights) throw httpError(403, 'Admin password required');
   return me;
 }
 

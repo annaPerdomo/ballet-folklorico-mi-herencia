@@ -5,7 +5,7 @@ import { sql, one, withSource } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine, creditOf } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one(`SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1 AND status <> 'deleted'`, [id]);
@@ -167,7 +167,7 @@ export default route({
       const thumbSize = kind === 'photo' && b.thumb ? int(b.thumb_size) || 0 : 0;
       if (kind === 'photo' && b.thumb && (thumbSize <= 0 || thumbSize > THUMB_MAX)) throw httpError(400, 'Bad thumbnail');
       await sweepStale();
-      if (await usedBytes() + size + thumbSize > quotaBytes()) throw httpError(507, 'The gallery is full — ask the owners to clear out old videos');
+      if (await usedBytes() + size + thumbSize > quotaBytes()) throw httpError(507, 'The gallery is full — ask Mayra or Angel to clear out old videos');
 
       const rand = crypto.randomBytes(6).toString('base64url');
       const folder = eventId ? `gig-${eventId}` : 'library';
@@ -177,10 +177,10 @@ export default route({
       const title = str(b.title, 200) || (kind === 'audio' ? str(String(b.name || '').replace(/\.[^.]+$/, ''), 200) : null);
       const flags = websiteFlags(me, b.website, Boolean(eventId) && canPublish(kind, thumbKey));
       const row = await one(`INSERT INTO media (event_id, kind, title, note, storage_key, thumb_key, mime, bytes, thumb_bytes, width, height,
-          family_id, uploader, website, suggested)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id`,
+          family_id, uploader, website, suggested, credit)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING id`,
         [eventId, kind, title, str(b.note, 500), key, thumbKey, type, size + thumbSize, thumbSize, int(b.width), int(b.height),
-          familyOf(me), uploaderOf(me), flags.website, flags.suggested]);
+          familyOf(me), uploaderOf(me), flags.website, flags.suggested, creditOf(me)]);
       return ok(res, { id: row.id, put: signedUrl('PUT', key, { length: size }),
         thumb_put: thumbKey ? signedUrl('PUT', thumbKey, { length: thumbSize }) : null });
     }
@@ -217,10 +217,10 @@ export default route({
       if (isPlaylist(url)) throw httpError(400, 'Add the videos one at a time — playlists don’t show in the gallery');
       const title = str(b.title, 200) || (youtubeId(url) ? await youtubeTitle(youtubeId(url)) : new URL(url).hostname.replace(/^www\./, ''));
       const flags = websiteFlags(me, b.website, true);
-      const row = await one(`INSERT INTO media (event_id, kind, title, url, family_id, uploader, ready, website, suggested)
-        VALUES ($1, 'link', $2, $3, $4, $5, true, $6, $7) RETURNING *`,
+      const row = await one(`INSERT INTO media (event_id, kind, title, url, family_id, uploader, ready, website, suggested, credit)
+        VALUES ($1, 'link', $2, $3, $4, $5, true, $6, $7, $8) RETURNING *`,
         [eventId, title, url, familyOf(me), uploaderOf(me),
-          flags.website, flags.suggested]);
+          flags.website, flags.suggested, creditOf(me)]);
       return ok(res, { item: toItem(row, me) });
     }
 

@@ -651,6 +651,8 @@ details[open] > .summary::before { transform: rotate(45deg); }
   .tm-tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .tm-tab .count { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 17px; height: 17px; line-height: 17px; padding: 0 5px; font-size: 0.62rem; }
   @media (max-width: 400px) { .tm-tab { letter-spacing: 0; font-size: 0.54rem; padding-left: 0; padding-right: 0; } }
+  .tm-tabs.has-7 .tm-tab { letter-spacing: 0.02em; }
+  @media (max-width: 400px) { .tm-tabs.has-7 .tm-tab { font-size: 0.5rem; } .tm-tabs.has-7 .tm-tab-ico svg { width: 20px; height: 20px; } }
   .fab { display: flex; bottom: calc(70px + var(--safe-b) * 0.5); }
   /* Must clear the tab bar: a toast may not sit on the thumb targets. */
   .tm-toast { bottom: calc(70px + var(--safe-b) * 0.5); }

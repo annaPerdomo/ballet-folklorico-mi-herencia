@@ -4,6 +4,12 @@
 
   var app = document.getElementById('app');
   var FAMILIA = /^\/familia\/?$/.test(location.pathname);
+  var ADMIN_SITE = /^\/admin\/?$/.test(location.pathname);
+  if (ADMIN_SITE) {
+    var amf = document.querySelector('link[rel="manifest"]'); if (amf) amf.href = '/team/admin.webmanifest';
+    var aat = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (aat) aat.content = 'BFMH Admin';
+    document.title = 'Admin · Ballet Folklórico Mi Herencia';
+  }
   if (FAMILIA) {
     var mf = document.querySelector('link[rel="manifest"]'); if (mf) mf.href = '/team/familia.webmanifest';
     var at = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if (at) at.content = 'MH Familia';
@@ -33,11 +39,11 @@
       callTime: 'Call time', dancersNeeded: '{n} dancers needed', pay: 'Pay', rehearsals: 'Rehearsals', whosIn: "Who's in",
       yes: 'yes', maybe: 'maybe', no: 'no', noAnswer: 'no answer',
       btnYes: '✓ Yes', btnMaybe: '? Maybe', btnNo: '✗ No', availabilityFor: 'Availability for {name}',
-      signOut: 'Sign out', familia: 'Familia', owner: 'Owner', newGig: '+ New gig',
-      loginTitle: 'Owner sign-in', loginText: 'Enter your password to manage events.',
-      ownerPassword: 'Owner password', signIn: 'Sign in', notConfigured: 'ADMIN_PASSWORD is not set on the server yet.',
+      signOut: 'Sign out', familia: 'Familia', owner: 'Ramirez family', whoOwner: 'Mayra or Angel', newGig: '+ New gig',
+      loginTitle: 'Team sign-in', loginText: 'Enter your password to manage events.',
+      ownerPassword: 'Team password', signIn: 'Sign in', notConfigured: 'ADMIN_PASSWORD is not set on the server yet.',
       signInAs: 'Your name',
-      badLink: 'That link is not valid anymore. Ask the owners for a new one.',
+      badLink: 'That link is not valid anymore. Ask Mayra or Angel for a new one.',
       needsAnswer: 'Needs your answer', upcoming: 'Upcoming', recent: 'Past gigs', myFamily: 'My family',
       subscribe: 'Add our gigs to your calendar', subscribeHint: 'Keeps updating on its own as dates change.',
       subscribeOwner: 'Add every gig to your calendar', addToCal: 'Add to my calendar', calSection: 'Calendar',
@@ -52,11 +58,12 @@
       calRehearsalNote: 'Rehearsals come along only with Apple Calendar. Subscribe above to get them everywhere.',
       calGoogleNote: 'Google checks for changes once a day or so, Apple and Outlook every few hours. If a date just moved, open the gig and add it again to get it right away.',
       addDancersFirst: 'Add the dancers in your family below so you can mark availability for each of them.',
-      allAnswered: 'Everything else is answered. ¡Gracias!', noGigs: 'No gigs posted yet. The owners will post here when an inquiry comes in.',
+      allAnswered: 'Everything else is answered. ¡Gracias!', noGigs: 'No gigs posted yet. Mayra and Angel will post here when an inquiry comes in.',
       answerCleared: 'Answer cleared', dancers: 'Dancers', addDancerPh: 'Add a dancer (e.g. Sofia)', dancerName: 'Dancer name', add: 'Add',
       removeDancer: 'Remove {name} from your family?', remove: 'Remove', phone: 'Phone',
       saved: 'Saved', copied: 'Copied', copyFail: 'Could not copy',
-      tabInbox: 'Inbox', tabGigs: 'Gigs', tabFeed: 'Feed', tabTeam: 'Team', tabChona: 'La Chona',
+      tabInbox: 'Inbox', tabGigs: 'Gigs', tabFeed: 'Feed', tabTeam: 'Team', tabChona: 'La Chona', tabInsights: 'Insights', roleAdmin: 'Admin',
+      adminLoginTitle: 'Admin sign-in', adminLoginText: 'Your admin password opens everything Mayra and Angel see, plus Insights.',
       groupmeOn: 'La Chona is connected', groupmeOff: 'La Chona is not connected — set GROUPME_BOT_ID',
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
@@ -74,13 +81,13 @@
       mergeDone: 'Merged into {gig}', sameDayHint: 'Same day as {gig}. The same job?',
       deleteConfirm: 'Delete “{title}” permanently?', thisEvent: 'this event', done: 'Done', donePosted: 'Done — posted to {ch}', groupme: 'GroupMe',
       requiredTag: 'required', optionalHead: 'Optional — fill in what you know',
-      payLabel: 'Pay (owners only)', payPh: '$50 per dancer',
+      payLabel: 'Pay (Mayra & Angel only)', payPh: '$50 per dancer',
       title: 'Title', titlePh: 'e.g. Quinceañera — Lopez family', typeLabel: 'Type', typePh: '— type —', dateLabel: 'Date', startTime: 'Start time', endTime: 'End time',
       dancersNeededLabel: 'Dancers needed', venue: 'Venue', city: 'City', address: 'Address',
       clientWrote: 'Client wrote (date & city)', clientWroteShort: 'Client wrote', detailsForTeam: 'Details for the team', detailsPh: 'Costume, dances, parking, what to bring…',
       rehearsalsLabel: 'Rehearsals (shown to the team)', rehearsalDate: 'Rehearsal date', time: 'Time', locationNote: 'Location / note', addRehearsal: '+ Add rehearsal',
       clientSection: 'Client contact & private notes', clientName: 'Client name', clientEmail: 'Client email', clientPhone: 'Client phone', clientMessage: 'Client message',
-      privateNotes: 'Private notes (owners only)',
+      privateNotes: 'Private notes (Mayra & Angel only)',
       needTitle: 'Give the gig a title.', create: 'Create', save: 'Save', cancel: 'Cancel', close: 'Close',
       modalNew: 'New gig', modalEdit: 'Edit gig',
       tapToChange: 'Tap to change',
@@ -90,8 +97,8 @@
       postConfirmation: 'Post the confirmation', markDone: 'Mark done', gig: 'Gig',
       botEmpty: 'No messages read yet.', botIgnored: 'Ignored', botNoDancers: 'Could not tell which dancer', botUnknownSender: 'Unknown sender — no dancer named', botNoEvent: 'No open gig to apply it to', botGuessed: '(assumed latest gig)', botGuessedTag: 'Guessed the latest gig', chgToday: 'Today', chgYesterday: 'Yesterday', botLinked: 'GroupMe linked', botAmbiguous: 'Ambiguous name: {names}', botNoDate: 'No gig on that date', botVague: 'Long message with no date — not applied', botAnnouncement: 'Announcement / reminder — not an answer', botPaused: 'Sent by a paused dancer — not applied', botKept: 'Kept the answers already there (newer, or the dancer’s own)',
       addFamilyFrom: 'Add this family', reread: 'Read again', addFamilyHint: 'From GroupMe name “{name}”. Check the spelling of each dancer — the bot matches these names in the chat.',
-      pickWho: 'Who’s answering?', pickHint: 'Tap your family. We’ll remember you on this phone.', pickNotListed: 'Don’t see your family? Just reply in GroupMe and the owners will add you.',
-      pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask the owners for a new one.',
+      pickWho: 'Who’s answering?', pickHint: 'Tap your family. We’ll remember you on this phone.', pickNotListed: 'Don’t see your family? Just reply in GroupMe and Mayra or Angel will add you.',
+      pickClosed: 'This gig isn’t taking answers right now.', pickBadLink: 'That link is no longer valid. Ask Mayra or Angel for a new one.',
       chonaAlt: 'La Chona, a little gold robot in a red and green folklorico dress with braided ribbons',
       chonaOn: 'Listening to the chat', chonaOff: 'Not listening yet',
       chonaLive: 'Connected · listening to the chat', chonaPostOnly: 'Connected · not listening yet',
@@ -134,7 +141,7 @@
       waiting: 'no response received', plusWaiting: '+{n} with no response', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
       inboxEmptyText: 'Nothing new from the website. Inquiries from the contact and quote forms show up here on their own.',
-      inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No gigs posted yet. When the owners post one you’ll hear about it in GroupMe.',
+      inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No gigs posted yet. When Mayra and Angel post one you’ll hear about it in GroupMe.',
       checkMyDancers: 'Check my dancers', allAnsweredText: 'Everything is answered. ¡Gracias! We’ll let you know when the next one is posted.',
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
       openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
@@ -153,7 +160,7 @@
       printHint: 'Open it, then tap Print or save as PDF.',
       printShareMsg: 'Gig roster',
       tabMedia: 'Gallery', gallery: 'Photos & videos', galleryN: 'Photos & videos ({n})', mediaLoading: 'Loading the gallery…',
-      storageOff: 'Photo and music storage isn’t set up yet — the owners need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
+      storageOff: 'Photo and music storage isn’t set up yet — Mayra and Angel need to connect it.', storageLabel: 'Storage', storageUsed: '{used} of {quota} free space used',
       dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', sortMostDone: 'Most performed', sortAz: 'A–Z', region: 'Region', allRegions: 'All', otherRegion: 'Other', danceGigsN: 'Performed at {n} gigs', danceVideosN: '{n} videos', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig & event galleries', noGalleryGigs: 'No gigs yet.',
@@ -163,9 +170,9 @@
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
       feedSub: 'Photos, videos and music the group has shared', feedAdded: 'added {what}', feedAnd: ' and ',
       feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
-      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the owners', theFamily: 'the {name} family',
-      youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the owners”. You keep every owner tool.',
-      youFamily: 'Your family', youNone: 'None — show as “the owners”', youSaved: 'Saved', titleLabel: 'Title',
+      rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the Ramirez family', theFamily: 'the {name} family',
+      youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the Ramirez family”. You keep every tool.',
+      youFamily: 'Your family', youNone: 'None — show as “the Ramirez family”', youSaved: 'Saved', titleLabel: 'Title',
       deleteMediaAsk: 'Delete this for everyone? It can’t be undone.', deleted: 'Deleted',
       photos: 'Photos', videos: 'Videos', addMedia: 'Photos & videos', noMedia: 'No photos or videos yet. Add the ones you took at this gig.',
       openPhoto: 'Open photo {n}', openVideo: 'Play video {n}', previous: 'Previous', next: 'Next',
@@ -178,9 +185,9 @@
       dirEmpty: 'No families have been added yet.', ownersHere: 'Admins can sign in here', familiesHere: 'Families: find your family here',
       webShow: 'Show on bfmh.dance', webHide: 'Remove from bfmh.dance', webBadge: 'On bfmh.dance',
       webOn: 'Now on bfmh.dance — it shows up within a few minutes', webOff: 'Removed from bfmh.dance',
-      webSuggest: 'Suggest for bfmh.dance', webWithdraw: 'Withdraw suggestion', webApprove: 'Approve for bfmh.dance', webPending: 'Waiting for an owner’s OK',
+      webSuggest: 'Suggest for bfmh.dance', webWithdraw: 'Withdraw suggestion', webApprove: 'Approve for bfmh.dance', webPending: 'Waiting for Mayra or Angel’s OK',
       lbShow: 'Show on site', lbHide: 'Hide from site', lbSuggest: 'Suggest for site', lbWithdraw: 'Withdraw',
-      webSuggested: 'Suggested — an owner will look at it before it goes on bfmh.dance',
+      webSuggested: 'Suggested — Mayra or Angel will look at it before it goes on bfmh.dance',
       reviewTitle: 'Waiting for your OK', reviewHint: 'Families suggested these for bfmh.dance. Nothing goes public until you approve it.',
       approve: 'Approve', webDeclined: 'Kept off bfmh.dance',
       printNoGigs: 'Post a gig first, then print the roster.', printMax: 'Up to 10 gigs fit on one page — uncheck some to continue.',
@@ -201,11 +208,11 @@
       callTime: 'Hora de llegada', dancersNeeded: 'Se necesitan {n} bailarines', pay: 'Pago', rehearsals: 'Ensayos', whosIn: 'Quién va',
       yes: 'sí', maybe: 'tal vez', no: 'no', noAnswer: 'sin respuesta',
       btnYes: '✓ Sí', btnMaybe: '? Tal vez', btnNo: '✗ No', availabilityFor: 'Disponibilidad de {name}',
-      signOut: 'Salir', familia: 'Familia', owner: 'Dueño', newGig: '+ Nuevo evento',
-      loginTitle: 'Acceso de dueños', loginText: 'Escribe tu contraseña para administrar eventos.',
-      ownerPassword: 'Contraseña de dueño', signIn: 'Entrar', notConfigured: 'ADMIN_PASSWORD todavía no está configurado en el servidor.',
+      signOut: 'Salir', familia: 'Familia', owner: 'Familia Ramirez', whoOwner: 'Mayra o Angel', newGig: '+ Nuevo evento',
+      loginTitle: 'Acceso del equipo', loginText: 'Escribe tu contraseña para administrar eventos.',
+      ownerPassword: 'Contraseña del equipo', signIn: 'Entrar', notConfigured: 'ADMIN_PASSWORD todavía no está configurado en el servidor.',
       signInAs: 'Tu nombre',
-      badLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
+      badLink: 'Ese enlace ya no es válido. Pide uno nuevo a Mayra o Angel.',
       needsAnswer: 'Falta tu respuesta', upcoming: 'Próximos', recent: 'Eventos pasados', myFamily: 'Mi familia',
       subscribe: 'Agrega nuestros eventos a tu calendario', subscribeHint: 'Se actualiza solo cuando cambian las fechas.',
       subscribeOwner: 'Agrega todos los eventos a tu calendario', addToCal: 'Agregar a mi calendario', calSection: 'Calendario',
@@ -220,11 +227,12 @@
       calRehearsalNote: 'Los ensayos solo se incluyen con Apple Calendar. Suscríbete arriba para tenerlos en cualquier calendario.',
       calGoogleNote: 'Google busca cambios una vez al día; Apple y Outlook cada pocas horas. Si una fecha acaba de cambiar, abre el evento y agrégalo de nuevo para tenerlo al instante.',
       addDancersFirst: 'Agrega abajo a los bailarines de tu familia para marcar la disponibilidad de cada uno.',
-      allAnswered: 'Todo lo demás ya está respondido. ¡Gracias!', noGigs: 'Aún no hay eventos publicados. Los dueños publicarán aquí cuando llegue una solicitud.',
+      allAnswered: 'Todo lo demás ya está respondido. ¡Gracias!', noGigs: 'Aún no hay eventos publicados. Mayra y Angel publicarán aquí cuando llegue una solicitud.',
       answerCleared: 'Respuesta borrada', dancers: 'Bailarines', addDancerPh: 'Agregar bailarín (p. ej. Sofía)', dancerName: 'Nombre del bailarín', add: 'Agregar',
       removeDancer: '¿Quitar a {name} de tu familia?', remove: 'Quitar', phone: 'Teléfono',
       saved: 'Guardado', copied: 'Copiado', copyFail: 'No se pudo copiar',
-      tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabFeed: 'Actividad', tabTeam: 'Equipo', tabChona: 'La Chona',
+      tabInbox: 'Solicitudes', tabGigs: 'Eventos', tabFeed: 'Actividad', tabTeam: 'Equipo', tabChona: 'La Chona', tabInsights: 'Datos', roleAdmin: 'Admin',
+      adminLoginTitle: 'Acceso de administración', adminLoginText: 'Tu contraseña de admin abre todo lo que ven Mayra y Angel, más Datos.',
       groupmeOn: 'La Chona está conectada', groupmeOff: 'La Chona no está conectada — falta GROUPME_BOT_ID',
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
@@ -242,13 +250,13 @@
       mergeDone: 'Unido con {gig}', sameDayHint: 'Mismo día que {gig}. ¿Es el mismo trabajo?',
       deleteConfirm: '¿Eliminar “{title}” permanentemente?', thisEvent: 'este evento', done: 'Listo', donePosted: 'Listo — publicado en {ch}', groupme: 'GroupMe',
       requiredTag: 'obligatorio', optionalHead: 'Opcional — llena lo que sepas',
-      payLabel: 'Pago (solo dueños)', payPh: '$50 por bailarín',
+      payLabel: 'Pago (solo Mayra y Angel)', payPh: '$50 por bailarín',
       title: 'Título', titlePh: 'p. ej. Quinceañera — familia López', typeLabel: 'Tipo', typePh: '— tipo —', dateLabel: 'Fecha', startTime: 'Hora de inicio', endTime: 'Hora de fin',
       dancersNeededLabel: 'Bailarines necesarios', venue: 'Lugar', city: 'Ciudad', address: 'Dirección',
       clientWrote: 'El cliente escribió (fecha y ciudad)', clientWroteShort: 'El cliente escribió', detailsForTeam: 'Detalles para el equipo', detailsPh: 'Vestuario, bailes, estacionamiento, qué traer…',
       rehearsalsLabel: 'Ensayos (visibles al equipo)', rehearsalDate: 'Fecha del ensayo', time: 'Hora', locationNote: 'Lugar / nota', addRehearsal: '+ Agregar ensayo',
       clientSection: 'Contacto del cliente y notas privadas', clientName: 'Nombre del cliente', clientEmail: 'Correo del cliente', clientPhone: 'Teléfono del cliente', clientMessage: 'Mensaje del cliente',
-      privateNotes: 'Notas privadas (solo dueños)',
+      privateNotes: 'Notas privadas (solo Mayra y Angel)',
       needTitle: 'Ponle un título al evento.', create: 'Crear', save: 'Guardar', cancel: 'Cancelar', close: 'Cerrar',
       modalNew: 'Nuevo evento', modalEdit: 'Editar evento',
       tapToChange: 'Toca para cambiar',
@@ -258,8 +266,8 @@
       postConfirmation: 'Publicar la confirmación', markDone: 'Marcar terminado', gig: 'Evento',
       botEmpty: 'Aún no ha leído mensajes.', botIgnored: 'Ignorado', botNoDancers: 'No supo de qué bailarín se trata', botUnknownSender: 'Remitente desconocido — no nombró a ningún bailarín', botNoEvent: 'No hay evento abierto', botGuessed: '(asumió el evento más reciente)', botGuessedTag: 'Supuso el evento más reciente', chgToday: 'Hoy', chgYesterday: 'Ayer', botLinked: 'GroupMe vinculado', botAmbiguous: 'Nombre ambiguo: {names}', botNoDate: 'No hay evento en esa fecha', botVague: 'Mensaje largo sin fecha — no se aplicó', botAnnouncement: 'Aviso / recordatorio — no es respuesta', botPaused: 'Lo envió un bailarín en pausa — no se aplicó', botKept: 'Se quedaron las respuestas que ya había (más nuevas, o del propio bailarín)',
       addFamilyFrom: 'Agregar esta familia', reread: 'Leer de nuevo', addFamilyHint: 'Del nombre de GroupMe “{name}”. Revisa cómo se escribe cada bailarín — el bot busca esos nombres en el chat.',
-      pickWho: '¿Quién responde?', pickHint: 'Toca tu familia. Te recordaremos en este teléfono.', pickNotListed: '¿No ves a tu familia? Responde en GroupMe y los dueños te agregan.',
-      pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a los dueños.',
+      pickWho: '¿Quién responde?', pickHint: 'Toca tu familia. Te recordaremos en este teléfono.', pickNotListed: '¿No ves a tu familia? Responde en GroupMe y Mayra o Angel te agregan.',
+      pickClosed: 'Este evento no está recibiendo respuestas.', pickBadLink: 'Ese enlace ya no es válido. Pide uno nuevo a Mayra o Angel.',
       chonaAlt: 'La Chona, una robotita dorada con vestido folclórico rojo y verde y trenzas con listones',
       chonaOn: 'Escuchando el chat', chonaOff: 'Todavía no escucha',
       chonaLive: 'Conectada · escuchando el chat', chonaPostOnly: 'Conectada · todavía no escucha',
@@ -302,7 +310,7 @@
       waiting: 'sin respuesta', plusWaiting: '+{n} sin respuesta', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
       inboxEmptyText: 'Nada nuevo del sitio web. Las solicitudes de los formularios de contacto y cotización aparecen aquí solas.',
-      inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay eventos publicados. Cuando los dueños publiquen uno, avisarán en GroupMe.',
+      inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay eventos publicados. Cuando Mayra y Angel publiquen uno, avisarán en GroupMe.',
       checkMyDancers: 'Ver mis bailarines', allAnsweredText: 'Todo está respondido. ¡Gracias! Te avisamos cuando se publique el próximo.',
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
       openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
@@ -321,7 +329,7 @@
       printHint: 'Ábrelo y luego toca Imprimir o guardar PDF.',
       printShareMsg: 'Lista de eventos',
       tabMedia: 'Galería', gallery: 'Fotos y videos', galleryN: 'Fotos y videos ({n})', mediaLoading: 'Cargando la galería…',
-      storageOff: 'El almacenamiento de fotos y música todavía no está configurado; los dueños deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
+      storageOff: 'El almacenamiento de fotos y música todavía no está configurado; Mayra y Angel deben conectarlo.', storageLabel: 'Almacenamiento', storageUsed: '{used} de {quota} de espacio gratis usado',
       dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', sortMostDone: 'Más bailados', sortAz: 'A–Z', region: 'Región', allRegions: 'Todas', otherRegion: 'Otra', danceGigsN: 'Bailado en {n} eventos', danceVideosN: '{n} videos', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.',
@@ -331,9 +339,9 @@
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
       feedSub: 'Fotos, videos y música que el grupo ha compartido', feedAdded: 'agregó {what}', feedAnd: ' y ',
       feedNew: 'Nuevo', feedMore: 'más', feedOlder: 'Ver anteriores', feedEmpty: 'Todavía no se ha agregado nada.', songOne: '1 canción', songMany: '{n} canciones',
-      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'los dueños', theFamily: 'la familia {name}',
-      youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “los dueños”. Sigues teniendo todas las herramientas de dueño.',
-      youFamily: 'Tu familia', youNone: 'Ninguna — mostrar como “los dueños”', youSaved: 'Guardado', titleLabel: 'Título',
+      rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'la familia Ramirez', theFamily: 'la familia {name}',
+      youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “la familia Ramirez”. Sigues teniendo todas las herramientas.',
+      youFamily: 'Tu familia', youNone: 'Ninguna — mostrar como “la familia Ramirez”', youSaved: 'Guardado', titleLabel: 'Título',
       deleteMediaAsk: '¿Borrar esto para todos? No se puede deshacer.', deleted: 'Borrado',
       photos: 'Fotos', videos: 'Videos', addMedia: 'Fotos y videos', noMedia: 'Todavía no hay fotos ni videos. Agrega los que tomaste en este evento.',
       openPhoto: 'Abrir foto {n}', openVideo: 'Ver video {n}', previous: 'Anterior', next: 'Siguiente',
@@ -346,9 +354,9 @@
       dirEmpty: 'Todavía no se ha agregado ninguna familia.', ownersHere: 'Los administradores pueden entrar aquí', familiesHere: 'Familias: encuentren a su familia aquí',
       webShow: 'Mostrar en bfmh.dance', webHide: 'Quitar de bfmh.dance', webBadge: 'En bfmh.dance',
       webOn: 'Ya está en bfmh.dance; aparece en unos minutos', webOff: 'Se quitó de bfmh.dance',
-      webSuggest: 'Sugerir para bfmh.dance', webWithdraw: 'Retirar sugerencia', webApprove: 'Aprobar para bfmh.dance', webPending: 'Esperando el visto bueno de un dueño',
+      webSuggest: 'Sugerir para bfmh.dance', webWithdraw: 'Retirar sugerencia', webApprove: 'Aprobar para bfmh.dance', webPending: 'Esperando el visto bueno de Mayra o Angel',
       lbShow: 'Mostrar en web', lbHide: 'Quitar de web', lbSuggest: 'Sugerir para web', lbWithdraw: 'Retirar',
-      webSuggested: 'Sugerido; un dueño lo revisará antes de ponerlo en bfmh.dance',
+      webSuggested: 'Sugerido; Mayra o Angel lo revisarán antes de ponerlo en bfmh.dance',
       reviewTitle: 'Esperando tu visto bueno', reviewHint: 'Las familias sugirieron esto para bfmh.dance. Nada se publica hasta que lo apruebes.',
       approve: 'Aprobar', webDeclined: 'No se pondrá en bfmh.dance',
       printNoGigs: 'Publica un evento primero y luego imprime la lista.', printMax: 'Caben hasta 10 eventos en una página; quita algunos para continuar.',
@@ -537,7 +545,8 @@
       }
       if (me.role === 'anon') { if (FAMILIA) renderDirectory(); else renderLogin(); return; }
       if (state.gigLink) { state.focusEvent = +state.gigLink.e; history.replaceState(null, '', location.pathname + '#event-' + state.gigLink.e); }
-      if (me.role === 'admin') state.tab = 'inbox';
+      if (me.role === 'admin') state.tab = ADMIN_SITE ? 'insights' : 'inbox';
+      track('open', null, null, [state.lang, isStandalone() ? 'app' : 'web', state.gigLink ? 'gig' : FAMILIA ? 'familia' : 'team'].join('|'));
       return refresh();
     }).catch(function (e) {
       app.innerHTML = '';
@@ -548,9 +557,9 @@
   function setLangSilently(l) { state.lang = l; document.documentElement.lang = l; try { localStorage.setItem('bfmh_team_lang', l); } catch (e) {} }
   function paintBrandRole() {
     var el = document.getElementById('brand-role'); if (!el) return;
-    el.textContent = t(FAMILIA ? 'familia' : 'roleTeam');
+    el.textContent = t(FAMILIA ? 'familia' : ADMIN_SITE ? 'roleAdmin' : 'roleTeam');
     var link = el.closest('a');
-    link.href = FAMILIA || state.pickerGig ? '/familia' : '/team/';
+    link.href = FAMILIA || state.pickerGig ? '/familia' : ADMIN_SITE ? '/admin' : '/team/';
     link.setAttribute('aria-label', 'Ballet Folklórico Mi Herencia — ' + el.textContent);
   }
 
@@ -571,8 +580,8 @@
       api('/api/auth', { method: 'POST', body: { password: pw.value } }).then(function () { location.reload(); })
         .catch(function (x) { err.textContent = x.message; });
     } },
-      h('h1', { text: t('loginTitle') }),
-      h('p', { text: t('loginText') }),
+      h('h1', { text: t(ADMIN_SITE ? 'adminLoginTitle' : 'loginTitle') }),
+      h('p', { text: t(ADMIN_SITE ? 'adminLoginText' : 'loginText') }),
       h('label', { class: 'f f-hidden' }, t('signInAs'), who),
       h('label', { class: 'f' }, t('ownerPassword'), pw),
       h('div', { class: 'card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('signIn') })),
@@ -580,13 +589,13 @@
       state.me && state.me.configured === false ? h('p', { class: 'hint', text: t('notConfigured') }) : null
     );
     app.appendChild(form);
-    app.appendChild(h('a', { class: 'btn btn-wide familia-link', href: '/familia' }, icon('people', 2), t('familiesHere')));
+    if (!ADMIN_SITE) app.appendChild(h('a', { class: 'btn btn-wide familia-link', href: '/familia' }, icon('people', 2), t('familiesHere')));
   }
 
   /* Back to the picker, not the login: a shared phone can switch families without the link. */
   function signOut() {
     var back = state.gigLink ? '/team/?e=' + encodeURIComponent(state.gigLink.e) + '&s=' + encodeURIComponent(state.gigLink.s)
-      : state.me && state.me.role === 'member' ? '/familia' : '/team/';
+      : state.me && state.me.role === 'member' ? '/familia' : ADMIN_SITE ? '/admin' : '/team/';
     api('/api/auth', { method: 'DELETE' }).then(function () { location.href = back; });
   }
 
@@ -696,6 +705,7 @@
     play: '<path d="M7 4.5v15l13-7.5z" fill="currentColor"/>',
     link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
     download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
+    chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
   };
   function icon(name, width) {
     var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -806,11 +816,11 @@
     // /api/calendar redirect is only a fallback, since the installed app doesn't always carry it.
     var cal = ev.calendar || {};
     [
-      [t('calApple'), href, false],
-      [t('calGoogle'), cal.google || href + '&to=google', true],
-      [t('calOutlook'), cal.outlook || href + '&to=outlook', true],
+      [t('calApple'), href, false, 'apple'],
+      [t('calGoogle'), cal.google || href + '&to=google', true, 'google'],
+      [t('calOutlook'), cal.outlook || href + '&to=outlook', true, 'outlook'],
     ].forEach(function (row) {
-      var attrs = { class: 'act', href: row[1], onclick: function () { pop.close(); } };
+      var attrs = { class: 'act', href: row[1], onclick: function () { track('calendar', ev.id, null, 'gig:' + row[3]); pop.close(); } };
       if (row[2]) { attrs.target = '_blank'; attrs.rel = 'noopener'; }
       list.appendChild(h('a', attrs, h('span', { class: 'act-ico' }, icon('calendar', 2)), h('span', { text: row[0] })));
     });
@@ -829,11 +839,11 @@
     var pop = popSheet(t('subscribePick'), t('subscribeHint'));
     var list = h('div', { class: 'acts' });
     [
-      [t('calApple'), url.replace(/^https?:/, 'webcal:')],
-      [t('calGoogle'), 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(url)],
-      [t('calOutlook'), 'https://outlook.live.com/calendar/0/addfromweb?url=' + encodeURIComponent(url) + '&name=' + encodeURIComponent(feedName())],
+      [t('calApple'), url.replace(/^https?:/, 'webcal:'), 'apple'],
+      [t('calGoogle'), 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(url), 'google'],
+      [t('calOutlook'), 'https://outlook.live.com/calendar/0/addfromweb?url=' + encodeURIComponent(url) + '&name=' + encodeURIComponent(feedName()), 'outlook'],
     ].forEach(function (row) {
-      list.appendChild(h('a', { class: 'act', href: row[1], target: '_blank', rel: 'noopener', onclick: function () { pop.close(); } },
+      list.appendChild(h('a', { class: 'act', href: row[1], target: '_blank', rel: 'noopener', onclick: function () { track('calendar', null, null, 'feed:' + row[2]); pop.close(); } },
         h('span', { class: 'act-ico' }, icon('calendar', 2)), h('span', { text: row[0] })));
     });
     list.appendChild(h('button', { type: 'button', class: 'act', onclick: function () { pop.close(); copyText(url); } },
@@ -1006,7 +1016,7 @@
     tabsEl.hidden = false; tabsEl.innerHTML = '';
     [['gigs', 'tabGigs', 'calendar'], ['feed', 'tabFeed', 'pulse'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.mtab === tb[0] ? ' is-active' : ''), 'aria-current': state.mtab === tb[0] ? 'page' : false,
-        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); state.mtab = tb[0]; render(); } },
+        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); if (state.mtab !== tb[0]) track('tab', null, null, tb[0]); state.mtab = tb[0]; render(); } },
         h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) }), tb[0] === 'feed' ? feedBadge() : null));
     });
     headerRight.innerHTML = '';
@@ -1165,9 +1175,11 @@
     }
     var listening = state.me.channels && state.me.channels.groupme_listen;
     tabsEl.hidden = false; tabsEl.innerHTML = '';
-    TABS.forEach(function (tb) {
+    var tabs = hasInsights() ? [['insights', 'tabInsights', 'chart']].concat(TABS) : TABS;
+    tabsEl.classList.toggle('has-7', tabs.length > 6);
+    tabs.forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'aria-current': state.tab === tb[0] ? 'page' : false,
-        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
+        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); if (state.tab !== tb[0]) track('tab', null, null, tb[0]); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
         tb[0] === 'chona'
           ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
           : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
@@ -1187,6 +1199,7 @@
     else if (state.tab === 'chona') renderChona();
     else if (state.tab === 'media') renderMediaTab();
     else if (state.tab === 'feed') renderFeedTab();
+    else if (state.tab === 'insights' && hasInsights()) renderInsightsTab();
     else renderTeam();
     focusIfNeeded();
   }
@@ -1734,7 +1747,7 @@
   function whoLabel(c) {
     if (c.source === 'bot') return t('whoBot', { sender: c.actor || '?' });
     if (c.source === 'family') return c.actor || t('whoSystem');
-    if (c.source === 'owner') return t('owner');
+    if (c.source === 'owner') return t('whoOwner');
     if (c.source === 'undo') return t('whoUndo');
     if (c.source === 'sql') return 'SQL';
     return c.actor || t('whoSystem');
@@ -2255,9 +2268,9 @@
         h('span', { class: 'song-ico' }, icon('music', 2)),
         h('span', { class: 'song-name' }, h('b', { text: s.title || t('untitledSong') }),
           h('span', { class: 'song-sub', text: addedBy(s) })),
-        s.download ? h('a', { class: 'btn btn-sm btn-icon', href: s.download, 'aria-label': t('download'), title: t('download') }, icon('download', 2)) : null,
+        s.download ? h('a', { class: 'btn btn-sm btn-icon', href: s.download, 'aria-label': t('download'), title: t('download'), onclick: function () { track('download', null, s.id); } }, icon('download', 2)) : null,
         actions ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('moreActions'), onclick: function () { actionSheet(s.title || t('untitledSong'), actions); } }, icon('more', 2)) : null),
-      s.url ? h('audio', { controls: true, preload: 'none', src: s.url }) : null);
+      s.url ? h('audio', { controls: true, preload: 'none', src: s.url, 'data-mid': s.id }) : null);
   }
 
   function reloadMedia() {
@@ -2295,6 +2308,7 @@
   function openGallery(eventId, dance) {
     closeGallery(true);
     gal = { id: eventId, dance: dance || null, data: null, root: h('div', { class: 'gal', role: 'dialog', 'aria-modal': 'true' }) };
+    if (dance) track('dance', null, null, dance); else track('gallery', eventId);
     document.body.appendChild(gal.root);
     document.body.classList.add('has-gal');
     try { history.pushState({ gal: eventId || 'dance' }, ''); gal.pushed = true; } catch (e) {}
@@ -2485,7 +2499,7 @@
     var ytOpen = h('a', { class: 'btn btn-sm btn-icon', target: '_blank', rel: 'noopener', 'aria-label': t('openYoutube'), title: t('openYoutube') }, icon('link', 2.2));
     var count = h('span', { class: 'lb-count' });
     var who = h('span', { class: 'lb-who' });
-    var dl = h('a', { class: 'btn btn-sm btn-icon', 'aria-label': t('download'), title: t('download') }, icon('download', 2));
+    var dl = h('a', { class: 'btn btn-sm btn-icon', 'aria-label': t('download'), title: t('download'), onclick: function () { track('download', items[i].event_id, items[i].id); } }, icon('download', 2));
     var del = h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('del'), title: t('del'), onclick: function () {
       deleteItem(items[i], function () { if (gal) gal.dirty = true; reloadMedia(); }).then(function (gone) {
         if (!gone) return;
@@ -2515,6 +2529,8 @@
       else if (isVid) { img.removeAttribute('src'); vid.src = it.url; } else img.src = it.url;
       count.textContent = (i + 1) + ' / ' + items.length; who.textContent = [it.title, addedBy(it)].filter(Boolean).join(' · ');
       dl.href = it.download || it.url; del.hidden = !it.can_edit;
+      vid.setAttribute('data-mid', it.id); dl.setAttribute('data-mid', it.id);
+      track('view', it.event_id, it.id); if (isYt) track('play', it.event_id, it.id);
       web.hidden = !mediaWebAction(it); web.classList.toggle('is-on', !!it.website); web.classList.toggle('is-pending', !it.website && !!it.suggested);
       web.lastChild.textContent = webShortLabel(it); web.title = webLabel(it);
       var next = items[(i + 1) % items.length]; if (next && next.kind === 'photo') { var pre = new Image(); pre.src = next.url; }
@@ -3135,6 +3151,65 @@
         toast(e.status === 409 ? t('undoAlready') : e.status === 404 ? t('undoNotFound') : t('undoFailed'), true);
       });
     });
+  }
+
+  /* ── usage tracking ────────────────────────────────────── */
+  var usageQueue = [];
+  function isStandalone() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; }
+  function deviceId() {
+    try {
+      var id = localStorage.getItem('bfmh_device');
+      if (!id) { id = Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem('bfmh_device', id); }
+      return id;
+    } catch (e) { return null; }
+  }
+  function track(action, eventId, mediaId, detail) {
+    if (ADMIN_SITE || (state.me && state.me.insights)) return;
+    usageQueue.push({ a: action, e: eventId || null, m: mediaId || null, d: detail || null, at: Date.now() });
+    if (usageQueue.length >= 40) flushUsage();
+  }
+  function flushUsage() {
+    if (!usageQueue.length || !state.me || state.me.role === 'anon' || state.me.insights) { if (state.me && state.me.insights) usageQueue = []; return; }
+    var now = Date.now();
+    var body = JSON.stringify({ device: deviceId(), events: usageQueue.splice(0).map(function (e) { return { a: e.a, e: e.e, m: e.m, d: e.d, t: now - e.at }; }) });
+    if (navigator.sendBeacon && navigator.sendBeacon('/api/me', body)) return;
+    fetch('/api/me', { method: 'POST', body: body, keepalive: true, credentials: 'same-origin' }).catch(function () {});
+  }
+  setInterval(flushUsage, 15000);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) flushUsage(); });
+  window.addEventListener('pagehide', flushUsage);
+  document.addEventListener('play', function (e) {
+    var mid = e.target && e.target.getAttribute && e.target.getAttribute('data-mid');
+    if (mid) track('play', null, +mid);
+  }, true);
+
+  /* ── insights (admin site) ─────────────────────────────── */
+  function hasInsights() { return ADMIN_SITE || !!(state.me && state.me.insights); }
+  var insightsLoad = null;
+  function loadInsightsScript() {
+    if (!insightsLoad) {
+      insightsLoad = new Promise(function (ok, fail) {
+        var css = h('link', { rel: 'stylesheet', href: '/team/insights.css' }); document.head.appendChild(css);
+        var js = h('script', { src: '/team/insights.js' }); js.onload = ok; js.onerror = function () { insightsLoad = null; fail(new Error('Could not load Insights')); };
+        document.head.appendChild(js);
+      });
+    }
+    return insightsLoad;
+  }
+  function renderInsightsTab() {
+    fabRoot.innerHTML = '';
+    var root = h('div', { class: 'ins' }); app.appendChild(root);
+    var ctx = { h: h, icon: icon, api: api, toast: toast, section: section, emptyState: emptyState, loader: loader, lightbox: lightbox,
+      openGallery: openGallery, me: state.me, copyText: copyText, typeLabel: typeLabel, lang: state.lang,
+      hasEvent: function (id) { return state.events.some(function (e) { return e.id === id; }); },
+      openEvent: function (id) {
+        var ev = state.events.find(function (e) { return e.id === id; }); if (!ev) return;
+        if (ev.status === 'inquiry') { state.tab = 'inbox'; state.focusEvent = id; render(); } else openDetail(id);
+      } };
+    if (window.BFMHInsights) return window.BFMHInsights.render(root, ctx);
+    root.appendChild(loader('Loading insights…'));
+    loadInsightsScript().then(function () { if (root.isConnected) { root.innerHTML = ''; window.BFMHInsights.render(root, ctx); } },
+      function (e) { root.innerHTML = ''; root.appendChild(emptyState('refresh', e.message)); });
   }
 
   /* ── render dispatch ───────────────────────────────────── */

@@ -157,6 +157,8 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | `DATABASE_URL` | yes | Postgres connection string. Easiest: `vercel integration add neon` (sets it automatically). |
 | `ADMIN_PASSWORD` | yes | Owner sign-in password for `/team/`. Owners stay signed in until they sign out; changing this password signs every owner device out (and nothing else — gig and calendar links keep working). |
 | `SESSION_SECRET` | yes | Random string used to sign owner sessions, gig links and calendar feeds. It falls back to `ADMIN_PASSWORD`, but then changing the password invalidates every gig and calendar link already sitting in the GroupMe chat ("That link is not valid"). Set it once and leave it. |
+| `INSIGHTS_PASSWORD` | for `/admin` | Admin-site password. It opens everything the owners see plus the **Insights** tab (inquiry trends, gallery and app usage, family engagement). The owners' `ADMIN_PASSWORD` never opens Insights. Uploads made under it are credited to Anna. |
+| `INQUIRY_TEST_EMAILS` | no | Comma-separated extra addresses whose form submissions are treated as tests: never saved, never counted. Anna's own address is built in. |
 | `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
 | `GROUPME_BOT_ID` | **yes, in practice** | Create a bot at https://dev.groupme.com/bots for the team group. Every message the app sends goes out as La Chona; without it the buttons report "La Chona is not connected" and nothing reaches the chat. |
 | `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
@@ -164,6 +166,16 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | for the Gallery | Cloudflare R2 bucket that holds gig photos, clips and music (setup below). Without them the Gallery tab says storage isn't set up. |
 | `MEDIA_QUOTA_GB` | no | Uploads stop at this many GB (default 9) so the bucket stays inside R2's 10 GB free tier. |
 | `FORMSPREE_WEBHOOK_SECRET` | no | If you enable the Formspree webhook plugin, point it at `/api/webhooks/formspree?secret=<value>`. |
+
+**Admin site (`/admin`)**
+
+`bfmh.dance/admin` is the owners' app plus an **Insights** tab, behind `INSIGHTS_PASSWORD`. Insights reads
+every website inquiry (merged and hidden ones included, test submissions excluded), the gallery, availability
+history and La Chona's log. App usage (opens, tabs, gallery folders, views, plays, downloads, calendar adds) is
+recorded from families' and owners' phones by beacons to `POST /api/me` into `usage_events`; the admin's own
+session is never recorded. Usage only exists from the day this shipped, so those charts start empty.
+`node --env-file=.env.local scripts/purge-test-inquiries.mjs` lists test submissions already in the database; `--apply` deletes them
+and their history.
 
 **GroupMe reader (the bot reads the chat and fills in availability)**
 

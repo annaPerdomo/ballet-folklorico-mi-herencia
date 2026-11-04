@@ -164,6 +164,23 @@ CREATE TABLE IF NOT EXISTS events_history (
   changed_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS events_history_event ON events_history(event_id, id DESC);
+CREATE TABLE IF NOT EXISTS usage_events (
+  id bigserial PRIMARY KEY,
+  at timestamptz NOT NULL DEFAULT now(),
+  role text NOT NULL,
+  family_id int REFERENCES families(id) ON DELETE SET NULL,
+  device text,
+  action text NOT NULL,
+  event_id int,
+  media_id int REFERENCES media(id) ON DELETE SET NULL,
+  detail text
+);
+CREATE INDEX IF NOT EXISTS usage_events_at ON usage_events(at DESC);
+CREATE INDEX IF NOT EXISTS usage_events_media ON usage_events(media_id) WHERE media_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS usage_events_family ON usage_events(family_id, at DESC) WHERE family_id IS NOT NULL;
+ALTER TABLE usage_events ADD COLUMN IF NOT EXISTS received_at timestamptz NOT NULL DEFAULT now();
+CREATE INDEX IF NOT EXISTS usage_events_device_received ON usage_events(device, received_at DESC);
+CREATE INDEX IF NOT EXISTS usage_events_family_received ON usage_events(family_id, received_at DESC) WHERE family_id IS NOT NULL;
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

@@ -87,6 +87,10 @@ http.createServer(async (req, res) => {
     if (url.pathname !== '/familia') { res.statusCode = 308; res.setHeader('Location', '/familia' + url.search); return res.end(); }
     url.pathname = '/team/index.html';
   }
+  if (/^\/admin\/?$/.test(url.pathname)) {
+    if (url.pathname !== '/admin') { res.statusCode = 308; res.setHeader('Location', '/admin' + url.search); return res.end(); }
+    url.pathname = '/team/index.html';
+  }
   const rel = decodeURIComponent(url.pathname);
   if (rel.split('/').some((seg) => seg.startsWith('.')) || /^\/(?:node_modules|scripts|feedback-images)(?:\/|$)/.test(rel)) { res.statusCode = 404; return res.end('Not found'); }
   let file = path.join(ROOT, rel);

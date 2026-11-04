@@ -7,8 +7,12 @@ export const LIMITS = { photo: 25 * MB, video: 150 * MB, audio: 60 * MB };
 export const THUMB_MAX = MB;
 export const TYPES = { photo: /^image\//, video: /^video\//, audio: /^audio\// };
 
+// Only Anna holds INSIGHTS_PASSWORD.
+export const ADMIN_CREDIT = 'Anna Mendez Perdomo';
+export const creditOf = (me) => (me.role === 'admin' && me.insights ? ADMIN_CREDIT : null);
+
 // Anna's tripod recordings lead a gig's videos; photos keep upload order.
-export const FEATURED_FIRST = `COALESCE(m.kind <> 'photo' AND (m.credit = 'Anna Mendez Perdomo'
+export const FEATURED_FIRST = `COALESCE(m.kind <> 'photo' AND (m.credit = '${ADMIN_CREDIT}'
   OR (m.credit IS NULL AND m.uploader IN ('owners', 'Mendez Perdomo'))), false) DESC`;
 
 // R2's free tier is 10 GB-month. Stop a little short so a busy month never turns into a bill.
@@ -126,6 +130,7 @@ export function feedBatches(rows, gapMs = FEED_GAP_MS) {
 
 // Owners share one login, so an owner's "mine" is whatever they add under their own family name.
 export function isMine(row, me) {
+  if (me.role === 'admin' && me.insights) return row.credit === ADMIN_CREDIT;
   return me.role === 'admin' ? row.family_id == null && !row.credit && row.uploader === (me.family ? me.family.name : 'owners')
     : row.family_id === me.family.id;
 }

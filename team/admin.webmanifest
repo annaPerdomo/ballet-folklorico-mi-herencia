@@ -1,0 +1,16 @@
+{
+  "name": "Mi Herencia Admin",
+  "short_name": "BFMH Admin",
+  "description": "Ballet Folklórico Mi Herencia — everything the owners see, plus Insights.",
+  "id": "/admin",
+  "start_url": "/admin",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0c0514",
+  "theme_color": "#0c0514",
+  "icons": [
+    { "src": "/team/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/team/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/team/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
