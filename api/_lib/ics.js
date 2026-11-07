@@ -3,6 +3,7 @@
 
 import crypto from 'node:crypto';
 import { siteUrl } from './notify.js';
+import { calendarSig } from './auth.js';
 
 const DEFAULT_HOURS = 2;
 
@@ -94,7 +95,8 @@ function block(lines) {
 
 export const eventWhere = (ev) => [ev.venue, ev.address, ev.city].filter(Boolean).join(', ');
 
-export const eventUrl = (ev) => `${siteUrl()}/team/#event-${ev.id}`;
+export const eventUrl = (ev) => (ev.status === 'gathering' ? inviteUrl(ev.id) : `${siteUrl()}/team/#event-${ev.id}`);
+export const inviteUrl = (id) => `${siteUrl()}/e/${id}/${calendarSig(id)}`;
 
 export function eventDescription(ev) {
   return [

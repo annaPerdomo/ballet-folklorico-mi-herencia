@@ -859,3 +859,47 @@ button.feed-where:focus-visible { outline: 2px solid var(--gold); outline-offset
 .feed-rest:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 .feed-all { margin-top: 0.7rem; }
 .feed-sub { margin: 0.2rem 0 0.8rem; }
+
+/* ── group events (rows; the event page itself is team/party.css) ── */
+.evlist { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.9rem; }
+.evrow { all: unset; box-sizing: border-box; position: relative; display: flex; align-items: center; gap: 0.85rem; width: 100%; cursor: pointer; overflow: hidden;
+  padding: 1.05rem 0.85rem 0.85rem; border-radius: 16px; border: 1px solid var(--line);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(198,42,110,0.16) 0%, transparent 55%), linear-gradient(165deg, var(--bg-card-hover) 0%, var(--bg-card) 60%);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+.evrow::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; opacity: 0.8;
+  background: repeating-linear-gradient(90deg, #e84393 0 26px, #e8c97a 26px 52px, #2ecda7 52px 78px, #c62a6e 78px 104px, #fdcb6e 104px 130px, #7b5bd6 130px 156px); }
+.evrow:hover, .evrow:focus-visible { border-color: var(--gold); }
+.evrow:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.evrow.is-ask { border-color: rgba(232,201,122,0.5); }
+.evrow.is-past { opacity: 0.78; }
+.evrow-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.evrow-kind { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+.evrow-title { font-family: var(--font-display); font-size: 1.14rem; font-weight: 600; line-height: 1.25; color: #fff4dc; overflow-wrap: anywhere; }
+.evrow-meta { font-size: 0.76rem; color: var(--text-2); overflow-wrap: anywhere; }
+.evrow-foot { font-size: 0.7rem; font-weight: 600; color: var(--gold-light); }
+.evrow-count { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; min-width: 3.2rem; line-height: 1.05; }
+.evrow-count b { font-family: var(--font-display); font-size: 1.7rem; font-weight: 600; color: var(--gold-light); }
+.evrow-count span { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.evrow-cta { flex-shrink: 0; padding: 0.45rem 0.8rem; border-radius: 999px; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--bg-deep); }
+.evrow-me { display: inline-flex; align-items: center; gap: 0.3rem; flex-shrink: 0; padding: 0.35rem 0.65rem; border-radius: 999px; font-size: 0.66rem; font-weight: 700;
+  border: 1px solid rgba(46,205,167,0.45); color: var(--teal-light); }
+.evrow-me svg { width: 12px; height: 12px; }
+.evrow-me.is-maybe { border-color: rgba(253,203,110,0.45); color: var(--amber); }
+.evrow-me.is-no { border-color: rgba(232,67,147,0.4); color: #ff9ecb; }
+.evrow .giggo { flex-shrink: 0; color: var(--gold); }
+.evrow .giggo svg { width: 16px; height: 16px; }
+@media (max-width: 420px) { .evrow { gap: 0.65rem; padding-left: 0.7rem; padding-right: 0.6rem; } .evrow .card-date { min-width: 54px; } .evrow .giggo { display: none; } }
+.evempty { all: unset; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; width: 100%; cursor: pointer; margin-bottom: 0.9rem;
+  padding: 0.9rem 1rem; border-radius: 14px; border: 1px dashed var(--line); color: var(--muted); font-size: 0.82rem; }
+.evempty svg { width: 16px; height: 16px; color: var(--gold); }
+.evempty b { margin-left: auto; color: var(--gold-light); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.evempty:hover { border-color: var(--gold); }
+.gkinds-field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.gkinds { gap: 0.35rem; }
+.gkinds .fchip { min-height: 38px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.party-body { padding-top: 0.6rem; }
+.gal-kinds { margin: 0 0 0.75rem; }
+.galcard-cover { position: relative; }
+.galcard-tag { position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: 999px; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em;
+  text-transform: uppercase; background: rgba(12,5,20,0.82); color: var(--gold-light); border: 1px solid rgba(232,201,122,0.45); }

@@ -6,7 +6,7 @@ import { isTestInquiry } from './inquiry.js';
 const TZ = 'America/Los_Angeles';
 // The owners are the Ramirez family (families.name 'Ramirez'); their unlabelled uploads count there.
 const OWNERS_FAMILY = 'Ramirez';
-export const USAGE_ACTIONS = ['open', 'tab', 'gallery', 'view', 'play', 'download', 'calendar', 'dance', 'song'];
+export const USAGE_ACTIONS = ['open', 'tab', 'gallery', 'view', 'play', 'download', 'calendar', 'dance', 'song', 'party'];
 const MAX_BATCH = 60;
 const MAX_AGO_MS = 24 * 3600 * 1000;
 const MAX_ROWS_PER_MINUTE = 120;

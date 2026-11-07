@@ -7,12 +7,14 @@ export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'ca
 const LAPSE_AFTER_DAYS = 14;
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
 // A folder is a gallery-only event: never in Gigs, calendars or GroupMe.
-export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder'];
+export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder', 'gathering'];
+// A group event (potluck, posada) is the group's own, never a gig: no asks, feeds or website.
+const LISTED = [...MEMBER_VISIBLE, 'gathering'];
 
 const ADMIN_COLS = `e.*`;
 // Pay is deliberately absent from MEMBER_COLS: what a gig pays is the owners' business.
 const MEMBER_COLS = `e.id, e.title, e.status, e.event_type, e.event_date, e.start_time, e.end_time, e.call_time,
-  e.venue, e.address, e.city, e.dancers_needed, e.details, e.rehearsals, e.published_at, e.confirmed_at, e.updated_at, e.website`;
+  e.venue, e.address, e.city, e.dancers_needed, e.details, e.rehearsals, e.published_at, e.confirmed_at, e.updated_at, e.website, e.potluck`;
 
 const AVAIL_JSON = `
   COALESCE((SELECT json_agg(json_build_object(
@@ -22,16 +24,28 @@ const AVAIL_JSON = `
     WHERE a.event_id = e.id), '[]'::json) AS availability,
   (SELECT count(*) FROM media m WHERE m.event_id = e.id AND m.ready AND m.kind <> 'audio')::int AS media_count`;
 
-export async function listEvents({ admin, includePast = false }) {
+const PARTY_JSON = `
+  CASE WHEN e.status = 'gathering' THEN (SELECT json_build_object(
+      'households', count(*) FILTER (WHERE r.status = 'yes'),
+      'people', COALESCE(sum(r.adults + r.kids) FILTER (WHERE r.status = 'yes'), 0),
+      'maybe', count(*) FILTER (WHERE r.status = 'maybe'),
+      'mine', max(r.status) FILTER (WHERE r.family_id = $1),
+      'needed', (SELECT COALESCE(sum(i.slots), 0) FROM gathering_items i WHERE i.event_id = e.id AND i.rsvp_id IS NULL),
+      'claimed', (SELECT count(*) FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id WHERE i.event_id = e.id AND i.rsvp_id IS NULL))
+    FROM gathering_rsvps r WHERE r.event_id = e.id) END AS party`;
+
+export async function listEvents({ admin, includePast = false, familyId = null }) {
   if (admin) await lapseStaleInquiries();
   const where = admin
-    ? (includePast ? `e.status NOT IN ('folder','deleted')` : `(e.status IN ('inquiry','open','confirmed') OR (e.status NOT IN ('folder','deleted') AND e.updated_at > now() - interval '60 days'))`)
-    : `e.status = ANY($1) AND (e.event_date IS NULL OR e.event_date >= current_date - 14)`;
-  const params = admin ? [] : [MEMBER_VISIBLE];
+    ? (includePast ? `e.status NOT IN ('folder','deleted')`
+      : `(e.status IN ('inquiry','open','confirmed') OR (e.status = 'gathering' AND (e.event_date IS NULL OR e.event_date >= current_date - 60))
+          OR (e.status NOT IN ('folder','deleted','gathering') AND e.updated_at > now() - interval '60 days'))`)
+    : `e.status = ANY($2) AND (e.event_date IS NULL OR e.event_date >= current_date - 14)`;
+  const params = admin ? [familyId] : [familyId, LISTED];
   const rows = await sql(
-    `SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON}
+    `SELECT ${admin ? ADMIN_COLS : MEMBER_COLS}, ${AVAIL_JSON}, ${PARTY_JSON}
        FROM events e WHERE ${where}
-       ORDER BY CASE e.status WHEN 'inquiry' THEN 0 WHEN 'open' THEN 1 WHEN 'confirmed' THEN 1 ELSE 2 END,
+       ORDER BY CASE e.status WHEN 'inquiry' THEN 0 WHEN 'open' THEN 1 WHEN 'confirmed' THEN 1 WHEN 'gathering' THEN 1 ELSE 2 END,
                 e.event_date NULLS LAST, e.id DESC`, params);
   return rows.map(withCalendarLinks);
 }
@@ -63,7 +77,7 @@ export function withCalendarLinks(ev) {
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',
   'address', 'city', 'client_name', 'client_email', 'client_phone', 'message', 'dancers_needed', 'pay', 'notes',
-  'details', 'rehearsals'];
+  'details', 'rehearsals', 'potluck'];
 
 export async function updateEvent(id, patch, tag = { source: 'owner', actor: 'owner' }) {
   const sets = []; const params = [id];
@@ -81,6 +95,9 @@ export async function updateEvent(id, patch, tag = { source: 'owner', actor: 'ow
 export async function deleteEvent(id, tag = { source: 'owner', actor: 'owner' }) {
   return withSource(tag, async (q) => {
     const files = await takeEventMedia(id, q);
+    // A group event keeps nothing for analytics, and its guest list holds people's notes.
+    await q(`DELETE FROM gathering_rsvps WHERE event_id = $1`, [id]);
+    await q(`DELETE FROM gathering_items WHERE event_id = $1`, [id]);
     await q(`UPDATE events SET status = 'deleted', deleted_at = now(), updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id]);
     return files;
   });

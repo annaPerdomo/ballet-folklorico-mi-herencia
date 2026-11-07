@@ -92,6 +92,8 @@ export default route({
     }
 
     const patch = cleanPatch(body);
+    if (current.status === 'gathering' && 'event_date' in patch && !patch.event_date) throw httpError(400, 'Give the event a date');
+    if (typeof body.website === 'boolean' && current.status === 'gathering') throw httpError(400, 'Group events stay off bfmh.dance');
     if (Object.keys(patch).length) await updateEvent(id, patch, ownerTag(me));
     if (typeof body.website === 'boolean') await withSource(ownerTag(me), (q) =>
       q('UPDATE events SET website = $2, updated_at = now() WHERE id = $1', [id, body.website]));
@@ -99,6 +101,7 @@ export default route({
     let notified = null;
     const action = str(body.action, 20);
     if (action && current.status === 'folder') throw httpError(400, 'Folders have no gig actions');
+    if (action && current.status === 'gathering') throw httpError(400, 'Group events have no gig actions');
     if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));

@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/e/:id/:s",
+      "destination": "/api/gig?invite=:id&s=:s"
+    },
+    {
       "source": "/api/dancers",
       "destination": "/api/families?r=dancers"
     },

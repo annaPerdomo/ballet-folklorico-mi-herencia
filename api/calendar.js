@@ -61,7 +61,8 @@ export default route({
   async GET(req, res) {
     const q = query(req);
     const wantRemove = q.remove === '1';
-    const visible = (ev) => MEMBER_VISIBLE.includes(ev.status) || (wantRemove && ev.status === 'cancelled');
+    // A group event can be saved one at a time off its invite, but never rides a feed.
+    const visible = (ev) => MEMBER_VISIBLE.includes(ev.status) || ev.status === 'gathering' || (wantRemove && ev.status === 'cancelled');
     // A stale remove link for a gig that came back on must not cancel it.
     const removeFor = (ev) => wantRemove && ev.status === 'cancelled';
 

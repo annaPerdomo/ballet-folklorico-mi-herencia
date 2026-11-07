@@ -181,6 +181,39 @@ CREATE INDEX IF NOT EXISTS usage_events_family ON usage_events(family_id, at DES
 ALTER TABLE usage_events ADD COLUMN IF NOT EXISTS received_at timestamptz NOT NULL DEFAULT now();
 CREATE INDEX IF NOT EXISTS usage_events_device_received ON usage_events(device, received_at DESC);
 CREATE INDEX IF NOT EXISTS usage_events_family_received ON usage_events(family_id, received_at DESC) WHERE family_id IS NOT NULL;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS potluck boolean NOT NULL DEFAULT false;
+CREATE TABLE IF NOT EXISTS gathering_rsvps (
+  id serial PRIMARY KEY,
+  event_id int NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  family_id int REFERENCES families(id) ON DELETE SET NULL,
+  name text NOT NULL,
+  status text NOT NULL CHECK (status IN ('yes','maybe','no')),
+  adults int NOT NULL DEFAULT 1,
+  kids int NOT NULL DEFAULT 0,
+  note text,
+  key_hash text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS gathering_rsvps_family ON gathering_rsvps(event_id, family_id) WHERE family_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS gathering_rsvps_key ON gathering_rsvps(event_id, key_hash) WHERE key_hash IS NOT NULL;
+CREATE TABLE IF NOT EXISTS gathering_items (
+  id serial PRIMARY KEY,
+  event_id int NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  label text NOT NULL,
+  category text NOT NULL DEFAULT 'other',
+  slots int NOT NULL DEFAULT 1,
+  rsvp_id int REFERENCES gathering_rsvps(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS gathering_items_event ON gathering_items(event_id);
+CREATE TABLE IF NOT EXISTS gathering_claims (
+  item_id int NOT NULL REFERENCES gathering_items(id) ON DELETE CASCADE,
+  rsvp_id int NOT NULL REFERENCES gathering_rsvps(id) ON DELETE CASCADE,
+  note text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (item_id, rsvp_id)
+);
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

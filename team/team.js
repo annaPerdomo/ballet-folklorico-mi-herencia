@@ -198,6 +198,18 @@
       changesTitle: 'Recent changes', changesMore: 'Show all', changesEmpty: 'No changes yet', changesLoading: 'Loading…',
       changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
+      gkinds: { potluck: 'Potluck', posada: 'Posada', party: 'Party', practice: 'Practice', meeting: 'Meeting', outing: 'Outing', fundraiser: 'Fundraiser', other: 'Get-together' },
+      groupEvents: 'Group events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us: never on bfmh.dance or in GroupMe. Share the invite with anyone you like.',
+      newEvent: 'New group event', newWhat: 'What are you adding?', addGig: 'A gig', addGigSub: 'A performance. Families mark who can dance.',
+      addEvent: 'A group event', addEventSub: 'A potluck, posada or get-together, with RSVPs and an invite anyone can open.',
+      eventKind: 'Kind of event', eventTitlePh: 'e.g. Christmas posada', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
+      eventDetails: 'Good to know', eventDetailsPh: 'Parking, what to wear, bring a chair…', potluckToggle: 'Potluck sign-up: guests pick what to bring',
+      needEventDate: 'Give the event a date.', modalNewEvent: 'New group event', modalEditEvent: 'Edit group event',
+      eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going', potluckShort: 'Potluck {c}/{n}',
+      noEvents: 'No group events coming up.', pastEvents: 'Past group events', loadingEvent: 'Loading the event…',
+      shareEvent: 'Share invite', copyEventLink: 'Copy invite link', editEvent: 'Edit event', deleteEvent: 'Delete event', eventMenu: 'Event options',
+      deleteEventAsk: 'Delete “{title}”? Its RSVPs, potluck list, photos and videos go too, for everyone. It can’t be undone.',
+      eventShareMsg: 'You’re invited to {title}! RSVP here:', galAll: 'All', galGigs: 'Gigs', galEvents: 'Events', galEventTag: 'Event', noGalleryMatch: 'Nothing here yet.',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -367,6 +379,18 @@
       changesTitle: 'Cambios recientes', changesMore: 'Ver todos', changesEmpty: 'Todavía no hay cambios', changesLoading: 'Cargando…',
       changesGigEdited: '{who} editó {fields}', changesGigCreated: '{who} creó este evento', changesGigDeleted: '{who} eliminó este evento',
       whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
+      gkinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
+      groupEvents: 'Convivios del grupo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros: nunca en bfmh.dance ni en GroupMe. Comparte la invitación con quien quieras.',
+      newEvent: 'Nuevo convivio', newWhat: '¿Qué vas a agregar?', addGig: 'Un evento', addGigSub: 'Una presentación. Las familias marcan quién puede bailar.',
+      addEvent: 'Un convivio del grupo', addEventSub: 'Comida, posada o reunión, con confirmaciones y una invitación que cualquiera puede abrir.',
+      eventKind: 'Tipo de convivio', eventTitlePh: 'p. ej. Posada navideña', eventWhere: 'Dónde', eventWherePh: 'p. ej. Casa de la familia Ramirez',
+      eventDetails: 'Para saber', eventDetailsPh: 'Estacionamiento, qué ponerse, traer silla…', potluckToggle: 'Lista de comida: los invitados eligen qué llevar',
+      needEventDate: 'Ponle fecha al convivio.', modalNewEvent: 'Nuevo convivio', modalEditEvent: 'Editar convivio',
+      eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas', potluckShort: 'Comida {c}/{n}',
+      noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
+      shareEvent: 'Compartir invitación', copyEventLink: 'Copiar enlace de la invitación', editEvent: 'Editar convivio', deleteEvent: 'Eliminar convivio', eventMenu: 'Opciones del convivio',
+      deleteEventAsk: '¿Eliminar “{title}”? Se borran para todos sus confirmaciones, la lista de comida, las fotos y los videos. No se puede deshacer.',
+      eventShareMsg: '¡Te invitamos a {title}! Confirma aquí:', galAll: 'Todo', galGigs: 'Eventos', galEvents: 'Convivios', galEventTag: 'Convivio', noGalleryMatch: 'Nada por aquí todavía.',
     },
   };
   function t(key, vars) {
@@ -1033,12 +1057,14 @@
     function myAnswers(ev) { var out = {}; (ev.availability || []).forEach(function (a) { if (mine[a.dancer_id]) out[a.dancer_id] = a; }); return out; }
     var needs = [], upcoming = [], past = [];
     state.events.forEach(function (ev) {
+      if (isGathering(ev)) return;
       if (isPast(ev) || ev.status === 'done') { past.push(ev); return; }
       var ans = myAnswers(ev);
       if (ev.status === 'open' && me.dancers.some(function (d) { return !ans[d.id]; })) needs.push(ev); else upcoming.push(ev);
     });
 
     if (!me.dancers.length) app.appendChild(h('div', { class: 'card' }, h('p', { class: 'card-meta', text: t('addDancersFirst') })));
+    gatherSection(false);
     if (needs.length) {
       app.appendChild(section(t('needsAnswer'), needs.length));
       needs.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
@@ -1171,7 +1197,8 @@
     var inquiries = state.events.filter(function (e) { return e.status === 'inquiry'; });
     if (state.focusEvent) {
       var f = state.events.find(function (e) { return e.id === state.focusEvent; });
-      if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') { state.detail = f.id; state.focusEvent = null; } }
+      if (f && isGathering(f)) { state.tab = 'gigs'; state.focusEvent = null; if (!partyUI || partyUI.id !== f.id) openParty(f.id); }
+      else if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') { state.detail = f.id; state.focusEvent = null; } }
     }
     var listening = state.me.channels && state.me.channels.groupme_listen;
     tabsEl.hidden = false; tabsEl.innerHTML = '';
@@ -1190,7 +1217,8 @@
 
     fabRoot.innerHTML = '';
     if (state.tab === 'inbox' || state.tab === 'gigs') {
-      fabRoot.appendChild(h('button', { class: 'fab', 'aria-label': t('newGig'), onclick: function () { openEventModal(null); } }, icon('plus', 2.5)));
+      fabRoot.appendChild(h('button', { class: 'fab', 'aria-label': state.tab === 'gigs' ? t('newWhat') : t('newGig'),
+        onclick: function () { if (state.tab === 'gigs') newSomethingSheet(); else openEventModal(null); } }, icon('plus', 2.5)));
     }
 
     app.innerHTML = '';
@@ -1294,6 +1322,7 @@
     } else {
       app.appendChild(gigList(live));
     }
+    gatherSection(true);
     if (past.length) {
       var pastSec = section(t('past'), past.length);
       pastSec.className += ' tm-sec-fold';
@@ -1840,8 +1869,187 @@
     return det;
   }
 
+  /* ── group events (potlucks, posadas): RSVPs + potluck live in team/party.js ── */
+  var GKINDS = ['potluck', 'posada', 'party', 'practice', 'meeting', 'outing', 'fundraiser', 'other'];
+  function isGathering(ev) { return ev && ev.status === 'gathering'; }
+  function upcomingGatherings() {
+    return state.events.filter(function (e) { return isGathering(e) && !isPast(e); })
+      .sort(function (a, b) { return (a.event_date || '').localeCompare(b.event_date || '') || a.id - b.id; });
+  }
+  function pastGatherings() { return state.events.filter(function (e) { return isGathering(e) && isPast(e); }).sort(newestFirst); }
+  function gatherRow(ev) {
+    var p = ev.party || {}, owner = isOwner(), past = isPast(ev);
+    var when = [fmtTime(ev), ev.venue].filter(Boolean).join(' · ');
+    var mine = p.mine;
+    var side = owner || past
+      ? h('span', { class: 'evrow-count' }, h('b', { text: p.people || 0 }), h('span', { text: t('eventGoing', { n: '' }).trim() }))
+      : mine ? h('span', { class: 'evrow-me is-' + mine }, icon(mine, 3), t(mine === 'yes' ? 'youGoingShort' : mine === 'maybe' ? 'youMaybeShort' : 'youNoShort'))
+      : h('span', { class: 'evrow-cta', text: t('eventRsvp') });
+    var foot = [];
+    if (!owner && !past && p.people) foot.push(t('eventGoing', { n: p.people }));
+    if (ev.potluck && p.needed) foot.push(t('potluckShort', { c: p.claimed, n: p.needed }));
+    return h('button', { type: 'button', class: 'evrow' + (past ? ' is-past' : '') + (!owner && !past && !mine ? ' is-ask' : ''), id: 'event-' + ev.id,
+      'aria-label': evTitle(ev), onclick: function () { openParty(ev.id); } },
+      dateBox(ev),
+      h('span', { class: 'evrow-main' },
+        h('span', { class: 'evrow-kind', text: t('gkinds')[ev.event_type] || t('groupEvents') }),
+        h('b', { class: 'evrow-title', text: evTitle(ev) }),
+        when ? h('span', { class: 'evrow-meta', text: when }) : null,
+        foot.length ? h('span', { class: 'evrow-foot', text: foot.join(' · ') }) : null),
+      side,
+      h('span', { class: 'giggo' }, icon('chevron', 2.5)));
+  }
+  function gatherSection(withPast) {
+    var list = upcomingGatherings(), owner = isOwner();
+    if (!list.length && !owner) return;
+    app.appendChild(section(t('groupEvents'), list.length || null, owner
+      ? h('button', { type: 'button', class: 'btn btn-sm btn-icon btn-gold sec-add', 'aria-label': t('newEvent'), title: t('newEvent'),
+        onclick: function () { gatheringForm(null); } }, icon('plus', 2.5)) : null));
+    if (owner) app.appendChild(h('p', { class: 'tm-sub', text: t('groupEventsSub') }));
+    if (list.length) app.appendChild(h('div', { class: 'evlist' }, list.map(gatherRow)));
+    else app.appendChild(h('button', { type: 'button', class: 'evempty', onclick: function () { gatheringForm(null); } },
+      icon('plus', 2.2), h('span', { text: t('noEvents') }), h('b', { text: t('newEvent') })));
+    var past = withPast ? pastGatherings() : [];
+    if (past.length) {
+      var sec = section(t('pastEvents'), past.length);
+      sec.className += ' tm-sec-fold';
+      app.appendChild(h('details', { class: 'tm-fold' }, h('summary', { class: 'tm-fold-summary' }, sec), h('div', { class: 'evlist' }, past.map(gatherRow))));
+    }
+  }
+  function newSomethingSheet() {
+    actionSheet(t('newWhat'), [
+      { label: t('addGig'), icon: 'calendar', onclick: function () { openEventModal(null); } },
+      { label: t('addEvent'), icon: 'people', onclick: function () { gatheringForm(null); } },
+    ]);
+  }
+
+  function gatheringForm(ev, after) {
+    ev = ev || {};
+    var isNew = !ev.id;
+    var kind = ev.event_type && GKINDS.indexOf(ev.event_type) !== -1 ? ev.event_type : 'potluck';
+    var potluck = isNew ? true : !!ev.potluck;
+    var kinds = h('div', { class: 'frow gkinds', role: 'radiogroup', 'aria-label': t('eventKind') });
+    function paintKinds() {
+      kinds.innerHTML = '';
+      GKINDS.forEach(function (k) {
+        kinds.appendChild(h('button', { type: 'button', role: 'radio', 'aria-checked': kind === k ? 'true' : 'false', class: 'fchip' + (kind === k ? ' is-on' : ''),
+          text: t('gkinds')[k], onclick: function () { kind = k; if (isNew) setPotluck(k === 'potluck' || k === 'posada' || k === 'party'); paintKinds(); } }));
+      });
+    }
+    var potRow = h('button', { type: 'button', class: 'pop-toggle full', role: 'switch', onclick: function () { setPotluck(!potluck); } },
+      icon('people', 2.2), h('span', { class: 'site-label', text: t('potluckToggle') }), h('span', { class: 'switch' }));
+    function setPotluck(on) { potluck = on; potRow.classList.toggle('is-on', on); potRow.setAttribute('aria-checked', on ? 'true' : 'false'); }
+    setPotluck(potluck); paintKinds();
+    var err = h('p', { class: 'error' });
+    function done() { closeModal(); if (after) after(); }
+    var form = h('form', { class: 'form-grid', id: 'gathering-form', onsubmit: function (e) {
+      e.preventDefault(); err.textContent = '';
+      var fd = new FormData(form), body = { event_type: kind, potluck: potluck };
+      fd.forEach(function (v, k) { body[k] = v; });
+      if (!String(body.title || '').trim()) { err.textContent = t('needTitle'); return; }
+      if (!body.event_date) { err.textContent = t('needEventDate'); return; }
+      var req = isNew ? api('/api/events', { method: 'POST', body: Object.assign({ status: 'gathering' }, body) })
+        : api('/api/events/' + ev.id, { method: 'PATCH', body: body });
+      req.then(function (r) {
+        closeModal(); toast(t('saved'));
+        return refresh().then(function () { openParty(isNew ? r.id : ev.id); });
+      }).catch(function (x) { err.textContent = x.message; });
+    } },
+      field(t('title'), inp('title', ev, { placeholder: t('eventTitlePh'), required: true, maxlength: 300 }), true, true),
+      h('div', { class: 'f full gkinds-field' }, h('span', { class: 'f-label', text: t('eventKind') }), kinds),
+      field(t('dateLabel'), inp('event_date', ev, { type: 'date', required: true }), false, true),
+      field(t('startTime'), inp('start_time', ev, { placeholder: '4:00 PM' })),
+      field(t('endTime'), inp('end_time', ev, { placeholder: '9:00 PM' })),
+      field(t('eventWhere'), inp('venue', ev, { placeholder: t('eventWherePh') })),
+      field(t('city'), inp('city', ev, { placeholder: 'Hacienda Heights' })),
+      field(t('address'), inp('address', ev, {}), true),
+      field(t('eventDetails'), h('textarea', { name: 'details', text: ev.details || '', placeholder: t('eventDetailsPh') }), true),
+      potRow,
+      h('div', { class: 'full' }, err));
+    var foot = h('div', { class: 'foot-btns' },
+      h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'gathering-form', text: isNew ? t('create') : t('save') }),
+      h('button', { class: 'btn', type: 'button', text: t('cancel'), onclick: done }));
+    modal(isNew ? t('modalNewEvent') : t('modalEditEvent'), form, foot, { onclose: done });
+  }
+
+  var partyUI = null, partyLoad = null;
+  function loadPartyScript() {
+    if (window.BFMHParty) return Promise.resolve();
+    if (!partyLoad) {
+      partyLoad = new Promise(function (ok, fail) {
+        document.head.appendChild(h('link', { rel: 'stylesheet', href: '/team/party.css' }));
+        var js = h('script', { src: '/team/party.js' }); js.onload = ok; js.onerror = function () { partyLoad = null; fail(new Error('Could not load the event')); };
+        document.head.appendChild(js);
+      });
+    }
+    return partyLoad;
+  }
+  function inviteUrl(id, sig) { return location.origin + '/e/' + id + '/' + sig; }
+  function shareParty(ev, sig) {
+    var url = inviteUrl(ev.id, sig), text = t('eventShareMsg', { title: evTitle(ev) });
+    if (navigator.share) return navigator.share({ title: evTitle(ev), text: text, url: url }).catch(function () {});
+    return copyText(url);
+  }
+  function openParty(id) {
+    closeParty(true);
+    var ev = state.events.filter(function (e) { return e.id === id; })[0];
+    var body = h('div', { class: 'gal-body party-body' }, loader(t('loadingEvent')));
+    var menu = isOwner() ? h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('eventMenu'), onclick: function () { partyMenu(); } }, icon('more', 2)) : null;
+    var root = h('div', { class: 'gal party-layer', role: 'dialog', 'aria-modal': 'true' },
+      h('header', { class: 'gal-head' },
+        h('button', { type: 'button', class: 'btn btn-sm btn-icon', 'aria-label': t('close'), onclick: function () { closeParty(); } }, icon('back', 2.2)),
+        h('div', { class: 'gal-title' }, h('b', { text: ev ? evTitle(ev) : t('groupEvents') }), h('span', { class: 'card-meta', text: ev && ev.event_date ? fmtDate(ev.event_date) : '' })),
+        h('span', { class: 'lb-spacer' }), menu),
+      body);
+    partyUI = { id: id, root: root, ctl: null, dirty: false };
+    var mine = partyUI;
+    document.body.appendChild(root);
+    document.body.classList.add('has-gal');
+    try { history.pushState({ party: id }, ''); mine.pushed = true; } catch (e) {}
+    track('party', id);
+    loadPartyScript().then(function () {
+      if (partyUI !== mine) return;
+      body.innerHTML = '';
+      mine.ctl = window.BFMHParty.mount(body, { id: id, lang: state.lang, embedded: true, toast: toast,
+        onChange: function () { mine.dirty = true; },
+        onGallery: function (e) { openGallery(e.id); } });
+    }, function (e) { toast(e.message, true); closeParty(); });
+  }
+  function closeParty(silent) {
+    if (!partyUI) return;
+    var p = partyUI; partyUI = null;
+    p.root.remove();
+    if (!gal) document.body.classList.remove('has-gal');
+    if (p.pushed && !silent && history.state && history.state.party === p.id) history.back();
+    if (p.dirty) loadEvents().then(render).catch(function () {});
+  }
+  function partyMenu() {
+    var p = partyUI; if (!p) return;
+    var d = p.ctl && p.ctl.data();
+    var ev = (d && d.event) || state.events.filter(function (e) { return e.id === p.id; })[0];
+    if (!ev) return;
+    var sig = d && d.sig;
+    actionSheet(evTitle(ev), [
+      sig ? { label: t('shareEvent'), icon: 'share', onclick: function () { shareParty(ev, sig); } } : null,
+      sig && navigator.share ? { label: t('copyEventLink'), icon: 'link', onclick: function () { copyText(inviteUrl(ev.id, sig)); } } : null,
+      { label: t('editEvent'), icon: 'edit', onclick: function () {
+        var full = state.events.filter(function (e) { return e.id === ev.id; })[0] || ev;
+        closeParty(); gatheringForm(full, function () { openParty(ev.id); });
+      } },
+      ev.gallery_open || ev.media_count ? { label: t('gallery'), icon: 'image', onclick: function () { openGallery(ev.id); } } : null,
+      { label: t('deleteEvent'), icon: 'trash', cls: 'danger', onclick: function () {
+        confirmSheet(t('deleteEventAsk', { title: evTitle(ev) }), t('del'), true).then(function (yes) {
+          if (!yes) return;
+          api('/api/events/' + ev.id, { method: 'DELETE' }).then(function () { toast(t('deleted')); closeParty(); return refresh(); })
+            .catch(function (e) { toast(e.message, true); });
+        });
+      } },
+    ]);
+  }
+
   /* ── gallery & music ───────────────────────────────────── */
-  var media = { index: null, library: null, videos: null, loading: null, open: {}, danceSort: 'most', danceRegion: null };
+  var media = { index: null, library: null, videos: null, loading: null, open: {}, danceSort: 'most', danceRegion: null, galKind: 'all' };
+  try { var gk = localStorage.getItem('bfmh_team_gal_kind'); if (gk === 'gig' || gk === 'event') media.galKind = gk; } catch (e) {}
   try { if (localStorage.getItem('bfmh_team_dance_sort') === 'az') media.danceSort = 'az'; media.danceRegion = localStorage.getItem('bfmh_team_dance_region'); } catch (e) {}
   /* Videos are matched to a dance by title ("Jarabe Tapatío - Arcadia Elks 5/8/26"); aliases catch spellings in use. */
   var DANCES = [
@@ -1932,7 +2140,7 @@
   }
   function webToggle(it) { return setWebsite(it, isOwner() ? !it.website : !(it.website || it.suggested)); }
   function mediaWebAction(it) {
-    if (!it.can_edit || it.kind === 'audio' || (it.kind === 'photo' && !it.thumb)) return null;
+    if (!it.can_edit || it.noWeb || it.kind === 'audio' || (it.kind === 'photo' && !it.thumb)) return null;
     return { label: webLabel(it), icon: 'globe', onclick: function () { webToggle(it); } };
   }
   function webBadge(it) {
@@ -2019,6 +2227,7 @@
     if (!media.loading) {
       media.loading = Promise.all([api('/api/media'), api('/api/media?library=1'), api('/api/media?videos=1')]).then(function (r) {
         media.index = r[0]; media.library = r[1].songs; media.videos = r[2].videos; media.loading = null;
+        media.videos.forEach(function (v) { if (v.event_status === 'gathering') v.noWeb = true; });
       }, function (e) { media.loading = null; throw e; });
     }
     return media.loading;
@@ -2050,15 +2259,26 @@
     renderDances();
     renderMusic(idx.storage);
 
+    var galKind = media.galKind;
+    var hasEvents = idx.gigs.some(function (g) { return g.kind === 'event'; });
+    if (!hasEvents) galKind = 'all';
+    var galShown = galKind === 'all' ? idx.gigs : idx.gigs.filter(function (g) { return g.kind === galKind; });
+    var setGalKind = function (k) { media.galKind = k; try { localStorage.setItem('bfmh_team_gal_kind', k); } catch (e) {} render(); };
     foldSection('gigs', t('gigGalleries'), idx.gigs.length, true,
       isOwner() ? h('button', { type: 'button', class: 'btn btn-sm btn-icon btn-gold sec-add', 'aria-label': t('newFolder'), title: t('newFolder'),
         onclick: function (e) { e.preventDefault(); e.stopPropagation(); folderSheet(null); } }, icon('plus', 2.5)) : null,
+      hasEvents ? h('div', { class: 'frow gal-kinds' }, h('span', { class: 'flabel', text: t('showLabel') }),
+        chip(t('galAll'), galKind === 'all', function () { setGalKind('all'); }),
+        chip(t('galGigs'), galKind === 'gig', function () { setGalKind('gig'); }),
+        chip(t('galEvents'), galKind === 'event', function () { setGalKind('event'); })) : null,
       !idx.gigs.length ? emptyState('image', t('noGalleryGigs'))
-      : h('div', { class: 'galgrid' }, idx.gigs.map(function (g) {
+      : !galShown.length ? emptyState('image', t('noGalleryMatch'))
+      : h('div', { class: 'galgrid' }, galShown.map(function (g) {
         var counts = [g.photos ? plural(g.photos, 'photoOne', 'photoMany') : null, g.videos ? plural(g.videos, 'videoOne', 'videoMany') : null]
           .filter(Boolean).join(' · ');
         return h('button', { type: 'button', class: 'galcard', onclick: function () { openGallery(g.id); } },
-          h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? thumbImg(g.cover) : icon('image', 1.5)),
+          h('span', { class: 'galcard-cover' + (g.cover ? '' : ' is-empty') }, g.cover ? thumbImg(g.cover) : icon('image', 1.5),
+            g.kind === 'event' ? h('span', { class: 'galcard-tag', text: t('galEventTag') }) : null),
           h('span', { class: 'galcard-text' },
             h('b', { text: evTitle(g) }),
             g.event_date || g.status !== 'folder' ? h('span', { class: 'card-meta', text: g.event_date ? fmtDate(g.event_date) : t('dateTbd') }) : null,
@@ -2106,6 +2326,7 @@
     var who = whoOf(b);
     var songs = b.items.filter(function (i) { return i.kind === 'audio'; });
     var vis = b.items.filter(function (i) { return i.kind !== 'audio'; });
+    if (b.event && isGathering(b.event)) vis.forEach(function (i) { i.noWeb = true; });
     var viewable = vis.filter(function (i) { return i.kind !== 'link' || i.youtube; });
     var cut = vis.length > FEED_TILES ? FEED_TILES - 1 : FEED_TILES;
     var openFolder = b.event ? function () { openGallery(b.event.id); } : null;
@@ -2319,12 +2540,16 @@
     if (!gal) return;
     var g = gal; gal = null;
     g.root.remove();
-    document.body.classList.remove('has-gal');
+    if (!partyUI) document.body.classList.remove('has-gal');
     if (g.pushed && !silent && history.state && history.state.gal) history.back();
     if (media.index) loadMediaIndex().then(function () { if (isMediaTab()) render(); }).catch(function () {});
     if (g.dirty) loadEvents().then(render).catch(function () {});
   }
-  window.addEventListener('popstate', function () { if (gal) { gal.pushed = false; closeGallery(); } });
+  // The gallery can open over an event: Back closes only the top layer.
+  window.addEventListener('popstate', function () {
+    if (gal) { gal.pushed = false; closeGallery(); }
+    else if (partyUI && !(history.state && history.state.party === partyUI.id)) { partyUI.pushed = false; closeParty(); }
+  });
   function loadGallery() {
     var g = gal;
     if (g.dance) {
@@ -2353,6 +2578,7 @@
     if (!d) { root.appendChild(loader(t('mediaLoading'))); return; }
 
     var shown = d.items.filter(function (i) { return i.kind !== 'audio'; });
+    if (isGathering(d.event)) shown.forEach(function (i) { i.noWeb = true; });
     var body = h('div', { class: 'gal-body' });
     root.appendChild(body);
     var eid = gal.id;
@@ -3204,7 +3430,8 @@
       hasEvent: function (id) { return state.events.some(function (e) { return e.id === id; }); },
       openEvent: function (id) {
         var ev = state.events.find(function (e) { return e.id === id; }); if (!ev) return;
-        if (ev.status === 'inquiry') { state.tab = 'inbox'; state.focusEvent = id; render(); } else openDetail(id);
+        if (isGathering(ev)) openParty(id);
+        else if (ev.status === 'inquiry') { state.tab = 'inbox'; state.focusEvent = id; render(); } else openDetail(id);
       } };
     if (window.BFMHInsights) return window.BFMHInsights.render(root, ctx);
     root.appendChild(loader('Loading insights…'));

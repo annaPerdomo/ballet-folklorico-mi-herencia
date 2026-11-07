@@ -10,6 +10,7 @@ export function cleanPatch(body) {
     if (!(k in body)) continue;
     const v = body[k];
     if (k === 'dancers_needed') patch[k] = int(v);
+    else if (k === 'potluck') patch[k] = v === true || v === 'true' || v === 'on';
     else if (k === 'rehearsals') {
       const arr = Array.isArray(v) ? v : [];
       patch[k] = JSON.stringify(arr.slice(0, 30).map((r) => ({
@@ -54,7 +55,7 @@ export default route({
     }
     const me = await whoami(req);
     if (me.role === 'anon') throw httpError(401, 'Sign in required');
-    const events = await listEvents({ admin: me.role === 'admin', includePast: q.all === '1' });
+    const events = await listEvents({ admin: me.role === 'admin', includePast: q.all === '1', familyId: me.family ? me.family.id : null });
     // Families see how many dancers are still out, but never who they are.
     const [{ n }] = await sql('SELECT count(*)::int AS n FROM dancers WHERE active');
     ok(res, { events, roster: n });
@@ -66,11 +67,12 @@ export default route({
     if (!patch.title) throw httpError(400, 'Title is required');
     const cols = Object.keys(patch);
     const vals = Object.values(patch);
-    const status = ['inquiry', 'open', 'folder'].includes(body.status) ? body.status : 'inquiry';
+    const status = ['inquiry', 'open', 'folder', 'gathering'].includes(body.status) ? body.status : 'inquiry';
+    if (status === 'gathering' && !patch.event_date) throw httpError(400, 'Give the event a date');
     const row = await withSource(ownerTag(me), (q) => q(
       `INSERT INTO events (${cols.join(',')}, status, source, published_at, quiet)
        VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, CASE WHEN $${cols.length + 1} = 'folder' THEN 'folder' ELSE 'manual' END,
-               CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} IN ('open', 'folder')) RETURNING id`,
+               CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} IN ('open', 'folder', 'gathering')) RETURNING id`,
       [...vals, status]));
     ok(res, { id: row[0].id });
   },

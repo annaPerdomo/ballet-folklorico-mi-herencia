@@ -22,6 +22,11 @@ async function ownRow(id, me) {
   return row;
 }
 
+// A group event's photos are the group's own: they never go up on bfmh.dance.
+const shareable = (ev) => Boolean(ev) && ev.status !== 'gathering';
+// The gallery's Gigs | Events filter; folders and old "Group gathering" gigs count as events.
+const KIND_SQL = `CASE WHEN e.status IN ('gathering', 'folder') OR e.event_type = 'team' THEN 'event' ELSE 'gig' END`;
+
 const uploaderOf = (me) => (me.family ? me.family.name : 'owners');
 // Owners' rows stay owner-only: /familia is open, so a family id would let anyone edit them.
 const familyOf = (me) => (me.role === 'admin' ? null : me.family.id);
@@ -115,7 +120,7 @@ export default route({
         WHERE m.kind IN ('video','link') AND m.ready AND e.status = ANY($1)
         ORDER BY e.event_date DESC NULLS LAST, e.id, ${FEATURED_FIRST}, m.created_at, m.id`, [GALLERY_VISIBLE]);
       const videos = rows.filter((r) => me.role === 'admin' || galleryOpen(r))
-        .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date }));
+        .map((r) => ({ ...toItem(r, me), event_title: r.event_title, event_type: r.event_type, event_date: r.event_date, event_status: r.status }));
       return ok(res, { ...base, videos });
     }
 
@@ -129,7 +134,7 @@ export default route({
     }
 
     const gigs = await sql(`
-      SELECT e.id, e.title, e.event_type, e.event_date, e.start_time, e.call_time, e.status, e.venue, e.city,
+      SELECT e.id, e.title, e.event_type, e.event_date, e.start_time, e.call_time, e.status, e.venue, e.city, ${KIND_SQL} AS kind,
         count(m.id) FILTER (WHERE m.kind = 'photo')::int AS photos,
         count(m.id) FILTER (WHERE m.kind IN ('video','link'))::int AS videos,
         (SELECT json_agg(x) FROM (SELECT c.kind, c.thumb_key, c.url FROM media c
@@ -161,8 +166,8 @@ export default route({
           : `Files like this can be up to ${Math.round(LIMITS[kind] / 1048576)} MB`);
       }
       const eventId = kind === 'audio' ? null : int(b.event_id);
-      if (eventId) await visibleEvent(eventId, me);
-      else if (kind !== 'audio') throw httpError(400, 'Photos and videos belong to a gig');
+      const ev = eventId ? await visibleEvent(eventId, me) : null;
+      if (!ev && kind !== 'audio') throw httpError(400, 'Photos and videos belong to a gig');
       if (!storageReady()) throw httpError(503, 'Media storage is not set up yet');
       const thumbSize = kind === 'photo' && b.thumb ? int(b.thumb_size) || 0 : 0;
       if (kind === 'photo' && b.thumb && (thumbSize <= 0 || thumbSize > THUMB_MAX)) throw httpError(400, 'Bad thumbnail');
@@ -175,7 +180,7 @@ export default route({
       const key = `${stem}.${extOf(b.name, type)}`;
       const thumbKey = thumbSize ? `${stem}-t.jpg` : null;
       const title = str(b.title, 200) || (kind === 'audio' ? str(String(b.name || '').replace(/\.[^.]+$/, ''), 200) : null);
-      const flags = websiteFlags(me, b.website, Boolean(eventId) && canPublish(kind, thumbKey));
+      const flags = websiteFlags(me, b.website, shareable(ev) && canPublish(kind, thumbKey));
       const row = await one(`INSERT INTO media (event_id, kind, title, note, storage_key, thumb_key, mime, bytes, thumb_bytes, width, height,
           family_id, uploader, website, suggested, credit)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING id`,
@@ -211,12 +216,12 @@ export default route({
     if (b.action === 'link') {
       const eventId = int(b.event_id);
       if (!eventId) throw httpError(400, 'Links belong to a gig');
-      await visibleEvent(eventId, me);
+      const ev = await visibleEvent(eventId, me);
       const url = safeLink(b.url);
       if (!url) throw httpError(400, 'Paste a full https:// link');
       if (isPlaylist(url)) throw httpError(400, 'Add the videos one at a time — playlists don’t show in the gallery');
       const title = str(b.title, 200) || (youtubeId(url) ? await youtubeTitle(youtubeId(url)) : new URL(url).hostname.replace(/^www\./, ''));
-      const flags = websiteFlags(me, b.website, true);
+      const flags = websiteFlags(me, b.website, shareable(ev));
       const row = await one(`INSERT INTO media (event_id, kind, title, url, family_id, uploader, ready, website, suggested, credit)
         VALUES ($1, 'link', $2, $3, $4, $5, true, $6, $7, $8) RETURNING *`,
         [eventId, title, url, familyOf(me), uploaderOf(me),
@@ -250,7 +255,8 @@ export default route({
     const b = await readJson(req);
     let { website, suggested } = row;
     if ('website' in b) {
-      const allowed = Boolean(row.event_id) && canPublish(row.kind, row.thumb_key);
+      const ev = row.event_id && await one('SELECT status FROM events WHERE id = $1', [row.event_id]);
+      const allowed = shareable(ev) && canPublish(row.kind, row.thumb_key);
       if (me.role === 'admin') ({ website, suggested } = websiteFlags(me, b.website, allowed));
       else if (b.website === true) suggested = allowed;
       else { website = false; suggested = false; }
