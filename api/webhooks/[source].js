@@ -2,34 +2,11 @@ import { route, readJson, ok, bad, query, str } from '../_lib/http.js';
 import { sql } from '../_lib/db.js';
 import { recordInquiry } from '../_lib/inquiry.js';
 import { ingestMessage, recordIngest } from '../_lib/groupme-ingest.js';
-import { safeEqual, calendarSig } from '../_lib/auth.js';
-import { postGroupMe, fmtDate, siteUrl } from '../_lib/notify.js';
+import { safeEqual } from '../_lib/auth.js';
 
 /* Both webhooks share one function to stay under the 12-function limit on the Hobby plan; the
    public URLs are unchanged. GroupMe's bot callback must stay
    <SITE_URL>/api/webhooks/groupme?secret=<GROUPME_WEBHOOK_SECRET>; GroupMe retries on non-2xx. */
-
-const GROUPME_MAX = 990;
-const MARK = { yes: '✓', maybe: '?', no: '✗' };
-const short = (d) => fmtDate(d).replace(/, \d{4}$/, '');
-
-// Short on purpose: it lands in a busy parent chat. Only answers that changed something are echoed.
-function ackText(updates) {
-  const byEvent = new Map();
-  for (const u of updates) {
-    const k = u.event.id;
-    if (!byEvent.has(k)) byEvent.set(k, { event: u.event, parts: [] });
-    byEvent.get(k).parts.push(`${u.dancer.name.split(' ')[0]} ${MARK[u.status]}`);
-  }
-  const events = [...byEvent.values()].sort((a, b) => String(a.event.event_date).localeCompare(String(b.event.event_date)));
-  const lines = events.map(({ event, parts }) => `${event.event_date ? short(event.event_date) : event.title}: ${[...new Set(parts)].join(' · ')}`);
-  // The bare /team/ is the owners' password page; families need the gig's own signed link.
-  const links = events.map(({ event }) => `${siteUrl()}/team/?e=${event.id}&s=${calendarSig(event.id)}`);
-  const head = `🤖 Noted / Anotado:\n${lines.join('\n')}\nChange / cambiar: `;
-  let change = links.join(' · ');
-  for (let n = links.length; n > 1 && (head + change).length > GROUPME_MAX; n--) change = `${links.slice(0, n - 1).join(' · ')} · …`;
-  return head + change;
-}
 
 // Formspree's body is { form, submission: { _id, ...fields } } on some plans and flat on others.
 async function formspree(req, res) {
@@ -59,16 +36,16 @@ async function groupme(req, res) {
     [messageId, str(m.group_id, 40), str(m.user_id, 40), str(m.name, 120), text]);
   if (!claimed.length) return ok(res, { ignored: 'duplicate' });
 
-  let applied = false, changed = [], result, eventId = null;
+  // Answers are recorded silently: a reply in the chat would notify the whole group.
+  let applied = false, result, eventId = null;
   try {
-    ({ applied, changed, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null, messageId: claimed[0].id }));
+    ({ applied, result, eventId } = await ingestMessage({ text, senderName: m.name, senderUserId: m.user_id, sentAt: m.created_at ? new Date(m.created_at * 1000) : null, messageId: claimed[0].id }));
   } catch (err) {
     console.error('groupme ingest', err);
     result = { reason: 'error', error: String(err.message || err) };
   }
   await recordIngest(claimed[0].id, { applied, result, eventId });
 
-  if (changed.length && process.env.GROUPME_BOT_ACK !== '0') await postGroupMe(ackText(changed));
   ok(res, { applied, ...result });
 }
 

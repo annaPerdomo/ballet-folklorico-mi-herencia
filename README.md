@@ -93,13 +93,13 @@ served as-is (no build step runs on Vercel).
 
 Private page for the owners and the dancer families. Replaces the "who is available?" GroupMe thread.
 
-**Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question in the group and reads the replies) or, for a gig with no date yet, **Post to team** (publishes it and announces it in the group) → families answer in the chat or open their personal link and tap Yes / Maybe / No per dancer → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
+**Flow:** website form → `events` row (status `inquiry`) → owner taps **Ask GroupMe who's available** (one tap; the bot posts the question with the RSVP link, and still reads any replies typed in the chat) or, for a gig with no date yet, **Post to team** (publishes it and announces it in the group) → families open the RSVP link and tap Yes / Maybe / No per dancer (answers typed in the chat still count) → owner sees the roster, sends a reminder to non-responders, adds rehearsals, and clicks **Confirm** → everyone sees the confirmed details in the same place.
 
 **Everything is posted from the site.** There is no copy-and-paste path any more: each button below is one `PATCH /api/events/:id` and La Chona says it in the group. Her posts are English (one message for everyone) with bilingual tap lines; the wording lives in `api/_lib/notify.js`.
 
 | Button | Action | What lands in GroupMe |
 | --- | --- | --- |
-| Ask GroupMe who's available | `ask` | `📢 New gig request received! Who can join us for this one?` + gig, date · time, ⏰ call time, 📍 venue + street address + city with a 🗺 Google Maps link, a sample reply, the signed gig link, and a 📅 add-to-calendar link that opens the Apple / Google / Outlook chooser |
+| Ask GroupMe who's available | `ask` | `📢 New gig request received! Who can join us for this one?` + gig, date · time, ⏰ call time, 📍 venue + street address + city with a 🗺 Google Maps link, then the signed gig link to RSVP — nothing about answering in the chat |
 | Post the announcement | `announce` | `📣 New gig: are you available?` + the full summary, calendar link, and "Mark your availability" link |
 | Post tally to GroupMe | `tally` | `📊 <gig> — <date>` then ✓ / ? / ✗ names and "Waiting on: …" |
 | Send reminder | `remind` | `⏰ Reminder — <gig> on <date>. Still need an answer from: <names>.` + link |
@@ -117,10 +117,10 @@ Wed, Nov 4 · 7:00 PM–7:30 PM
 📍 Grand Ballroom, 123 Main St, West Covina
 🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%20123%20Main%20St%2C%20West%20Covina
 
-Reply "Sofia yes for Nov 4" or "we can't".
-Or tap / O toca: https://bfmh.dance/team/?e=42&s=…
-📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1
+👉 RSVP: https://bfmh.dance/team/?e=42&s=…
 ```
+
+Families who type an answer in the chat anyway are still read and marked, but La Chona never replies — a bot post notifies the whole group. Check the La Chona tab's activity and fix anything in the gig roster.
 
 The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners can see what the group will get before they tap.
 
@@ -162,7 +162,7 @@ The **La Chona** tab in `/team/` shows all five messages verbatim, so the owners
 | `SITE_URL` | no | Defaults to `https://bfmh.dance`; used in links inside notifications. |
 | `GROUPME_BOT_ID` | **yes, in practice** | Create a bot at https://dev.groupme.com/bots for the team group. Every message the app sends goes out as La Chona; without it the buttons report "La Chona is not connected" and nothing reaches the chat. |
 | `GROUPME_WEBHOOK_SECRET` | no | Turns on the **GroupMe reader** (below). Any random string; the bot's callback URL must include it. |
-| `GROUPME_GROUP_ID`, `GROUPME_BOT_ACK` | no | Reader options: only accept messages from this group id; set `GROUPME_BOT_ACK=0` to stop the "🤖 Noted…" replies. |
+| `GROUPME_GROUP_ID` | no | Reader option: only accept messages from this group id. The reader never replies in the chat. |
 | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | for the Gallery | Cloudflare R2 bucket that holds gig photos, clips and music (setup below). Without them the Gallery tab says storage isn't set up. |
 | `MEDIA_QUOTA_GB` | no | Uploads stop at this many GB (default 9) so the bucket stays inside R2's 10 GB free tier. |
 | `FORMSPREE_WEBHOOK_SECRET` | no | If you enable the Formspree webhook plugin, point it at `/api/webhooks/formspree?secret=<value>`. |
@@ -179,7 +179,7 @@ and their history.
 
 **GroupMe reader (the bot reads the chat and fills in availability)**
 
-Families keep answering in the group chat the way they always have; the bot turns those replies into Yes / Maybe / No per dancer.
+Families RSVP through the link in the ask, but anyone who types an answer in the group chat is still counted: the bot quietly turns those replies into Yes / Maybe / No per dancer, never posting back.
 
 1. Create the bot at https://dev.groupme.com/bots in the team group. Copy its **Bot ID** into `GROUPME_BOT_ID`.
 2. Pick a random string for `GROUPME_WEBHOOK_SECRET` and set the bot's **Callback URL** to

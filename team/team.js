@@ -72,7 +72,7 @@
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
-      askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — replies will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
+      askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — RSVPs will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
       postToTeam: 'Post to team', addQuietly: 'Add to Gigs without posting', addQuietlyNew: 'Add straight to Gigs — no GroupMe post', confirmPost: 'Post the confirmation to GroupMe', edit: 'Edit', decline: 'Decline', lapse: 'No reply — didn’t happen', reopen: 'Reopen as inquiry', del: 'Delete',
       mergeIntoGig: 'This became a gig…', mergePick: 'Which gig did this inquiry become?', mergeSub: 'Its contact info and message move onto the gig.',
@@ -107,9 +107,9 @@
       postFailed: 'GroupMe did not take the message — try again',
       guideWho: 'La Chona sits in the GroupMe chat, reads what the families write, and marks the roster for you — so nobody counts yeses by hand at midnight.',
       guideSteps: 'What she does',
-      guideStep1: 'You tap **Ask GroupMe** on a gig. She posts the date, the place, and an example reply — you never copy or paste anything.',
-      guideStep2: 'Families answer however they like — in the chat, or by tapping her link.',
-      guideStep3: 'She marks the roster and replies **🤖 Noted:** so everyone can see she caught it.',
+      guideStep1: 'You tap **Ask GroupMe** on a gig. She posts the date, the place, and the link to RSVP — you never copy or paste anything.',
+      guideStep2: 'Families RSVP by tapping her link. If someone types an answer in the chat anyway, she still marks it.',
+      guideStep3: 'She never replies in the chat, so nobody’s phone buzzes for it. Her activity below shows everything she marked.',
       guideStep4: 'Anything she couldn’t read lands below, with a button to set her straight.',
       guidePosts: 'What she posts',
       guidePostsSub: 'Word for word, this is what the group sees. Every one of these is one button on a gig — the caption is the button you tap.',
@@ -241,7 +241,7 @@
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
-      askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las respuestas llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
+      askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las confirmaciones llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
       postToTeam: 'Publicar al equipo', addQuietly: 'Agregar a Eventos sin publicar', addQuietlyNew: 'Agregar directo a Eventos — sin publicar en GroupMe', confirmPost: 'Publicar la confirmación en GroupMe', edit: 'Editar', decline: 'Rechazar', lapse: 'Sin respuesta — no se hizo', reopen: 'Reabrir como solicitud', del: 'Eliminar',
       mergeIntoGig: 'Esto se volvió un evento…', mergePick: '¿En qué evento se convirtió esta solicitud?', mergeSub: 'Sus datos de contacto y su mensaje pasan al evento.',
@@ -276,9 +276,9 @@
       postFailed: 'GroupMe no aceptó el mensaje — inténtalo de nuevo',
       guideWho: 'La Chona está en el chat de GroupMe, lee lo que escriben las familias y marca la lista por ti — para que nadie ande contando los “sí” a medianoche.',
       guideSteps: 'Qué hace',
-      guideStep1: 'Tocas **Preguntar en GroupMe** en un evento. Ella publica la fecha, el lugar y un ejemplo de respuesta — tú no copias ni pegas nada.',
-      guideStep2: 'Las familias responden como quieran — en el chat o tocando su enlace.',
-      guideStep3: 'Marca la lista y responde **🤖 Anotado:** para que todos vean que sí entendió.',
+      guideStep1: 'Tocas **Preguntar en GroupMe** en un evento. Ella publica la fecha, el lugar y el enlace para confirmar — tú no copias ni pegas nada.',
+      guideStep2: 'Las familias confirman tocando su enlace. Si alguien escribe su respuesta en el chat, igual la marca.',
+      guideStep3: 'Nunca responde en el chat, así que a nadie le suena el teléfono por eso. Su actividad abajo muestra todo lo que marcó.',
       guideStep4: 'Lo que no pudo leer aparece abajo, con un botón para corregirla.',
       guidePosts: 'Qué publica',
       guidePostsSub: 'Palabra por palabra, esto es lo que ve el grupo. Cada uno es un botón del evento — el título es el botón que tocas.',
@@ -2924,9 +2924,7 @@
       '📍 Grand Ballroom, 1200 E Garvey Ave, West Covina',
       '🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%201200%20E%20Garvey%20Ave%2C%20West%20Covina',
       '',
-      'Reply "Sofia yes for Nov 4" or "we can\'t".',
-      'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
-      '📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1',
+      '👉 RSVP: https://bfmh.dance/team/?e=42&s=…',
     ]],
     ['postAnnouncement', [
       '📣 New gig: are you available?',
@@ -2957,9 +2955,7 @@
       '📍 Grand Ballroom, 1200 E Garvey Ave, West Covina',
       '🗺 https://www.google.com/maps/search/?api=1&query=Grand%20Ballroom%2C%201200%20E%20Garvey%20Ave%2C%20West%20Covina',
       '',
-      'Reply "Sofia yes for Nov 4" or "we can\'t".',
-      'Or tap / O toca: https://bfmh.dance/team/?e=42&s=…',
-      '📅 Add to my calendar / Agregar a mi calendario: https://bfmh.dance/team/?e=42&s=…&cal=1',
+      '👉 RSVP: https://bfmh.dance/team/?e=42&s=…',
     ]],
     ['postConfirmation', [
       '✅ CONFIRMED: Quinceañera — Ramirez — Wed, Nov 4, 2026',
@@ -3009,8 +3005,6 @@
     if (!posting) app.appendChild(h('p', { class: 'tm-sub', text: t('groupmeOff') }));
     if (!listening) app.appendChild(h('p', { class: 'tm-sub', text: t('botSubOff') }));
 
-    renderBotLog(listening);
-
     var steps = h('ol', { class: 'guide-steps' },
       [t('guideStep1'), t('guideStep2'), t('guideStep3'), t('guideStep4')].map(function (x) { return h('li', {}, rich(x)); }));
 
@@ -3036,21 +3030,26 @@
       h('span', { class: 'tm-label', text: t('guideMisses') }), misses,
       h('p', { class: 'hint', text: t('guideNeedDate') }),
       h('p', { class: 'guide-fix', text: t('guideFix') }));
-    var sec = section(t('guideFold')); sec.className += ' tm-sec-fold';
-    var det = h('details', { class: 'tm-fold', ontoggle: function () { botUI.guideOpen = det.open; } },
-      h('summary', { class: 'tm-fold-summary' }, sec), guide);
-    det.open = botUI.guideOpen;
-    app.appendChild(det);
+    app.appendChild(chonaFold(t('guideFold'), 'guideOpen', guide));
+    app.appendChild(chonaFold(t('botHeard'), 'logOpen', renderBotLog(listening)));
   }
 
-  var botUI = { filter: 'changes', guideOpen: false, shown: 25, expanded: {} };
+  function chonaFold(title, key, body) {
+    var sec = section(title); sec.className += ' tm-sec-fold';
+    var det = h('details', { class: 'tm-fold', ontoggle: function () { botUI[key] = det.open; } },
+      h('summary', { class: 'tm-fold-summary' }, sec), body);
+    det.open = botUI[key];
+    return det;
+  }
+
+  var botUI = { filter: 'changes', guideOpen: false, logOpen: true, shown: 25, expanded: {} };
   function botNeedsLook(m) { var r = m.result || {}; return !m.applied && !!r.intent && !!m.user_id; }
   function renderBotLog(listening) {
-    app.appendChild(section(t('botHeard')));
-    if (!listening) return;
+    var wrap = h('div', {});
+    if (!listening) return wrap;
     var bar = h('div', { class: 'frow logfilter' });
     var box = h('div', { class: 'log' });
-    app.appendChild(bar); app.appendChild(box);
+    wrap.appendChild(bar); wrap.appendChild(box);
     function setFilter(f) { botUI.filter = f; botUI.shown = 25; fill(); }
     function fill() {
       bar.innerHTML = ''; box.innerHTML = '';
@@ -3068,6 +3067,7 @@
         h('button', { class: 'btn btn-sm', text: t('logShowMore'), onclick: function () { botUI.shown += 25; fill(); } })));
     }
     if (state.botLog === null) loadBotLog().then(fill); else fill();
+    return wrap;
   }
   function botLogRow(m) {
     var r = m.result || {};

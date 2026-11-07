@@ -13,7 +13,8 @@ test('the ask blast carries the call time, the full address and a map link', () 
   assert.match(text, /📍 Grand Ballroom, 123 Main St, West Covina/);
   assert.match(text, /🗺 https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=Grand%20Ballroom%2C%20123%20Main%20St%2C%20West%20Covina/);
   assert.match(text, /Sat, Oct 24 · 6:00 PM–7:30 PM/);
-  assert.match(text, /Reply "Sofia yes for Oct 24" or "we can't"\./, 'the sample reply the parser understands is unchanged');
+  assert.match(text, /\n👉 RSVP: https:\/\/bfmh\.dance\/team\/\?e=5&s=[^\s]+$/, 'ends on the RSVP link');
+  assert.doesNotMatch(text, /Reply|calendar/i, 'no chat-reply instructions or extra links');
   assert.ok(text.length < 990, 'fits in one GroupMe post');
 });
 

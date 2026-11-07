@@ -77,13 +77,10 @@ export function isRepeatAsk(ev) {
   return ev.ask_count > 0 || (ev.status !== 'inquiry' && !ev.quiet);
 }
 
-// The sample reply must stay in a shape api/_lib/groupme-parse.js understands.
 export function askText(ev, { again = false, now } = {}) {
   const when = ev.event_date ? shortDate(ev.event_date) : (ev.date_text || 'date TBD');
   const where = eventWhere(ev);
   const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
-  const d = ev.event_date ? shortDate(ev.event_date).replace(/^\w+, /, '') : 'that day';
-  const cal = calLink(ev);
   return [
     again ? reminderHead(ev, now) : '📢 New gig request received! Who can join us for this one?',
     ev.title || ev.event_type || 'Performance',
@@ -92,9 +89,7 @@ export function askText(ev, { again = false, now } = {}) {
     where ? `📍 ${where}` : null,
     where ? `🗺 ${mapLink(ev)}` : null,
     '',
-    `Reply "Sofia yes for ${d}" or "we can't".`,
-    `Or tap / O toca: ${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}`,
-    cal ? `${CAL_LABEL}: ${cal}` : null,
+    `👉 RSVP: ${siteUrl()}/team/?e=${ev.id}&s=${calendarSig(ev.id)}`,
   ].filter((l) => l !== null).join('\n');
 }
 
