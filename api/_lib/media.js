@@ -1,5 +1,6 @@
 import { sql } from './db.js';
 import { signedUrl, removeObject, storageReady } from './storage.js';
+import { ADMIN_NAME } from './auth.js';
 
 const MB = 1024 * 1024;
 // Clips only: full performances go on YouTube so they don't eat the free tier.
@@ -7,8 +8,7 @@ export const LIMITS = { photo: 25 * MB, video: 150 * MB, audio: 60 * MB };
 export const THUMB_MAX = MB;
 export const TYPES = { photo: /^image\//, video: /^video\//, audio: /^audio\// };
 
-// Only Anna holds INSIGHTS_PASSWORD.
-export const ADMIN_CREDIT = 'Anna Mendez Perdomo';
+export const ADMIN_CREDIT = ADMIN_NAME;
 export const creditOf = (me) => (me.role === 'admin' && me.insights ? ADMIN_CREDIT : null);
 
 // Anna's tripod recordings lead a gig's videos; photos keep upload order.

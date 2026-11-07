@@ -2,7 +2,7 @@ import { route, ok, query, int, readJson, httpError } from './_lib/http.js';
 import { one } from './_lib/db.js';
 import { ingestMessage, recordIngest } from './_lib/groupme-ingest.js';
 import { undoMessage, undoableSql } from './_lib/groupme-undo.js';
-import { requireAdmin } from './_lib/auth.js';
+import { requireAdmin, actorOf } from './_lib/auth.js';
 import { sql } from './_lib/db.js';
 
 export default route({
@@ -17,10 +17,10 @@ export default route({
     ok(res, { messages });
   },
   async POST(req, res) {
-    await requireAdmin(req);
+    const me = await requireAdmin(req);
     const b = await readJson(req);
     if (b.action === 'undo') {
-      const result = await undoMessage(int(b.id));
+      const result = await undoMessage(int(b.id), actorOf(me));
       return ok(res, result);
     }
     const row = await one('SELECT * FROM groupme_messages WHERE id = $1', [int(b.id)]);

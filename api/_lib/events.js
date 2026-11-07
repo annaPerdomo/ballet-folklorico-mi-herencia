@@ -65,21 +65,21 @@ export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'star
   'address', 'city', 'client_name', 'client_email', 'client_phone', 'message', 'dancers_needed', 'pay', 'notes',
   'details', 'rehearsals'];
 
-export async function updateEvent(id, patch) {
+export async function updateEvent(id, patch, tag = { source: 'owner', actor: 'owner' }) {
   const sets = []; const params = [id];
   for (const [k, v] of Object.entries(patch)) {
     params.push(v); sets.push(`${k} = $${params.length}`);
   }
   sets.push('updated_at = now()');
-  const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+  const rows = await withSource(tag, (q) =>
     q(`UPDATE events SET ${sets.join(', ')} WHERE id = $1 AND status <> 'deleted' RETURNING id`, params));
   return rows[0] || null;
 }
 
 // Soft, so website inquiries stay countable. Media goes in this transaction so the
 // cover_media_id SET NULL cascade is tagged too.
-export async function deleteEvent(id) {
-  return withSource({ source: 'owner', actor: 'owner' }, async (q) => {
+export async function deleteEvent(id, tag = { source: 'owner', actor: 'owner' }) {
+  return withSource(tag, async (q) => {
     const files = await takeEventMedia(id, q);
     await q(`UPDATE events SET status = 'deleted', deleted_at = now(), updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id]);
     return files;
@@ -91,13 +91,13 @@ export const MERGE_TARGETS = ['open', 'confirmed', 'done', 'cancelled'];
 const FILL = ['client_name', 'client_email', 'client_phone', 'message', 'event_type', 'event_date', 'date_text', 'venue', 'address', 'city', 'raw'];
 
 // An owner answered the inquiry by email and made the gig by hand, so the two rows tell one story.
-export async function mergeInquiry(fromId, intoId) {
+export async function mergeInquiry(fromId, intoId, actor = 'owner') {
   await ensureSchema();
   const client = await getPool().connect();
   try {
     await client.query('BEGIN');
     const q = async (text, params) => (await client.query(text, params)).rows;
-    await tagSource(q, { source: 'merge', actor: 'owner' });
+    await tagSource(q, { source: 'merge', actor });
     const { rows } = await client.query('SELECT * FROM events WHERE id = ANY($1) ORDER BY id FOR UPDATE', [[fromId, intoId]]);
     const from = rows.find((r) => r.id === fromId);
     const into = rows.find((r) => r.id === intoId);

@@ -1,5 +1,5 @@
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
-import { whoami, requireAdmin, verifySheetSig } from './_lib/auth.js';
+import { whoami, requireAdmin, verifySheetSig, ownerTag } from './_lib/auth.js';
 import { sql, withSource } from './_lib/db.js';
 import { listEvents, EDITABLE } from './_lib/events.js';
 import { renderSheet } from './_lib/sheet.js';
@@ -60,14 +60,14 @@ export default route({
     ok(res, { events, roster: n });
   },
   async POST(req, res) {
-    await requireAdmin(req);
+    const me = await requireAdmin(req);
     const body = await readJson(req);
     const patch = cleanPatch(body);
     if (!patch.title) throw httpError(400, 'Title is required');
     const cols = Object.keys(patch);
     const vals = Object.values(patch);
     const status = ['inquiry', 'open', 'folder'].includes(body.status) ? body.status : 'inquiry';
-    const row = await withSource({ source: 'owner', actor: 'owner' }, (q) => q(
+    const row = await withSource(ownerTag(me), (q) => q(
       `INSERT INTO events (${cols.join(',')}, status, source, published_at, quiet)
        VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, CASE WHEN $${cols.length + 1} = 'folder' THEN 'folder' ELSE 'manual' END,
                CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} IN ('open', 'folder')) RETURNING id`,

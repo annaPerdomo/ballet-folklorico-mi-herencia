@@ -1,5 +1,5 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
-import { whoami, requireAdmin, calendarSig } from '../_lib/auth.js';
+import { whoami, requireAdmin, calendarSig, ownerTag, actorOf } from '../_lib/auth.js';
 import { withSource } from '../_lib/db.js';
 import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
 import { eventChanges } from '../_lib/history.js';
@@ -20,14 +20,14 @@ const TRANSITIONS = {
 // Signed, so tapping it out of GroupMe reaches the gig and the picker with no password.
 function teamLink(id) { return `${siteUrl()}/team/?e=${id}&s=${calendarSig(id)}`; }
 
-async function notifyPublish(ev) {
+async function notifyPublish(ev, tag) {
   const cal = calLink(ev);
   const text = `📣 New gig: are you available?\n${eventSummary(ev)}` +
     (cal ? `\n\n${CAL_LABEL}:\n${cal}` : '') +
     `\n\nMark your availability: ${teamLink(ev.id)}`;
   const posted = await postGroupMe(text);
   // Counts as an ask, so the UI offers Remind next and a later ask isn't posted as new.
-  if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+  if (posted) await withSource(tag, (q) =>
     q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]));
   return { groupme: posted };
 }
@@ -77,7 +77,7 @@ export default route({
     ok(res, { event: ev, roster });
   },
   async PATCH(req, res) {
-    await requireAdmin(req);
+    const me = await requireAdmin(req);
     const id = int(query(req).id);
     const body = await readJson(req);
     const current = await getEvent(id, { admin: true });
@@ -87,13 +87,13 @@ export default route({
     if (body.action === 'merge') {
       const into = int(body.into);
       if (!into) throw httpError(400, 'Pick a gig to merge into');
-      await mergeInquiry(id, into);
+      await mergeInquiry(id, into, actorOf(me));
       return ok(res, { event: await getEvent(into, { admin: true }), roster: await rosterFor(into), notified: null });
     }
 
     const patch = cleanPatch(body);
-    if (Object.keys(patch).length) await updateEvent(id, patch);
-    if (typeof body.website === 'boolean') await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+    if (Object.keys(patch).length) await updateEvent(id, patch, ownerTag(me));
+    if (typeof body.website === 'boolean') await withSource(ownerTag(me), (q) =>
       q('UPDATE events SET website = $2, updated_at = now() WHERE id = $1', [id, body.website]));
 
     let notified = null;
@@ -102,22 +102,22 @@ export default route({
     if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));
-      if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
       notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
-      if (current.status === 'inquiry') await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      if (current.status === 'inquiry') await withSource(ownerTag(me), (q) =>
         q(`UPDATE events SET status = 'open', published_at = COALESCE(published_at, now()), updated_at = now() WHERE id = $1`, [id]));
       const text = askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) });
       const posted = await postGroupMe(text);
-      if (posted) await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
       notified = { groupme: posted };
     } else if (action === 'announce') {
       if (!['open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot announce an event that is ${current.status}`);
-      notified = await notifyPublish(await getEvent(id, { admin: true }));
+      notified = await notifyPublish(await getEvent(id, { admin: true }), ownerTag(me));
     } else if (action === 'reconfirm') {
       if (current.status !== 'confirmed') throw httpError(400, `Cannot re-post the confirmation for an event that is ${current.status}`);
       notified = await notifyConfirm(await getEvent(id, { admin: true }));
@@ -130,11 +130,11 @@ export default route({
       if (!t.from.includes(current.status) && current.status !== t.to) throw httpError(400, `Cannot ${action} an event that is ${current.status}`);
       const stamp = t.to === 'open' ? 'published_at = COALESCE(published_at, now()),' : t.to === 'confirmed' ? 'confirmed_at = now(),' : '';
       const quiet = action === 'publish' && body.notify === false && current.status === 'inquiry' ? 'quiet = true,' : '';
-      await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      await withSource(ownerTag(me), (q) =>
         q(`UPDATE events SET status = $2, ${stamp} ${quiet} updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id, t.to]));
       const ev = await getEvent(id, { admin: true });
       if (body.notify !== false) {
-        if (action === 'publish') notified = await notifyPublish(ev);
+        if (action === 'publish') notified = await notifyPublish(ev, ownerTag(me));
         if (action === 'confirm') notified = await notifyConfirm(ev);
       }
       if (action === 'cancel' && body.notify === true) notified = { groupme: await postGroupMe(cancelText(ev)) };
@@ -143,10 +143,10 @@ export default route({
     ok(res, { event: ev, roster: await rosterFor(id), notified });
   },
   async DELETE(req, res) {
-    await requireAdmin(req);
+    const me = await requireAdmin(req);
     const id = int(query(req).id);
     if (!(await getEvent(id, { admin: true }))) throw httpError(404, 'Not found');
-    const files = await deleteEvent(id);
+    const files = await deleteEvent(id, ownerTag(me));
     await removeFiles(files);
     ok(res);
   },

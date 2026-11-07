@@ -11,8 +11,8 @@ export function undoableSql(idExpr, undoneAtExpr) {
    ))`;
 }
 
-export async function undoMessage(messageId) {
-  return withSource({ source: 'undo', actor: 'owner', messageId }, async (q) => {
+export async function undoMessage(messageId, actor = 'owner') {
+  return withSource({ source: 'undo', actor, messageId }, async (q) => {
     const [msg] = await q('SELECT * FROM groupme_messages WHERE id = $1 FOR UPDATE', [messageId]);
     if (!msg) throw httpError(404, 'Message not found');
     if (msg.undone_at) throw httpError(409, 'Already undone');

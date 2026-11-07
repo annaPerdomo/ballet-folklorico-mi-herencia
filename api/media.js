@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
-import { requireUser, requireAdmin } from './_lib/auth.js';
+import { requireUser, requireAdmin, actorOf, ownerTag } from './_lib/auth.js';
 import { sql, one, withSource } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
@@ -194,7 +194,7 @@ export default route({
       const declared = Number(row.bytes) - row.thumb_bytes;
       if (size !== declared) {
         await removeFiles([row]);
-        const actor = me.role === 'admin' ? 'owner' : me.family.name;
+        const actor = actorOf(me);
         await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, (q) =>
           q('DELETE FROM media WHERE id = $1', [row.id]));
         throw httpError(400, 'The upload did not arrive — try again');
@@ -234,7 +234,7 @@ export default route({
         const row = await one('SELECT * FROM media WHERE id = $1 AND event_id = $2 AND ready', [mediaId, eventId]);
         if (!coverUrl(row)) throw httpError(400, 'Pick a photo or YouTube video from this gig');
       }
-      const rows = await withSource({ source: 'owner', actor: 'owner' }, (q) =>
+      const rows = await withSource(ownerTag(me), (q) =>
         q(`UPDATE events SET cover_media_id = $2 WHERE id = $1 AND status <> 'deleted' RETURNING id`, [eventId, mediaId]));
       const ev = rows[0] || null;
       if (!ev) throw httpError(404, 'Gig not found');
@@ -263,7 +263,7 @@ export default route({
   async DELETE(req, res) {
     const me = await requireUser(req);
     const row = await ownRow(int(query(req).id), me);
-    const actor = me.role === 'admin' ? 'owner' : me.family.name;
+    const actor = actorOf(me);
     await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, (q) =>
       q('DELETE FROM media WHERE id = $1', [row.id]));
     await removeFiles([row]);

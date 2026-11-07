@@ -5,6 +5,10 @@ import { parseCookies, httpError } from './http.js';
 export const ADMIN_COOKIE = 'bfmh_admin';
 export const FAMILY_COOKIE = 'bfmh_family';
 export const INSIGHTS_COOKIE = 'bfmh_insights';
+// Mayra and Angel use only /team/; only Anna holds INSIGHTS_PASSWORD and uses /admin.
+export const ADMIN_NAME = 'Anna Mendez Perdomo';
+export const actorOf = (me) => (me.role === 'admin' ? (me.insights ? ADMIN_NAME : 'owner') : me.family.name);
+export const ownerTag = (me) => ({ source: 'owner', actor: actorOf(me) });
 
 function secret() {
   const s = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;

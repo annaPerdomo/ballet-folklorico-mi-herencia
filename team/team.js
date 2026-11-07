@@ -1747,7 +1747,7 @@
   function whoLabel(c) {
     if (c.source === 'bot') return t('whoBot', { sender: c.actor || '?' });
     if (c.source === 'family') return c.actor || t('whoSystem');
-    if (c.source === 'owner') return t('whoOwner');
+    if (c.source === 'owner' || c.source === 'merge') return c.actor && c.actor !== 'owner' ? c.actor : t('whoOwner');
     if (c.source === 'undo') return t('whoUndo');
     if (c.source === 'sql') return 'SQL';
     return c.actor || t('whoSystem');

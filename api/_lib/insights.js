@@ -154,9 +154,10 @@ async function families() {
           WHERE EXISTS (SELECT 1 FROM dancers d WHERE d.family_id = f.id AND d.active)
           ORDER BY f.name`),
     sql(`SELECT to_char(changed_at AT TIME ZONE '${TZ}', 'YYYY-MM') AS month,
-            CASE WHEN source = 'bot' THEN 'chona' WHEN source = 'family' THEN 'app' WHEN source IN ('owner', 'merge') THEN 'owner' ELSE 'other' END AS channel,
+            CASE WHEN source = 'bot' THEN 'chona' WHEN source = 'family' THEN 'app' WHEN source IN ('owner', 'merge') AND actor = $1 THEN 'anna'
+                 WHEN source IN ('owner', 'merge') THEN 'owner' ELSE 'other' END AS channel,
             count(*)::int AS n
-       FROM availability_history WHERE op <> 'delete' GROUP BY 1, 2 ORDER BY 1`),
+       FROM availability_history WHERE op <> 'delete' GROUP BY 1, 2 ORDER BY 1`, [ADMIN_CREDIT]),
   ]);
   return { families: rows.map((r) => ({ ...r, median_hours: r.median_hours == null ? null : Number(r.median_hours) })), channels };
 }

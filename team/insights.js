@@ -17,7 +17,7 @@
     { key: 'hidden', label: 'Hidden', color: 'rgba(255,255,255,0.3)' },
   ];
   var KINDS = [{ key: 'photo', label: 'Photos', color: '#3987e5' }, { key: 'video', label: 'Videos', color: '#d95926' }, { key: 'link', label: 'YouTube', color: '#199e70' }];
-  var CHANNELS = [{ key: 'app', label: 'App', color: '#3987e5' }, { key: 'chona', label: 'La Chona', color: '#d95926' }, { key: 'owner', label: 'Ramirez family', color: '#199e70' }];
+  var CHANNELS = [{ key: 'app', label: 'App', color: '#3987e5' }, { key: 'chona', label: 'La Chona', color: '#d95926' }, { key: 'owner', label: 'Ramirez family', color: '#199e70' }, { key: 'anna', label: 'You', color: '#c98500' }];
   var TAB_NAMES = { inbox: 'Inbox', gigs: 'Gigs', feed: 'Feed', media: 'Gallery', team: 'Team', chona: 'La Chona' };
   var LANGS = { es: 'Spanish', ja: 'Japanese', zh: 'Chinese (Simplified)', 'zh-hant': 'Chinese (Traditional)', en: 'English' };
   var PAGES = { '/': 'Home page', '/quinceaneras/': 'Quinceañeras page', '/weddings/': 'Weddings page', '/pricing/': 'Pricing page',

@@ -1,5 +1,5 @@
 import { route, readJson, ok, query, int, str, httpError } from './_lib/http.js';
-import { requireAdmin, requireManage, requireUser, newFamilyToken } from './_lib/auth.js';
+import { requireAdmin, requireManage, requireUser, newFamilyToken, actorOf, ownerTag } from './_lib/auth.js';
 import { one, sql, withSource } from './_lib/db.js';
 import { siteUrl } from './_lib/notify.js';
 
@@ -64,7 +64,7 @@ const dancers = {
     const me = await requireManage(req);
     const id = int(query(req).id);
     await ownedDancer(me, id);
-    const actor = me.role === 'admin' ? 'owner' : me.family.name;
+    const actor = actorOf(me);
     await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, (q) =>
       q('DELETE FROM dancers WHERE id = $1', [id]));
     ok(res);
@@ -88,7 +88,7 @@ const availability = {
     if (!ev) throw httpError(404, 'Event not found');
     if (me.role !== 'admin' && !['open', 'confirmed'].includes(ev.status)) throw httpError(400, 'This event is not taking answers');
 
-    const actor = me.role === 'admin' ? 'owner' : me.family.name;
+    const actor = actorOf(me);
     await withSource({ source: me.role === 'admin' ? 'owner' : 'family', actor }, async (q) => {
       if (!status) {
         await q('DELETE FROM availability WHERE event_id = $1 AND dancer_id = $2', [eventId, dancerId]);
@@ -142,9 +142,9 @@ const families = {
     ok(res);
   },
   async DELETE(req, res) {
-    await requireAdmin(req);
+    const me = await requireAdmin(req);
     const id = int(query(req).id);
-    await withSource({ source: 'owner', actor: 'owner' }, (q) => q('DELETE FROM families WHERE id = $1', [id]));
+    await withSource(ownerTag(me), (q) => q('DELETE FROM families WHERE id = $1', [id]));
     ok(res);
   },
 };
