@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true">
-  <!-- The six cut flag designs from the papel picado over the contact form in index.html, plus eight themed ones for group events (posada, potluck, party, outing…). -->
+  <!-- The six cut flag designs from the papel picado over the contact form in index.html, plus twelve themed ones for group events (posada, navidad, potluck, party, outing…). -->
   <defs>
-    <!-- Shared flag body: scalloped hem, perforation row. Fourteen cut designs below.
+    <!-- Shared flag body: scalloped hem, perforation row. Eighteen cut designs below.
          Cut-outs are masks, so the page truly shows through the holes. -->
     <path id="pic-shape" d="M-55,0 H55 V64 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 Z"/>
     <path id="pic-heart" d="M0,2.2 C0,0.6 1.6,-0.9 3,0.6 C4.4,-0.9 6,0.6 6,2.2 C6,4 3,6.2 3,6.2 C3,6.2 0,4 0,2.2 Z"/>
@@ -251,6 +251,98 @@
       <g fill="#fff"><circle cx="-10" cy="19" r="1.3"/><circle cx="-6" cy="24" r="1.3"/><circle cx="10" cy="19" r="1.3"/><circle cx="6" cy="24" r="1.3"/></g>
     </mask>
 
+    <!-- Design 15: nacimiento (nativity under a stable roof) -->
+    <mask id="pic-mask-15" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <path d="M0,8.5 L1.3,12.2 L5,13.5 L1.3,14.8 L0,18.5 L-1.3,14.8 L-5,13.5 L-1.3,12.2 Z"/>
+        <path d="M-23,48 V30 L0,19 L23,30 V48 Z"/>
+        <circle cx="-35" cy="16" r="1.3"/><circle cx="35" cy="16" r="1.3"/><circle cx="-28" cy="11" r="1.3"/><circle cx="28" cy="11" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-40,28)"/>
+        <use href="#pic-daisy" transform="translate(40,28)"/>
+        <use href="#pic-fern" transform="translate(-38,47) rotate(-28)"/>
+        <use href="#pic-fern" transform="translate(38,47) rotate(28)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff">
+        <path d="M-23,30 L0,19 L23,30 L23,33 L0,22.2 L-23,33 Z"/>
+        <circle cx="-12" cy="30" r="2.6"/>
+        <path d="M-15.5,48 L-14.5,36 Q-12,32.6 -9.5,36 L-8.5,48 Z"/>
+        <path d="M-9.7,30 L-7,48" stroke="#fff" stroke-width="1" fill="none"/>
+        <circle cx="12" cy="34" r="2.4"/>
+        <path d="M7.5,48 Q8,37 12,31.6 Q16,37 16.5,48 Z"/>
+        <path d="M-5,43 H5 L3.5,48 H-3.5 Z"/>
+        <ellipse cx="0" cy="42" rx="3.2" ry="1.8"/>
+      </g>
+    </mask>
+
+    <!-- Design 16: campanas (bells with a bow) -->
+    <mask id="pic-mask-16" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <g transform="translate(-8,34) rotate(-14)"><path d="M0,-11 C-6,-11 -7.5,-5 -7.5,0 C-7.5,5 -9.5,7.5 -11,9 L11,9 C9.5,7.5 7.5,5 7.5,0 C7.5,-5 6,-11 0,-11 Z"/><circle cy="12" r="2.4"/></g>
+        <g transform="translate(8,34) rotate(14)"><path d="M0,-11 C-6,-11 -7.5,-5 -7.5,0 C-7.5,5 -9.5,7.5 -11,9 L11,9 C9.5,7.5 7.5,5 7.5,0 C7.5,-5 6,-11 0,-11 Z"/><circle cy="12" r="2.4"/></g>
+        <ellipse cx="-6" cy="15" rx="5.5" ry="3" transform="rotate(-20 -6 15)"/>
+        <ellipse cx="6" cy="15" rx="5.5" ry="3" transform="rotate(20 6 15)"/>
+        <path d="M-1.5,16 L-6,25 L-3,24 Z M1.5,16 L6,25 L3,24 Z"/>
+        <use href="#pic-daisy" transform="translate(-38,20)"/>
+        <use href="#pic-daisy" transform="translate(38,20)"/>
+        <use href="#pic-fern" transform="translate(-38,44) rotate(-28)"/>
+        <use href="#pic-fern" transform="translate(38,44) rotate(28)"/>
+        <use href="#pic-heart" transform="translate(-27,9)"/>
+        <use href="#pic-heart" transform="translate(21,9)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="0" cy="15.5" r="2"/>
+        <path d="M-12,30 Q-8,27.5 -4,30" stroke="#fff" stroke-width="1.2" fill="none" transform="rotate(-14 -8 34)"/>
+        <path d="M4,30 Q8,27.5 12,30" stroke="#fff" stroke-width="1.2" fill="none" transform="rotate(14 8 34)"/>
+      </g>
+    </mask>
+
+    <!-- Design 17: arbolito (Christmas tree) -->
+    <mask id="pic-mask-17" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <path d="M0,8.5 L1.2,11.6 L4.4,11.8 L1.9,13.8 L2.8,17 L0,15.2 L-2.8,17 L-1.9,13.8 L-4.4,11.8 L-1.2,11.6 Z"/>
+        <path d="M0,17.5 L11,28 L5.5,28 L15.5,38 L8,38 L19,48 L-19,48 L-8,38 L-15.5,38 L-5.5,28 L-11,28 Z"/>
+        <rect x="-3" y="48" width="6" height="5" rx="0.8"/>
+        <circle cx="-36" cy="13" r="1.3"/><circle cx="36" cy="13" r="1.3"/><circle cx="-30" cy="22" r="1.3"/><circle cx="30" cy="22" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-38,36)"/>
+        <use href="#pic-daisy" transform="translate(38,36)"/>
+        <use href="#pic-heart" transform="translate(-27,8)"/>
+        <use href="#pic-heart" transform="translate(21,8)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="-2" cy="25" r="1.4"/><circle cx="4" cy="33" r="1.4"/><circle cx="-6" cy="35" r="1.4"/>
+        <circle cx="9" cy="44" r="1.4"/><circle cx="-2" cy="43" r="1.4"/><circle cx="-12" cy="45" r="1.4"/>
+      </g>
+    </mask>
+
+    <!-- Design 18: venado (leaping reindeer) -->
+    <mask id="pic-mask-18" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <ellipse cx="-2" cy="32" rx="14" ry="6.2" transform="rotate(-8 -2 32)"/>
+        <path d="M7,30 L12,20 L15.5,17 L21,18.5 L22,20.5 L17,22 L14.5,30 Z"/>
+        <ellipse cx="-16" cy="27" rx="3" ry="2" transform="rotate(-30 -16 27)"/>
+        <g stroke="#000" stroke-linecap="round" fill="none">
+          <path d="M15,17.5 L12,8 M13.5,12.5 L9.5,10 M12.8,10.4 L13.5,6.8" stroke-width="1.7"/>
+          <path d="M17.5,17 L19.5,8.5 M18.7,12 L22.5,10 M19.3,10 L18,6.5" stroke-width="1.7"/>
+          <path d="M8,34 L15,39 L22,40 M5,35.5 L10,42 L16,46" stroke-width="2.6"/>
+          <path d="M-11,34 L-19,40 L-25,45 M-8,36 L-13,43 L-19,48" stroke-width="2.6"/>
+        </g>
+        <circle cx="-36" cy="12" r="1.3"/><circle cx="-30" cy="17" r="1.3"/><circle cx="34" cy="30" r="1.3"/><circle cx="29" cy="36" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-38,26)"/>
+        <use href="#pic-daisy" transform="translate(38,15)"/>
+        <use href="#pic-fern" transform="translate(-40,46) rotate(-28)"/>
+        <use href="#pic-fern" transform="translate(40,46) rotate(28)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><circle cx="17" cy="19.6" r="0.9"/></g>
+    </mask>
+
     <g id="pic-flag-1" mask="url(#pic-mask-1)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-2" mask="url(#pic-mask-2)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-3" mask="url(#pic-mask-3)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
@@ -265,5 +357,9 @@
     <g id="pic-flag-12" mask="url(#pic-mask-12)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-13" mask="url(#pic-mask-13)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-14" mask="url(#pic-mask-14)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-15" mask="url(#pic-mask-15)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-16" mask="url(#pic-mask-16)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-17" mask="url(#pic-mask-17)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-18" mask="url(#pic-mask-18)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
   </defs>
 </svg>

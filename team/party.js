@@ -135,14 +135,14 @@
     outing: { flags: [13, 3, 2, 1, 13, 3], colors: ['#1e9ce0', '#fdc53a', '#2bc463', '#f0832e', '#1cc09e', '#e84393'] },
     fundraiser: { flags: [1, 7, 3, 2, 1, 7], colors: FIESTA },
     muertos: { flags: [6, 1, 3, 6, 8, 5], colors: ['#f0832e', '#e84393', '#8c4be0', '#fdc53a', '#1cc09e', '#e12b30'] },
-    posadaPotluck: { flags: [10, 7, 8, 9, 10, 8], colors: ['#e12b30', '#2bc463', '#fdc53a', '#f0832e', '#b4162b', '#157a4a'] },
+    // Copies the papel picado on the 2026 end-of-year potluck flyer.
+    navidad: { flags: [8, 15, 16, 17, 18, 9], colors: ['#ec4f9c', '#3fb24f', '#f7c534', '#1fb3b5', '#e5352c', '#9a4fd8'], step: 1, lights: true },
   };
   function picadoTheme(ev) {
     var kind = ev && ev.event_type, month = ev && ev.event_date ? +ev.event_date.slice(5, 7) : 0;
     if (kind === 'posada') return PICADO_THEMES.posada;
     if ((month === 10 || month === 11) && (kind === 'party' || kind === 'other' || kind === 'potluck')) return PICADO_THEMES.muertos;
-    if (month === 12 && kind === 'potluck') return PICADO_THEMES.posadaPotluck;
-    if (month === 12 && (kind === 'party' || kind === 'other')) return PICADO_THEMES.posada;
+    if (month === 12 && (kind === 'potluck' || kind === 'party' || kind === 'other')) return PICADO_THEMES.navidad;
     return PICADO_THEMES[kind] || PICADO_THEMES.classic;
   }
   var picadoReady = null;
@@ -182,9 +182,18 @@
       var use = document.createElementNS(NS, 'use');
       use.setAttribute('href', '#pic-flag-' + theme.flags[i % theme.flags.length]);
       use.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') rotate(' + tilt.toFixed(1) + ') translate(0,-2) scale(0.62)');
-      use.setAttribute('fill', theme.colors[(i * 4) % theme.colors.length]);
+      use.setAttribute('fill', theme.colors[(i * (theme.step || 4)) % theme.colors.length]);
       g.appendChild(use);
       svg.appendChild(g);
+    }
+    for (var b = 1; theme.lights && b < n; b++) {
+      var bt = b / n, bu = 1 - bt;
+      var bulb = document.createElementNS(NS, 'g');
+      bulb.setAttribute('class', 'pt-bulb');
+      bulb.setAttribute('transform', 'translate(' + (bu * bu * x0 + 2 * bu * bt * (w / 2) + bt * bt * x1).toFixed(1) + ',' + (bu * bu * top + 2 * bu * bt * cy + bt * bt * top + 4).toFixed(1) + ')');
+      bulb.style.animationDelay = (-(b * 1.3) % 3).toFixed(2) + 's';
+      bulb.innerHTML = '<circle r="9" class="pt-bulb-glow"/><rect x="-1.6" y="-4.5" width="3.2" height="2.6" rx="0.6" fill="#7a6235"/><circle r="3" fill="#fff3c8"/>';
+      svg.appendChild(bulb);
     }
     svg.appendChild(thread(1, 0.25));
     return svg;
