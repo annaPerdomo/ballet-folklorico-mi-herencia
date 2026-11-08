@@ -177,11 +177,6 @@ export async function partyAction(id, v, b) {
       await q('DELETE FROM gathering_items WHERE id = $1', [item.id]);
       return {};
     }
-    if (action === 'suggest') {
-      requireOwner();
-      await q('UPDATE events SET potluck_notes = $2, potluck = true, updated_at = now() WHERE id = $1', [id, str(b.notes, 6000)]);
-      return {};
-    }
     if (action === 'remove') {
       requireOwner();
       await q('DELETE FROM gathering_rsvps WHERE id = $1 AND event_id = $2', [int(b.rsvp), id]);
