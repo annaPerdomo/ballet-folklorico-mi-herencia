@@ -5,7 +5,7 @@ import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry, logBlast }
 import { eventChanges } from '../_lib/history.js';
 import { removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
-import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
+import { postGroupMe, isRepeatAsk, eventSummary, eventWhere, siteUrl, fmtDate, askText, tallyText, gatheringText, calLink, CAL_LABEL, UNCAL_LABEL } from '../_lib/notify.js';
 
 const TRANSITIONS = {
   publish:  { to: 'open',      from: ['inquiry', 'declined', 'cancelled', 'lapsed', 'confirmed'] },
@@ -29,7 +29,7 @@ async function notifyPublish(ev, tag) {
   // Counts as an ask, so the UI offers Remind next and a later ask isn't posted as new.
   if (posted) await withSource(tag, (q) =>
     q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]));
-  await logBlast(ev.id, 'new', tag.actor);
+  await logBlast(ev.id, 'new', tag.actor, posted);
   return { groupme: posted };
 }
 
@@ -47,7 +47,16 @@ async function notifyConfirm(ev, tag) {
     (reh ? `\n\nRehearsals:\n${reh}` : '') +
     `\n\nDetails: ${teamLink(ev.id)}`;
   const posted = await postGroupMe(text);
-  await logBlast(ev.id, 'confirmed', tag.actor);
+  await logBlast(ev.id, 'confirmed', tag.actor, posted);
+  return { groupme: posted };
+}
+
+async function notifyGathering(ev, tag) {
+  const again = ev.ask_count > 0;
+  const posted = await postGroupMe(gatheringText(ev, { again }));
+  if (posted) await withSource(tag, (q) =>
+    q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]));
+  await logBlast(ev.id, again ? 'gathering_ask' : 'gathering', tag.actor, posted);
   return { groupme: posted };
 }
 
@@ -104,13 +113,15 @@ export default route({
     let notified = null;
     const action = str(body.action, 20);
     if (action && current.status === 'folder') throw httpError(400, 'Folders have no gig actions');
-    if (action && current.status === 'gathering') throw httpError(400, 'Group events have no gig actions');
-    if (action === 'remind') {
+    if (action && current.status === 'gathering') {
+      if (!['announce', 'remind'].includes(action)) throw httpError(400, 'Group events have no gig actions');
+      notified = await notifyGathering(await getEvent(id, { admin: true }), ownerTag(me));
+    } else if (action === 'remind') {
       if (!current.event_date) throw httpError(400, 'Set the event date before asking');
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));
       if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
-      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me));
+      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me), posted);
       notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
@@ -121,7 +132,7 @@ export default route({
       const posted = await postGroupMe(text);
       if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
-      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me));
+      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me), posted);
       notified = { groupme: posted };
     } else if (action === 'announce') {
       if (!['open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot announce an event that is ${current.status}`);
@@ -147,7 +158,7 @@ export default route({
       }
       if (action === 'cancel' && body.notify === true) {
         notified = { groupme: await postGroupMe(cancelText(ev)) };
-        await logBlast(id, 'cancelled', actorOf(me));
+        await logBlast(id, 'cancelled', actorOf(me), notified.groupme);
       }
     }
     const ev = await getEvent(id, { admin: true });

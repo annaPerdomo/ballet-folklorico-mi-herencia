@@ -16,9 +16,9 @@ test('cleanRsvp clamps party size and zeroes it for a no', () => {
   assert.equal(no.adults + no.kids, 0);
 });
 
-test('cleanItem defaults the category and bounds the slots', () => {
+test('cleanItem defaults the category', () => {
   assert.throws(() => cleanItem({ label: '  ' }));
-  assert.deepEqual(cleanItem({ label: 'Tamales', category: 'nope', slots: 400 }), { label: 'Tamales', category: 'other', slots: 20, note: null });
+  assert.deepEqual(cleanItem({ label: 'Tamales', category: 'nope' }), { label: 'Tamales', category: 'other', note: null });
 });
 
 test('viewerOf lets a signed link or a session in, and a family can choose to write themselves in', () => {

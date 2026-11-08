@@ -21,20 +21,23 @@
       potluck: 'Potluck', potluckSub: 'Pick something to bring so we don’t end up with five pots of rice.', spots: '{c} of {n} covered',
       bringIt: 'I’ll bring it', covered: 'Covered', leftN: '{n} more needed',  undo: 'Undo',
       bringOther: 'Bringing something else?', bringPh: 'e.g. Flan, aguas frescas', category: 'Category', add: 'Add',
-      addNeeded: 'Add to the potluck list', neededPh: 'e.g. Tamales, ice, folding chairs', slotsLabel: 'How many people can sign up',
-      nothingNeeded: 'Nothing on the list yet.', ownerNeeded: 'Add what you need — tamales, drinks, plates — and guests sign up for it.',
+      addNeeded: 'Add a dish to the list', neededPh: 'e.g. Tamales, rice, aguas frescas',
+      nothingNeeded: 'Nothing on the list yet.', ownerNeeded: 'List the dishes you need and guests sign up for them.',
+      bringing: 'You’re bringing', bringMore: 'Add another', suggestions: 'Ideas from the hosts', suggestPh: 'e.g. College kids bring dessert, families with little ones bring drinks…',
+      suggestEdit: 'Add suggestions', suggestChange: 'Edit suggestions', suggestSave: 'Save',
       claimTitle: 'Bringing {item}', claimNote: 'Anything to add? (optional)', claimNotePh: 'e.g. red pork, 2 dozen', confirm: 'Confirm',
       quickRsvp: 'RSVP first so everyone knows who’s bringing it.', rsvpAndBring: 'RSVP & bring it',
       past: 'This event already happened — thank you for coming!', photos: 'Photos & videos',
-      goodToKnow: 'Good to know', thanks: '¡Gracias! You’re on the list', saved: 'Saved', removed: 'Removed',
+      thanks: '¡Gracias! You’re on the list', saved: 'Saved', removed: 'Removed',
       removeGuest: 'Remove from the guest list', removeAsk: 'Take {name} off the guest list? What they signed up to bring goes back on the list.',
       removeItem: 'Remove from the list', removeItemAsk: 'Take “{item}” off the potluck list?', remove: 'Remove', hostNote: 'Note',
       invalid: 'This invite link isn’t valid anymore. Ask whoever sent it for a new one.', loading: 'Loading…', tryAgain: 'Try again',
       copied: 'Link copied', hosted: 'Hosted by', openInApp: 'Manage this event in the team app',
-      rsvpFamily: 'Will the {name} family be there?', howMany: 'How many of you are coming?', howManyFamily: 'How many from your family?',
-      howManyHint: 'Count yourself too.', howManyFamilyHint: 'Everyone coming: you, your dancers, and anyone you’re bringing.', justYou: 'Just you',
+      rsvpFamily: 'Will the {name} family be there?', howMany: 'How many are coming?', howManyHint: 'Count yourself too.',
+      adults: 'Adults', kids: 'Kids', adultsN: '{n} adults', adultN: '1 adult', kidsN: '{n} kids', kidN: '1 kid',
       addNote: 'Add a note for the hosts', peopleN: '{n} people', personN: '1 person',
       flyer: 'Event flyer', addFlyer: 'Add a flyer', close: 'Close',
+      announce: 'Post to GroupMe', remind: 'Remind in GroupMe', notAnnounced: 'Not posted to GroupMe yet',
     },
     es: {
       kinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
@@ -54,20 +57,23 @@
       potluck: 'Comida compartida', potluckSub: 'Elige algo para llevar, para que no terminemos con cinco ollas de arroz.', spots: '{c} de {n} cubiertos',
       bringIt: 'Yo lo llevo', covered: 'Cubierto', leftN: 'Faltan {n}',  undo: 'Deshacer',
       bringOther: '¿Vas a llevar otra cosa?', bringPh: 'p. ej. flan, aguas frescas', category: 'Categoría', add: 'Agregar',
-      addNeeded: 'Agregar a la lista', neededPh: 'p. ej. tamales, hielo, sillas', slotsLabel: 'Cuántas personas pueden apuntarse',
-      nothingNeeded: 'Todavía no hay nada en la lista.', ownerNeeded: 'Agrega lo que hace falta (tamales, bebidas, platos) y los invitados se apuntan.',
+      addNeeded: 'Agregar un platillo a la lista', neededPh: 'p. ej. tamales, arroz, aguas frescas',
+      nothingNeeded: 'Todavía no hay nada en la lista.', ownerNeeded: 'Anota los platillos que hacen falta y los invitados se apuntan.',
+      bringing: 'Vas a llevar', bringMore: 'Agregar otra cosa', suggestions: 'Ideas de los anfitriones', suggestPh: 'p. ej. Los universitarios traen postre, las familias con niños chicos traen bebidas…',
+      suggestEdit: 'Agregar sugerencias', suggestChange: 'Editar sugerencias', suggestSave: 'Guardar',
       claimTitle: 'Llevas {item}', claimNote: '¿Algo que agregar? (opcional)', claimNotePh: 'p. ej. de puerco en rojo, 2 docenas', confirm: 'Confirmar',
       quickRsvp: 'Primero confirma, para que todos sepan quién lo lleva.', rsvpAndBring: 'Confirmar y llevarlo',
       past: 'Este convivio ya pasó. ¡Gracias por venir!', photos: 'Fotos y videos',
-      goodToKnow: 'Para saber', thanks: '¡Gracias! Ya estás en la lista', saved: 'Guardado', removed: 'Quitado',
+      thanks: '¡Gracias! Ya estás en la lista', saved: 'Guardado', removed: 'Quitado',
       removeGuest: 'Quitar de la lista', removeAsk: '¿Quitar a {name} de la lista? Lo que iba a llevar vuelve a la lista.',
       removeItem: 'Quitar de la lista', removeItemAsk: '¿Quitar “{item}” de la lista?', remove: 'Quitar', hostNote: 'Nota',
       invalid: 'Este enlace de invitación ya no es válido. Pide uno nuevo a quien te lo mandó.', loading: 'Cargando…', tryAgain: 'Reintentar',
       copied: 'Enlace copiado', hosted: 'Organiza', openInApp: 'Administra este convivio en la app del equipo',
-      rsvpFamily: '¿Va a venir la familia {name}?', howMany: '¿Cuántos van a venir?', howManyFamily: '¿Cuántos de tu familia vienen?',
-      howManyHint: 'Cuéntate a ti también.', howManyFamilyHint: 'Todos los que vienen: tú, tus bailarines y quien traigas.', justYou: 'Solo tú',
+      rsvpFamily: '¿Va a venir la familia {name}?', howMany: '¿Cuántos van a venir?', howManyHint: 'Cuéntate a ti también.',
+      adults: 'Adultos', kids: 'Niños', adultsN: '{n} adultos', adultN: '1 adulto', kidsN: '{n} niños', kidN: '1 niño',
       addNote: 'Agregar una nota para los anfitriones', peopleN: '{n} personas', personN: '1 persona',
       flyer: 'Volante del convivio', addFlyer: 'Agregar un volante', close: 'Cerrar',
+      announce: 'Publicar en GroupMe', remind: 'Recordar en GroupMe', notAnnounced: 'Aún no se ha publicado en GroupMe',
     },
   };
   var CATS = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
@@ -117,8 +123,28 @@
     return null;
   }
 
-  /* Papel picado: the six cut designs strung over the contact form on bfmh.dance, kept in team/picado.svg. */
-  var PICADO_COLORS = ['#e84393', '#1e9ce0', '#fdc53a', '#8c4be0', '#f0832e', '#1cc09e', '#e12b30', '#2bc463', '#4547dd'];
+  /* Papel picado: flag designs live in team/picado.svg; each kind of event strings up its own. */
+  var FIESTA = ['#e84393', '#1e9ce0', '#fdc53a', '#8c4be0', '#f0832e', '#1cc09e', '#e12b30', '#2bc463', '#4547dd'];
+  var PICADO_THEMES = {
+    classic: { flags: [1, 2, 3, 4, 5, 6], colors: FIESTA },
+    posada: { flags: [7, 8, 9, 2, 7, 8], colors: ['#e12b30', '#2bc463', '#fdc53a', '#f6ead6', '#b4162b', '#157a4a'] },
+    potluck: { flags: [10, 3, 1, 14, 10, 5], colors: ['#f0832e', '#fdc53a', '#e12b30', '#2bc463', '#1cc09e', '#e84393'] },
+    party: { flags: [11, 12, 7, 1, 11, 12], colors: FIESTA },
+    practice: { flags: [4, 14, 3, 5, 4, 14], colors: FIESTA },
+    meeting: { flags: [5, 1, 2, 3, 5, 1], colors: ['#1e9ce0', '#fdc53a', '#1cc09e', '#8c4be0', '#e84393', '#4547dd'] },
+    outing: { flags: [13, 3, 2, 1, 13, 3], colors: ['#1e9ce0', '#fdc53a', '#2bc463', '#f0832e', '#1cc09e', '#e84393'] },
+    fundraiser: { flags: [1, 7, 3, 2, 1, 7], colors: FIESTA },
+    muertos: { flags: [6, 1, 3, 6, 8, 5], colors: ['#f0832e', '#e84393', '#8c4be0', '#fdc53a', '#1cc09e', '#e12b30'] },
+    posadaPotluck: { flags: [10, 7, 8, 9, 10, 8], colors: ['#e12b30', '#2bc463', '#fdc53a', '#f0832e', '#b4162b', '#157a4a'] },
+  };
+  function picadoTheme(ev) {
+    var kind = ev && ev.event_type, month = ev && ev.event_date ? +ev.event_date.slice(5, 7) : 0;
+    if (kind === 'posada') return PICADO_THEMES.posada;
+    if ((month === 10 || month === 11) && (kind === 'party' || kind === 'other' || kind === 'potluck')) return PICADO_THEMES.muertos;
+    if (month === 12 && kind === 'potluck') return PICADO_THEMES.posadaPotluck;
+    if (month === 12 && (kind === 'party' || kind === 'other')) return PICADO_THEMES.posada;
+    return PICADO_THEMES[kind] || PICADO_THEMES.classic;
+  }
   var picadoReady = null;
   function loadPicado() {
     if (!picadoReady) {
@@ -133,7 +159,7 @@
     }
     return picadoReady;
   }
-  function picadoString(cls, w, sag, n) {
+  function picadoString(cls, w, sag, n, theme) {
     var NS = 'http://www.w3.org/2000/svg', top = 14, x0 = -10, x1 = w + 10, cy = top + 2 * sag;
     var svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + w + ' ' + (top + sag + 58));
@@ -154,17 +180,18 @@
       g.style.animationDuration = (3.8 + (i % 4) * 0.45).toFixed(2) + 's';
       g.style.animationDelay = (-(i * 0.7) % 4.2).toFixed(2) + 's';
       var use = document.createElementNS(NS, 'use');
-      use.setAttribute('href', '#pic-flag-' + (i % 6 + 1));
+      use.setAttribute('href', '#pic-flag-' + theme.flags[i % theme.flags.length]);
       use.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') rotate(' + tilt.toFixed(1) + ') translate(0,-2) scale(0.62)');
-      use.setAttribute('fill', PICADO_COLORS[(i * 4) % PICADO_COLORS.length]);
+      use.setAttribute('fill', theme.colors[(i * 4) % theme.colors.length]);
       g.appendChild(use);
       svg.appendChild(g);
     }
     svg.appendChild(thread(1, 0.25));
     return svg;
   }
-  function picado() {
-    return h('div', { class: 'pt-picado', 'aria-hidden': 'true' }, picadoString('pt-pp-phone', 480, 30, 6), picadoString('pt-pp-wide', 1000, 34, 12));
+  function picado(ev) {
+    var theme = picadoTheme(ev);
+    return h('div', { class: 'pt-picado', 'aria-hidden': 'true' }, picadoString('pt-pp-phone', 480, 30, 6, theme), picadoString('pt-pp-wide', 1000, 34, 12, theme));
   }
 
   function mount(root, opts) {
@@ -242,7 +269,11 @@
     function timeText(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
     function whoName(r) { return r.family ? t('familyName', { name: r.name }) : r.name; }
     function peopleText(n) { return n === 1 ? t('personN') : t('peopleN', { n: n }); }
-    function party(r) { var n = r.adults + r.kids; return r.status === 'no' || !n ? '' : peopleText(n); }
+    function party(r) {
+      if (r.status === 'no' || !(r.adults + r.kids)) return '';
+      if (!r.kids) return peopleText(r.adults);
+      return [r.adults ? (r.adults === 1 ? t('adultN') : t('adultsN', { n: r.adults })) : null, r.kids === 1 ? t('kidN') : t('kidsN', { n: r.kids })].filter(Boolean).join(' · ');
+    }
     function initials(name) {
       var w = String(name || '?').replace(/^(the|la|el|tía|tia|tío|tio)\s+/i, '').split(/\s+/).filter(Boolean);
       return ((w[0] || '?').charAt(0) + (w[1] && !/^(&|y|and)$/i.test(w[1]) ? w[1].charAt(0) : '')).toUpperCase();
@@ -296,16 +327,6 @@
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text + ' ' + url).then(done, function () {});
     }
 
-    function stepper(label, value, onSet) {
-      var out = h('output', { class: 'pt-step-n', text: String(value) });
-      var set = function (n) { value = Math.max(0, Math.min(30, n)); out.textContent = String(value); onSet(value); };
-      return h('div', { class: 'pt-step' }, h('span', { class: 'pt-step-label', text: label }),
-        h('div', { class: 'pt-step-ctl' },
-          h('button', { type: 'button', class: 'pt-step-btn', 'aria-label': label + ': ' + t('less'), onclick: function () { set(value - 1); } }, icon('minus', 2.4)),
-          out,
-          h('button', { type: 'button', class: 'pt-step-btn', 'aria-label': label + ': ' + t('more'), onclick: function () { set(value + 1); } }, icon('plus', 2.4))));
-    }
-
     /* ── sections ───────────────────────────── */
     function hero(ev) {
       var where = [ev.venue, ev.city].filter(Boolean).join(' · ');
@@ -313,7 +334,7 @@
       var flyer = ev.flyer, bg = null;
       if (flyer) { bg = h('div', { class: 'pt-hero-bg' }); bg.style.backgroundImage = 'url("' + flyer.url + '")'; }
       return h('section', { class: 'pt-hero' + (flyer ? ' has-flyer' : '') }, bg,
-        picado(),
+        picado(ev),
         h('div', { class: 'pt-hero-body' },
         flyer ? h('button', { type: 'button', class: 'pt-flyer', 'aria-label': t('flyer'), onclick: function () { viewFlyer(flyer); } },
           h('img', { src: flyer.url, alt: t('flyer'), width: flyer.w, height: flyer.h, decoding: 'async' })) : null,
@@ -324,11 +345,14 @@
             ev.event_date ? h('div', { class: 'pt-fact' }, icon('calendar'), h('span', {}, h('b', { text: longDate(ev.event_date) }), timeText(ev) ? h('span', { text: timeText(ev) }) : null)) : null,
             where || ev.address ? h('a', { class: 'pt-fact', href: mapUrl(ev), target: '_blank', rel: 'noopener' }, icon('pin'),
               h('span', {}, where ? h('b', { text: where }) : null, ev.address ? h('span', { text: ev.address }) : null)) : null),
+          ev.details ? h('p', { class: 'pt-details-text', text: ev.details }) : null,
           h('div', { class: 'pt-hero-acts' },
             ev.event_date && !data.past ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { calSheet(ev); } }, icon('calendar'), t('addToCal')) : null,
             where || ev.address ? h('a', { class: 'btn btn-sm pt-ghost', href: mapUrl(ev), target: '_blank', rel: 'noopener' }, icon('pin'), t('directions')) : null,
             data.past ? null : h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { share(ev); } }, icon('share'), t('share')),
-            !flyer && opts.onFlyer && data.me.owner ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost pt-flyer-add', onclick: function () { opts.onFlyer(ev); } }, icon('image'), t('addFlyer')) : null))));
+            !flyer && opts.onFlyer && data.me.owner ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost pt-flyer-add', onclick: function () { opts.onFlyer(ev); } }, icon('image'), t('addFlyer')) : null,
+            opts.onAnnounce && data.me.owner && !data.past ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost' + (data.announced ? '' : ' pt-flyer-add'), title: data.announced ? null : t('notAnnounced'),
+              onclick: function () { opts.onAnnounce(ev, Boolean(data.announced)); } }, icon('share'), t(data.announced ? 'remind' : 'announce')) : null))));
     }
 
     function rsvpCard() {
@@ -358,14 +382,13 @@
       var f = form || (form = draftFrom(null)), fam = me.as === 'family';
       card.appendChild(h('h2', { class: 'pt-h2', text: fam ? t('rsvpFamily', { name: me.family_name }) : t('rsvpTitle') }));
       card.appendChild(h('p', { class: 'pt-sub', text: t('rsvpSub') }));
-      if (fam) {
-        if (!opts.embedded) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
+      var name = h('input', { class: 'pt-input', value: f.name, placeholder: fam ? t('familyName', { name: me.family_name }) : t('namePh'), autocomplete: fam ? 'off' : 'name', maxlength: 80, 'aria-label': t('yourName'),
+        oninput: function () { f.name = name.value; } });
+      card.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), name));
+      if (!opts.embedded) {
+        if (fam) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
           onclick: function () { store(GUEST, '1'); form = null; load(); } }));
-      } else {
-        var name = h('input', { class: 'pt-input', value: f.name, placeholder: t('namePh'), autocomplete: 'name', maxlength: 80, 'aria-label': t('yourName'),
-          oninput: function () { f.name = name.value; } });
-        card.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), name));
-        if (me.session_family && !opts.embedded) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('asFamily', { name: me.session_family }),
+        else if (me.session_family) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('asFamily', { name: me.session_family }),
           onclick: function () { store(GUEST, null); form = null; load(); } }));
       }
       var seg = h('div', { class: 'seg pt-seg', role: 'group', 'aria-label': t('rsvpTitle') });
@@ -374,7 +397,7 @@
           onclick: function () { f.status = s[0]; paint(); } }, icon(s[0], 2.6), t(s[1])));
       });
       card.appendChild(seg);
-      if (f.status === 'yes' || f.status === 'maybe') card.appendChild(counter(f.count, function (n) { f.count = n; }));
+      if (f.status === 'yes' || f.status === 'maybe') card.appendChild(headcount(f));
       if (f.status) {
         var note = h('textarea', { class: 'pt-input', rows: 2, maxlength: 300, placeholder: t('notePh'), oninput: function () { f.note = note.value; } });
         note.value = f.note || '';
@@ -388,37 +411,41 @@
       return card;
     }
     var counterIds = 0;
-    function counter(value, onSet) {
-      var fam = data.me.as === 'family';
-      var out = h('output', { class: 'pt-counter-n', 'aria-live': 'polite', text: String(value) });
-      var word = h('span', { class: 'pt-counter-word' });
-      var minus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': t('less'), onclick: function () { set(value - 1); } }, icon('minus', 2.4));
-      var plus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': t('more'), onclick: function () { set(value + 1); } }, icon('plus', 2.4));
-      function show() {
-        out.textContent = String(value);
-        word.textContent = value === 1 && !fam ? t('justYou') : value === 1 ? t('personN').replace(/^1\s*/, '') : t('peopleN', { n: '' }).trim();
-        minus.disabled = value <= 1; plus.disabled = value >= 30;
+    function headcount(f) {
+      var qid = 'pt-q-' + (++counterIds), refreshers = [];
+      function refreshAll() { refreshers.forEach(function (fn) { fn(); }); }
+      function col(key, label) {
+        var out = h('output', { class: 'pt-counter-n', 'aria-live': 'polite', text: String(f[key]) });
+        var minus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': label + ': ' + t('less'), onclick: function () { set(f[key] - 1); } }, icon('minus', 2.4));
+        var plus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': label + ': ' + t('more'), onclick: function () { set(f[key] + 1); } }, icon('plus', 2.4));
+        function set(n) {
+          n = Math.max(0, Math.min(30, n));
+          if (n + f.adults + f.kids - f[key] === 0) return;
+          f[key] = n; out.textContent = String(n); refreshAll();
+        }
+        refreshers.push(function () { minus.disabled = f[key] <= 0 || f.adults + f.kids <= 1; plus.disabled = f[key] >= 30; });
+        return h('div', { class: 'pt-counter-col' }, h('span', { class: 'pt-counter-word', text: label }), h('div', { class: 'pt-counter-row' }, minus, out, plus));
       }
-      function set(n) { value = Math.max(1, Math.min(30, n)); show(); onSet(value); }
-      show();
-      var qid = 'pt-q-' + (++counterIds);
-      return h('div', { class: 'pt-counter', role: 'group', 'aria-labelledby': qid },
-        h('p', { class: 'pt-counter-q', id: qid, text: t(fam ? 'howManyFamily' : 'howMany') }),
-        h('div', { class: 'pt-counter-row' }, minus, h('div', { class: 'pt-counter-mid' }, out, word), plus),
-        h('p', { class: 'pt-hint', text: t(fam ? 'howManyFamilyHint' : 'howManyHint') }));
+      var el = h('div', { class: 'pt-counter', role: 'group', 'aria-labelledby': qid },
+        h('p', { class: 'pt-counter-q', id: qid, text: t('howMany') }),
+        h('div', { class: 'pt-counter-cols' }, col('adults', t('adults')), col('kids', t('kids'))),
+        h('p', { class: 'pt-hint', text: t('howManyHint') }));
+      refreshAll();
+      return el;
     }
     function draftFrom(r) {
-      var remembered = store('bfmh_party_name') || '';
-      var start = Math.min(30, Math.max(1, data.me.household || 1));
-      return r ? { name: r.family ? '' : r.name, status: r.status, count: r.status === 'no' ? start : Math.max(1, r.adults + r.kids), note: r.note || '' }
-        : { name: remembered, status: null, count: start, note: '' };
+      var fam = data.me.as === 'family';
+      var remembered = fam ? data.me.family_name : store('bfmh_party_name') || '';
+      var start = { adults: 1, kids: fam ? Math.min(29, data.me.household || 0) : 0 };
+      if (r && r.status !== 'no') start = { adults: r.adults, kids: r.kids };
+      return { name: r ? r.name : remembered, status: r ? r.status : null, adults: start.adults, kids: start.kids, note: r ? r.note || '' : '' };
     }
     function sendRsvp() {
       var f = form;
       if (data.me.as !== 'family' && !String(f.name || '').trim()) { toast(t('needName'), true); return; }
       if (data.me.as !== 'family') store('bfmh_party_name', f.name.trim());
       var was = mine();
-      act({ action: 'rsvp', name: f.name, status: f.status, adults: f.count, kids: 0, note: f.note }, was ? t('saved') : t('thanks'))
+      act({ action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note }, was ? t('saved') : t('thanks'))
         .then(function (ok) { if (ok) { form = null; paint(); } });
     }
 
@@ -475,12 +502,18 @@
       var card = h('section', { class: 'pt-card pt-potluck' });
       card.appendChild(h('div', { class: 'pt-card-head' }, h('span', { class: 'pt-head-ico' }, icon('pot', 1.8)),
         h('div', {}, h('h2', { class: 'pt-h2', text: t('potluck') }), h('p', { class: 'pt-sub', text: t('potluckSub') }))));
+      var locked = data.past;
+      if (ev.potluck_notes || (me.owner && !locked)) card.appendChild(suggestions(ev));
+      var myStuff = items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); });
+      if (myStuff.length) {
+        card.appendChild(h('div', { class: 'pt-mine-list' }, h('p', { class: 'pt-label', text: t('bringing') }),
+          h('div', { class: 'pt-extras' }, myStuff.map(function (i) { return h('span', { class: 'pt-extra is-mine' }, icon('yes', 2.8), h('b', { text: i.label })); }))));
+      }
       if (slots) {
         card.appendChild(h('div', { class: 'pt-progress' },
           h('div', { class: 'pt-bar' }, h('i', { style: 'width:' + Math.round(taken / slots * 100) + '%' })),
           h('span', { text: t('spots', { c: taken, n: slots }) })));
       }
-      var locked = data.past;
       CATS.forEach(function (cat) {
         var inCat = needed.filter(function (i) { return i.category === cat; });
         var extraCat = extras.filter(function (i) { return i.category === cat; });
@@ -518,41 +551,66 @@
         card.appendChild(group);
       });
       if (!items.length) card.appendChild(h('p', { class: 'pt-empty', text: me.owner ? t('ownerNeeded') : t('nothingNeeded') }));
-      if (!locked && coming(mine())) card.appendChild(itemForm('bring'));
+      if (!locked && coming(mine())) card.appendChild(itemForm('bring', myStuff.length > 0));
       if (!locked && me.owner) card.appendChild(itemForm('need'));
       return card;
+    }
+    var suggestOpen = false;
+    function suggestions(ev) {
+      var box = h('div', { class: 'pt-suggest' });
+      if (suggestOpen) {
+        var ta = h('textarea', { class: 'pt-input', rows: 3, maxlength: 6000, placeholder: t('suggestPh') });
+        ta.value = ev.potluck_notes || '';
+        box.appendChild(h('form', { class: 'pt-suggest-form', onsubmit: function (e) {
+          e.preventDefault();
+          act({ action: 'suggest', notes: ta.value }, t('saved')).then(function (ok) { if (ok) { suggestOpen = false; paint(); } });
+        } }, h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('suggestions') }), ta),
+          h('div', { class: 'pt-row-btns' }, h('button', { type: 'submit', class: 'btn btn-sm btn-gold', text: t('suggestSave') }),
+            h('button', { type: 'button', class: 'btn btn-sm', text: t('cancel'), onclick: function () { suggestOpen = false; paint(); } }))));
+        setTimeout(function () { ta.focus(); }, 0);
+        return box;
+      }
+      if (ev.potluck_notes) {
+        box.appendChild(h('p', { class: 'pt-label', text: t('suggestions') }));
+        box.appendChild(h('p', { class: 'pt-suggest-text', text: ev.potluck_notes }));
+      }
+      if (data.me.owner && !data.past) box.appendChild(h('button', { type: 'button', class: 'btn-link pt-suggest-edit', text: t(ev.potluck_notes ? 'suggestChange' : 'suggestEdit'),
+        onclick: function () { suggestOpen = true; paint(); } }));
+      return box;
     }
     function catSelect(val, onSet) {
       var sel = h('select', { class: 'pt-input pt-cat-sel', 'aria-label': t('category'), onchange: function () { onSet(sel.value); } },
         CATS.map(function (c) { return h('option', { value: c, text: STR[lang].cats[c], selected: c === val }); }));
       return sel;
     }
-    function itemForm(kind) {
-      var st = { label: '', category: kind === 'need' ? 'mains' : 'desserts', slots: 1 };
+    var bringAgain = false;
+    function itemForm(kind, more) {
+      var st = { label: '', category: kind === 'need' ? 'mains' : 'desserts' };
       var label = h('input', { class: 'pt-input', placeholder: t(kind === 'need' ? 'neededPh' : 'bringPh'), maxlength: 80, 'aria-label': t(kind === 'need' ? 'addNeeded' : 'bringOther'),
         oninput: function () { st.label = label.value; } });
       var submit = function (e) {
         e.preventDefault();
         if (!st.label.trim()) { label.focus(); return; }
-        act({ action: kind, label: st.label, category: st.category, slots: st.slots }, t('saved'));
+        bringAgain = kind === 'bring';
+        act({ action: kind, label: st.label, category: st.category }, t('saved'));
       };
+      if (kind === 'bring' && bringAgain) { bringAgain = false; setTimeout(function () { label.focus(); }, 0); }
       return h('form', { class: 'pt-add' + (kind === 'need' ? ' is-owner' : ''), onsubmit: submit },
-        h('p', { class: 'pt-label', text: t(kind === 'need' ? 'addNeeded' : 'bringOther') }),
+        h('p', { class: 'pt-label', text: t(kind === 'need' ? 'addNeeded' : more ? 'bringMore' : 'bringOther') }),
         h('div', { class: 'pt-add-row' }, label, catSelect(st.category, function (v) { st.category = v; })),
-        kind === 'need' ? stepper(t('slotsLabel'), 1, function (n) { st.slots = Math.max(1, n); }) : null,
         h('button', { type: 'submit', class: 'btn btn-sm' + (kind === 'need' ? ' btn-gold' : '') }, icon('plus', 2.6), t('add')));
     }
     function claimSheet(item) {
       var r = mine(), needRsvp = !coming(r);
       var s = sheet(t('claimTitle', { item: item.label }), needRsvp ? t('quickRsvp') : null);
-      var q = { name: store('bfmh_party_name') || '', count: Math.min(30, Math.max(1, data.me.household || 1)), note: '' };
+      var q = draftFrom(r); q.status = 'yes'; q.note = '';
       var form = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
         e.preventDefault();
         var chain = Promise.resolve(true);
         if (needRsvp) {
           if (data.me.as !== 'family' && !q.name.trim()) { nameIn.focus(); return; }
           if (data.me.as !== 'family') store('bfmh_party_name', q.name.trim());
-          chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.count, kids: 0, note: r && r.note });
+          chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.adults, kids: q.kids, note: r && r.note });
         }
         chain.then(function (ok) {
           if (!ok) return;
@@ -565,7 +623,7 @@
         nameIn = h('input', { class: 'pt-input', value: q.name, placeholder: t('namePh'), maxlength: 80, autocomplete: 'name', oninput: function () { q.name = nameIn.value; } });
         form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
       }
-      if (needRsvp) form.appendChild(counter(q.count, function (n) { q.count = n; }));
+      if (needRsvp) form.appendChild(headcount(q));
       var note = h('input', { class: 'pt-input', placeholder: t('claimNotePh'), maxlength: 120, oninput: function () { q.note = note.value; } });
       form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
       form.appendChild(h('div', { class: 'pop-btns' },
@@ -573,11 +631,6 @@
         h('button', { type: 'button', class: 'btn btn-wide', text: t('cancel'), onclick: s.close })));
       s.body.appendChild(form);
       (nameIn || note).focus();
-    }
-
-    function detailsCard(ev) {
-      if (!ev.details) return null;
-      return h('section', { class: 'pt-card pt-details' }, h('p', { class: 'pt-label', text: t('goodToKnow') }), h('p', { class: 'pt-details-text', text: ev.details }));
     }
 
     function paint() {
@@ -593,7 +646,7 @@
       var wrap = h('div', { class: 'pt' + (data.past ? ' is-past' : '') },
         hero(ev),
         h('div', { class: 'pt-cols' },
-          h('div', { class: 'pt-col' }, rsvpCard(), detailsCard(ev), potluckCard()),
+          h('div', { class: 'pt-col' }, rsvpCard(), potluckCard()),
           h('div', { class: 'pt-col' }, guestsCard())),
         !opts.embedded && data.me.owner ? h('a', { class: 'pt-applink', href: '/team/' }, icon('link'), t('openInApp')) : null,
         h('footer', { class: 'pt-foot' }, h('img', { src: '/images/optimized/logo-dancers-color.webp', alt: '' }),

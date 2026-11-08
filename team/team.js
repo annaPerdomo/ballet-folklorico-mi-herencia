@@ -168,7 +168,7 @@
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
       deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      feedSub: 'Gig news, plus the photos, videos and music the group has shared', blastNew: 'New gig: are you available?', blastAsk: 'Reminder: mark who can dance', blastConfirmed: 'Gig confirmed', blastCancelled: 'Gig cancelled', blastGathering: 'New group event', feedAdded: 'added {what}', feedAnd: ' and ',
+      feedSub: 'Gig news, plus the photos, videos and music the group has shared', blastNew: 'New gig: are you available?', blastAsk: 'Reminder: mark who can dance', blastConfirmed: 'Gig confirmed', blastCancelled: 'Gig cancelled', blastGathering: 'New group event', blastGatheringAsk: 'Reminder: RSVP for the group event', feedAdded: 'added {what}', feedAnd: ' and ',
       feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the Ramirez family', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the Ramirez family”. You keep every tool.',
@@ -199,11 +199,12 @@
       changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
       gkinds: { potluck: 'Potluck', posada: 'Posada', party: 'Party', practice: 'Practice', meeting: 'Meeting', outing: 'Outing', fundraiser: 'Fundraiser', other: 'Get-together' },
-      groupEvents: 'Group events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us: never on bfmh.dance or in GroupMe. Share the invite with anyone you like.',
+      groupEvents: 'Group events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us, never on bfmh.dance. Post one to GroupMe so families RSVP, and share the invite with anyone you like.',
+      announceEvent: 'Post to GroupMe', remindEvent: 'Remind in GroupMe', eventPosted: 'Posted to GroupMe — it’s in the Feed too', potluckNotes: 'Potluck suggestions', potluckNotesPh: 'e.g. College kids bring dessert, families with little ones bring drinks…',
       newEvent: 'New group event', newWhat: 'What are you adding?', addGig: 'A gig', addGigSub: 'A performance. Families mark who can dance.',
       addEvent: 'A group event', addEventSub: 'A potluck, posada or get-together, with RSVPs and an invite anyone can open.',
       eventKind: 'Kind of event', eventTitlePh: 'e.g. Christmas posada', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
-      eventDetails: 'Good to know', eventDetailsPh: 'Parking, what to wear, bring a chair…', potluckToggle: 'Potluck sign-up: guests pick what to bring',
+      eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…', potluckToggle: 'Potluck sign-up: guests pick what to bring',
       needEventDate: 'Give the event a date.', modalNewEvent: 'New group event', modalEditEvent: 'Edit group event',
       eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going', potluckShort: 'Potluck {c}/{n}',
       noEvents: 'No group events coming up.', pastEvents: 'Past group events', loadingEvent: 'Loading the event…',
@@ -351,7 +352,7 @@
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
       deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
-      feedSub: 'Noticias de los eventos, y las fotos, videos y música que el grupo ha compartido', blastNew: 'Nuevo evento: ¿pueden bailar?', blastAsk: 'Recordatorio: marquen quién puede bailar', blastConfirmed: 'Evento confirmado', blastCancelled: 'Evento cancelado', blastGathering: 'Nuevo convivio del grupo', feedAdded: 'agregó {what}', feedAnd: ' y ',
+      feedSub: 'Noticias de los eventos, y las fotos, videos y música que el grupo ha compartido', blastNew: 'Nuevo evento: ¿pueden bailar?', blastAsk: 'Recordatorio: marquen quién puede bailar', blastConfirmed: 'Evento confirmado', blastCancelled: 'Evento cancelado', blastGathering: 'Nuevo convivio del grupo', blastGatheringAsk: 'Recordatorio: confirma para el convivio', feedAdded: 'agregó {what}', feedAnd: ' y ',
       feedNew: 'Nuevo', feedMore: 'más', feedOlder: 'Ver anteriores', feedEmpty: 'Todavía no se ha agregado nada.', songOne: '1 canción', songMany: '{n} canciones',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'la familia Ramirez', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “la familia Ramirez”. Sigues teniendo todas las herramientas.',
@@ -382,11 +383,12 @@
       changesGigEdited: '{who} editó {fields}', changesGigCreated: '{who} creó este evento', changesGigDeleted: '{who} eliminó este evento',
       whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
       gkinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
-      groupEvents: 'Convivios del grupo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros: nunca en bfmh.dance ni en GroupMe. Comparte la invitación con quien quieras.',
+      groupEvents: 'Convivios del grupo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros, nunca en bfmh.dance. Publícalo en GroupMe para que las familias confirmen, y comparte la invitación con quien quieras.',
+      announceEvent: 'Publicar en GroupMe', remindEvent: 'Recordar en GroupMe', eventPosted: 'Publicado en GroupMe; también sale en Actividad', potluckNotes: 'Sugerencias para la comida', potluckNotesPh: 'p. ej. Los universitarios traen postre, las familias con niños chicos traen bebidas…',
       newEvent: 'Nuevo convivio', newWhat: '¿Qué vas a agregar?', addGig: 'Un evento', addGigSub: 'Una presentación. Las familias marcan quién puede bailar.',
       addEvent: 'Un convivio del grupo', addEventSub: 'Comida, posada o reunión, con confirmaciones y una invitación que cualquiera puede abrir.',
       eventKind: 'Tipo de convivio', eventTitlePh: 'p. ej. Posada navideña', eventWhere: 'Dónde', eventWherePh: 'p. ej. Casa de la familia Ramirez',
-      eventDetails: 'Para saber', eventDetailsPh: 'Estacionamiento, qué ponerse, traer silla…', potluckToggle: 'Lista de comida: los invitados eligen qué llevar',
+      eventDetails: 'Descripción', eventDetailsPh: 'De qué se trata, estacionamiento, qué ponerse, traer silla…', potluckToggle: 'Lista de comida: los invitados eligen qué llevar',
       needEventDate: 'Ponle fecha al convivio.', modalNewEvent: 'Nuevo convivio', modalEditEvent: 'Editar convivio',
       eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas', potluckShort: 'Comida {c}/{n}',
       noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
@@ -1950,6 +1952,8 @@
       e.preventDefault(); err.textContent = '';
       var fd = new FormData(form), body = { event_type: kind, potluck: potluck };
       fd.forEach(function (v, k) { body[k] = v; });
+      // Suggestions live in the potluck card, so writing them turns the potluck on.
+      if (String(body.potluck_notes || '').trim()) body.potluck = true;
       if (!String(body.title || '').trim()) { err.textContent = t('needTitle'); return; }
       if (!body.event_date) { err.textContent = t('needEventDate'); return; }
       var req = isNew ? api('/api/events', { method: 'POST', body: Object.assign({ status: 'gathering' }, body) })
@@ -1969,6 +1973,7 @@
       field(t('address'), inp('address', ev, {}), true),
       field(t('eventDetails'), h('textarea', { name: 'details', text: ev.details || '', placeholder: t('eventDetailsPh') }), true),
       potRow,
+      field(t('potluckNotes'), h('textarea', { name: 'potluck_notes', text: ev.potluck_notes || '', placeholder: t('potluckNotesPh') }), true),
       h('div', { class: 'full' }, err));
     var foot = h('div', { class: 'foot-btns' },
       h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'gathering-form', text: isNew ? t('create') : t('save') }),
@@ -2017,6 +2022,7 @@
       mine.ctl = window.BFMHParty.mount(body, { id: id, lang: state.lang, embedded: true, toast: toast,
         onChange: function () { mine.dirty = true; },
         onFlyer: isOwner() ? function (e) { pickFlyer(e.id); } : null,
+        onAnnounce: isOwner() ? function (e, again) { announceParty(e, again); } : null,
         onGallery: function (e) { openGallery(e.id); } });
     }, function (e) { toast(e.message, true); closeParty(); });
   }
@@ -2028,13 +2034,21 @@
     if (p.pushed && !silent && history.state && history.state.party === p.id) history.back();
     if (p.dirty) loadEvents().then(render).catch(function () {});
   }
+  function announceParty(ev, again) {
+    return api('/api/events/' + ev.id, { method: 'PATCH', body: { action: again ? 'remind' : 'announce' } }).then(function (d) {
+      var posted = d.notified && d.notified.groupme;
+      toast(posted ? t('eventPosted') : t('postFailed'), !posted);
+      if (partyUI && partyUI.id === ev.id && partyUI.ctl) { partyUI.dirty = true; partyUI.ctl.reload(); }
+    }).catch(function (e) { toast(e.message, true); });
+  }
   function partyMenu() {
     var p = partyUI; if (!p) return;
     var d = p.ctl && p.ctl.data();
     var ev = (d && d.event) || state.events.filter(function (e) { return e.id === p.id; })[0];
     if (!ev) return;
-    var sig = d && d.sig;
+    var sig = d && d.sig, posted = Boolean(d && d.announced);
     actionSheet(evTitle(ev), [
+      !isPast(ev) ? { label: t(posted ? 'remindEvent' : 'announceEvent'), icon: 'chat', onclick: function () { announceParty(ev, posted); } } : null,
       sig ? { label: t('shareEvent'), icon: 'share', onclick: function () { shareParty(ev, sig); } } : null,
       sig && navigator.share ? { label: t('copyEventLink'), icon: 'link', onclick: function () { copyText(inviteUrl(ev.id, sig)); } } : null,
       { label: t('editEvent'), icon: 'edit', onclick: function () {
@@ -2357,7 +2371,7 @@
       c.audio ? plural(c.audio, 'songOne', 'songMany') : null].filter(Boolean).join(t('feedAnd'));
   }
   var FEED_TILES = 6;
-  var BLASTS = { 'new': ['blastNew', 'bell'], ask: ['blastAsk', 'clock'], confirmed: ['blastConfirmed', 'yes'], cancelled: ['blastCancelled', 'no'], gathering: ['blastGathering', 'people'] };
+  var BLASTS = { 'new': ['blastNew', 'bell'], ask: ['blastAsk', 'clock'], confirmed: ['blastConfirmed', 'yes'], cancelled: ['blastCancelled', 'no'], gathering: ['blastGathering', 'people'], gathering_ask: ['blastGatheringAsk', 'clock'] };
   function openFeedEvent(id) {
     var ev = state.events.find(function (e) { return e.id === id; });
     if (!ev) return;

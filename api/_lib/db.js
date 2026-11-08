@@ -226,6 +226,9 @@ CREATE TABLE IF NOT EXISTS blasts (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS blasts_created ON blasts(created_at DESC, id DESC);
+ALTER TABLE blasts DROP CONSTRAINT IF EXISTS blasts_kind_check;
+ALTER TABLE blasts ADD CONSTRAINT blasts_kind_check CHECK (kind IN ('new','ask','confirmed','cancelled','gathering','gathering_ask'));
+ALTER TABLE events ADD COLUMN IF NOT EXISTS potluck_notes text;
 -- One-time backfill. Cancellations are left out: a quiet cancel looks the same as an announced one.
 INSERT INTO blasts (event_id, kind, actor, created_at)
 SELECT * FROM (
@@ -233,8 +236,9 @@ SELECT * FROM (
     FROM events WHERE asked_at IS NOT NULL
   UNION ALL SELECT id, 'ask', 'owner', asked_at FROM events WHERE asked_at IS NOT NULL AND ask_count > 1
   UNION ALL SELECT id, 'confirmed', 'owner', confirmed_at FROM events WHERE confirmed_at IS NOT NULL AND asked_at IS NOT NULL AND status IN ('confirmed', 'done')
-  UNION ALL SELECT id, 'gathering', 'owner', created_at FROM events WHERE status = 'gathering'
 ) b WHERE NOT EXISTS (SELECT 1 FROM blasts);
+-- Legacy: group events got a card at creation before a card required a real post.
+DELETE FROM blasts b USING events e WHERE b.event_id = e.id AND e.status = 'gathering' AND e.asked_at IS NULL;
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

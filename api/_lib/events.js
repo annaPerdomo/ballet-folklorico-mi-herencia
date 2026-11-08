@@ -76,14 +76,15 @@ export function withCalendarLinks(ev) {
 }
 
 // Never throws: a failed Feed card must not fail the GroupMe post's request, or the owner re-posts.
-export async function logBlast(eventId, kind, actor) {
+export async function logBlast(eventId, kind, actor, posted = true) {
+  if (!posted) return;
   await sql(`INSERT INTO blasts (event_id, kind, actor) SELECT $1, $2, $3
     WHERE NOT EXISTS (SELECT 1 FROM blasts WHERE event_id = $1 AND kind = $2 AND created_at > now() - interval '10 minutes')`, [eventId, kind, actor]).catch((e) => console.error('blast', e));
 }
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',
   'address', 'city', 'client_name', 'client_email', 'client_phone', 'message', 'dancers_needed', 'pay', 'notes',
-  'details', 'rehearsals', 'potluck'];
+  'details', 'rehearsals', 'potluck', 'potluck_notes'];
 
 export async function updateEvent(id, patch, tag = { source: 'owner', actor: 'owner' }) {
   const sets = []; const params = [id];

@@ -16,7 +16,7 @@ const MAX_PARTY = 30;
 const MAX_WRITE_INS_PER_MINUTE = 20;
 const TODAY = `(now() AT TIME ZONE 'America/Los_Angeles')::date`;
 
-const COLS = `id, title, status, event_type, event_date, start_time, end_time, venue, address, city, details, potluck, flyer_key, flyer_w, flyer_h,
+const COLS = `id, title, status, event_type, event_date, start_time, end_time, venue, address, city, details, potluck, potluck_notes, flyer_key, flyer_w, flyer_h, asked_at, ask_count,
   event_date < ${TODAY} AS past,
   (SELECT count(*) FROM media m WHERE m.event_id = events.id AND m.ready AND m.kind <> 'audio')::int AS media_count`;
 
@@ -38,8 +38,7 @@ export function cleanItem(b) {
   const label = str(b.label, 80);
   if (!label) throw httpError(400, 'Say what it is');
   const category = CATEGORIES.includes(b.category) ? b.category : 'other';
-  const slots = Math.max(1, Math.min(20, int(b.slots) || 1));
-  return { label, category, slots, note: str(b.note, 120) };
+  return { label, category, note: str(b.note, 120) };
 }
 
 export const flyerOf = (ev) => (ev.flyer_key && storageReady() ? { url: signedUrl('GET', ev.flyer_key), w: ev.flyer_w, h: ev.flyer_h } : null);
@@ -67,8 +66,9 @@ async function myRsvp(eventId, v, q = sql) {
 export async function loadParty(id, v) {
   const ev = await gathering(id);
   const [rsvps, items, claims, mine, household] = await Promise.all([
-    sql(`SELECT id, family_id, name, status, adults, kids, note, updated_at FROM gathering_rsvps WHERE event_id = $1
-          ORDER BY CASE status WHEN 'yes' THEN 0 WHEN 'maybe' THEN 1 ELSE 2 END, lower(name), id`, [id]),
+    sql(`SELECT r.id, r.family_id, r.name, r.status, r.adults, r.kids, r.note, f.name AS family_name
+          FROM gathering_rsvps r LEFT JOIN families f ON f.id = r.family_id WHERE r.event_id = $1
+          ORDER BY CASE r.status WHEN 'yes' THEN 0 WHEN 'maybe' THEN 1 ELSE 2 END, lower(r.name), r.id`, [id]),
     sql('SELECT id, label, category, slots, rsvp_id FROM gathering_items WHERE event_id = $1 ORDER BY id', [id]),
     sql(`SELECT c.item_id, c.rsvp_id, c.note FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id
           WHERE i.event_id = $1 ORDER BY c.created_at`, [id]),
@@ -76,13 +76,15 @@ export async function loadParty(id, v) {
     v.family ? sql('SELECT count(*)::int AS n FROM dancers WHERE family_id = $1 AND active', [v.family.id]) : [],
   ]);
   const myId = mine && mine.id;
-  const { past, flyer_key, flyer_w, flyer_h, ...event } = ev;
+  const { past, flyer_key, flyer_w, flyer_h, asked_at, ask_count, ...event } = ev;
   return {
     event: { ...withCalendarLinks(event), flyer: flyerOf(ev) },
     past,
+    announced: v.owner ? (ask_count > 0 ? asked_at : null) : undefined,
     // Notes and who said no are for the hosts; guests get only the count.
     declined: rsvps.filter((r) => r.status === 'no').length,
-    rsvps: rsvps.filter((r) => r.status !== 'no' || v.owner || r.id === myId).map((r) => ({ id: r.id, name: r.name, family: Boolean(r.family_id), status: r.status, adults: r.adults, kids: r.kids,
+    // The page appends “family” only while the name is still the family's default.
+    rsvps: rsvps.filter((r) => r.status !== 'no' || v.owner || r.id === myId).map((r) => ({ id: r.id, name: r.name, family: Boolean(r.family_id) && r.name === r.family_name, status: r.status, adults: r.adults, kids: r.kids,
       mine: r.id === myId, note: v.owner || r.id === myId ? r.note : undefined })),
     items: items.map((i) => ({ id: i.id, label: i.label, category: i.category, slots: i.slots, by: i.rsvp_id, mine: Boolean(myId) && i.rsvp_id === myId,
       claims: claims.filter((c) => c.item_id === i.id).map((c) => ({ rsvp_id: c.rsvp_id, note: c.note, mine: c.rsvp_id === myId })) })),
@@ -110,7 +112,7 @@ export async function partyAction(id, v, b) {
 
     if (action === 'rsvp') {
       const r = cleanRsvp(b, { guest: !v.family });
-      const name = v.family ? v.family.name : r.name;
+      const name = v.family ? r.name || v.family.name : r.name;
       let key = null, rsvpId;
       if (mine) {
         await q(`UPDATE gathering_rsvps SET name = $2, status = $3, adults = $4, kids = $5, note = $6, updated_at = now() WHERE id = $1`,
@@ -163,8 +165,8 @@ export async function partyAction(id, v, b) {
       const it = cleanItem(b);
       const [{ n }] = await q('SELECT count(*)::int AS n FROM gathering_items WHERE event_id = $1', [id]);
       if (n >= MAX_ITEMS) throw httpError(409, 'The potluck list is full');
-      await q('INSERT INTO gathering_items (event_id, label, category, slots, rsvp_id) VALUES ($1, $2, $3, $4, $5)',
-        [id, it.label, it.category, action === 'need' ? it.slots : 1, action === 'bring' ? mine.id : null]);
+      await q('INSERT INTO gathering_items (event_id, label, category, rsvp_id) VALUES ($1, $2, $3, $4)',
+        [id, it.label, it.category, action === 'bring' ? mine.id : null]);
       if (action === 'need' && !ev.potluck) await q('UPDATE events SET potluck = true, updated_at = now() WHERE id = $1', [id]);
       return {};
     }
@@ -173,6 +175,11 @@ export async function partyAction(id, v, b) {
       if (!item) return {};
       if (!v.owner && !(mine && item.rsvp_id === mine.id)) throw httpError(403, 'Only whoever added it can take it off');
       await q('DELETE FROM gathering_items WHERE id = $1', [item.id]);
+      return {};
+    }
+    if (action === 'suggest') {
+      requireOwner();
+      await q('UPDATE events SET potluck_notes = $2, potluck = true, updated_at = now() WHERE id = $1', [id, str(b.notes, 6000)]);
       return {};
     }
     if (action === 'remove') {

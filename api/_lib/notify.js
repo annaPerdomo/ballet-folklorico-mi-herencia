@@ -93,6 +93,28 @@ export function askText(ev, { again = false, now } = {}) {
   ].filter((l) => l !== null).join('\n');
 }
 
+export function gatheringText(ev, { again = false, now } = {}) {
+  const where = eventWhere(ev);
+  const time = [ev.start_time, ev.end_time].filter(Boolean).join('–');
+  const n = daysUntil(ev.event_date, now);
+  const soon = n === 0 ? 'is today' : n === 1 ? 'is tomorrow' : n > 1 ? `is in ${n} days` : null;
+  const head = [
+    again ? `🎉 Reminder: ${ev.title}${soon ? ' ' + soon : ''}! Please RSVP if you haven’t yet.` : `🎉 You’re invited: ${ev.title}! / ¡Están invitados!`,
+    [shortDate(ev.event_date), time].filter(Boolean).join(' · '),
+    where ? `📍 ${where}` : null,
+    where ? `🗺 ${mapLink(ev)}` : null,
+  ].filter((l) => l !== null).join('\n');
+  const tail = [
+    ev.potluck ? '\n🍲 Potluck: pick what you’ll bring on the invite. / Comida compartida: elige qué llevas en la invitación.' : null,
+    '',
+    `👉 RSVP: ${siteUrl()}/e/${ev.id}/${calendarSig(ev.id)}`,
+  ].filter((l) => l !== null).join('\n');
+  // postGroupMe cuts at 990 chars; the description gives way, never the link.
+  const room = 990 - head.length - tail.length - 4;
+  const details = ev.details && room > 40 ? '\n' + (ev.details.length > room ? ev.details.slice(0, room - 1).trimEnd() + '…' : ev.details) : null;
+  return [head, details, tail].filter((l) => l !== null).join('\n');
+}
+
 export function tallyText(ev, roster) {
   const g = { yes: [], maybe: [], no: [], pending: [] };
   for (const f of roster) for (const d of f.dancers) g[d.status || 'pending'].push(d.name.split(' ')[0]);
