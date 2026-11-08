@@ -108,7 +108,7 @@ export function gatheringText(ev, { again = false, now } = {}) {
     where ? `🗺 ${mapLink(ev)}` : null,
   ].filter((l) => l !== null).join('\n');
   const tail = [
-    ev.potluck ? '\n🍲 Potluck: pick what you’ll bring on the invite. / Comida compartida: elige qué llevas en la invitación.' : null,
+    ev.event_type === 'potluck' ? '\n🍲 Potluck: pick what you’ll bring on the invite. / Comida compartida: elige qué llevas en la invitación.' : null,
     '',
     `👉 RSVP: ${siteUrl()}/e/${ev.id}/${calendarSig(ev.id)}`,
   ].filter((l) => l !== null).join('\n');

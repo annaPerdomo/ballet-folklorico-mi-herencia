@@ -200,13 +200,13 @@
       changesTitle: 'Recent changes', changesMore: 'Show all', changesEmpty: 'No changes yet', changesLoading: 'Loading…',
       changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
-      gkinds: { potluck: 'Potluck', posada: 'Posada', party: 'Party', practice: 'Practice', meeting: 'Meeting', outing: 'Outing', fundraiser: 'Fundraiser', other: 'Get-together' },
-      groupEvents: 'Team events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us, never on bfmh.dance. Post one to GroupMe so families RSVP, and share the invite with anyone you like.',
+      gkinds: { potluck: 'Potluck', party: 'Party', practice: 'Practice', meeting: 'Meeting', outing: 'Outing' },
+      groupEvents: 'Team events', groupEventsSub: 'Potlucks, parties and outings. Just for us, never on bfmh.dance. Post one to GroupMe so families RSVP, and share the invite with anyone you like.',
       announceEvent: 'Post to GroupMe', remindEvent: 'Remind in GroupMe', eventPosted: 'Posted to GroupMe — it’s in the Feed too', potluckNotes: 'Potluck suggestions', potluckNotesPh: 'e.g. College kids bring dessert, families with little ones bring drinks…',
       newEvent: 'New team event', newWhat: 'What are you adding?', addGig: 'A gig', addGigSub: 'A performance. Families mark who can dance.',
-      addEvent: 'A team event', addEventSub: 'A potluck, posada or get-together, with RSVPs and an invite anyone can open.',
-      eventKind: 'Kind of event', eventTitlePh: 'e.g. Christmas posada', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
-      eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…', potluckToggle: 'Potluck sign-up: guests pick what to bring',
+      addEvent: 'A team event', addEventSub: 'A potluck, party or outing, with RSVPs and an invite anyone can open.',
+      eventKind: 'Kind of event', eventTitlePh: 'e.g. End-of-year potluck', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
+      eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…',
       needEventDate: 'Give the event a date.', modalNewEvent: 'New team event', modalEditEvent: 'Edit team event',
       eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going', potluckShort: 'Potluck {c}/{n}',
       noEvents: 'No team events coming up.', pastEvents: 'Past team events', loadingEvent: 'Loading the event…',
@@ -386,13 +386,13 @@
       changesTitle: 'Cambios recientes', changesMore: 'Ver todos', changesEmpty: 'Todavía no hay cambios', changesLoading: 'Cargando…',
       changesGigEdited: '{who} editó {fields}', changesGigCreated: '{who} creó este evento', changesGigDeleted: '{who} eliminó este evento',
       whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
-      gkinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
-      groupEvents: 'Convivios del equipo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros, nunca en bfmh.dance. Publícalo en GroupMe para que las familias confirmen, y comparte la invitación con quien quieras.',
+      gkinds: { potluck: 'Comida compartida', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo' },
+      groupEvents: 'Convivios del equipo', groupEventsSub: 'Comidas, fiestas y paseos. Solo para nosotros, nunca en bfmh.dance. Publícalo en GroupMe para que las familias confirmen, y comparte la invitación con quien quieras.',
       announceEvent: 'Publicar en GroupMe', remindEvent: 'Recordar en GroupMe', eventPosted: 'Publicado en GroupMe; también sale en Actividad', potluckNotes: 'Sugerencias para la comida', potluckNotesPh: 'p. ej. Los universitarios traen postre, las familias con niños chicos traen bebidas…',
       newEvent: 'Nuevo convivio', newWhat: '¿Qué vas a agregar?', addGig: 'Un evento', addGigSub: 'Una presentación. Las familias marcan quién puede bailar.',
-      addEvent: 'Un convivio del grupo', addEventSub: 'Comida, posada o reunión, con confirmaciones y una invitación que cualquiera puede abrir.',
-      eventKind: 'Tipo de convivio', eventTitlePh: 'p. ej. Posada navideña', eventWhere: 'Dónde', eventWherePh: 'p. ej. Casa de la familia Ramirez',
-      eventDetails: 'Descripción', eventDetailsPh: 'De qué se trata, estacionamiento, qué ponerse, traer silla…', potluckToggle: 'Lista de comida: los invitados eligen qué llevar',
+      addEvent: 'Un convivio del grupo', addEventSub: 'Comida, fiesta o paseo, con confirmaciones y una invitación que cualquiera puede abrir.',
+      eventKind: 'Tipo de convivio', eventTitlePh: 'p. ej. Comida de fin de año', eventWhere: 'Dónde', eventWherePh: 'p. ej. Casa de la familia Ramirez',
+      eventDetails: 'Descripción', eventDetailsPh: 'De qué se trata, estacionamiento, qué ponerse, traer silla…',
       needEventDate: 'Ponle fecha al convivio.', modalNewEvent: 'Nuevo convivio', modalEditEvent: 'Editar convivio',
       eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas', potluckShort: 'Comida {c}/{n}',
       noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
@@ -1897,8 +1897,8 @@
     return det;
   }
 
-  /* ── group events (potlucks, posadas): RSVPs + potluck live in team/party.js ── */
-  var GKINDS = ['potluck', 'posada', 'party', 'practice', 'meeting', 'outing', 'fundraiser', 'other'];
+  /* ── group events (potlucks, parties): RSVPs + potluck live in team/party.js ── */
+  var GKINDS = ['potluck', 'party', 'practice', 'meeting', 'outing'];
   function isGathering(ev) { return ev && ev.status === 'gathering'; }
   function upcomingGatherings() {
     return state.events.filter(function (e) { return isGathering(e) && !isPast(e); })
@@ -1915,7 +1915,7 @@
       : h('span', { class: 'evrow-cta', text: t('eventRsvp') });
     var foot = [];
     if (!owner && !past && p.people) foot.push(t('eventGoing', { n: p.people }));
-    if (ev.potluck && p.needed) foot.push(t('potluckShort', { c: p.claimed, n: p.needed }));
+    if (ev.event_type === 'potluck' && p.needed) foot.push(t('potluckShort', { c: p.claimed, n: p.needed }));
     return h('button', { type: 'button', class: 'evrow' + (past ? ' is-past' : '') + (!owner && !past && !mine ? ' is-ask' : ''), id: 'event-' + ev.id,
       'aria-label': evTitle(ev), onclick: function () { openParty(ev.id); } },
       dateBox(ev),
@@ -1954,28 +1954,24 @@
   function gatheringForm(ev, after) {
     ev = ev || {};
     var isNew = !ev.id;
-    var kind = ev.event_type && GKINDS.indexOf(ev.event_type) !== -1 ? ev.event_type : 'potluck';
-    var potluck = isNew ? true : !!ev.potluck;
+    var kind = ev.event_type && GKINDS.indexOf(ev.event_type) !== -1 ? ev.event_type : isNew ? 'potluck' : 'party';
     var kinds = h('div', { class: 'frow gkinds', role: 'radiogroup', 'aria-label': t('eventKind') });
     function paintKinds() {
       kinds.innerHTML = '';
       GKINDS.forEach(function (k) {
         kinds.appendChild(h('button', { type: 'button', role: 'radio', 'aria-checked': kind === k ? 'true' : 'false', class: 'fchip' + (kind === k ? ' is-on' : ''),
-          text: t('gkinds')[k], onclick: function () { kind = k; if (isNew) setPotluck(k === 'potluck' || k === 'posada' || k === 'party'); paintKinds(); } }));
+          text: t('gkinds')[k], onclick: function () { kind = k; paintKinds(); } }));
       });
+      notes.hidden = kind !== 'potluck';
     }
-    var potRow = h('button', { type: 'button', class: 'pop-toggle full', role: 'switch', onclick: function () { setPotluck(!potluck); } },
-      icon('people', 2.2), h('span', { class: 'site-label', text: t('potluckToggle') }), h('span', { class: 'switch' }));
-    function setPotluck(on) { potluck = on; potRow.classList.toggle('is-on', on); potRow.setAttribute('aria-checked', on ? 'true' : 'false'); }
-    setPotluck(potluck); paintKinds();
+    var notes = field(t('potluckNotes'), h('textarea', { name: 'potluck_notes', text: ev.potluck_notes || '', placeholder: t('potluckNotesPh') }), true);
+    paintKinds();
     var err = h('p', { class: 'error' });
     function done() { closeModal(); if (after) after(); }
     var form = h('form', { class: 'form-grid', id: 'gathering-form', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
-      var fd = new FormData(form), body = { event_type: kind, potluck: potluck };
+      var fd = new FormData(form), body = { event_type: kind, potluck: kind === 'potluck' };
       fd.forEach(function (v, k) { body[k] = v; });
-      // Suggestions live in the potluck card, so writing them turns the potluck on.
-      if (String(body.potluck_notes || '').trim()) body.potluck = true;
       if (!String(body.title || '').trim()) { err.textContent = t('needTitle'); return; }
       if (!body.event_date) { err.textContent = t('needEventDate'); return; }
       var req = isNew ? api('/api/events', { method: 'POST', body: Object.assign({ status: 'gathering' }, body) })
@@ -1994,8 +1990,7 @@
       field(t('city'), inp('city', ev, { placeholder: 'Hacienda Heights' })),
       field(t('address'), inp('address', ev, {}), true),
       field(t('eventDetails'), h('textarea', { name: 'details', text: ev.details || '', placeholder: t('eventDetailsPh') }), true),
-      potRow,
-      field(t('potluckNotes'), h('textarea', { name: 'potluck_notes', text: ev.potluck_notes || '', placeholder: t('potluckNotesPh') }), true),
+      notes,
       h('div', { class: 'full' }, err));
     var foot = h('div', { class: 'foot-btns' },
       h('button', { class: 'btn btn-gold btn-main', type: 'submit', form: 'gathering-form', text: isNew ? t('create') : t('save') }),

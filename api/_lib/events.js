@@ -8,7 +8,7 @@ const LAPSE_AFTER_DAYS = 14;
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
 // A folder is a gallery-only event: never in Gigs, calendars or GroupMe.
 export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder', 'gathering'];
-// A group event (potluck, posada) is the group's own, never a gig: no asks, feeds or website.
+// A group event (potluck, party) is the group's own, never a gig: no asks, feeds or website.
 export const LISTED = [...MEMBER_VISIBLE, 'gathering'];
 
 const ADMIN_COLS = `e.*`;

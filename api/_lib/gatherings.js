@@ -7,7 +7,6 @@ import { withCalendarLinks } from './events.js';
 import { actorOf } from './auth.js';
 import { signedUrl, storageReady } from './storage.js';
 
-export const KINDS = ['potluck', 'posada', 'party', 'practice', 'meeting', 'outing', 'fundraiser', 'other'];
 export const CATEGORIES = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
 const ANSWERS = ['yes', 'maybe', 'no'];
 const MAX_RSVPS = 400;

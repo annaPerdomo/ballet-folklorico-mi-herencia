@@ -17,19 +17,11 @@
       change: 'Edit my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
       whoComing: 'Who’s coming', personOne: 'person', personMany: 'people', rsvpOne: '1 RSVP', rsvpMany: '{n} RSVPs',
       maybeN: '{n} maybe', cantN: '{n} can’t make it', beFirst: 'No RSVPs yet — be the first!', you: 'You', familyName: '{name} family',
-      potluck: 'Potluck', potluckSub: 'Pick something to bring so we don’t end up with five pots of rice.', spots: '{c} of {n} covered',
-      bringIt: 'I’ll bring it', covered: 'Covered', leftN: '{n} more needed',  undo: 'Undo',
       bringOther: 'Bringing something else?', bringPh: 'e.g. Flan, aguas frescas', category: 'Category', add: 'Add',
-      addNeeded: 'Add a dish you need someone to bring', neededPh: 'e.g. Tamales, rice, aguas frescas',
-      nothingNeeded: 'Nothing on the list yet.', ownerNeeded: 'List the dishes you need and guests sign up for them.',
-      bringing: 'You’re bringing', bringMore: 'Change what you’re bringing', bringAdd: 'Add what you’re bringing',
-      bringTitle: 'What are you bringing?', bringHint: 'Tap something the hosts need, or add your own. It saves with your RSVP.', suggestions: 'Ideas from the hosts',
-      claimTitle: 'Bringing {item}', claimNote: 'Anything to add? (optional)', claimNotePh: 'e.g. red pork, 2 dozen', confirm: 'Confirm',
-      quickRsvp: 'RSVP first so everyone knows who’s bringing it.', rsvpAndBring: 'RSVP & bring it',
+      bringing: 'You’re bringing', bringTitle: 'What are you bringing?', bringHint: 'Add what you’re bringing. It saves with your RSVP.', suggestions: 'Ideas from the hosts',
       past: 'This event already happened — thank you for coming!', photos: 'Photos & videos',
       thanks: '¡Gracias! You’re on the list', saved: 'Saved', removed: 'Removed',
-      removeGuest: 'Remove from the guest list', removeAsk: 'Take {name} off the guest list? What they signed up to bring goes back on the list.',
-      removeItem: 'Remove from the list', removeItemAsk: 'Take “{item}” off the potluck list?', remove: 'Remove', hostNote: 'Note',
+      removeGuest: 'Remove from the guest list', removeAsk: 'Take {name} off the guest list? What they signed up to bring goes back on the list.', remove: 'Remove', removeDish: 'Take “{item}” off', hostNote: 'Note',
       invalid: 'This invite link isn’t valid anymore. Ask whoever sent it for a new one.', loading: 'Loading…', tryAgain: 'Try again',
       copied: 'Link copied', hosted: 'Hosted by', openInApp: 'Manage this event in the team app',
       rsvpFamily: 'Will the {name} family be there?', howMany: 'How many are coming?', howManyHint: 'Count yourself too.',
@@ -52,19 +44,11 @@
       change: 'Editar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
       whoComing: 'Quiénes vienen', personOne: 'persona', personMany: 'personas', rsvpOne: '1 respuesta', rsvpMany: '{n} respuestas',
       maybeN: '{n} tal vez', cantN: '{n} no pueden', beFirst: 'Aún no hay respuestas. ¡Sé el primero!', you: 'Tú', familyName: 'Familia {name}',
-      potluck: 'Comida compartida', potluckSub: 'Elige algo para llevar, para que no terminemos con cinco ollas de arroz.', spots: '{c} de {n} cubiertos',
-      bringIt: 'Yo lo llevo', covered: 'Cubierto', leftN: 'Faltan {n}',  undo: 'Deshacer',
       bringOther: '¿Vas a llevar otra cosa?', bringPh: 'p. ej. flan, aguas frescas', category: 'Categoría', add: 'Agregar',
-      addNeeded: 'Agregar un platillo que haga falta', neededPh: 'p. ej. tamales, arroz, aguas frescas',
-      nothingNeeded: 'Todavía no hay nada en la lista.', ownerNeeded: 'Anota los platillos que hacen falta y los invitados se apuntan.',
-      bringing: 'Vas a llevar', bringMore: 'Cambiar lo que vas a llevar', bringAdd: 'Agregar lo que vas a llevar',
-      bringTitle: '¿Qué vas a llevar?', bringHint: 'Toca algo que necesitan los anfitriones, o agrega lo tuyo. Se guarda con tu respuesta.', suggestions: 'Ideas de los anfitriones',
-      claimTitle: 'Llevas {item}', claimNote: '¿Algo que agregar? (opcional)', claimNotePh: 'p. ej. de puerco en rojo, 2 docenas', confirm: 'Confirmar',
-      quickRsvp: 'Primero confirma, para que todos sepan quién lo lleva.', rsvpAndBring: 'Confirmar y llevarlo',
+      bringing: 'Vas a llevar', bringTitle: '¿Qué vas a llevar?', bringHint: 'Agrega lo que vas a llevar. Se guarda con tu respuesta.', suggestions: 'Ideas de los anfitriones',
       past: 'Este convivio ya pasó. ¡Gracias por venir!', photos: 'Fotos y videos',
       thanks: '¡Gracias! Ya estás en la lista', saved: 'Guardado', removed: 'Quitado',
-      removeGuest: 'Quitar de la lista', removeAsk: '¿Quitar a {name} de la lista? Lo que iba a llevar vuelve a la lista.',
-      removeItem: 'Quitar de la lista', removeItemAsk: '¿Quitar “{item}” de la lista?', remove: 'Quitar', hostNote: 'Nota',
+      removeGuest: 'Quitar de la lista', removeAsk: '¿Quitar a {name} de la lista? Lo que iba a llevar vuelve a la lista.', remove: 'Quitar', removeDish: 'Quitar “{item}”', hostNote: 'Nota',
       invalid: 'Este enlace de invitación ya no es válido. Pide uno nuevo a quien te lo mandó.', loading: 'Cargando…', tryAgain: 'Reintentar',
       copied: 'Enlace copiado', hosted: 'Organiza', openInApp: 'Administra este convivio en la app del equipo',
       rsvpFamily: '¿Va a venir la familia {name}?', howMany: '¿Cuántos van a venir?', howManyHint: 'Cuéntate a ti también.',
@@ -125,22 +109,19 @@
   var FIESTA = ['#e84393', '#1e9ce0', '#fdc53a', '#8c4be0', '#f0832e', '#1cc09e', '#e12b30', '#2bc463', '#4547dd'];
   var PICADO_THEMES = {
     classic: { flags: [1, 2, 3, 4, 5, 6], colors: FIESTA },
-    posada: { flags: [7, 8, 9, 2, 7, 8], colors: ['#e12b30', '#2bc463', '#fdc53a', '#f6ead6', '#b4162b', '#157a4a'] },
     potluck: { flags: [10, 3, 1, 14, 10, 5], colors: ['#f0832e', '#fdc53a', '#e12b30', '#2bc463', '#1cc09e', '#e84393'] },
     party: { flags: [11, 12, 7, 1, 11, 12], colors: FIESTA },
     practice: { flags: [4, 14, 3, 5, 4, 14], colors: FIESTA },
     meeting: { flags: [5, 1, 2, 3, 5, 1], colors: ['#1e9ce0', '#fdc53a', '#1cc09e', '#8c4be0', '#e84393', '#4547dd'] },
     outing: { flags: [13, 3, 2, 1, 13, 3], colors: ['#1e9ce0', '#fdc53a', '#2bc463', '#f0832e', '#1cc09e', '#e84393'] },
-    fundraiser: { flags: [1, 7, 3, 2, 1, 7], colors: FIESTA },
     muertos: { flags: [6, 1, 3, 6, 8, 5], colors: ['#f0832e', '#e84393', '#8c4be0', '#fdc53a', '#1cc09e', '#e12b30'] },
     // Copies the papel picado on the 2026 end-of-year potluck flyer.
     navidad: { flags: [8, 15, 16, 17, 18, 9], colors: ['#ec4f9c', '#3fb24f', '#f7c534', '#1fb3b5', '#e5352c', '#9a4fd8'], step: 1 },
   };
   function picadoTheme(ev) {
     var kind = ev && ev.event_type, month = ev && ev.event_date ? +ev.event_date.slice(5, 7) : 0;
-    if (kind === 'posada') return PICADO_THEMES.posada;
-    if ((month === 10 || month === 11) && (kind === 'party' || kind === 'other' || kind === 'potluck')) return PICADO_THEMES.muertos;
-    if (month === 12 && (kind === 'potluck' || kind === 'party' || kind === 'other')) return PICADO_THEMES.navidad;
+    if ((month === 10 || month === 11) && (kind === 'party' || kind === 'potluck')) return PICADO_THEMES.muertos;
+    if (month === 12 && (kind === 'potluck' || kind === 'party')) return PICADO_THEMES.navidad;
     return PICADO_THEMES[kind] || PICADO_THEMES.classic;
   }
   var picadoReady = null;
@@ -280,7 +261,6 @@
       return ((w[0] || '?').charAt(0) + (w[1] && !/^(&|y|and)$/i.test(w[1]) ? w[1].charAt(0) : '')).toUpperCase();
     }
     function mine() { return data && data.rsvps.filter(function (r) { return r.mine; })[0] || null; }
-    function coming(r) { return r && (r.status === 'yes' || r.status === 'maybe'); }
     function shareUrl() { return sig ? location.origin + '/e/' + id + '/' + sig : location.href; }
     function mapLinks(ev) {
       var q = encodeURIComponent((ev.address ? [ev.city ? null : ev.venue, ev.address, ev.city] : [ev.venue, ev.city]).filter(Boolean).join(', '));
@@ -445,7 +425,7 @@
       refreshAll();
       return el;
     }
-    function potluckOn() { return Boolean(data.event.potluck || data.items.length); }
+    function potluckOn() { return data.event.event_type === 'potluck'; }
     function myBringing() {
       return data.items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); }).map(function (i) { return i.label; });
     }
@@ -465,7 +445,8 @@
     }
     function bringPicker(f) {
       var b = f.bring;
-      var box = h('div', { class: 'pt-bringbox' }, h('p', { class: 'pt-label', text: t('bringTitle') }), h('p', { class: 'pt-hint', text: t('bringHint') }));
+      var box = h('div', { class: 'pt-bringbox' }, h('p', { class: 'pt-label', text: t('bringTitle') }), h('p', { class: 'pt-hint', text: t('bringHint') }),
+        data.event.potluck_notes ? suggestions(data.event) : null);
       var open = data.items.filter(function (i) {
         return !i.by && (b.claims[i.id] !== undefined || i.claims.filter(function (c) { return !c.mine; }).length < i.slots);
       });
@@ -488,13 +469,6 @@
         h('div', { class: 'pt-add-row' }, catSelect(b.category, function (v) { b.category = v; }),
           h('button', { type: 'button', class: 'btn btn-sm', onclick: addOwn }, icon('plus', 2.6), t('add')))));
       return box;
-    }
-    function editBringing() {
-      if (!form) form = draftFrom(mine());
-      if (form.status !== 'yes' && form.status !== 'maybe') form.status = 'yes';
-      paint();
-      var card = root.querySelector('.pt-bringbox') || root.querySelector('.pt-rsvp');
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     function draftFrom(r) {
       var fam = data.me.as === 'family';
@@ -531,12 +505,18 @@
         h('div', { class: 'pt-count-side' }, h('span', { class: 'pt-count-l', text: people === 1 ? t('personOne') : t('personMany') }),
           h('span', { class: 'pt-count-s', text: [yes.length ? plural(yes.length, 'rsvpOne', 'rsvpMany') : null, maybe.length ? t('maybeN', { n: maybe.length }) : null,
             declined ? t('cantN', { n: declined }) : null].filter(Boolean).join(' · ') }))));
+      var dishes = {};
+      if (potluckOn()) data.items.forEach(function (i) {
+        if (i.by) (dishes[i.by] = dishes[i.by] || []).push(i.label);
+        i.claims.forEach(function (c) { (dishes[c.rsvp_id] = dishes[c.rsvp_id] || []).push(i.label); });
+      });
       function row(r) {
-        var tappable = data.me.owner;
+        var tappable = data.me.owner, bring = r.status !== 'no' && dishes[r.id];
         return h(tappable ? 'button' : 'div', { type: tappable ? 'button' : null, class: 'pt-guest' + (r.mine ? ' is-mine' : '') + ' is-' + r.status,
           onclick: tappable ? function () { guestSheet(r); } : null },
           h('span', { class: 'pt-av', 'aria-hidden': 'true', text: initials(r.name) }),
           h('span', { class: 'pt-guest-main' }, h('b', { text: whoName(r) }), r.status !== 'no' && party(r) ? h('span', { text: party(r) }) : null,
+            bring ? h('span', { class: 'pt-guest-bring' }, icon('pot', 2), bring.join(', ')) : null,
             r.note && data.me.owner ? h('em', { class: 'pt-guest-note', text: '“' + r.note + '”' }) : null),
           r.mine ? h('span', { class: 'pt-you', text: t('you') }) : null);
       }
@@ -554,7 +534,14 @@
     function guestSheet(r) {
       var s = sheet(whoName(r), [t(r.status === 'yes' ? 'going' : r.status === 'maybe' ? 'maybe' : 'cant'), party(r)].filter(Boolean).join(' · '));
       if (r.note) s.body.appendChild(h('p', { class: 'pop-msg' }, h('b', { text: t('hostNote') + ': ' }), r.note));
-      var acts = h('div', { class: 'acts' }, h('button', { type: 'button', class: 'act danger', onclick: function () {
+      var acts = h('div', { class: 'acts' }, data.items.map(function (i) {
+        var claimed = i.claims.some(function (c) { return c.rsvp_id === r.id; });
+        if (i.by !== r.id && !claimed) return null;
+        return h('button', { type: 'button', class: 'act', onclick: function () {
+          s.close();
+          act(i.by === r.id ? { action: 'drop', item: i.id } : { action: 'unclaim', item: i.id, rsvp: r.id }, t('removed'));
+        } }, h('span', { class: 'act-ico' }, icon('trash')), h('span', { text: t('removeDish', { item: i.label }) }));
+      }), h('button', { type: 'button', class: 'act danger', onclick: function () {
         s.close();
         confirmIt(t('removeAsk', { name: whoName(r) }), t('remove')).then(function (yes) { if (yes) act({ action: 'remove', rsvp: r.id }, t('removed')); });
       } }, h('span', { class: 'act-ico' }, icon('trash')), h('span', { text: t('removeGuest') })));
@@ -562,70 +549,6 @@
       s.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: s.close }));
     }
 
-    function potluckCard() {
-      var ev = data.event, items = data.items, me = data.me;
-      if (!ev.potluck && !items.length) return null;
-      var byId = {}; data.rsvps.forEach(function (r) { byId[r.id] = r; });
-      var needed = items.filter(function (i) { return !i.by; }), extras = items.filter(function (i) { return i.by; });
-      var slots = needed.reduce(function (n, i) { return n + i.slots; }, 0);
-      var taken = needed.reduce(function (n, i) { return n + Math.min(i.slots, i.claims.length); }, 0);
-      var card = h('section', { class: 'pt-card pt-potluck' });
-      card.appendChild(h('div', { class: 'pt-card-head' }, h('span', { class: 'pt-head-ico' }, icon('pot', 1.8)),
-        h('div', {}, h('h2', { class: 'pt-h2', text: t('potluck') }), h('p', { class: 'pt-sub', text: t('potluckSub') }))));
-      var locked = data.past;
-      if (ev.potluck_notes) card.appendChild(suggestions(ev));
-      var myStuff = items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); });
-      if (myStuff.length) {
-        card.appendChild(h('div', { class: 'pt-mine-list' }, h('p', { class: 'pt-label', text: t('bringing') }),
-          h('div', { class: 'pt-extras' }, myStuff.map(function (i) { return h('span', { class: 'pt-extra is-mine' }, icon('yes', 2.8), h('b', { text: i.label })); }))));
-      }
-      if (slots) {
-        card.appendChild(h('div', { class: 'pt-progress' },
-          h('div', { class: 'pt-bar' }, h('i', { style: 'width:' + Math.round(taken / slots * 100) + '%' })),
-          h('span', { text: t('spots', { c: taken, n: slots }) })));
-      }
-      CATS.forEach(function (cat) {
-        var inCat = needed.filter(function (i) { return i.category === cat; });
-        var extraCat = extras.filter(function (i) { return i.category === cat; });
-        if (!inCat.length && !extraCat.length) return;
-        var group = h('div', { class: 'pt-cat' }, h('p', { class: 'pt-label', text: STR[lang].cats[cat] }));
-        inCat.forEach(function (i) {
-          var full = i.claims.length >= i.slots, minec = i.claims.filter(function (c) { return c.mine; })[0];
-          var who = h('div', { class: 'pt-claims' }, i.claims.map(function (c) {
-            var r = byId[c.rsvp_id];
-            return h('span', { class: 'pt-claim' + (c.mine ? ' is-mine' : '') }, icon('yes', 2.8),
-              h('b', { text: c.mine ? t('you') : r ? whoName(r) : '—' }), c.note ? h('span', { text: ' · ' + c.note }) : null,
-              me.owner && !c.mine && !locked ? h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove'), onclick: function () { act({ action: 'unclaim', item: i.id, rsvp: c.rsvp_id }); } }, icon('no', 2.6)) : null);
-          }));
-          var btn = locked ? null : minec ? h('button', { type: 'button', class: 'btn btn-sm pt-mine-btn', onclick: function () { act({ action: 'unclaim', item: i.id }); } }, t('undo'))
-            : full ? h('span', { class: 'pt-covered' }, icon('yes', 2.8), t('covered'))
-            : h('button', { type: 'button', class: 'btn btn-sm btn-gold pt-bring', onclick: function () { claimSheet(i); } }, icon('plus', 2.6), t('bringIt'));
-          group.appendChild(h('div', { class: 'pt-item' + (full ? ' is-full' : '') + (minec ? ' is-mine' : '') },
-            h('div', { class: 'pt-item-main' },
-              h('div', { class: 'pt-item-top' }, h('b', { class: 'pt-item-label', text: i.label }),
-                i.slots > 1 && !full ? h('span', { class: 'pt-left', text: t('leftN', { n: i.slots - i.claims.length }) }) : null),
-              i.claims.length ? who : null),
-            h('div', { class: 'pt-item-act' }, btn,
-              me.owner && !locked ? h('button', { type: 'button', class: 'pt-x pt-drop', 'aria-label': t('removeItem'), title: t('removeItem'), onclick: function () {
-                confirmIt(t('removeItemAsk', { item: i.label }), t('remove')).then(function (yes) { if (yes) act({ action: 'drop', item: i.id }); });
-              } }, icon('trash', 2)) : null)));
-        });
-        if (extraCat.length) {
-          group.appendChild(h('div', { class: 'pt-extras' }, extraCat.map(function (i) {
-            var r = byId[i.by];
-            return h('span', { class: 'pt-extra' + (i.mine ? ' is-mine' : '') }, h('b', { text: i.label }),
-              h('span', { text: ' · ' + (i.mine ? t('you') : r ? whoName(r) : '—') }),
-              (i.mine || me.owner) && !locked ? h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove'), onclick: function () { act({ action: 'drop', item: i.id }); } }, icon('no', 2.6)) : null);
-          })));
-        }
-        card.appendChild(group);
-      });
-      if (!items.length) card.appendChild(h('p', { class: 'pt-empty', text: me.owner ? t('ownerNeeded') : t('nothingNeeded') }));
-      if (!locked && !(form && form.status !== 'no' && form.status)) card.appendChild(h('button', { type: 'button', class: 'btn btn-sm pt-bring-edit', onclick: editBringing },
-        icon('plus', 2.6), t(myStuff.length ? 'bringMore' : 'bringAdd')));
-      if (!locked && me.owner) card.appendChild(itemForm());
-      return card;
-    }
     function suggestions(ev) {
       return h('div', { class: 'pt-suggest' }, h('p', { class: 'pt-label', text: t('suggestions') }), h('p', { class: 'pt-suggest-text', text: ev.potluck_notes }));
     }
@@ -634,55 +557,6 @@
         CATS.map(function (c) { return h('option', { value: c, text: STR[lang].cats[c], selected: c === val }); }));
       return sel;
     }
-    function itemForm() {
-      var st = { label: '', category: 'mains' };
-      var label = h('input', { class: 'pt-input', placeholder: t('neededPh'), maxlength: 80, 'aria-label': t('addNeeded'),
-        oninput: function () { st.label = label.value; } });
-      var submit = function (e) {
-        e.preventDefault();
-        if (!st.label.trim()) { label.focus(); return; }
-        act({ action: 'need', label: st.label, category: st.category }, t('saved'));
-      };
-      return h('form', { class: 'pt-add is-owner', onsubmit: submit },
-        h('p', { class: 'pt-label', text: t('addNeeded') }),
-        label,
-        h('div', { class: 'pt-add-row' }, catSelect(st.category, function (v) { st.category = v; }),
-          h('button', { type: 'submit', class: 'btn btn-sm btn-gold' }, icon('plus', 2.6), t('add'))));
-    }
-    function claimSheet(item) {
-      var r = mine(), needRsvp = !coming(r);
-      var s = sheet(t('claimTitle', { item: item.label }), needRsvp ? t('quickRsvp') : null);
-      var q = draftFrom(r); q.status = 'yes'; q.note = '';
-      var claimForm = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
-        e.preventDefault();
-        var chain = Promise.resolve(true);
-        if (needRsvp) {
-          if (data.me.as !== 'family' && !q.name.trim()) { nameIn.focus(); return; }
-          if (data.me.as !== 'family') store('bfmh_party_name', q.name.trim());
-          chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.adults, kids: q.kids, note: r && r.note });
-        }
-        chain.then(function (ok) {
-          if (!ok) return;
-          s.close();
-          if (needRsvp) form = null;
-          act({ action: 'claim', item: item.id, note: q.note }, needRsvp ? t('thanks') : t('saved'));
-        });
-      } });
-      var nameIn = null;
-      if (needRsvp && data.me.as !== 'family') {
-        nameIn = h('input', { class: 'pt-input', value: q.name, placeholder: t('namePh'), maxlength: 80, autocomplete: 'name', oninput: function () { q.name = nameIn.value; } });
-        claimForm.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
-      }
-      if (needRsvp) claimForm.appendChild(headcount(q));
-      var note = h('input', { class: 'pt-input', placeholder: t('claimNotePh'), maxlength: 120, oninput: function () { q.note = note.value; } });
-      claimForm.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
-      claimForm.appendChild(h('div', { class: 'pop-btns' },
-        h('button', { type: 'submit', class: 'btn btn-wide btn-gold', text: needRsvp ? t('rsvpAndBring') : t('confirm') }),
-        h('button', { type: 'button', class: 'btn btn-wide', text: t('cancel'), onclick: s.close })));
-      s.body.appendChild(claimForm);
-      (nameIn || note).focus();
-    }
-
     function paint() {
       root.innerHTML = '';
       root.classList.add('pt-root');
@@ -696,7 +570,7 @@
       var wrap = h('div', { class: 'pt' + (data.past ? ' is-past' : '') },
         hero(ev),
         h('div', { class: 'pt-cols' },
-          h('div', { class: 'pt-col' }, rsvpCard(), potluckCard()),
+          h('div', { class: 'pt-col' }, rsvpCard()),
           h('div', { class: 'pt-col' }, guestsCard())),
         !opts.embedded && data.me.owner ? h('a', { class: 'pt-applink', href: '/team/' }, icon('link'), t('openInApp')) : null,
         h('footer', { class: 'pt-foot' }, h('img', { src: '/images/optimized/logo-dancers-color.webp', alt: '' }),
