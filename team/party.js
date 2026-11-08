@@ -111,32 +111,54 @@
     return null;
   }
 
-  var FLAG = 'M0 0H40V38L36.7 42.5 33.3 38 30 42.5 26.7 38 23.3 42.5 20 38 16.7 42.5 13.3 38 10 42.5 6.7 38 3.3 42.5 0 38Z'
-    + 'M20 9 27 18 20 27 13 18Z M20 13 23.5 18 20 23 16.5 18Z'
-    + 'M7.5 7a2 2 0 1 0 .01 0Z M32.5 7a2 2 0 1 0 .01 0Z M7.5 27a2 2 0 1 0 .01 0Z M32.5 27a2 2 0 1 0 .01 0Z'
-    + 'M4 17h4v2H4Z M32 17h4v2h-4Z M19 31h2v4h-2Z M19 2.5h2v3h-2Z';
-  var FLAG_COLORS = ['#e84393', '#e8c97a', '#2ecda7', '#c62a6e', '#fdcb6e', '#7b5bd6', '#1a7b6a'];
-  function picado(n) {
-    var NS = 'http://www.w3.org/2000/svg', w = n * 46 + 10;
+  /* Papel picado: the six cut designs strung over the contact form on bfmh.dance, kept in team/picado.svg. */
+  var PICADO_COLORS = ['#e84393', '#1e9ce0', '#fdc53a', '#8c4be0', '#f0832e', '#1cc09e', '#e12b30', '#2bc463', '#4547dd'];
+  var picadoReady = null;
+  function loadPicado() {
+    if (!picadoReady) {
+      picadoReady = fetch('/team/picado.svg').then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.text(); }).then(function (svg) {
+        // 0×0, not display:none: Safari stops resolving <use> into hidden defs.
+        var holder = document.createElement('div');
+        holder.setAttribute('aria-hidden', 'true');
+        holder.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+        holder.innerHTML = svg;
+        document.body.appendChild(holder);
+      }).catch(function () { picadoReady = null; });
+    }
+    return picadoReady;
+  }
+  function picadoString(cls, w, sag, n) {
+    var NS = 'http://www.w3.org/2000/svg', top = 14, x0 = -10, x1 = w + 10, cy = top + 2 * sag;
     var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('viewBox', '0 0 ' + w + ' 64'); svg.setAttribute('preserveAspectRatio', 'xMidYMin slice');
-    svg.setAttribute('class', 'pt-picado'); svg.setAttribute('aria-hidden', 'true');
-    var sag = function (x) { var u = x / w; return 6 + 10 * 4 * u * (1 - u); };
-    var line = document.createElementNS(NS, 'path');
-    line.setAttribute('d', 'M0 6 Q' + w / 2 + ' 26 ' + w + ' 6'); line.setAttribute('class', 'pt-string');
-    svg.appendChild(line);
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + (top + sag + 58));
+    svg.setAttribute('class', 'pt-pp ' + cls);
+    var d = 'M' + x0 + ',' + top + ' Q' + w / 2 + ',' + cy + ' ' + x1 + ',' + top;
+    function thread(width, opacity) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d); p.setAttribute('class', 'pt-string'); p.setAttribute('stroke-width', width); p.setAttribute('opacity', opacity);
+      return p;
+    }
+    svg.appendChild(thread(1.6, 0.6));
     for (var i = 0; i < n; i++) {
-      var x = 7 + i * 46, y = sag(x + 20);
-      var tilt = (sag(x + 40) - sag(x)) / 40 * 57;
+      var tt = (i + 0.5) / n, u = 1 - tt;
+      var x = u * u * x0 + 2 * u * tt * (w / 2) + tt * tt * x1, y = u * u * top + 2 * u * tt * cy + tt * tt * top;
+      var tilt = Math.atan2(2 * u * (cy - top) + 2 * tt * (top - cy), 2 * u * (w / 2 - x0) + 2 * tt * (x1 - w / 2)) * 180 / Math.PI;
       var g = document.createElementNS(NS, 'g');
-      g.setAttribute('transform', 'translate(' + x + ' ' + (y - 1) + ') rotate(' + tilt.toFixed(1) + ' 20 0)');
-      var flag = document.createElementNS(NS, 'path');
-      flag.setAttribute('d', FLAG); flag.setAttribute('fill-rule', 'evenodd'); flag.setAttribute('fill', FLAG_COLORS[i % FLAG_COLORS.length]);
-      flag.setAttribute('class', 'pt-flag'); flag.style.animationDelay = (-(i * 0.37) % 3).toFixed(2) + 's';
-      g.appendChild(flag);
+      g.setAttribute('class', 'ppw');
+      g.style.animationDuration = (3.8 + (i % 4) * 0.45).toFixed(2) + 's';
+      g.style.animationDelay = (-(i * 0.7) % 4.2).toFixed(2) + 's';
+      var use = document.createElementNS(NS, 'use');
+      use.setAttribute('href', '#pic-flag-' + (i % 6 + 1));
+      use.setAttribute('transform', 'translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') rotate(' + tilt.toFixed(1) + ') translate(0,-2) scale(0.62)');
+      use.setAttribute('fill', PICADO_COLORS[(i * 4) % PICADO_COLORS.length]);
+      g.appendChild(use);
       svg.appendChild(g);
     }
+    svg.appendChild(thread(1, 0.25));
     return svg;
+  }
+  function picado() {
+    return h('div', { class: 'pt-picado', 'aria-hidden': 'true' }, picadoString('pt-pp-phone', 480, 30, 6), picadoString('pt-pp-wide', 1000, 34, 12));
   }
 
   function mount(root, opts) {
@@ -524,11 +546,11 @@
       root.innerHTML = '';
       root.classList.add('pt-root');
       if (err) {
-        root.appendChild(h('div', { class: 'pt pt-error' }, picado(26), h('p', { text: err.status === 403 || err.status === 404 ? t('invalid') : err.message }),
+        root.appendChild(h('div', { class: 'pt pt-error' }, picado(), h('p', { text: err.status === 403 || err.status === 404 ? t('invalid') : err.message }),
           err.status >= 500 || !err.status ? h('button', { type: 'button', class: 'btn btn-gold', text: t('tryAgain'), onclick: load }) : null));
         return;
       }
-      if (!data) { root.appendChild(h('div', { class: 'pt pt-loading' }, picado(26), h('p', { text: t('loading') }))); return; }
+      if (!data) { root.appendChild(h('div', { class: 'pt pt-loading' }, picado(), h('p', { text: t('loading') }))); return; }
       var ev = data.event;
       var wrap = h('div', { class: 'pt' + (data.past ? ' is-past' : '') },
         hero(ev),
@@ -542,6 +564,7 @@
       if (!opts.embedded) document.title = ev.title + ' · Ballet Folklórico Mi Herencia';
     }
 
+    loadPicado();
     paint();
     if (!id) { err = { status: 404 }; paint(); } else load().catch(function () {});
     return {

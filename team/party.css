@@ -3,10 +3,13 @@
 .party-standalone .tm-header { gap: 0.6rem; }
 
 /* ── papel picado ───────────────────────────────────────── */
-.pt-picado { display: block; width: 100%; height: 64px; overflow: visible; }
-.pt-string { fill: none; stroke: rgba(232,201,122,0.55); stroke-width: 1.2; }
-.pt-flag { opacity: 0.92; transform-box: fill-box; transform-origin: 50% 0; animation: pt-sway 3s ease-in-out infinite; }
-@keyframes pt-sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+.pt-picado { position: relative; z-index: 1; line-height: 0; pointer-events: none; }
+.pt-pp { display: block; width: 100%; height: auto; overflow: visible; }
+.pt-pp-wide { display: none; }
+@media (min-width: 700px) { .pt-pp-phone { display: none; } .pt-pp-wide { display: block; } }
+.pt-string { fill: none; stroke: #e8c97a; }
+.pt-picado .ppw { transform-box: fill-box; transform-origin: 50% 0; animation: pt-wind 4.5s ease-in-out infinite alternate; }
+@keyframes pt-wind { 0% { transform: rotate(-1.7deg); } 100% { transform: rotate(2deg); } }
 
 /* ── hero ───────────────────────────────────────────────── */
 .pt-hero { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid var(--line); margin-bottom: 0.9rem;
