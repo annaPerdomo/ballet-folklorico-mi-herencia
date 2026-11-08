@@ -54,7 +54,7 @@
       removeEventHint: 'Apple opens a cancellation for the gig and its rehearsals — tap Delete. Google and Outlook open that day so you can delete it there. If you subscribed to the feed, it drops off on its own.',
       addEventHint: 'Saves the call time and the address.',
       subscribePick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
-      calOutlook: 'Outlook', calCopy: 'Copy the link instead',
+      calOutlook: 'Outlook', calCopy: 'Copy the link instead', mapPick: 'Get directions with', mapApple: 'Apple Maps', mapGoogle: 'Google Maps', mapWaze: 'Waze',
       calRehearsalNote: 'Rehearsals come along only with Apple Calendar. Subscribe above to get them everywhere.',
       calGoogleNote: 'Google checks for changes once a day or so, Apple and Outlook every few hours. If a date just moved, open the gig and add it again to get it right away.',
       addDancersFirst: 'Add the dancers in your family below so you can mark availability for each of them.',
@@ -238,7 +238,7 @@
       removeEventHint: 'Apple abre la cancelación del evento y sus ensayos — toca Eliminar. Google y Outlook abren ese día para que lo borres ahí. Si te suscribiste al calendario, desaparece solo.',
       addEventHint: 'Guarda la hora de llegada y la dirección.',
       subscribePick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar',
-      calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace',
+      calOutlook: 'Outlook', calCopy: 'Mejor copiar el enlace', mapPick: 'Cómo llegar con', mapApple: 'Apple Maps', mapGoogle: 'Google Maps', mapWaze: 'Waze',
       calRehearsalNote: 'Los ensayos solo se incluyen con Apple Calendar. Suscríbete arriba para tenerlos en cualquier calendario.',
       calGoogleNote: 'Google busca cambios una vez al día; Apple y Outlook cada pocas horas. Si una fecha acaba de cambiar, abre el evento y agrégalo de nuevo para tenerlo al instante.',
       addDancersFirst: 'Agrega abajo a los bailarines de tu familia para marcar la disponibilidad de cada uno.',
@@ -832,6 +832,19 @@
       icon('calendar', 2.2), t(gone ? 'removeFromCal' : 'addToCal'));
   }
   function calSheet(ev, href) { return ev.status === 'cancelled' ? removeEventSheet(ev, href) : addEventSheet(ev, href); }
+  function mapLinks(ev) {
+    var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
+    return [[t('mapApple'), 'https://maps.apple.com/?daddr=' + q], [t('mapGoogle'), 'https://www.google.com/maps/dir/?api=1&destination=' + q],
+      [t('mapWaze'), 'https://waze.com/ul?q=' + q + '&navigate=yes']];
+  }
+  function mapSheet(ev) {
+    var pop = popSheet(t('mapPick'));
+    pop.body.appendChild(h('div', { class: 'acts' }, mapLinks(ev).map(function (row) {
+      return h('a', { class: 'act', href: row[1], target: '_blank', rel: 'noopener', onclick: function () { pop.close(); } },
+        h('span', { class: 'act-ico' }, icon('pin', 2)), h('span', { text: row[0] }));
+    })));
+    pop.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: pop.close }));
+  }
   function removeEventSheet(ev, href) {
     var pop = popSheet(t('removeFromCal'), t('removeEventHint'));
     var list = h('div', { class: 'acts' });
@@ -1007,8 +1020,8 @@
         ev.call_time ? h('span', { class: fmtTime(ev) ? 'fact-sub' : '', text: t('callTime') + ': ' + ev.call_time }) : null)));
     }
     if (fmtWhere(ev) || ev.address) {
-      var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
-      facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: 'https://maps.apple.com/?q=' + q, target: '_blank', rel: 'noopener' },
+      facts.appendChild(h('div', { class: 'fact' }, icon('pin', 2), h('a', { href: mapLinks(ev)[1][1], target: '_blank', rel: 'noopener',
+        onclick: function (e) { e.preventDefault(); mapSheet(ev); } },
         fmtWhere(ev) ? h('b', { text: fmtWhere(ev) }) : null,
         ev.address ? h('span', { class: fmtWhere(ev) ? 'fact-sub' : '', text: ev.address }) : null)));
     }

@@ -7,7 +7,7 @@
       cats: { mains: 'Main dishes', sides: 'Sides', desserts: 'Desserts', drinks: 'Drinks', supplies: 'Plates & supplies', other: 'Other' },
       invited: 'You’re invited',
       addToCal: 'Add to calendar', directions: 'Directions', share: 'Share invite', shareMsg: 'You’re invited to {title}! RSVP here:',
-      calPick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancel',
+      calPick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancel', mapPick: 'Get directions with',
       rsvpTitle: 'Will you be there?', rsvpSub: 'Let the hosts know how many to expect.',
       yourName: 'Your name', needName: 'Write your name first', namePh: 'e.g. Tía Lupe & family',
       notYou: 'Not the {name} family? Write yourself in', asFamily: 'Answer as the {name} family instead',
@@ -41,7 +41,7 @@
       cats: { mains: 'Platillos', sides: 'Guarniciones', desserts: 'Postres', drinks: 'Bebidas', supplies: 'Platos y desechables', other: 'Otros' },
       invited: 'Estás invitado',
       addToCal: 'Agregar al calendario', directions: 'Cómo llegar', share: 'Compartir invitación', shareMsg: '¡Te invitamos a {title}! Confirma aquí:',
-      calPick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancelar',
+      calPick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancelar', mapPick: 'Cómo llegar con',
       rsvpTitle: '¿Vas a venir?', rsvpSub: 'Avísale a los anfitriones cuántos van.',
       yourName: 'Tu nombre', needName: 'Primero escribe tu nombre', namePh: 'p. ej. Tía Lupe y familia',
       notYou: '¿No eres de la familia {name}? Escribe tu nombre', asFamily: 'Mejor responder como la familia {name}',
@@ -277,10 +277,20 @@
     function mine() { return data && data.rsvps.filter(function (r) { return r.mine; })[0] || null; }
     function coming(r) { return r && (r.status === 'yes' || r.status === 'maybe'); }
     function shareUrl() { return sig ? location.origin + '/e/' + id + '/' + sig : location.href; }
-    function mapUrl(ev) {
+    function mapLinks(ev) {
       var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
-      return (/iPhone|iPad|Macintosh/.test(navigator.userAgent) ? 'https://maps.apple.com/?q=' : 'https://www.google.com/maps/search/?api=1&query=') + q;
+      return [['Apple Maps', 'https://maps.apple.com/?daddr=' + q], ['Google Maps', 'https://www.google.com/maps/dir/?api=1&destination=' + q],
+        ['Waze', 'https://waze.com/ul?q=' + q + '&navigate=yes']];
     }
+    function mapSheet(ev) {
+      var s = sheet(t('mapPick'));
+      s.body.appendChild(h('div', { class: 'acts' }, mapLinks(ev).map(function (r) {
+        return h('a', { class: 'act', href: r[1], target: '_blank', rel: 'noopener', onclick: function () { s.close(); } },
+          h('span', { class: 'act-ico' }, icon('pin')), h('span', { text: r[0] }));
+      })));
+      s.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: s.close }));
+    }
+    function openMaps(ev) { return function (e) { e.preventDefault(); mapSheet(ev); }; }
 
     /* ── sheets (team.css bottom-sheet look) ── */
     function sheet(title, sub) {
@@ -338,12 +348,12 @@
           h('h1', { class: 'pt-title', text: ev.title }),
           h('div', { class: 'pt-facts' },
             ev.event_date ? h('div', { class: 'pt-fact' }, icon('calendar'), h('span', {}, h('b', { text: longDate(ev.event_date) }), timeText(ev) ? h('span', { text: timeText(ev) }) : null)) : null,
-            where || ev.address ? h('a', { class: 'pt-fact', href: mapUrl(ev), target: '_blank', rel: 'noopener' }, icon('pin'),
+            where || ev.address ? h('a', { class: 'pt-fact', href: mapLinks(ev)[1][1], target: '_blank', rel: 'noopener', onclick: openMaps(ev) }, icon('pin'),
               h('span', {}, where ? h('b', { text: where }) : null, ev.address ? h('span', { text: ev.address }) : null)) : null),
           ev.details ? h('p', { class: 'pt-details-text', text: ev.details }) : null,
           h('div', { class: 'pt-hero-acts' },
             ev.event_date && !data.past ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { calSheet(ev); } }, icon('calendar'), t('addToCal')) : null,
-            where || ev.address ? h('a', { class: 'btn btn-sm pt-ghost', href: mapUrl(ev), target: '_blank', rel: 'noopener' }, icon('pin'), t('directions')) : null,
+            where || ev.address ? h('a', { class: 'btn btn-sm pt-ghost', href: mapLinks(ev)[1][1], target: '_blank', rel: 'noopener', onclick: openMaps(ev) }, icon('pin'), t('directions')) : null,
             data.past ? null : h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { share(ev); } }, icon('share'), t('share')),
             !flyer && opts.onFlyer && data.me.owner ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost pt-flyer-add', onclick: function () { opts.onFlyer(ev); } }, icon('image'), t('addFlyer')) : null,
             opts.onAnnounce && data.me.owner && !data.past ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost' + (data.announced ? '' : ' pt-flyer-add'), title: data.announced ? null : t('notAnnounced'),
