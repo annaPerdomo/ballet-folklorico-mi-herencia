@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true">
-  <!-- The six cut flag designs from the papel picado over the contact form in index.html. -->
+  <!-- The six cut flag designs from the papel picado over the contact form in index.html, plus eight themed ones for group events (posada, potluck, party, outing…). -->
   <defs>
-    <!-- Shared flag body: scalloped hem, perforation row. Six cut designs below.
+    <!-- Shared flag body: scalloped hem, perforation row. Fourteen cut designs below.
          Cut-outs are masks, so the page truly shows through the holes. -->
     <path id="pic-shape" d="M-55,0 H55 V64 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 a11,11 0 0 1 -22,0 Z"/>
     <path id="pic-heart" d="M0,2.2 C0,0.6 1.6,-0.9 3,0.6 C4.4,-0.9 6,0.6 6,2.2 C6,4 3,6.2 3,6.2 C3,6.2 0,4 0,2.2 Z"/>
@@ -125,11 +125,145 @@
       </g>
     </mask>
 
+    <!-- Design 7: estrella de posada -->
+    <mask id="pic-mask-7" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <path d="M0,11 L2.9,21.1 L12,16 L6.9,25.1 L17,28 L6.9,30.9 L12,40 L2.9,34.9 L0,45 L-2.9,34.9 L-12,40 L-6.9,30.9 L-17,28 L-6.9,25.1 L-12,16 L-2.9,21.1 Z"/>
+        <circle cx="22" cy="14" r="1.3"/><circle cx="-22" cy="14" r="1.3"/><circle cx="22" cy="42" r="1.3"/><circle cx="-22" cy="42" r="1.3"/>
+        <circle cx="25" cy="28" r="1.3"/><circle cx="-25" cy="28" r="1.3"/>
+        <use href="#pic-heart" transform="translate(-45,10)"/>
+        <use href="#pic-heart" transform="translate(37,10)"/>
+        <use href="#pic-daisy" transform="translate(-37,36)"/>
+        <use href="#pic-daisy" transform="translate(37,36)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <circle cx="0" cy="28" r="3" fill="#fff"/>
+    </mask>
+    <!-- Design 8: nochebuena (poinsettia) -->
+    <mask id="pic-mask-8" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(0 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(45 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(90 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(135 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(180 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(225 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(270 0 28)"/><ellipse cx="0" cy="15" rx="3.6" ry="9.5" transform="rotate(315 0 28)"/>
+        <ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(22.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(67.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(112.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(157.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(202.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(247.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(292.5 0 28)"/><ellipse cx="0" cy="19.5" rx="2.4" ry="6" transform="rotate(337.5 0 28)"/>
+        <circle cx="-2.2" cy="26.8" r="1.4"/><circle cx="2.2" cy="26.8" r="1.4"/><circle cx="0" cy="30.2" r="1.4"/>
+        <use href="#pic-fern" transform="translate(-42,14) rotate(-30)"/>
+        <use href="#pic-fern" transform="translate(42,14) rotate(30)"/>
+        <use href="#pic-fern" transform="translate(-40,44) rotate(-150)"/>
+        <use href="#pic-fern" transform="translate(40,44) rotate(150)"/>
+        <use href="#pic-hem"/>
+      </g>
+    </mask>
+    <!-- Design 9: vela (candle) -->
+    <mask id="pic-mask-9" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <path d="M0,9 C4,14 4.5,18 0,21.5 C-4.5,18 -4,14 0,9 Z"/>
+        <rect x="-4.5" y="23" width="9" height="22" rx="1.2"/>
+        <rect x="-13" y="45" width="26" height="3.2" rx="1.6"/>
+        <circle cx="9" cy="13" r="1.3"/><circle cx="-9" cy="13" r="1.3"/><circle cx="12" cy="20" r="1.3"/><circle cx="-12" cy="20" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-36,20)"/>
+        <use href="#pic-daisy" transform="translate(36,20)"/>
+        <use href="#pic-fern" transform="translate(-38,42) rotate(-28)"/>
+        <use href="#pic-fern" transform="translate(38,42) rotate(28)"/>
+        <use href="#pic-heart" transform="translate(-22,10)"/>
+        <use href="#pic-heart" transform="translate(16,10)"/>
+        <use href="#pic-hem"/>
+      </g>
+    </mask>
+    <!-- Design 10: olla (clay pot with steam) -->
+    <mask id="pic-mask-10" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <path d="M-14,27 Q-16,40 -8,46 L8,46 Q16,40 14,27 Z"/>
+        <rect x="-17" y="22.5" width="34" height="4.5" rx="2.2"/>
+        <ellipse cx="-19.5" cy="30" rx="3.2" ry="2.2"/><ellipse cx="19.5" cy="30" rx="3.2" ry="2.2"/>
+        <circle cx="-6" cy="17" r="1.7"/><circle cx="-5" cy="12" r="1.5"/><circle cx="0" cy="18" r="1.7"/><circle cx="1" cy="13" r="1.5"/><circle cx="6" cy="17" r="1.7"/><circle cx="5" cy="12" r="1.5"/>
+        <use href="#pic-daisy" transform="translate(-37,16)"/>
+        <use href="#pic-daisy" transform="translate(37,16)"/>
+        <use href="#pic-fern" transform="translate(-40,42) rotate(-28)"/>
+        <use href="#pic-fern" transform="translate(40,42) rotate(28)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><circle cx="-6" cy="36" r="1.5"/><circle cx="0" cy="38" r="1.5"/><circle cx="6" cy="36" r="1.5"/></g>
+    </mask>
+    <!-- Design 11: pastel (cake) -->
+    <mask id="pic-mask-11" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <rect x="-17" y="33" width="34" height="12" rx="2"/>
+        <rect x="-11.5" y="23" width="23" height="10" rx="2"/>
+        <rect x="-7.2" y="15" width="2.4" height="8"/><rect x="-1.2" y="13" width="2.4" height="10"/><rect x="4.8" y="15" width="2.4" height="8"/>
+        <path d="M-6,9 C-4.2,11.4 -4,13 -6,14.4 C-8,13 -7.8,11.4 -6,9 Z"/><path d="M0,7 C1.8,9.4 2,11 0,12.4 C-2,11 -1.8,9.4 0,7 Z"/><path d="M6,9 C7.8,11.4 8,13 6,14.4 C4,13 4.2,11.4 6,9 Z"/>
+        <use href="#pic-daisy" transform="translate(-37,20)"/>
+        <use href="#pic-daisy" transform="translate(37,20)"/>
+        <use href="#pic-heart" transform="translate(-44,38)"/>
+        <use href="#pic-heart" transform="translate(36,38)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><circle cx="-12" cy="35.5" r="1.4"/><circle cx="-6" cy="35.5" r="1.4"/><circle cx="0" cy="35.5" r="1.4"/><circle cx="6" cy="35.5" r="1.4"/><circle cx="12" cy="35.5" r="1.4"/>
+        <circle cx="-7" cy="25.5" r="1.2"/><circle cx="0" cy="25.5" r="1.2"/><circle cx="7" cy="25.5" r="1.2"/></g>
+    </mask>
+    <!-- Design 12: globos (balloons) -->
+    <mask id="pic-mask-12" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <ellipse cx="-10" cy="22" rx="7" ry="8.5"/><path d="M-10,30 L-12,33.5 L-8,33.5 Z"/><rect x="-10.4" y="33" width="0.9" height="17"/>
+        <ellipse cx="9" cy="19" rx="7" ry="8.5"/><path d="M9,27 L7,30.5 L11,30.5 Z"/><rect x="8.6" y="30" width="0.9" height="20"/>
+        <rect x="-28" y="12" width="3" height="5" rx="0.6" transform="rotate(25 -26.5 14.5)"/><rect x="24" y="10" width="3" height="5" rx="0.6" transform="rotate(-30 25.5 12.5)"/>
+        <rect x="-32" y="40" width="3" height="5" rx="0.6" transform="rotate(-20 -30.5 42.5)"/><rect x="28" y="38" width="3" height="5" rx="0.6" transform="rotate(35 29.5 40.5)"/>
+        <circle cx="-22" cy="28" r="1.3"/><circle cx="22" cy="26" r="1.3"/><circle cx="0" cy="44" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-40,26)"/>
+        <use href="#pic-daisy" transform="translate(40,26)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><ellipse cx="-13" cy="18" rx="1.4" ry="2.4" transform="rotate(20 -13 18)"/><ellipse cx="6" cy="15" rx="1.4" ry="2.4" transform="rotate(20 6 15)"/></g>
+    </mask>
+    <!-- Design 13: nopal y sol (cactus) -->
+    <mask id="pic-mask-13" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <rect x="-4.5" y="15" width="9" height="31" rx="4.5"/>
+        <rect x="-14" y="22" width="5.5" height="12" rx="2.75"/><rect x="-14" y="30" width="12" height="5" rx="2.5"/>
+        <rect x="8.5" y="18" width="5.5" height="14" rx="2.75"/><rect x="2" y="28" width="12" height="5" rx="2.5"/>
+        <ellipse cx="0" cy="47" rx="17" ry="2.2"/>
+        <circle cx="32" cy="14" r="5"/>
+        <circle cx="32" cy="5.5" r="1.1"/><circle cx="38" cy="8" r="1.1"/><circle cx="40.5" cy="14" r="1.1"/><circle cx="38" cy="20" r="1.1"/><circle cx="26" cy="8" r="1.1"/><circle cx="23.5" cy="14" r="1.1"/><circle cx="26" cy="20" r="1.1"/>
+        <use href="#pic-daisy" transform="translate(0,12)"/>
+        <use href="#pic-daisy" transform="translate(-36,38)"/>
+        <use href="#pic-fern" transform="translate(-38,16) rotate(-30)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><circle cx="-2" cy="24" r="0.9"/><circle cx="2" cy="30" r="0.9"/><circle cx="-2" cy="36" r="0.9"/><circle cx="2" cy="42" r="0.9"/></g>
+    </mask>
+    <!-- Design 14: maracas -->
+    <mask id="pic-mask-14" maskUnits="userSpaceOnUse" x="-56" y="-2" width="112" height="82">
+      <use href="#pic-shape" fill="#fff"/>
+      <g fill="#000">
+        <g transform="translate(-8,22) rotate(-28)"><ellipse rx="7.5" ry="9"/><rect x="-1.7" y="8" width="3.4" height="19" rx="1.2"/></g>
+        <g transform="translate(8,22) rotate(28)"><ellipse rx="7.5" ry="9"/><rect x="-1.7" y="8" width="3.4" height="19" rx="1.2"/></g>
+        <circle cx="0" cy="10" r="1.3"/><circle cx="-20" cy="12" r="1.3"/><circle cx="20" cy="12" r="1.3"/><circle cx="-24" cy="40" r="1.3"/><circle cx="24" cy="40" r="1.3"/>
+        <use href="#pic-daisy" transform="translate(-38,24)"/>
+        <use href="#pic-daisy" transform="translate(38,24)"/>
+        <use href="#pic-heart" transform="translate(-3,41)"/>
+        <use href="#pic-hem"/>
+      </g>
+      <g fill="#fff"><circle cx="-10" cy="19" r="1.3"/><circle cx="-6" cy="24" r="1.3"/><circle cx="10" cy="19" r="1.3"/><circle cx="6" cy="24" r="1.3"/></g>
+    </mask>
+
     <g id="pic-flag-1" mask="url(#pic-mask-1)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-2" mask="url(#pic-mask-2)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-3" mask="url(#pic-mask-3)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-4" mask="url(#pic-mask-4)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-5" mask="url(#pic-mask-5)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
     <g id="pic-flag-6" mask="url(#pic-mask-6)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-7" mask="url(#pic-mask-7)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-8" mask="url(#pic-mask-8)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-9" mask="url(#pic-mask-9)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-10" mask="url(#pic-mask-10)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-11" mask="url(#pic-mask-11)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-12" mask="url(#pic-mask-12)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-13" mask="url(#pic-mask-13)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
+    <g id="pic-flag-14" mask="url(#pic-mask-14)"><use href="#pic-shape"/><rect x="-55" y="0" width="110" height="5.5" fill="#2C1B28" opacity="0.18"/></g>
   </defs>
 </svg>
