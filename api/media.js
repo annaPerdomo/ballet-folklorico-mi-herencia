@@ -75,13 +75,77 @@ async function blastsBetween(me, after, upto) {
   }));
 }
 
+const EVENT_JSON = `json_build_object('id', e.id, 'title', e.title, 'event_type', e.event_type, 'event_date', e.event_date, 'start_time', e.start_time,
+  'venue', e.venue, 'city', e.city, 'status', e.status) AS event`;
+const stampOf = (col) => `to_char(${col} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
+
+const FOLD_MS = 5 * 60 * 1000;
+const ANSWER_PAGE = 200;
+function foldAnswers(rows) {
+  const out = [], open = {};
+  for (const r of rows) {
+    const key = `${r.event_id}_${r.family_id}`, g = open[key];
+    if (g && !g.legacy && !r.legacy && new Date(g.oldest) - new Date(r.at) < FOLD_MS) {
+      for (const d of r.dancers) if (!g.dancers.some((x) => x.name === d.name)) g.dancers.push(d);
+      g.changed = g.changed || r.changed; g.oldest = r.at;
+    } else out.push((open[key] = { ...r, dancers: [...r.dancers], oldest: r.at }));
+  }
+  return out;
+}
+
+// Families never see who said no to a team event, nor RSVPs to one not yet posted to GroupMe.
+async function answersBetween(me, after, upto) {
+  const admin = me.role === 'admin', fam = me.family && me.family.id;
+  const gigQuery = (from, limit) => sql(`WITH h AS (
+          SELECT h.event_id, d.family_id, h.changed_at AS at, bool_or(h.old_status IS NOT NULL) AS changed, false AS legacy,
+            json_agg(json_build_object('name', d.name, 'status', h.new_status) ORDER BY d.name) AS dancers
+          FROM availability_history h JOIN dancers d ON d.id = h.dancer_id
+          WHERE h.new_status IS NOT NULL AND h.new_status IS DISTINCT FROM h.old_status
+          GROUP BY h.event_id, d.family_id, h.changed_at
+          UNION ALL
+          SELECT a.event_id, d.family_id, max(a.updated_at), false, true,
+            json_agg(json_build_object('name', d.name, 'status', a.status) ORDER BY d.name)
+          FROM availability a JOIN dancers d ON d.id = a.dancer_id
+          WHERE NOT EXISTS (SELECT 1 FROM availability_history x WHERE x.event_id = a.event_id AND x.dancer_id = a.dancer_id)
+          GROUP BY a.event_id, d.family_id)
+        SELECT h.*, ${stampOf('h.at')} AS stamp, f.name AS family_name, ${EVENT_JSON}
+        FROM h JOIN families f ON f.id = h.family_id JOIN events e ON e.id = h.event_id
+        WHERE e.status <> 'deleted' AND ($1 OR e.status = ANY($2))
+          AND ($3::timestamptz IS NULL OR h.at >= $3::timestamptz) AND ($4::timestamptz IS NULL OR h.at < $4::timestamptz)
+        ORDER BY h.at DESC LIMIT ${limit}`, [admin, LISTED, from, upto]);
+  const rsvpQuery = (from, limit) => sql(`SELECT l.id, l.status, l.adults, l.kids, l.bringing, l.changed, l.created_at AS at, ${stampOf('l.created_at')} AS stamp,
+          r.family_id, r.name, f.name AS family_name, ${EVENT_JSON}
+        FROM gathering_rsvp_log l JOIN gathering_rsvps r ON r.id = l.rsvp_id JOIN events e ON e.id = l.event_id LEFT JOIN families f ON f.id = r.family_id
+        WHERE e.status = 'gathering' AND ($1 OR (l.status <> 'no' AND e.asked_at IS NOT NULL))
+          AND ($2::timestamptz IS NULL OR l.created_at >= $2::timestamptz) AND ($3::timestamptz IS NULL OR l.created_at < $3::timestamptz)
+        ORDER BY l.created_at DESC LIMIT ${limit}`, [admin, from, upto]);
+  // Refetch from the cut so rows tied at its stamp aren't split across pages.
+  const page = async (query) => {
+    const rows = await query(after, ANSWER_PAGE);
+    if (rows.length < ANSWER_PAGE) return { rows, cut: null };
+    const cut = rows.at(-1).stamp;
+    return { rows: await query(cut, ANSWER_PAGE * 10), cut };
+  };
+  const [g, r] = await Promise.all([page(gigQuery), page(rsvpQuery)]);
+  const gigs = g.rows, rsvps = r.rows;
+  const cut = [g.cut, r.cut].filter(Boolean).sort().at(-1) || null;
+  const list = [
+    ...foldAnswers(gigs).map((r) => ({ answers: 'gig', id: `a${r.event_id}_${r.family_id}_${r.stamp}`, at: r.at, stamp: r.stamp, mine: Boolean(fam) && r.family_id === fam,
+      changed: r.changed, family: r.family_name, dancers: r.dancers, event: r.event })),
+    ...rsvps.map((r) => ({ answers: 'party', id: 'r' + r.id, at: r.at, stamp: r.stamp, mine: Boolean(fam) && r.family_id === fam, changed: r.changed,
+      name: r.name, family: Boolean(r.family_id) && r.name === r.family_name, status: r.status, adults: r.adults, kids: r.kids, bringing: r.bringing, event: r.event })),
+  ];
+  return { list, cut };
+}
+
 async function feed(q, me) {
   if (q.since !== undefined) {
     const since = stampParam(q.since);
     const rows = await sql(`SELECT m.id, m.kind, m.created_at, m.event_id, m.family_id, m.uploader, m.credit, e.event_date, e.start_time, e.call_time, e.status
       ${FEED_FROM} ${memberCut(me)} AND m.created_at > $2::timestamptz ORDER BY m.created_at DESC, m.id DESC LIMIT 500`, [GALLERY_VISIBLE, since]);
     const blasts = me.role === 'admin' ? [] : await sql(`SELECT b.id ${BLAST_FROM} AND b.created_at > $3::timestamptz LIMIT 100`, [false, LISTED, since]);
-    return { fresh: feedBatches(rows.filter((r) => feedVisible(r, me) && !isMine(r, me))).length + blasts.length };
+    const answers = (await answersBetween(me, since, null)).list.filter((a) => !a.mine && a.stamp > since);
+    return { fresh: feedBatches(rows.filter((r) => feedVisible(r, me) && !isMine(r, me))).length + blasts.length + answers.length };
   }
   let cursor = null;
   if (q.before !== undefined) {
@@ -115,8 +179,12 @@ async function feed(q, me) {
     };
   });
   // The last page takes every older blast; otherwise blasts stop where the next page's uploads start.
-  const blasts = await blastsBetween(me, next && next.split('_')[0], upto);
-  const batches = [...uploads, ...blasts].sort((a, b) => (a.stamp < b.stamp ? 1 : a.stamp > b.stamp ? -1 : 0));
+  const after = next && next.split('_')[0];
+  const [blasts, answers] = await Promise.all([blastsBetween(me, after, upto), answersBetween(me, after, upto)]);
+  let all = [...uploads, ...blasts, ...answers.list];
+  // Id 0 sorts below every upload at the cut stamp, so the next page starts strictly before what this one showed.
+  if (answers.cut) { all = all.filter((b) => b.stamp >= answers.cut); next = `${answers.cut}_0`; }
+  const batches = all.sort((a, b) => (a.stamp < b.stamp ? 1 : a.stamp > b.stamp ? -1 : 0));
   return { next, batches };
 }
 

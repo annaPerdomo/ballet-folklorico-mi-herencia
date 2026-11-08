@@ -873,6 +873,8 @@ button.feed-blast:focus-visible { outline: 2px solid var(--gold-light); outline-
 .feed-blast.is-cancelled .feed-gig { opacity: 0.7; }
 .feed-gig { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
 .feed-gig .card-date { min-width: 54px; padding: 0.4rem; }
+.feed-gig .card-date .d { font-size: 1.15rem; }
+.feed-gig .card-date .y { font-size: 0.6rem; }
 .feed-gig-main { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
 .feed-gig .giggo { flex-shrink: 0; }
 
