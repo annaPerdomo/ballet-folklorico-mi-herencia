@@ -9,7 +9,7 @@ export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
 // A folder is a gallery-only event: never in Gigs, calendars or GroupMe.
 export const GALLERY_VISIBLE = [...MEMBER_VISIBLE, 'folder', 'gathering'];
 // A group event (potluck, posada) is the group's own, never a gig: no asks, feeds or website.
-const LISTED = [...MEMBER_VISIBLE, 'gathering'];
+export const LISTED = [...MEMBER_VISIBLE, 'gathering'];
 
 const ADMIN_COLS = `e.*`;
 // Pay is deliberately absent from MEMBER_COLS: what a gig pays is the owners' business.
@@ -73,6 +73,12 @@ export function withCalendarLinks(ev) {
   if (!ev) return ev;
   if (!ev.event_date) return { ...ev, gallery_open: false };
   return { ...ev, gallery_open: galleryOpen(ev), calendar: { google: googleEventUrl(ev), outlook: outlookEventUrl(ev), google_day: googleDayUrl(ev), outlook_day: outlookDayUrl(ev) } };
+}
+
+// Never throws: a failed Feed card must not fail the GroupMe post's request, or the owner re-posts.
+export async function logBlast(eventId, kind, actor) {
+  await sql(`INSERT INTO blasts (event_id, kind, actor) SELECT $1, $2, $3
+    WHERE NOT EXISTS (SELECT 1 FROM blasts WHERE event_id = $1 AND kind = $2 AND created_at > now() - interval '10 minutes')`, [eventId, kind, actor]).catch((e) => console.error('blast', e));
 }
 
 export const EDITABLE = ['title', 'event_type', 'event_date', 'date_text', 'start_time', 'end_time', 'call_time', 'venue',

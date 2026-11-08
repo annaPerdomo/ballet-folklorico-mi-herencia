@@ -1,7 +1,7 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
 import { whoami, requireAdmin, calendarSig, ownerTag, actorOf } from '../_lib/auth.js';
 import { withSource } from '../_lib/db.js';
-import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry } from '../_lib/events.js';
+import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry, logBlast } from '../_lib/events.js';
 import { eventChanges } from '../_lib/history.js';
 import { removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
@@ -29,10 +29,11 @@ async function notifyPublish(ev, tag) {
   // Counts as an ask, so the UI offers Remind next and a later ask isn't posted as new.
   if (posted) await withSource(tag, (q) =>
     q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [ev.id]));
+  await logBlast(ev.id, 'new', tag.actor);
   return { groupme: posted };
 }
 
-async function notifyConfirm(ev) {
+async function notifyConfirm(ev, tag) {
   const roster = await rosterFor(ev.id);
   const going = roster.filter((f) => f.dancers.some((d) => d.status === 'yes'));
   const names = going.flatMap((f) => f.dancers.filter((d) => d.status === 'yes').map((d) => d.name));
@@ -45,7 +46,9 @@ async function notifyConfirm(ev) {
     (names.length ? `\n\nDancers: ${names.join(', ')}` : '') +
     (reh ? `\n\nRehearsals:\n${reh}` : '') +
     `\n\nDetails: ${teamLink(ev.id)}`;
-  return { groupme: await postGroupMe(text) };
+  const posted = await postGroupMe(text);
+  await logBlast(ev.id, 'confirmed', tag.actor);
+  return { groupme: posted };
 }
 
 function cancelText(ev) {
@@ -107,6 +110,7 @@ export default route({
       const posted = await postGroupMe(askText(await getEvent(id, { admin: true }), { again: isRepeatAsk(current) }));
       if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
+      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me));
       notified = { groupme: posted };
     } else if (action === 'ask') {
       if (!['inquiry', 'open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot ask about an event that is ${current.status}`);
@@ -117,13 +121,14 @@ export default route({
       const posted = await postGroupMe(text);
       if (posted) await withSource(ownerTag(me), (q) =>
         q('UPDATE events SET asked_at = now(), ask_count = ask_count + 1, updated_at = now() WHERE id = $1', [id]));
+      await logBlast(id, isRepeatAsk(current) ? 'ask' : 'new', actorOf(me));
       notified = { groupme: posted };
     } else if (action === 'announce') {
       if (!['open', 'confirmed'].includes(current.status)) throw httpError(400, `Cannot announce an event that is ${current.status}`);
       notified = await notifyPublish(await getEvent(id, { admin: true }), ownerTag(me));
     } else if (action === 'reconfirm') {
       if (current.status !== 'confirmed') throw httpError(400, `Cannot re-post the confirmation for an event that is ${current.status}`);
-      notified = await notifyConfirm(await getEvent(id, { admin: true }));
+      notified = await notifyConfirm(await getEvent(id, { admin: true }), ownerTag(me));
     } else if (action === 'tally') {
       const ev = await getEvent(id, { admin: true });
       notified = { groupme: await postGroupMe(tallyText(ev, await rosterFor(id))) };
@@ -138,9 +143,12 @@ export default route({
       const ev = await getEvent(id, { admin: true });
       if (body.notify !== false) {
         if (action === 'publish') notified = await notifyPublish(ev, ownerTag(me));
-        if (action === 'confirm') notified = await notifyConfirm(ev);
+        if (action === 'confirm') notified = await notifyConfirm(ev, ownerTag(me));
       }
-      if (action === 'cancel' && body.notify === true) notified = { groupme: await postGroupMe(cancelText(ev)) };
+      if (action === 'cancel' && body.notify === true) {
+        notified = { groupme: await postGroupMe(cancelText(ev)) };
+        await logBlast(id, 'cancelled', actorOf(me));
+      }
     }
     const ev = await getEvent(id, { admin: true });
     ok(res, { event: ev, roster: await rosterFor(id), notified });

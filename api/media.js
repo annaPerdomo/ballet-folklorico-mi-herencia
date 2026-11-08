@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
 import { requireUser, requireAdmin, actorOf, ownerTag } from './_lib/auth.js';
 import { sql, one, withSource } from './_lib/db.js';
-import { GALLERY_VISIBLE } from './_lib/events.js';
+import { GALLERY_VISIBLE, LISTED } from './_lib/events.js';
 import { signedUrl, objectSize, storageReady, removeObject } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
 import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine, creditOf, FLYER_MAX } from './_lib/media.js';
@@ -61,11 +61,27 @@ function stampParam(v) {
   return String(v);
 }
 
+const BLAST_FROM = `FROM blasts b JOIN events e ON e.id = b.event_id
+  WHERE e.status <> 'deleted' AND ($1 OR e.status = ANY($2) OR (b.kind = 'cancelled' AND e.status = 'cancelled'))`;
+const BLAST_STAMP = STAMP.replace('m.created_at', 'b.created_at');
+
+async function blastsBetween(me, after, upto) {
+  const rows = await sql(`SELECT b.id, b.kind, b.created_at, ${BLAST_STAMP}, e.id AS event_id, e.title, e.event_type, e.event_date, e.start_time, e.venue, e.city, e.status
+    ${BLAST_FROM} AND ($3::timestamptz IS NULL OR b.created_at >= $3::timestamptz) AND ($4::timestamptz IS NULL OR b.created_at < $4::timestamptz)
+    ORDER BY b.created_at DESC, b.id DESC LIMIT 1000`, [me.role === 'admin', LISTED, after, upto]);
+  return rows.map((r) => ({
+    blast: r.kind, id: 'b' + r.id, at: r.created_at, stamp: r.stamp, mine: me.role === 'admin',
+    event: { id: r.event_id, title: r.title, event_type: r.event_type, event_date: r.event_date, start_time: r.start_time, venue: r.venue, city: r.city, status: r.status },
+  }));
+}
+
 async function feed(q, me) {
   if (q.since !== undefined) {
+    const since = stampParam(q.since);
     const rows = await sql(`SELECT m.id, m.kind, m.created_at, m.event_id, m.family_id, m.uploader, m.credit, e.event_date, e.start_time, e.call_time, e.status
-      ${FEED_FROM} ${memberCut(me)} AND m.created_at > $2::timestamptz ORDER BY m.created_at DESC, m.id DESC LIMIT 500`, [GALLERY_VISIBLE, stampParam(q.since)]);
-    return { fresh: feedBatches(rows.filter((r) => feedVisible(r, me) && !isMine(r, me))).length };
+      ${FEED_FROM} ${memberCut(me)} AND m.created_at > $2::timestamptz ORDER BY m.created_at DESC, m.id DESC LIMIT 500`, [GALLERY_VISIBLE, since]);
+    const blasts = me.role === 'admin' ? [] : await sql(`SELECT b.id ${BLAST_FROM} AND b.created_at > $3::timestamptz LIMIT 100`, [false, LISTED, since]);
+    return { fresh: feedBatches(rows.filter((r) => feedVisible(r, me) && !isMine(r, me))).length + blasts.length };
   }
   let cursor = null;
   if (q.before !== undefined) {
@@ -73,6 +89,7 @@ async function feed(q, me) {
     cursor = [stampParam(at), int(id)];
     if (cursor[1] == null) throw httpError(400, 'Bad feed position');
   }
+  const upto = cursor && cursor[0];
   const shown = [];
   let next = null;
   for (let tries = 0; tries < 5 && !shown.length; tries++) {
@@ -89,17 +106,18 @@ async function feed(q, me) {
     if (!next) break;
     cursor = [last.stamp, last.id];
   }
-  return {
-    next,
-    batches: shown.map((b) => {
-      const r = b[0];
-      return {
-        id: r.id, at: r.created_at, stamp: r.stamp, uploader: r.uploader, credit: r.credit || null, mine: isMine(r, me),
-        event: r.event_id ? { id: r.event_id, title: r.event_title, event_type: r.event_type, event_date: r.event_date, status: r.status } : null,
-        items: b.map((x) => toItem(x, me)),
-      };
-    }),
-  };
+  const uploads = shown.map((b) => {
+    const r = b[0];
+    return {
+      id: r.id, at: r.created_at, stamp: r.stamp, uploader: r.uploader, credit: r.credit || null, mine: isMine(r, me),
+      event: r.event_id ? { id: r.event_id, title: r.event_title, event_type: r.event_type, event_date: r.event_date, status: r.status } : null,
+      items: b.map((x) => toItem(x, me)),
+    };
+  });
+  // The last page takes every older blast; otherwise blasts stop where the next page's uploads start.
+  const blasts = await blastsBetween(me, next && next.split('_')[0], upto);
+  const batches = [...uploads, ...blasts].sort((a, b) => (a.stamp < b.stamp ? 1 : a.stamp > b.stamp ? -1 : 0));
+  return { next, batches };
 }
 
 export default route({

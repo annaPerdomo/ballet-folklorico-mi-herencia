@@ -1,7 +1,7 @@
 import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js';
 import { whoami, requireAdmin, verifySheetSig, ownerTag } from './_lib/auth.js';
 import { sql, withSource } from './_lib/db.js';
-import { listEvents, EDITABLE } from './_lib/events.js';
+import { listEvents, EDITABLE, logBlast } from './_lib/events.js';
 import { renderSheet } from './_lib/sheet.js';
 
 export function cleanPatch(body) {
@@ -74,6 +74,7 @@ export default route({
        VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, CASE WHEN $${cols.length + 1} = 'folder' THEN 'folder' ELSE 'manual' END,
                CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} IN ('open', 'folder', 'gathering')) RETURNING id`,
       [...vals, status]));
+    if (status === 'gathering') await logBlast(row[0].id, 'gathering', ownerTag(me).actor);
     ok(res, { id: row[0].id });
   },
 });

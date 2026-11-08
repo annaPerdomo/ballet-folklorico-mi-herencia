@@ -168,7 +168,7 @@
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
       deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      feedSub: 'Photos, videos and music the group has shared', feedAdded: 'added {what}', feedAnd: ' and ',
+      feedSub: 'Gig news, plus the photos, videos and music the group has shared', blastNew: 'New gig: are you available?', blastAsk: 'Reminder: mark who can dance', blastConfirmed: 'Gig confirmed', blastCancelled: 'Gig cancelled', blastGathering: 'New group event', feedAdded: 'added {what}', feedAnd: ' and ',
       feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the Ramirez family', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the Ramirez family”. You keep every tool.',
@@ -351,7 +351,7 @@
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
       deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
-      feedSub: 'Fotos, videos y música que el grupo ha compartido', feedAdded: 'agregó {what}', feedAnd: ' y ',
+      feedSub: 'Noticias de los eventos, y las fotos, videos y música que el grupo ha compartido', blastNew: 'Nuevo evento: ¿pueden bailar?', blastAsk: 'Recordatorio: marquen quién puede bailar', blastConfirmed: 'Evento confirmado', blastCancelled: 'Evento cancelado', blastGathering: 'Nuevo convivio del grupo', feedAdded: 'agregó {what}', feedAnd: ' y ',
       feedNew: 'Nuevo', feedMore: 'más', feedOlder: 'Ver anteriores', feedEmpty: 'Todavía no se ha agregado nada.', songOne: '1 canción', songMany: '{n} canciones',
       rename: 'Cambiar nombre', untitledSong: 'Canción sin título', addedBy: 'Agregado por {who}', theOwners: 'la familia Ramirez', theFamily: 'la familia {name}',
       youTitle: 'Tú', youSub: 'Las fotos, videos y enlaces que agregues aparecen con esta familia en lugar de “la familia Ramirez”. Sigues teniendo todas las herramientas.',
@@ -2322,7 +2322,7 @@
 
   }
 
-  /* ── feed: gallery uploads only; gig business (inquiries, availability) stays out ── */
+  /* ── feed: uploads and gig/event posts; inquiries and availability stay out ── */
   var FEED_KEY = 'bfmh_team_feed_seen';
   function feedSeen() {
     try { var v = localStorage.getItem(FEED_KEY); if (v) return v; } catch (e) {}
@@ -2357,7 +2357,34 @@
       c.audio ? plural(c.audio, 'songOne', 'songMany') : null].filter(Boolean).join(t('feedAnd'));
   }
   var FEED_TILES = 6;
+  var BLASTS = { 'new': ['blastNew', 'bell'], ask: ['blastAsk', 'clock'], confirmed: ['blastConfirmed', 'yes'], cancelled: ['blastCancelled', 'no'], gathering: ['blastGathering', 'people'] };
+  function openFeedEvent(id) {
+    var ev = state.events.find(function (e) { return e.id === id; });
+    if (!ev) return;
+    if (isGathering(ev)) { openParty(id); return; }
+    if (isOwner()) { state.tab = 'gigs'; openDetail(id); return; }
+    state.focusEvent = id; render();
+  }
+  function blastCard(b) {
+    var ev = b.event, k = BLASTS[b.blast] || BLASTS['new'];
+    // The calendar copy, so a renamed or moved gig reads as it is now.
+    var live = state.events.find(function (e) { return e.id === ev.id; }) || ev;
+    var open = state.events.some(function (e) { return e.id === ev.id; });
+    var where = [fmtTime(live), fmtWhere(live)].filter(Boolean).join(' · ');
+    return h(open ? 'button' : 'article', { type: open ? 'button' : null, class: 'feed-card feed-blast is-' + b.blast + (isFresh(b) ? ' is-new' : ''),
+      onclick: open ? function () { openFeedEvent(ev.id); } : null },
+      h('span', { class: 'feed-head' },
+        h('span', { class: 'feed-line feed-kind' }, icon(k[1], 2.5), h('b', { text: t(k[0]) })),
+        isFresh(b) ? h('span', { class: 'feed-new', text: t('feedNew') }) : null,
+        h('span', { class: 'feed-time', text: feedWhen(b.at) })),
+      h('span', { class: 'feed-gig' }, dateBox(live),
+        h('span', { class: 'feed-gig-main' },
+          h('span', { class: 'card-title sm', text: evTitle(live) }),
+          where ? h('span', { class: 'card-meta', text: where }) : null),
+        open ? h('span', { class: 'giggo' }, icon('chevron', 2.5)) : null));
+  }
   function feedCard(b) {
+    if (b.blast) return blastCard(b);
     var who = whoOf(b);
     var songs = b.items.filter(function (i) { return i.kind === 'audio'; });
     var vis = b.items.filter(function (i) { return i.kind !== 'audio'; });

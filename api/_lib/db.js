@@ -218,6 +218,23 @@ ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_key text;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_bytes int;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_w int;
 ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_h int;
+CREATE TABLE IF NOT EXISTS blasts (
+  id serial PRIMARY KEY,
+  event_id int NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  kind text NOT NULL CHECK (kind IN ('new','ask','confirmed','cancelled','gathering')),
+  actor text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS blasts_created ON blasts(created_at DESC, id DESC);
+-- One-time backfill. Cancellations are left out: a quiet cancel looks the same as an announced one.
+INSERT INTO blasts (event_id, kind, actor, created_at)
+SELECT * FROM (
+  SELECT id, 'new', 'owner', CASE WHEN ask_count > 1 THEN LEAST(COALESCE(published_at, asked_at), asked_at) ELSE asked_at END
+    FROM events WHERE asked_at IS NOT NULL
+  UNION ALL SELECT id, 'ask', 'owner', asked_at FROM events WHERE asked_at IS NOT NULL AND ask_count > 1
+  UNION ALL SELECT id, 'confirmed', 'owner', confirmed_at FROM events WHERE confirmed_at IS NOT NULL AND asked_at IS NOT NULL AND status IN ('confirmed', 'done')
+  UNION ALL SELECT id, 'gathering', 'owner', created_at FROM events WHERE status = 'gathering'
+) b WHERE NOT EXISTS (SELECT 1 FROM blasts);
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

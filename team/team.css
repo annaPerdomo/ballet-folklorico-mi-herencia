@@ -859,6 +859,21 @@ button.feed-where:focus-visible { outline: 2px solid var(--gold); outline-offset
 .feed-rest:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
 .feed-all { margin-top: 0.7rem; }
 .feed-sub { margin: 0.2rem 0 0.8rem; }
+.feed-blast { all: unset; box-sizing: border-box; background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 0.7rem;
+  display: flex; flex-direction: column; gap: 0.55rem; }
+button.feed-blast { cursor: pointer; }
+button.feed-blast:hover, button.feed-blast:focus-visible { border-color: var(--gold); }
+button.feed-blast:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.feed-blast.is-new { border-color: rgba(232,67,147,0.55); box-shadow: 0 0 0 1px rgba(232,67,147,0.18); }
+.feed-kind { display: flex; align-items: center; gap: 0.4rem; }
+.feed-kind svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--gold); }
+.feed-blast.is-confirmed .feed-kind svg { color: var(--teal-light); }
+.feed-blast.is-cancelled .feed-kind svg { color: var(--magenta-light); }
+.feed-blast.is-cancelled .feed-gig { opacity: 0.7; }
+.feed-gig { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.feed-gig .card-date { min-width: 54px; padding: 0.4rem; }
+.feed-gig-main { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.feed-gig .giggo { flex-shrink: 0; }
 
 /* ── group events (rows; the event page itself is team/party.css) ── */
 .evlist { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.9rem; }
