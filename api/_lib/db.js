@@ -214,6 +214,14 @@ CREATE TABLE IF NOT EXISTS gathering_claims (
   created_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (item_id, rsvp_id)
 );
+CREATE TABLE IF NOT EXISTS gathering_members (
+  rsvp_id int NOT NULL REFERENCES gathering_rsvps(id) ON DELETE CASCADE,
+  dancer_id int NOT NULL REFERENCES dancers(id) ON DELETE CASCADE,
+  status text NOT NULL CHECK (status IN ('yes','maybe','no')),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (rsvp_id, dancer_id)
+);
+ALTER TABLE gathering_rsvps ADD COLUMN IF NOT EXISTS extra int NOT NULL DEFAULT 0;
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

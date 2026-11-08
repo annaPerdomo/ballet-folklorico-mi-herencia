@@ -32,6 +32,10 @@
       removeItem: 'Remove from the list', removeItemAsk: 'Take “{item}” off the potluck list?', remove: 'Remove', hostNote: 'Note',
       invalid: 'This invite link isn’t valid anymore. Ask whoever sent it for a new one.', loading: 'Loading…', tryAgain: 'Try again',
       copied: 'Link copied', hosted: 'Hosted by', openInApp: 'Manage this event in the team app',
+      familySub: 'Answer for each dancer, just like a gig.', everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
+      yes: 'Yes', no: 'No', answerFor: 'Answer for {name}', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going', stateNone: 'Not answered',
+      addNote: 'Add a note for the hosts', others: 'Others coming who don’t dance', editNote: 'Edit the note', whoFrom: 'Who’s coming?', pickWho: 'Pick who’s coming',
+      flyer: 'Event flyer', addFlyer: 'Add a flyer', close: 'Close',
     },
     es: {
       kinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
@@ -62,6 +66,10 @@
       removeItem: 'Quitar de la lista', removeItemAsk: '¿Quitar “{item}” de la lista?', remove: 'Quitar', hostNote: 'Nota',
       invalid: 'Este enlace de invitación ya no es válido. Pide uno nuevo a quien te lo mandó.', loading: 'Cargando…', tryAgain: 'Reintentar',
       copied: 'Enlace copiado', hosted: 'Organiza', openInApp: 'Administra este convivio en la app del equipo',
+      familySub: 'Responde por cada bailarín, igual que en las presentaciones.', everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
+      yes: 'Sí', no: 'No', answerFor: 'Respuesta de {name}', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va', stateNone: 'Sin responder',
+      addNote: 'Agregar una nota para los anfitriones', others: 'Otros que vienen y no bailan', editNote: 'Editar la nota', whoFrom: '¿Quiénes vienen?', pickWho: 'Elige quiénes vienen',
+      flyer: 'Volante del convivio', addFlyer: 'Agregar un volante', close: 'Cerrar',
     },
   };
   var CATS = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
@@ -227,6 +235,12 @@
     function timeText(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
     function whoName(r) { return r.family ? t('familyName', { name: r.name }) : r.name; }
     function party(r) {
+      if (r.members && r.members.length) {
+        var by = function (st) { return r.members.filter(function (m) { return m.status === st; }).map(function (m) { return m.name; }); };
+        var yes = by('yes'), maybe = by('maybe');
+        if (r.status === 'no') return '';
+        return [yes.join(', ') + (r.extra ? ' +' + r.extra : ''), maybe.length ? t('maybe') + ': ' + maybe.join(', ') : null].filter(Boolean).join(' · ');
+      }
       return [r.adults ? plural(r.adults, 'adultOne', 'adultMany') : null, r.kids ? plural(r.kids, 'kidOne', 'kidMany') : null].filter(Boolean).join(' · ');
     }
     function initials(name) {
@@ -321,6 +335,7 @@
         }
         return card;
       }
+      if (me.as === 'family' && me.dancers && me.dancers.length) return familyCard(card, r);
       if (r && !form) {
         var head = r.status === 'yes' ? t('youGoing') : r.status === 'maybe' ? t('youMaybe') : t('youNo');
         card.appendChild(h('div', { class: 'pt-done' },
@@ -369,6 +384,70 @@
           r ? h('button', { type: 'button', class: 'btn', text: t('cancel'), onclick: function () { form = null; paint(); } }) : null));
       }
       return card;
+    }
+    var queue = Promise.resolve(), sent = 0;
+    function queued(body) {
+      var n = ++sent;
+      queue = queue.then(function () { return api(body); }).then(function (d) {
+        // A later tap is already on its way; repainting from this one would briefly undo it.
+        if (n === sent) { data = d; paint(); }
+        if (opts.onChange) opts.onChange(d);
+      }, function (e) { toast(e.message, true); return load().catch(function () {}); });
+      return queue;
+    }
+    function answer(map) {
+      data.me.dancers.forEach(function (d) { if (map[d.id]) d.status = map[d.id]; });
+      paint();
+      return queued({ action: 'members', answers: map });
+    }
+    function stateText(st) { return st ? t('state' + st.charAt(0).toUpperCase() + st.slice(1)) : t('stateNone'); }
+    function familyCard(card, r) {
+      var me = data.me, dancers = me.dancers;
+      card.className = 'pt-card pt-rsvp pt-family';
+      card.appendChild(h('h2', { class: 'pt-h2', text: t('rsvpTitle') }));
+      card.appendChild(h('p', { class: 'pt-sub', text: t('familySub') }));
+      if (!opts.embedded) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
+        onclick: function () { store(GUEST, '1'); form = null; load(); } }));
+      if (dancers.length > 1) {
+        var all = function (st) { var m = {}; dancers.forEach(function (d) { m[d.id] = st; }); answer(m); };
+        card.appendChild(h('div', { class: 'avrow allrow' }, h('div', { class: 'avname' }, h('b', { text: t('everyone') })),
+          h('div', { class: 'seg seg-2' },
+            h('button', { type: 'button', onclick: function () { all('yes'); } }, icon('yes', 2.6), t('allYes')),
+            h('button', { type: 'button', onclick: function () { all('no'); } }, icon('no', 2.6), t('allNo')))));
+      }
+      dancers.forEach(function (d) {
+        var seg = h('div', { class: 'seg', role: 'group', 'aria-label': t('answerFor', { name: d.name }) });
+        [['yes', 'yes'], ['maybe', 'maybe'], ['no', 'no']].forEach(function (sk) {
+          var on = d.status === sk[0];
+          seg.appendChild(h('button', { type: 'button', class: on ? 'on-' + sk[0] : '', 'aria-pressed': on ? 'true' : 'false',
+            onclick: function () { if (!on) { var m = {}; m[d.id] = sk[0]; answer(m); } } }, icon(sk[0], 2.6), t(sk[1])));
+        });
+        card.appendChild(h('div', { class: 'avrow' },
+          h('div', { class: 'avname' }, h('b', { text: d.name }), h('span', { class: 'avstate' + (d.status ? ' ' + d.status : ''), text: stateText(d.status) })),
+          seg));
+      });
+      if (coming(r)) {
+        card.appendChild(h('div', { class: 'pt-family-extra' }, stepper(t('others'), r.extra || 0, function (n) { r.extra = n; queued({ action: 'extra', extra: n }); })));
+      }
+      if (r) {
+        card.appendChild(h('div', { class: 'pt-family-note' },
+          r.note ? h('p', { class: 'pt-done-note' }, icon('note'), h('span', { text: r.note })) : null,
+          h('button', { type: 'button', class: 'btn-link', text: r.note ? t('editNote') : t('addNote'), onclick: function () { noteSheet(r); } })));
+      }
+      return card;
+    }
+    function noteSheet(r) {
+      var s = sheet(t('noteLabel'));
+      var note = h('textarea', { class: 'pt-input', rows: 3, maxlength: 300, placeholder: t('notePh') });
+      note.value = r.note || '';
+      s.body.appendChild(h('form', { onsubmit: function (e) {
+        e.preventDefault();
+        act({ action: 'note', note: note.value }, t('saved')).then(function (ok) { if (ok) s.close(); });
+      } }, h('label', { class: 'f pt-f' }, note),
+        h('div', { class: 'pop-btns' },
+          h('button', { type: 'submit', class: 'btn btn-wide btn-gold', text: t('update') }),
+          h('button', { type: 'button', class: 'btn btn-wide', text: t('cancel'), onclick: s.close }))));
+      note.focus();
     }
     function draftFrom(r) {
       var remembered = store('bfmh_party_name') || '';
@@ -508,10 +587,16 @@
       var r = mine(), needRsvp = !coming(r);
       var s = sheet(t('claimTitle', { item: item.label }), needRsvp ? t('quickRsvp') : null);
       var q = { name: store('bfmh_party_name') || '', adults: 1, kids: 0, note: '' };
+      var dancers = data.me.as === 'family' && data.me.dancers && data.me.dancers.length ? data.me.dancers : null;
+      var picked = {}; if (dancers) dancers.forEach(function (d) { picked[d.id] = d.status !== 'no'; });
       var form = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
         e.preventDefault();
         var chain = Promise.resolve(true);
-        if (needRsvp) {
+        if (needRsvp && dancers) {
+          var ans = {}; dancers.forEach(function (d) { if (picked[d.id]) ans[d.id] = 'yes'; });
+          if (!Object.keys(ans).length) { toast(t('pickWho'), true); return; }
+          chain = answer(ans).then(function () { return coming(mine()); });
+        } else if (needRsvp) {
           if (data.me.as !== 'family' && !q.name.trim()) { nameIn.focus(); return; }
           if (data.me.as !== 'family') store('bfmh_party_name', q.name.trim());
           chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.adults, kids: q.kids, note: r && r.note });
@@ -527,7 +612,15 @@
         nameIn = h('input', { class: 'pt-input', value: q.name, placeholder: t('namePh'), maxlength: 80, autocomplete: 'name', oninput: function () { q.name = nameIn.value; } });
         form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
       }
-      if (needRsvp) form.appendChild(h('div', { class: 'pt-steps' }, stepper(t('adults'), 1, function (n) { q.adults = n; }), stepper(t('kids'), 0, function (n) { q.kids = n; })));
+      if (needRsvp && dancers) {
+        form.appendChild(h('p', { class: 'pt-label', text: t('whoFrom') }));
+        form.appendChild(h('div', { class: 'pt-picks' }, dancers.map(function (d) {
+          var b = h('button', { type: 'button', class: 'pt-pick', 'aria-pressed': picked[d.id] ? 'true' : 'false', onclick: function () {
+            picked[d.id] = !picked[d.id]; b.setAttribute('aria-pressed', picked[d.id] ? 'true' : 'false');
+          } }, icon('yes', 2.8), h('span', { text: d.name }));
+          return b;
+        })));
+      } else if (needRsvp) form.appendChild(h('div', { class: 'pt-steps' }, stepper(t('adults'), 1, function (n) { q.adults = n; }), stepper(t('kids'), 0, function (n) { q.kids = n; })));
       var note = h('input', { class: 'pt-input', placeholder: t('claimNotePh'), maxlength: 120, oninput: function () { q.note = note.value; } });
       form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
       form.appendChild(h('div', { class: 'pop-btns' },

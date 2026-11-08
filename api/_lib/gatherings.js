@@ -8,6 +8,7 @@ import { actorOf } from './auth.js';
 
 export const KINDS = ['potluck', 'posada', 'party', 'practice', 'meeting', 'outing', 'fundraiser', 'other'];
 export const CATEGORIES = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
+const ANSWERS = ['yes', 'maybe', 'no'];
 const MAX_RSVPS = 400;
 const MAX_ITEMS = 150;
 const MAX_PARTY = 30;
@@ -22,7 +23,7 @@ export const hashKey = (key) => crypto.createHash('sha256').update(String(key)).
 export const newGuestKey = () => crypto.randomBytes(18).toString('base64url');
 
 export function cleanRsvp(b, { guest }) {
-  const status = ['yes', 'maybe', 'no'].includes(b.status) ? b.status : null;
+  const status = ANSWERS.includes(b.status) ? b.status : null;
   if (!status) throw httpError(400, 'Pick going, maybe or can’t go');
   const name = str(b.name, 80);
   if (guest && !name) throw httpError(400, 'Write your name so the hosts know who’s coming');
@@ -39,6 +40,14 @@ export function cleanItem(b) {
   const slots = Math.max(1, Math.min(20, int(b.slots) || 1));
   return { label, category, slots, note: str(b.note, 120) };
 }
+
+export function familyTally(answers, extra = 0) {
+  const yes = answers.filter((s) => s === 'yes').length, maybe = answers.filter((s) => s === 'maybe').length;
+  const status = yes ? 'yes' : maybe ? 'maybe' : 'no';
+  return { status, adults: status === 'no' ? 0 : extra, kids: status === 'yes' ? yes : status === 'maybe' ? maybe : 0 };
+}
+
+export const flyerOf = (ev) => (ev.flyer_key && storageReady() ? { url: signedUrl('GET', ev.flyer_key), w: ev.flyer_w, h: ev.flyer_h } : null);
 
 async function gathering(id) {
   const ev = await one(`SELECT ${COLS} FROM events WHERE id = $1 AND status = 'gathering'`, [id]);
@@ -62,27 +71,36 @@ async function myRsvp(eventId, v, q = sql) {
 
 export async function loadParty(id, v) {
   const ev = await gathering(id);
-  const [rsvps, items, claims, mine] = await Promise.all([
-    sql(`SELECT id, family_id, name, status, adults, kids, note, updated_at FROM gathering_rsvps WHERE event_id = $1
+  const [rsvps, items, claims, mine, members, dancers] = await Promise.all([
+    sql(`SELECT id, family_id, name, status, adults, kids, extra, note, updated_at FROM gathering_rsvps WHERE event_id = $1
           ORDER BY CASE status WHEN 'yes' THEN 0 WHEN 'maybe' THEN 1 ELSE 2 END, lower(name), id`, [id]),
     sql('SELECT id, label, category, slots, rsvp_id FROM gathering_items WHERE event_id = $1 ORDER BY id', [id]),
     sql(`SELECT c.item_id, c.rsvp_id, c.note FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id
           WHERE i.event_id = $1 ORDER BY c.created_at`, [id]),
     myRsvp(id, v),
+    sql(`SELECT m.rsvp_id, m.dancer_id, split_part(d.name, ' ', 1) AS name, m.status FROM gathering_members m
+          JOIN gathering_rsvps r ON r.id = m.rsvp_id JOIN dancers d ON d.id = m.dancer_id AND d.active
+          WHERE r.event_id = $1 ORDER BY d.name`, [id]),
+    v.family ? sql('SELECT id, name FROM dancers WHERE family_id = $1 AND active ORDER BY name', [v.family.id]) : [],
   ]);
   const myId = mine && mine.id;
-  const { past, ...event } = ev;
+  const { past, flyer_key, flyer_w, flyer_h, ...event } = ev;
+  const mineAnswers = members.filter((m) => m.rsvp_id === myId);
+  // Dancers' names stay off the public invite link, which travels beyond the team; who said no is for the hosts.
+  const membersOf = (r) => (v.member || r.id === myId ? members.filter((m) => m.rsvp_id === r.id && (v.owner || r.id === myId || m.status !== 'no'))
+    .map((m) => ({ name: m.name, status: m.status })) : []);
   return {
     event: withCalendarLinks(event),
     past,
     // Notes and who said no are for the hosts; guests get only the count.
     declined: rsvps.filter((r) => r.status === 'no').length,
     rsvps: rsvps.filter((r) => r.status !== 'no' || v.owner || r.id === myId).map((r) => ({ id: r.id, name: r.name, family: Boolean(r.family_id), status: r.status, adults: r.adults, kids: r.kids,
-      mine: r.id === myId, note: v.owner || r.id === myId ? r.note : undefined })),
+      mine: r.id === myId, note: v.owner || r.id === myId ? r.note : undefined, members: r.family_id ? membersOf(r) : [], extra: r.family_id ? r.extra : 0 })),
     items: items.map((i) => ({ id: i.id, label: i.label, category: i.category, slots: i.slots, by: i.rsvp_id, mine: Boolean(myId) && i.rsvp_id === myId,
       claims: claims.filter((c) => c.item_id === i.id).map((c) => ({ rsvp_id: c.rsvp_id, note: c.note, mine: c.rsvp_id === myId })) })),
     me: { as: v.family ? 'family' : 'guest', family_name: v.family ? v.family.name : null, session_family: v.family ? null : v.sessionFamily,
-      rsvp_id: myId || null, owner: v.owner, member: v.member },
+      rsvp_id: myId || null, owner: v.owner, member: v.member,
+      dancers: dancers.map((d) => ({ id: d.id, name: d.name, status: (mineAnswers.find((m) => m.dancer_id === d.id) || {}).status || null })) },
   };
 }
 
@@ -98,6 +116,10 @@ export async function partyAction(id, v, b) {
     const mine = await myRsvp(id, v, q);
     const requireOwner = () => { if (!v.owner) throw httpError(403, 'Only Mayra and Angel can do that'); };
     const requireComing = () => { if (!coming(mine)) throw httpError(409, 'RSVP first, so everyone knows who’s bringing it'); };
+    const dropBringing = async (rsvpId) => {
+      await q('DELETE FROM gathering_claims WHERE rsvp_id = $1', [rsvpId]);
+      await q('DELETE FROM gathering_items WHERE rsvp_id = $1', [rsvpId]);
+    };
 
     if (action === 'rsvp') {
       const r = cleanRsvp(b, { guest: !v.family });
@@ -125,11 +147,45 @@ export async function partyAction(id, v, b) {
           [id, v.family ? v.family.id : null, name, r.status, r.adults, r.kids, r.note, key ? hashKey(key) : null]);
         rsvpId = rows[0].id;
       }
-      if (r.status === 'no') {
-        await q('DELETE FROM gathering_claims WHERE rsvp_id = $1', [rsvpId]);
-        await q('DELETE FROM gathering_items WHERE rsvp_id = $1', [rsvpId]);
-      }
+      if (r.status === 'no') await dropBringing(rsvpId);
       return { key };
+    }
+    const retally = async (rsvpId, extra) => {
+      const now = await q(`SELECT m.status FROM gathering_members m JOIN dancers d ON d.id = m.dancer_id AND d.active WHERE m.rsvp_id = $1`, [rsvpId]);
+      const tally = familyTally(now.map((m) => m.status), extra);
+      await q('UPDATE gathering_rsvps SET name = $2, status = $3, adults = $4, kids = $5, extra = $6, updated_at = now() WHERE id = $1',
+        [rsvpId, v.family.name, tally.status, tally.adults, tally.kids, extra]);
+      if (tally.status === 'no') await dropBringing(rsvpId);
+    };
+    if (action === 'extra') {
+      if (!v.family || !mine) throw httpError(409, 'Answer for your dancers first');
+      await retally(mine.id, Math.max(0, Math.min(MAX_PARTY, int(b.extra) || 0)));
+      return {};
+    }
+    if (action === 'members') {
+      if (!v.family) throw httpError(403, 'Only a team family answers dancer by dancer');
+      const own = await q('SELECT id FROM dancers WHERE family_id = $1 AND active', [v.family.id]);
+      const ids = new Set(own.map((d) => d.id));
+      const answers = Object.entries(b.answers || {}).map(([d, st]) => [int(d), st]).filter(([d, st]) => ids.has(d) && ANSWERS.includes(st));
+      if (!answers.length) throw httpError(400, 'Pick going, maybe or can’t go');
+      let rsvpId = mine && mine.id;
+      if (!rsvpId) {
+        const [{ n }] = await q('SELECT count(*)::int AS n FROM gathering_rsvps WHERE event_id = $1', [id]);
+        if (n >= MAX_RSVPS) throw httpError(409, 'The guest list is full');
+        const rows = await q(`INSERT INTO gathering_rsvps (event_id, family_id, name, status, adults, kids) VALUES ($1, $2, $3, 'maybe', 0, 0)
+          ON CONFLICT (event_id, family_id) WHERE family_id IS NOT NULL DO UPDATE SET updated_at = now() RETURNING id`, [id, v.family.id, v.family.name]);
+        rsvpId = rows[0].id;
+      }
+      await q(`INSERT INTO gathering_members (rsvp_id, dancer_id, status) SELECT $1, d, s FROM unnest($2::int[], $3::text[]) AS a(d, s)
+        ON CONFLICT (rsvp_id, dancer_id) DO UPDATE SET status = EXCLUDED.status, updated_at = now()`,
+        [rsvpId, answers.map((a) => a[0]), answers.map((a) => a[1])]);
+      await retally(rsvpId, mine ? mine.extra || 0 : 0);
+      return {};
+    }
+    if (action === 'note') {
+      if (!mine) throw httpError(409, 'RSVP first');
+      await q('UPDATE gathering_rsvps SET note = $2, updated_at = now() WHERE id = $1', [mine.id, str(b.note, 300)]);
+      return {};
     }
     if (action === 'leave') {
       if (mine) await q('DELETE FROM gathering_rsvps WHERE id = $1', [mine.id]);

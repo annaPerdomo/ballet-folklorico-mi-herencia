@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cleanRsvp, cleanItem, viewerOf, hashKey } from './gatherings.js';
+import { cleanRsvp, cleanItem, viewerOf, hashKey, familyTally } from './gatherings.js';
 
 test('cleanRsvp needs a name from a write-in guest but not from a family', () => {
   assert.throws(() => cleanRsvp({ status: 'yes' }, { guest: true }), /name/);
@@ -31,4 +31,10 @@ test('viewerOf lets a signed link or a session in, and a family can choose to wr
   const asGuest = viewerOf(fam, { id: 1, verify, asGuest: true, guestKey: 'k' });
   assert.equal(asGuest.family, null);
   assert.equal(asGuest.sessionFamily, 'Garcia');
+});
+
+test('familyTally counts the dancers going, and a family is only out when every dancer is', () => {
+  assert.deepEqual(familyTally(['yes', 'maybe', 'no']), { status: 'yes', adults: 0, kids: 1 });
+  assert.deepEqual(familyTally(['maybe', 'maybe', 'no'], 2), { status: 'maybe', adults: 2, kids: 2 });
+  assert.deepEqual(familyTally(['no', 'no'], 3), { status: 'no', adults: 0, kids: 0 });
 });
