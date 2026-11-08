@@ -10,19 +10,18 @@
       addToCal: 'Add to calendar', directions: 'Directions', share: 'Share invite', shareMsg: 'You’re invited to {title}! RSVP here:',
       calPick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancel',
       rsvpTitle: 'Will you be there?', rsvpSub: 'Let the hosts know how many to expect.',
-      yourName: 'Your name', needName: 'Write your name first', namePh: 'e.g. Tía Lupe & family', answeringFor: 'Answering for the {name} family',
+      yourName: 'Your name', needName: 'Write your name first', namePh: 'e.g. Tía Lupe & family',
       notYou: 'Not the {name} family? Write yourself in', asFamily: 'Answer as the {name} family instead',
-      going: 'Going', maybe: 'Maybe', cant: 'Can’t go', adults: 'Adults', kids: 'Kids', less: 'One fewer', more: 'One more',
+      going: 'Going', maybe: 'Maybe', cant: 'Can’t go', less: 'One fewer', more: 'One more',
       noteLabel: 'Note for the hosts', notePh: 'Allergies, arriving late… (optional)', send: 'Send RSVP', update: 'Save changes',
       youGoing: 'You’re going!', youMaybe: 'You said maybe', youNo: 'You can’t make it', youNoSub: 'We’ll miss you. You can change your answer anytime.',
       change: 'Change my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
-      adultOne: '1 adult', adultMany: '{n} adults', kidOne: '1 kid', kidMany: '{n} kids',
       whoComing: 'Who’s coming', personOne: 'person', personMany: 'people', rsvpOne: '1 RSVP', rsvpMany: '{n} RSVPs',
       maybeN: '{n} maybe', cantN: '{n} can’t make it', beFirst: 'No RSVPs yet — be the first!', you: 'You', familyName: '{name} family',
       potluck: 'Potluck', potluckSub: 'Pick something to bring so we don’t end up with five pots of rice.', spots: '{c} of {n} covered',
       bringIt: 'I’ll bring it', covered: 'Covered', leftN: '{n} more needed',  undo: 'Undo',
       bringOther: 'Bringing something else?', bringPh: 'e.g. Flan, aguas frescas', category: 'Category', add: 'Add',
-      addNeeded: 'Add to the potluck list', neededPh: 'e.g. Tamales, ice, folding chairs', howMany: 'How many people can sign up',
+      addNeeded: 'Add to the potluck list', neededPh: 'e.g. Tamales, ice, folding chairs', slotsLabel: 'How many people can sign up',
       nothingNeeded: 'Nothing on the list yet.', ownerNeeded: 'Add what you need — tamales, drinks, plates — and guests sign up for it.',
       claimTitle: 'Bringing {item}', claimNote: 'Anything to add? (optional)', claimNotePh: 'e.g. red pork, 2 dozen', confirm: 'Confirm',
       quickRsvp: 'RSVP first so everyone knows who’s bringing it.', rsvpAndBring: 'RSVP & bring it',
@@ -32,9 +31,9 @@
       removeItem: 'Remove from the list', removeItemAsk: 'Take “{item}” off the potluck list?', remove: 'Remove', hostNote: 'Note',
       invalid: 'This invite link isn’t valid anymore. Ask whoever sent it for a new one.', loading: 'Loading…', tryAgain: 'Try again',
       copied: 'Link copied', hosted: 'Hosted by', openInApp: 'Manage this event in the team app',
-      familySub: 'Answer for each dancer, just like a gig.', everyone: 'Everyone in the family', allYes: 'All yes', allNo: 'All no',
-      yes: 'Yes', no: 'No', answerFor: 'Answer for {name}', stateYes: 'Going', stateMaybe: 'Maybe', stateNo: 'Not going', stateNone: 'Not answered',
-      addNote: 'Add a note for the hosts', others: 'Others coming who don’t dance', editNote: 'Edit the note', whoFrom: 'Who’s coming?', pickWho: 'Pick who’s coming',
+      rsvpFamily: 'Will the {name} family be there?', howMany: 'How many of you are coming?', howManyFamily: 'How many from your family?',
+      howManyHint: 'Count yourself too.', howManyFamilyHint: 'Everyone coming: you, your dancers, and anyone you’re bringing.', justYou: 'Just you',
+      addNote: 'Add a note for the hosts', peopleN: '{n} people', personN: '1 person',
       flyer: 'Event flyer', addFlyer: 'Add a flyer', close: 'Close',
     },
     es: {
@@ -44,19 +43,18 @@
       addToCal: 'Agregar al calendario', directions: 'Cómo llegar', share: 'Compartir invitación', shareMsg: '¡Te invitamos a {title}! Confirma aquí:',
       calPick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancelar',
       rsvpTitle: '¿Vas a venir?', rsvpSub: 'Avísale a los anfitriones cuántos van.',
-      yourName: 'Tu nombre', needName: 'Primero escribe tu nombre', namePh: 'p. ej. Tía Lupe y familia', answeringFor: 'Respondes por la familia {name}',
+      yourName: 'Tu nombre', needName: 'Primero escribe tu nombre', namePh: 'p. ej. Tía Lupe y familia',
       notYou: '¿No eres de la familia {name}? Escribe tu nombre', asFamily: 'Mejor responder como la familia {name}',
-      going: 'Voy', maybe: 'Tal vez', cant: 'No puedo', adults: 'Adultos', kids: 'Niños', less: 'Uno menos', more: 'Uno más',
+      going: 'Voy', maybe: 'Tal vez', cant: 'No puedo', less: 'Uno menos', more: 'Uno más',
       noteLabel: 'Nota para los anfitriones', notePh: 'Alergias, si llegas tarde… (opcional)', send: 'Enviar respuesta', update: 'Guardar cambios',
       youGoing: '¡Vas!', youMaybe: 'Dijiste que tal vez', youNo: 'No puedes ir', youNoSub: 'Te vamos a extrañar. Puedes cambiar tu respuesta cuando quieras.',
       change: 'Cambiar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
-      adultOne: '1 adulto', adultMany: '{n} adultos', kidOne: '1 niño', kidMany: '{n} niños',
       whoComing: 'Quiénes vienen', personOne: 'persona', personMany: 'personas', rsvpOne: '1 respuesta', rsvpMany: '{n} respuestas',
       maybeN: '{n} tal vez', cantN: '{n} no pueden', beFirst: 'Aún no hay respuestas. ¡Sé el primero!', you: 'Tú', familyName: 'Familia {name}',
       potluck: 'Comida compartida', potluckSub: 'Elige algo para llevar, para que no terminemos con cinco ollas de arroz.', spots: '{c} de {n} cubiertos',
       bringIt: 'Yo lo llevo', covered: 'Cubierto', leftN: 'Faltan {n}',  undo: 'Deshacer',
       bringOther: '¿Vas a llevar otra cosa?', bringPh: 'p. ej. flan, aguas frescas', category: 'Categoría', add: 'Agregar',
-      addNeeded: 'Agregar a la lista', neededPh: 'p. ej. tamales, hielo, sillas', howMany: 'Cuántas personas pueden apuntarse',
+      addNeeded: 'Agregar a la lista', neededPh: 'p. ej. tamales, hielo, sillas', slotsLabel: 'Cuántas personas pueden apuntarse',
       nothingNeeded: 'Todavía no hay nada en la lista.', ownerNeeded: 'Agrega lo que hace falta (tamales, bebidas, platos) y los invitados se apuntan.',
       claimTitle: 'Llevas {item}', claimNote: '¿Algo que agregar? (opcional)', claimNotePh: 'p. ej. de puerco en rojo, 2 docenas', confirm: 'Confirmar',
       quickRsvp: 'Primero confirma, para que todos sepan quién lo lleva.', rsvpAndBring: 'Confirmar y llevarlo',
@@ -66,9 +64,9 @@
       removeItem: 'Quitar de la lista', removeItemAsk: '¿Quitar “{item}” de la lista?', remove: 'Quitar', hostNote: 'Nota',
       invalid: 'Este enlace de invitación ya no es válido. Pide uno nuevo a quien te lo mandó.', loading: 'Cargando…', tryAgain: 'Reintentar',
       copied: 'Enlace copiado', hosted: 'Organiza', openInApp: 'Administra este convivio en la app del equipo',
-      familySub: 'Responde por cada bailarín, igual que en las presentaciones.', everyone: 'Toda la familia', allYes: 'Todos sí', allNo: 'Todos no',
-      yes: 'Sí', no: 'No', answerFor: 'Respuesta de {name}', stateYes: 'Va', stateMaybe: 'Tal vez', stateNo: 'No va', stateNone: 'Sin responder',
-      addNote: 'Agregar una nota para los anfitriones', others: 'Otros que vienen y no bailan', editNote: 'Editar la nota', whoFrom: '¿Quiénes vienen?', pickWho: 'Elige quiénes vienen',
+      rsvpFamily: '¿Va a venir la familia {name}?', howMany: '¿Cuántos van a venir?', howManyFamily: '¿Cuántos de tu familia vienen?',
+      howManyHint: 'Cuéntate a ti también.', howManyFamilyHint: 'Todos los que vienen: tú, tus bailarines y quien traigas.', justYou: 'Solo tú',
+      addNote: 'Agregar una nota para los anfitriones', peopleN: '{n} personas', personN: '1 persona',
       flyer: 'Volante del convivio', addFlyer: 'Agregar un volante', close: 'Cerrar',
     },
   };
@@ -243,15 +241,8 @@
     }
     function timeText(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
     function whoName(r) { return r.family ? t('familyName', { name: r.name }) : r.name; }
-    function party(r) {
-      if (r.members && r.members.length) {
-        var by = function (st) { return r.members.filter(function (m) { return m.status === st; }).map(function (m) { return m.name; }); };
-        var yes = by('yes'), maybe = by('maybe');
-        if (r.status === 'no') return '';
-        return [yes.join(', ') + (r.extra ? ' +' + r.extra : ''), maybe.length ? t('maybe') + ': ' + maybe.join(', ') : null].filter(Boolean).join(' · ');
-      }
-      return [r.adults ? plural(r.adults, 'adultOne', 'adultMany') : null, r.kids ? plural(r.kids, 'kidOne', 'kidMany') : null].filter(Boolean).join(' · ');
-    }
+    function peopleText(n) { return n === 1 ? t('personN') : t('peopleN', { n: n }); }
+    function party(r) { var n = r.adults + r.kids; return r.status === 'no' || !n ? '' : peopleText(n); }
     function initials(name) {
       var w = String(name || '?').replace(/^(the|la|el|tía|tia|tío|tio)\s+/i, '').split(/\s+/).filter(Boolean);
       return ((w[0] || '?').charAt(0) + (w[1] && !/^(&|y|and)$/i.test(w[1]) ? w[1].charAt(0) : '')).toUpperCase();
@@ -350,7 +341,6 @@
         }
         return card;
       }
-      if (me.as === 'family' && me.dancers && me.dancers.length) return familyCard(card, r);
       if (r && !form) {
         var head = r.status === 'yes' ? t('youGoing') : r.status === 'maybe' ? t('youMaybe') : t('youNo');
         card.appendChild(h('div', { class: 'pt-done' },
@@ -365,11 +355,10 @@
           } })));
         return card;
       }
-      var f = form || (form = draftFrom(null));
-      card.appendChild(h('h2', { class: 'pt-h2', text: t('rsvpTitle') }));
+      var f = form || (form = draftFrom(null)), fam = me.as === 'family';
+      card.appendChild(h('h2', { class: 'pt-h2', text: fam ? t('rsvpFamily', { name: me.family_name }) : t('rsvpTitle') }));
       card.appendChild(h('p', { class: 'pt-sub', text: t('rsvpSub') }));
-      if (me.as === 'family') {
-        card.appendChild(h('p', { class: 'pt-as' }, icon('people'), h('span', { text: t('answeringFor', { name: me.family_name }) })));
+      if (fam) {
         if (!opts.embedded) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
           onclick: function () { store(GUEST, '1'); form = null; load(); } }));
       } else {
@@ -385,96 +374,51 @@
           onclick: function () { f.status = s[0]; paint(); } }, icon(s[0], 2.6), t(s[1])));
       });
       card.appendChild(seg);
-      if (f.status === 'yes' || f.status === 'maybe') {
-        card.appendChild(h('div', { class: 'pt-steps' },
-          stepper(t('adults'), f.adults, function (n) { f.adults = n; }),
-          stepper(t('kids'), f.kids, function (n) { f.kids = n; })));
-      }
+      if (f.status === 'yes' || f.status === 'maybe') card.appendChild(counter(f.count, function (n) { f.count = n; }));
       if (f.status) {
         var note = h('textarea', { class: 'pt-input', rows: 2, maxlength: 300, placeholder: t('notePh'), oninput: function () { f.note = note.value; } });
         note.value = f.note || '';
-        card.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('noteLabel') }), note));
+        var noteField = h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('noteLabel') }), note);
+        card.appendChild(f.note || f.showNote ? noteField : h('button', { type: 'button', class: 'btn-link pt-add-note', text: t('addNote'),
+          onclick: function () { f.showNote = true; paint(); } }));
         card.appendChild(h('div', { class: 'pt-row-btns' },
           h('button', { type: 'button', class: 'btn btn-gold btn-main', text: r ? t('update') : t('send'), onclick: sendRsvp }),
           r ? h('button', { type: 'button', class: 'btn', text: t('cancel'), onclick: function () { form = null; paint(); } }) : null));
       }
       return card;
     }
-    var queue = Promise.resolve(), sent = 0;
-    function queued(body) {
-      var n = ++sent;
-      queue = queue.then(function () { return api(body); }).then(function (d) {
-        // A later tap is already on its way; repainting from this one would briefly undo it.
-        if (n === sent) { data = d; paint(); }
-        if (opts.onChange) opts.onChange(d);
-      }, function (e) { toast(e.message, true); return load().catch(function () {}); });
-      return queue;
-    }
-    function answer(map) {
-      data.me.dancers.forEach(function (d) { if (map[d.id]) d.status = map[d.id]; });
-      paint();
-      return queued({ action: 'members', answers: map });
-    }
-    function stateText(st) { return st ? t('state' + st.charAt(0).toUpperCase() + st.slice(1)) : t('stateNone'); }
-    function familyCard(card, r) {
-      var me = data.me, dancers = me.dancers;
-      card.className = 'pt-card pt-rsvp pt-family';
-      card.appendChild(h('h2', { class: 'pt-h2', text: t('rsvpTitle') }));
-      card.appendChild(h('p', { class: 'pt-sub', text: t('familySub') }));
-      if (!opts.embedded) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
-        onclick: function () { store(GUEST, '1'); form = null; load(); } }));
-      if (dancers.length > 1) {
-        var all = function (st) { var m = {}; dancers.forEach(function (d) { m[d.id] = st; }); answer(m); };
-        card.appendChild(h('div', { class: 'avrow allrow' }, h('div', { class: 'avname' }, h('b', { text: t('everyone') })),
-          h('div', { class: 'seg seg-2' },
-            h('button', { type: 'button', onclick: function () { all('yes'); } }, icon('yes', 2.6), t('allYes')),
-            h('button', { type: 'button', onclick: function () { all('no'); } }, icon('no', 2.6), t('allNo')))));
+    var counterIds = 0;
+    function counter(value, onSet) {
+      var fam = data.me.as === 'family';
+      var out = h('output', { class: 'pt-counter-n', 'aria-live': 'polite', text: String(value) });
+      var word = h('span', { class: 'pt-counter-word' });
+      var minus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': t('less'), onclick: function () { set(value - 1); } }, icon('minus', 2.4));
+      var plus = h('button', { type: 'button', class: 'pt-counter-btn', 'aria-label': t('more'), onclick: function () { set(value + 1); } }, icon('plus', 2.4));
+      function show() {
+        out.textContent = String(value);
+        word.textContent = value === 1 && !fam ? t('justYou') : value === 1 ? t('personN').replace(/^1\s*/, '') : t('peopleN', { n: '' }).trim();
+        minus.disabled = value <= 1; plus.disabled = value >= 30;
       }
-      dancers.forEach(function (d) {
-        var seg = h('div', { class: 'seg', role: 'group', 'aria-label': t('answerFor', { name: d.name }) });
-        [['yes', 'yes'], ['maybe', 'maybe'], ['no', 'no']].forEach(function (sk) {
-          var on = d.status === sk[0];
-          seg.appendChild(h('button', { type: 'button', class: on ? 'on-' + sk[0] : '', 'aria-pressed': on ? 'true' : 'false',
-            onclick: function () { if (!on) { var m = {}; m[d.id] = sk[0]; answer(m); } } }, icon(sk[0], 2.6), t(sk[1])));
-        });
-        card.appendChild(h('div', { class: 'avrow' },
-          h('div', { class: 'avname' }, h('b', { text: d.name }), h('span', { class: 'avstate' + (d.status ? ' ' + d.status : ''), text: stateText(d.status) })),
-          seg));
-      });
-      if (coming(r)) {
-        card.appendChild(h('div', { class: 'pt-family-extra' }, stepper(t('others'), r.extra || 0, function (n) { r.extra = n; queued({ action: 'extra', extra: n }); })));
-      }
-      if (r) {
-        card.appendChild(h('div', { class: 'pt-family-note' },
-          r.note ? h('p', { class: 'pt-done-note' }, icon('note'), h('span', { text: r.note })) : null,
-          h('button', { type: 'button', class: 'btn-link', text: r.note ? t('editNote') : t('addNote'), onclick: function () { noteSheet(r); } })));
-      }
-      return card;
-    }
-    function noteSheet(r) {
-      var s = sheet(t('noteLabel'));
-      var note = h('textarea', { class: 'pt-input', rows: 3, maxlength: 300, placeholder: t('notePh') });
-      note.value = r.note || '';
-      s.body.appendChild(h('form', { onsubmit: function (e) {
-        e.preventDefault();
-        act({ action: 'note', note: note.value }, t('saved')).then(function (ok) { if (ok) s.close(); });
-      } }, h('label', { class: 'f pt-f' }, note),
-        h('div', { class: 'pop-btns' },
-          h('button', { type: 'submit', class: 'btn btn-wide btn-gold', text: t('update') }),
-          h('button', { type: 'button', class: 'btn btn-wide', text: t('cancel'), onclick: s.close }))));
-      note.focus();
+      function set(n) { value = Math.max(1, Math.min(30, n)); show(); onSet(value); }
+      show();
+      var qid = 'pt-q-' + (++counterIds);
+      return h('div', { class: 'pt-counter', role: 'group', 'aria-labelledby': qid },
+        h('p', { class: 'pt-counter-q', id: qid, text: t(fam ? 'howManyFamily' : 'howMany') }),
+        h('div', { class: 'pt-counter-row' }, minus, h('div', { class: 'pt-counter-mid' }, out, word), plus),
+        h('p', { class: 'pt-hint', text: t(fam ? 'howManyFamilyHint' : 'howManyHint') }));
     }
     function draftFrom(r) {
       var remembered = store('bfmh_party_name') || '';
-      return r ? { name: r.family ? '' : r.name, status: r.status, adults: r.status === 'no' ? 1 : r.adults, kids: r.kids, note: r.note || '' }
-        : { name: remembered, status: null, adults: 1, kids: 0, note: '' };
+      var start = Math.min(30, Math.max(1, data.me.household || 1));
+      return r ? { name: r.family ? '' : r.name, status: r.status, count: r.status === 'no' ? start : Math.max(1, r.adults + r.kids), note: r.note || '' }
+        : { name: remembered, status: null, count: start, note: '' };
     }
     function sendRsvp() {
       var f = form;
       if (data.me.as !== 'family' && !String(f.name || '').trim()) { toast(t('needName'), true); return; }
       if (data.me.as !== 'family') store('bfmh_party_name', f.name.trim());
       var was = mine();
-      act({ action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note }, was ? t('saved') : t('thanks'))
+      act({ action: 'rsvp', name: f.name, status: f.status, adults: f.count, kids: 0, note: f.note }, was ? t('saved') : t('thanks'))
         .then(function (ok) { if (ok) { form = null; paint(); } });
     }
 
@@ -595,26 +539,20 @@
       return h('form', { class: 'pt-add' + (kind === 'need' ? ' is-owner' : ''), onsubmit: submit },
         h('p', { class: 'pt-label', text: t(kind === 'need' ? 'addNeeded' : 'bringOther') }),
         h('div', { class: 'pt-add-row' }, label, catSelect(st.category, function (v) { st.category = v; })),
-        kind === 'need' ? stepper(t('howMany'), 1, function (n) { st.slots = Math.max(1, n); }) : null,
+        kind === 'need' ? stepper(t('slotsLabel'), 1, function (n) { st.slots = Math.max(1, n); }) : null,
         h('button', { type: 'submit', class: 'btn btn-sm' + (kind === 'need' ? ' btn-gold' : '') }, icon('plus', 2.6), t('add')));
     }
     function claimSheet(item) {
       var r = mine(), needRsvp = !coming(r);
       var s = sheet(t('claimTitle', { item: item.label }), needRsvp ? t('quickRsvp') : null);
-      var q = { name: store('bfmh_party_name') || '', adults: 1, kids: 0, note: '' };
-      var dancers = data.me.as === 'family' && data.me.dancers && data.me.dancers.length ? data.me.dancers : null;
-      var picked = {}; if (dancers) dancers.forEach(function (d) { picked[d.id] = d.status !== 'no'; });
+      var q = { name: store('bfmh_party_name') || '', count: Math.min(30, Math.max(1, data.me.household || 1)), note: '' };
       var form = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
         e.preventDefault();
         var chain = Promise.resolve(true);
-        if (needRsvp && dancers) {
-          var ans = {}; dancers.forEach(function (d) { if (picked[d.id]) ans[d.id] = 'yes'; });
-          if (!Object.keys(ans).length) { toast(t('pickWho'), true); return; }
-          chain = answer(ans).then(function () { return coming(mine()); });
-        } else if (needRsvp) {
+        if (needRsvp) {
           if (data.me.as !== 'family' && !q.name.trim()) { nameIn.focus(); return; }
           if (data.me.as !== 'family') store('bfmh_party_name', q.name.trim());
-          chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.adults, kids: q.kids, note: r && r.note });
+          chain = act({ action: 'rsvp', name: q.name, status: 'yes', adults: q.count, kids: 0, note: r && r.note });
         }
         chain.then(function (ok) {
           if (!ok) return;
@@ -627,15 +565,7 @@
         nameIn = h('input', { class: 'pt-input', value: q.name, placeholder: t('namePh'), maxlength: 80, autocomplete: 'name', oninput: function () { q.name = nameIn.value; } });
         form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
       }
-      if (needRsvp && dancers) {
-        form.appendChild(h('p', { class: 'pt-label', text: t('whoFrom') }));
-        form.appendChild(h('div', { class: 'pt-picks' }, dancers.map(function (d) {
-          var b = h('button', { type: 'button', class: 'pt-pick', 'aria-pressed': picked[d.id] ? 'true' : 'false', onclick: function () {
-            picked[d.id] = !picked[d.id]; b.setAttribute('aria-pressed', picked[d.id] ? 'true' : 'false');
-          } }, icon('yes', 2.8), h('span', { text: d.name }));
-          return b;
-        })));
-      } else if (needRsvp) form.appendChild(h('div', { class: 'pt-steps' }, stepper(t('adults'), 1, function (n) { q.adults = n; }), stepper(t('kids'), 0, function (n) { q.kids = n; })));
+      if (needRsvp) form.appendChild(counter(q.count, function (n) { q.count = n; }));
       var note = h('input', { class: 'pt-input', placeholder: t('claimNotePh'), maxlength: 120, oninput: function () { q.note = note.value; } });
       form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
       form.appendChild(h('div', { class: 'pop-btns' },
