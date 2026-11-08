@@ -8,9 +8,6 @@
 .pt-pp-wide { display: none; }
 @media (min-width: 700px) { .pt-pp-phone { display: none; } .pt-pp-wide { display: block; } }
 .pt-string { fill: none; stroke: #e8c97a; }
-.pt-bulb { animation: pt-twinkle 3s ease-in-out infinite alternate; }
-.pt-bulb-glow { fill: #ffcf6b; opacity: 0.4; }
-@keyframes pt-twinkle { 0% { opacity: 1; } 100% { opacity: 0.7; } }
 .pt-picado .ppw { transform-box: fill-box; transform-origin: 50% 0; animation: pt-wind 4.5s ease-in-out infinite alternate; }
 @keyframes pt-wind { 0% { transform: rotate(-1.7deg); } 100% { transform: rotate(2deg); } }
 
@@ -212,4 +209,4 @@ button.pt-guest:hover .pt-guest-main b { color: var(--gold-light); }
   .pt-item { flex-wrap: wrap; }
   .pt-item-act { margin-left: auto; }
 }
-@media (prefers-reduced-motion: reduce) { .pt-picado .ppw, .pt-bulb { animation: none; } .pt-bar i, .pt-flyer { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pt-picado .ppw { animation: none; } .pt-bar i, .pt-flyer { transition: none; } }

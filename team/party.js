@@ -132,7 +132,7 @@
     fundraiser: { flags: [1, 7, 3, 2, 1, 7], colors: FIESTA },
     muertos: { flags: [6, 1, 3, 6, 8, 5], colors: ['#f0832e', '#e84393', '#8c4be0', '#fdc53a', '#1cc09e', '#e12b30'] },
     // Copies the papel picado on the 2026 end-of-year potluck flyer.
-    navidad: { flags: [8, 15, 16, 17, 18, 9], colors: ['#ec4f9c', '#3fb24f', '#f7c534', '#1fb3b5', '#e5352c', '#9a4fd8'], step: 1, lights: true },
+    navidad: { flags: [8, 15, 16, 17, 18, 9], colors: ['#ec4f9c', '#3fb24f', '#f7c534', '#1fb3b5', '#e5352c', '#9a4fd8'], step: 1 },
   };
   function picadoTheme(ev) {
     var kind = ev && ev.event_type, month = ev && ev.event_date ? +ev.event_date.slice(5, 7) : 0;
@@ -181,15 +181,6 @@
       use.setAttribute('fill', theme.colors[(i * (theme.step || 4)) % theme.colors.length]);
       g.appendChild(use);
       svg.appendChild(g);
-    }
-    for (var b = 1; theme.lights && b < n; b++) {
-      var bt = b / n, bu = 1 - bt;
-      var bulb = document.createElementNS(NS, 'g');
-      bulb.setAttribute('class', 'pt-bulb');
-      bulb.setAttribute('transform', 'translate(' + (bu * bu * x0 + 2 * bu * bt * (w / 2) + bt * bt * x1).toFixed(1) + ',' + (bu * bu * top + 2 * bu * bt * cy + bt * bt * top + 4).toFixed(1) + ')');
-      bulb.style.animationDelay = (-(b * 1.3) % 3).toFixed(2) + 's';
-      bulb.innerHTML = '<circle r="9" class="pt-bulb-glow"/><rect x="-1.6" y="-4.5" width="3.2" height="2.6" rx="0.6" fill="#7a6235"/><circle r="3" fill="#fff3c8"/>';
-      svg.appendChild(bulb);
     }
     svg.appendChild(thread(1, 0.25));
     return svg;
