@@ -863,11 +863,9 @@ button.feed-where:focus-visible { outline: 2px solid var(--gold); outline-offset
 /* ── group events (rows; the event page itself is team/party.css) ── */
 .evlist { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.9rem; }
 .evrow { all: unset; box-sizing: border-box; position: relative; display: flex; align-items: center; gap: 0.85rem; width: 100%; cursor: pointer; overflow: hidden;
-  padding: 1.05rem 0.85rem 0.85rem; border-radius: 16px; border: 1px solid var(--line);
+  padding: 0.85rem; border-radius: 16px; border: 1px solid var(--line);
   background: radial-gradient(120% 140% at 0% 0%, rgba(198,42,110,0.16) 0%, transparent 55%), linear-gradient(165deg, var(--bg-card-hover) 0%, var(--bg-card) 60%);
   box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-.evrow::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; opacity: 0.8;
-  background: repeating-linear-gradient(90deg, #e84393 0 26px, #e8c97a 26px 52px, #2ecda7 52px 78px, #c62a6e 78px 104px, #fdcb6e 104px 130px, #7b5bd6 130px 156px); }
 .evrow:hover, .evrow:focus-visible { border-color: var(--gold); }
 .evrow:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
 .evrow.is-ask { border-color: rgba(232,201,122,0.5); }
