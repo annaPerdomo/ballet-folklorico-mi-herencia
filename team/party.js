@@ -14,15 +14,16 @@
       going: 'Going', maybe: 'Maybe', cant: 'Can’t go', less: 'One fewer', more: 'One more',
       noteLabel: 'Note for the hosts', notePh: 'Allergies, arriving late… (optional)', send: 'Send RSVP', update: 'Save changes',
       youGoing: 'You’re going!', youMaybe: 'You said maybe', youNo: 'You can’t make it', youNoSub: 'We’ll miss you. You can change your answer anytime.',
-      change: 'Change my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
+      change: 'Edit my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
       whoComing: 'Who’s coming', personOne: 'person', personMany: 'people', rsvpOne: '1 RSVP', rsvpMany: '{n} RSVPs',
       maybeN: '{n} maybe', cantN: '{n} can’t make it', beFirst: 'No RSVPs yet — be the first!', you: 'You', familyName: '{name} family',
       potluck: 'Potluck', potluckSub: 'Pick something to bring so we don’t end up with five pots of rice.', spots: '{c} of {n} covered',
       bringIt: 'I’ll bring it', covered: 'Covered', leftN: '{n} more needed',  undo: 'Undo',
       bringOther: 'Bringing something else?', bringPh: 'e.g. Flan, aguas frescas', category: 'Category', add: 'Add',
-      addNeeded: 'Add a dish to the list', neededPh: 'e.g. Tamales, rice, aguas frescas',
+      addNeeded: 'Add a dish you need someone to bring', neededPh: 'e.g. Tamales, rice, aguas frescas',
       nothingNeeded: 'Nothing on the list yet.', ownerNeeded: 'List the dishes you need and guests sign up for them.',
-      bringing: 'You’re bringing', bringMore: 'Add another', suggestions: 'Ideas from the hosts',
+      bringing: 'You’re bringing', bringMore: 'Change what you’re bringing', bringAdd: 'Add what you’re bringing',
+      bringTitle: 'What are you bringing?', bringHint: 'Tap something the hosts need, or add your own. It saves with your RSVP.', suggestions: 'Ideas from the hosts',
       claimTitle: 'Bringing {item}', claimNote: 'Anything to add? (optional)', claimNotePh: 'e.g. red pork, 2 dozen', confirm: 'Confirm',
       quickRsvp: 'RSVP first so everyone knows who’s bringing it.', rsvpAndBring: 'RSVP & bring it',
       past: 'This event already happened — thank you for coming!', photos: 'Photos & videos',
@@ -48,15 +49,16 @@
       going: 'Voy', maybe: 'Tal vez', cant: 'No puedo', less: 'Uno menos', more: 'Uno más',
       noteLabel: 'Nota para los anfitriones', notePh: 'Alergias, si llegas tarde… (opcional)', send: 'Enviar respuesta', update: 'Guardar cambios',
       youGoing: '¡Vas!', youMaybe: 'Dijiste que tal vez', youNo: 'No puedes ir', youNoSub: 'Te vamos a extrañar. Puedes cambiar tu respuesta cuando quieras.',
-      change: 'Cambiar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
+      change: 'Editar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
       whoComing: 'Quiénes vienen', personOne: 'persona', personMany: 'personas', rsvpOne: '1 respuesta', rsvpMany: '{n} respuestas',
       maybeN: '{n} tal vez', cantN: '{n} no pueden', beFirst: 'Aún no hay respuestas. ¡Sé el primero!', you: 'Tú', familyName: 'Familia {name}',
       potluck: 'Comida compartida', potluckSub: 'Elige algo para llevar, para que no terminemos con cinco ollas de arroz.', spots: '{c} de {n} cubiertos',
       bringIt: 'Yo lo llevo', covered: 'Cubierto', leftN: 'Faltan {n}',  undo: 'Deshacer',
       bringOther: '¿Vas a llevar otra cosa?', bringPh: 'p. ej. flan, aguas frescas', category: 'Categoría', add: 'Agregar',
-      addNeeded: 'Agregar un platillo a la lista', neededPh: 'p. ej. tamales, arroz, aguas frescas',
+      addNeeded: 'Agregar un platillo que haga falta', neededPh: 'p. ej. tamales, arroz, aguas frescas',
       nothingNeeded: 'Todavía no hay nada en la lista.', ownerNeeded: 'Anota los platillos que hacen falta y los invitados se apuntan.',
-      bringing: 'Vas a llevar', bringMore: 'Agregar otra cosa', suggestions: 'Ideas de los anfitriones',
+      bringing: 'Vas a llevar', bringMore: 'Cambiar lo que vas a llevar', bringAdd: 'Agregar lo que vas a llevar',
+      bringTitle: '¿Qué vas a llevar?', bringHint: 'Toca algo que necesitan los anfitriones, o agrega lo tuyo. Se guarda con tu respuesta.', suggestions: 'Ideas de los anfitriones',
       claimTitle: 'Llevas {item}', claimNote: '¿Algo que agregar? (opcional)', claimNotePh: 'p. ej. de puerco en rojo, 2 docenas', confirm: 'Confirmar',
       quickRsvp: 'Primero confirma, para que todos sepan quién lo lleva.', rsvpAndBring: 'Confirmar y llevarlo',
       past: 'Este convivio ya pasó. ¡Gracias por venir!', photos: 'Fotos y videos',
@@ -225,17 +227,20 @@
         });
       });
     }
+    var BRINGING_ACTS = ['rsvp', 'claim', 'unclaim', 'drop', 'leave'];
     function act(body, okMsg) {
       if (busy) return Promise.resolve(false);
       busy = true;
       return api(body).then(function (d) {
-        busy = false; data = d; if (d.sig) sig = d.sig; paint();
+        busy = false; data = d; if (d.sig) sig = d.sig;
+        if (form && form.bring && BRINGING_ACTS.indexOf(body.action) !== -1) form.bring = Object.assign(bringFrom(mine()), { text: form.bring.text, category: form.bring.category });
+        paint();
         if (okMsg) toast(okMsg);
         if (opts.onChange) opts.onChange(d);
         return true;
       }, function (e) {
         busy = false; toast(e.message, true);
-        if (e.status === 409) load();
+        if (e.status === 409) load().then(function () { if (form && form.bring) { pruneBring(form.bring); paint(); } }, function () {});
         return false;
       });
     }
@@ -376,7 +381,8 @@
           h('span', { class: 'pt-done-ico' }, icon(r.status === 'yes' ? 'yes' : r.status, 2.6)),
           h('div', { class: 'pt-done-text' }, h('h2', { class: 'pt-done-title', text: head }),
             h('p', { class: 'pt-done-sub', text: r.status === 'no' ? t('youNoSub') : [whoName(r), party(r)].filter(Boolean).join(' · ') }),
-            r.note ? h('p', { class: 'pt-done-note' }, icon('note'), h('span', { text: r.note })) : null)));
+            r.note ? h('p', { class: 'pt-done-note' }, icon('note'), h('span', { text: r.note })) : null,
+            myBringing().length ? h('p', { class: 'pt-done-bring' }, icon('pot', 2), h('span', { text: t('bringing') + ': ' + myBringing().join(', ') })) : null)));
         card.appendChild(h('div', { class: 'pt-row-btns' },
           h('button', { type: 'button', class: 'btn btn-sm', text: t('change'), onclick: function () { form = draftFrom(r); paint(); } }),
           h('button', { type: 'button', class: 'btn-link pt-leave', text: t('leave'), onclick: function () {
@@ -403,6 +409,7 @@
       });
       card.appendChild(seg);
       if (f.status === 'yes' || f.status === 'maybe') card.appendChild(headcount(f));
+      if ((f.status === 'yes' || f.status === 'maybe') && potluckOn() && !data.past) card.appendChild(bringPicker(f));
       if (f.status) {
         var note = h('textarea', { class: 'pt-input', rows: 2, maxlength: 300, placeholder: t('notePh'), oninput: function () { f.note = note.value; } });
         note.value = f.note || '';
@@ -438,19 +445,77 @@
       refreshAll();
       return el;
     }
+    function potluckOn() { return Boolean(data.event.potluck || data.items.length); }
+    function myBringing() {
+      return data.items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); }).map(function (i) { return i.label; });
+    }
+    function bringFrom(r) {
+      var out = { claims: {}, extras: [], text: '', category: 'desserts' };
+      if (!r) return out;
+      data.items.forEach(function (i) {
+        if (i.mine) out.extras.push({ id: i.id, label: i.label, category: i.category });
+        i.claims.forEach(function (c) { if (c.mine) out.claims[i.id] = c.note || ''; });
+      });
+      return out;
+    }
+    function pruneBring(b) {
+      var byId = {}; data.items.forEach(function (i) { byId[i.id] = i; });
+      Object.keys(b.claims).forEach(function (k) { if (!byId[k] || byId[k].by) delete b.claims[k]; });
+      b.extras = b.extras.filter(function (e) { return !e.id || byId[e.id]; });
+    }
+    function bringPicker(f) {
+      var b = f.bring;
+      var box = h('div', { class: 'pt-bringbox' }, h('p', { class: 'pt-label', text: t('bringTitle') }), h('p', { class: 'pt-hint', text: t('bringHint') }));
+      var open = data.items.filter(function (i) {
+        return !i.by && (b.claims[i.id] !== undefined || i.claims.filter(function (c) { return !c.mine; }).length < i.slots);
+      });
+      if (open.length) box.appendChild(h('div', { class: 'pt-pick' }, open.map(function (i) {
+        var on = b.claims[i.id] !== undefined;
+        return h('button', { type: 'button', class: 'fchip' + (on ? ' is-on' : ''), 'aria-pressed': on ? 'true' : 'false',
+          onclick: function () { if (on) delete b.claims[i.id]; else b.claims[i.id] = ''; paint(); } }, on ? icon('yes', 2.8) : null, i.label);
+      })));
+      if (b.extras.length) box.appendChild(h('div', { class: 'pt-extras' }, b.extras.map(function (e, n) {
+        return h('span', { class: 'pt-extra is-mine' }, icon('yes', 2.8), h('b', { text: e.label }),
+          h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove') + ': ' + e.label, onclick: function () { b.extras.splice(n, 1); paint(); } }, icon('no', 2.6)));
+      })));
+      function addOwn() {
+        if (!b.text.trim()) { label.focus(); return; }
+        b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; paint();
+      }
+      var label = h('input', { class: 'pt-input', value: b.text, placeholder: t('bringPh'), maxlength: 80, 'aria-label': t('bringOther'),
+        oninput: function () { b.text = label.value; }, onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); addOwn(); } } });
+      box.appendChild(h('div', { class: 'pt-add' }, h('p', { class: 'pt-label', text: t('bringOther') }), label,
+        h('div', { class: 'pt-add-row' }, catSelect(b.category, function (v) { b.category = v; }),
+          h('button', { type: 'button', class: 'btn btn-sm', onclick: addOwn }, icon('plus', 2.6), t('add')))));
+      return box;
+    }
+    function editBringing() {
+      if (!form) form = draftFrom(mine());
+      if (form.status !== 'yes' && form.status !== 'maybe') form.status = 'yes';
+      paint();
+      var card = root.querySelector('.pt-bringbox') || root.querySelector('.pt-rsvp');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     function draftFrom(r) {
       var fam = data.me.as === 'family';
       var remembered = fam ? data.me.family_name : store('bfmh_party_name') || '';
       var start = { adults: 1, kids: fam ? Math.min(29, data.me.household || 0) : 0 };
       if (r && r.status !== 'no') start = { adults: r.adults, kids: r.kids };
-      return { name: r ? r.name : remembered, status: r ? r.status : null, adults: start.adults, kids: start.kids, note: r ? r.note || '' : '' };
+      return { name: r ? r.name : remembered, status: r ? r.status : null, adults: start.adults, kids: start.kids, note: r ? r.note || '' : '', bring: bringFrom(r) };
     }
     function sendRsvp() {
       var f = form;
       if (data.me.as !== 'family' && !String(f.name || '').trim()) { toast(t('needName'), true); return; }
       if (data.me.as !== 'family') store('bfmh_party_name', f.name.trim());
       var was = mine();
-      act({ action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note }, was ? t('saved') : t('thanks'))
+      var body = { action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note };
+      if (f.status !== 'no' && potluckOn()) {
+        var b = f.bring;
+        if (b.text.trim()) { b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; }
+        body.bring = { claims: Object.keys(b.claims).map(function (k) { return { item: +k, note: b.claims[k] }; }),
+          extras: b.extras.map(function (e) { return e.id ? { id: e.id } : { label: e.label, category: e.category }; }) };
+      }
+      act(body, was ? t('saved') : t('thanks'))
         .then(function (ok) { if (ok) { form = null; paint(); } });
     }
 
@@ -556,8 +621,9 @@
         card.appendChild(group);
       });
       if (!items.length) card.appendChild(h('p', { class: 'pt-empty', text: me.owner ? t('ownerNeeded') : t('nothingNeeded') }));
-      if (!locked && coming(mine())) card.appendChild(itemForm('bring', myStuff.length > 0));
-      if (!locked && me.owner) card.appendChild(itemForm('need'));
+      if (!locked && !(form && form.status !== 'no' && form.status)) card.appendChild(h('button', { type: 'button', class: 'btn btn-sm pt-bring-edit', onclick: editBringing },
+        icon('plus', 2.6), t(myStuff.length ? 'bringMore' : 'bringAdd')));
+      if (!locked && me.owner) card.appendChild(itemForm());
       return card;
     }
     function suggestions(ev) {
@@ -568,29 +634,26 @@
         CATS.map(function (c) { return h('option', { value: c, text: STR[lang].cats[c], selected: c === val }); }));
       return sel;
     }
-    var bringAgain = false;
-    function itemForm(kind, more) {
-      var st = { label: '', category: kind === 'need' ? 'mains' : 'desserts' };
-      var label = h('input', { class: 'pt-input', placeholder: t(kind === 'need' ? 'neededPh' : 'bringPh'), maxlength: 80, 'aria-label': t(kind === 'need' ? 'addNeeded' : 'bringOther'),
+    function itemForm() {
+      var st = { label: '', category: 'mains' };
+      var label = h('input', { class: 'pt-input', placeholder: t('neededPh'), maxlength: 80, 'aria-label': t('addNeeded'),
         oninput: function () { st.label = label.value; } });
       var submit = function (e) {
         e.preventDefault();
         if (!st.label.trim()) { label.focus(); return; }
-        bringAgain = kind === 'bring';
-        act({ action: kind, label: st.label, category: st.category }, t('saved'));
+        act({ action: 'need', label: st.label, category: st.category }, t('saved'));
       };
-      if (kind === 'bring' && bringAgain) { bringAgain = false; setTimeout(function () { label.focus(); }, 0); }
-      return h('form', { class: 'pt-add' + (kind === 'need' ? ' is-owner' : ''), onsubmit: submit },
-        h('p', { class: 'pt-label', text: t(kind === 'need' ? 'addNeeded' : more ? 'bringMore' : 'bringOther') }),
+      return h('form', { class: 'pt-add is-owner', onsubmit: submit },
+        h('p', { class: 'pt-label', text: t('addNeeded') }),
         label,
         h('div', { class: 'pt-add-row' }, catSelect(st.category, function (v) { st.category = v; }),
-          h('button', { type: 'submit', class: 'btn btn-sm' + (kind === 'need' ? ' btn-gold' : '') }, icon('plus', 2.6), t('add'))));
+          h('button', { type: 'submit', class: 'btn btn-sm btn-gold' }, icon('plus', 2.6), t('add'))));
     }
     function claimSheet(item) {
       var r = mine(), needRsvp = !coming(r);
       var s = sheet(t('claimTitle', { item: item.label }), needRsvp ? t('quickRsvp') : null);
       var q = draftFrom(r); q.status = 'yes'; q.note = '';
-      var form = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
+      var claimForm = h('form', { class: 'pt-claim-form', onsubmit: function (e) {
         e.preventDefault();
         var chain = Promise.resolve(true);
         if (needRsvp) {
@@ -601,21 +664,22 @@
         chain.then(function (ok) {
           if (!ok) return;
           s.close();
+          if (needRsvp) form = null;
           act({ action: 'claim', item: item.id, note: q.note }, needRsvp ? t('thanks') : t('saved'));
         });
       } });
       var nameIn = null;
       if (needRsvp && data.me.as !== 'family') {
         nameIn = h('input', { class: 'pt-input', value: q.name, placeholder: t('namePh'), maxlength: 80, autocomplete: 'name', oninput: function () { q.name = nameIn.value; } });
-        form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
+        claimForm.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), nameIn));
       }
-      if (needRsvp) form.appendChild(headcount(q));
+      if (needRsvp) claimForm.appendChild(headcount(q));
       var note = h('input', { class: 'pt-input', placeholder: t('claimNotePh'), maxlength: 120, oninput: function () { q.note = note.value; } });
-      form.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
-      form.appendChild(h('div', { class: 'pop-btns' },
+      claimForm.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('claimNote') }), note));
+      claimForm.appendChild(h('div', { class: 'pop-btns' },
         h('button', { type: 'submit', class: 'btn btn-wide btn-gold', text: needRsvp ? t('rsvpAndBring') : t('confirm') }),
         h('button', { type: 'button', class: 'btn btn-wide', text: t('cancel'), onclick: s.close })));
-      s.body.appendChild(form);
+      s.body.appendChild(claimForm);
       (nameIn || note).focus();
     }
 

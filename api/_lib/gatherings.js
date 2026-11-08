@@ -95,6 +95,43 @@ export async function loadParty(id, v) {
 
 const coming = (r) => r && (r.status === 'yes' || r.status === 'maybe');
 
+async function claimItem(q, eventId, rsvpId, itemId, note) {
+  const item = (await q('SELECT * FROM gathering_items WHERE id = $1 AND event_id = $2 FOR UPDATE', [int(itemId), eventId]))[0];
+  if (!item || item.rsvp_id) throw httpError(409, 'Something you picked isn’t on the list anymore — pick again');
+  const taken = await q('SELECT rsvp_id FROM gathering_claims WHERE item_id = $1', [item.id]);
+  if (!taken.some((c) => c.rsvp_id === rsvpId) && taken.length >= item.slots) throw httpError(409, `Someone just took ${item.label} — pick another`);
+  await q(`INSERT INTO gathering_claims (item_id, rsvp_id, note) VALUES ($1, $2, $3)
+           ON CONFLICT (item_id, rsvp_id) DO UPDATE SET note = EXCLUDED.note`, [item.id, rsvpId, str(note, 120)]);
+}
+
+async function addExtras(q, eventId, rsvpId, list) {
+  if (!list.length) return;
+  const [{ n }] = await q('SELECT count(*)::int AS n FROM gathering_items WHERE event_id = $1', [eventId]);
+  if (n + list.length > MAX_ITEMS) throw httpError(409, 'The potluck list is full');
+  for (const it of list) await q('INSERT INTO gathering_items (event_id, label, category, rsvp_id) VALUES ($1, $2, $3, $4)', [eventId, it.label, it.category, rsvpId]);
+}
+
+async function setBringing(q, eventId, rsvpId, bring) {
+  const claims = (Array.isArray(bring.claims) ? bring.claims : []).slice(0, 20).filter((c) => c && int(c.item));
+  const extras = (Array.isArray(bring.extras) ? bring.extras : []).slice(0, 20).filter((e) => e && typeof e === 'object');
+  await q(`DELETE FROM gathering_claims c USING gathering_items i WHERE c.item_id = i.id AND i.event_id = $1 AND c.rsvp_id = $2
+            AND NOT (c.item_id = ANY($3::int[]))`, [eventId, rsvpId, claims.map((c) => int(c.item))]);
+  for (const c of claims) await claimItem(q, eventId, rsvpId, c.item, c.note);
+  await q('DELETE FROM gathering_items WHERE event_id = $1 AND rsvp_id = $2 AND NOT (id = ANY($3::int[]))',
+    [eventId, rsvpId, extras.map((e) => int(e.id)).filter(Boolean)]);
+  await addExtras(q, eventId, rsvpId, extras.filter((e) => !int(e.id)).map(cleanItem));
+}
+// A change is a new Feed entry, never an edit of the old one; edits within 5 minutes fold together.
+async function logRsvp(q, rsvpId, changed) {
+  const snap = `SELECT r.event_id, r.id, r.status, r.adults, r.kids,
+      ARRAY(SELECT i.label FROM gathering_items i WHERE i.rsvp_id = r.id
+            UNION ALL SELECT i.label FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id WHERE c.rsvp_id = r.id) AS bringing
+    FROM gathering_rsvps r WHERE r.id = $1`;
+  const folded = await q(`UPDATE gathering_rsvp_log l SET status = s.status, adults = s.adults, kids = s.kids, bringing = s.bringing, created_at = now()
+    FROM (${snap}) s WHERE l.id = (SELECT max(id) FROM gathering_rsvp_log WHERE rsvp_id = $1 AND created_at > now() - interval '5 minutes') RETURNING l.id`, [rsvpId]);
+  if (!folded.length) await q(`INSERT INTO gathering_rsvp_log (event_id, rsvp_id, status, adults, kids, bringing, changed) SELECT s.*, $2 FROM (${snap}) s`, [rsvpId, changed]);
+}
+
 export async function partyAction(id, v, b) {
   const ev = await gathering(id);
   if (ev.past && !v.owner) throw httpError(403, 'This event already happened');
@@ -113,7 +150,7 @@ export async function partyAction(id, v, b) {
     if (action === 'rsvp') {
       const r = cleanRsvp(b, { guest: !v.family });
       const name = v.family ? r.name || v.family.name : r.name;
-      let key = null, rsvpId;
+      let key = null, rsvpId, changed = Boolean(mine);
       if (mine) {
         await q(`UPDATE gathering_rsvps SET name = $2, status = $3, adults = $4, kids = $5, note = $6, updated_at = now() WHERE id = $1`,
           [mine.id, name, r.status, r.adults, r.kids, r.note]);
@@ -132,11 +169,14 @@ export async function partyAction(id, v, b) {
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
           ON CONFLICT (event_id, family_id) WHERE family_id IS NOT NULL
           DO UPDATE SET name = EXCLUDED.name, status = EXCLUDED.status, adults = EXCLUDED.adults, kids = EXCLUDED.kids,
-            note = EXCLUDED.note, updated_at = now() RETURNING id`,
+            note = EXCLUDED.note, updated_at = now() RETURNING id, xmax <> 0 AS updated`,
           [id, v.family ? v.family.id : null, name, r.status, r.adults, r.kids, r.note, key ? hashKey(key) : null]);
         rsvpId = rows[0].id;
+        changed = rows[0].updated;
       }
       if (r.status === 'no') await dropBringing(rsvpId);
+      else if (b.bring && typeof b.bring === 'object') await setBringing(q, id, rsvpId, b.bring);
+      await logRsvp(q, rsvpId, changed);
       return { key };
     }
     if (action === 'leave') {
@@ -145,12 +185,8 @@ export async function partyAction(id, v, b) {
     }
     if (action === 'claim') {
       requireComing();
-      const item = (await q('SELECT * FROM gathering_items WHERE id = $1 AND event_id = $2 FOR UPDATE', [int(b.item), id]))[0];
-      if (!item || item.rsvp_id) throw httpError(404, 'That item isn’t on the list anymore');
-      const taken = await q('SELECT rsvp_id FROM gathering_claims WHERE item_id = $1', [item.id]);
-      if (!taken.some((c) => c.rsvp_id === mine.id) && taken.length >= item.slots) throw httpError(409, 'Someone just took that one — pick another');
-      await q(`INSERT INTO gathering_claims (item_id, rsvp_id, note) VALUES ($1, $2, $3)
-               ON CONFLICT (item_id, rsvp_id) DO UPDATE SET note = EXCLUDED.note`, [item.id, mine.id, str(b.note, 120)]);
+      await claimItem(q, id, mine.id, b.item, b.note);
+      await logRsvp(q, mine.id, true);
       return {};
     }
     if (action === 'unclaim') {
@@ -158,15 +194,14 @@ export async function partyAction(id, v, b) {
       if (!who) throw httpError(409, 'Nothing to undo');
       await q(`DELETE FROM gathering_claims c USING gathering_items i
                 WHERE c.item_id = i.id AND i.event_id = $1 AND c.item_id = $2 AND c.rsvp_id = $3`, [id, int(b.item), who]);
+      await logRsvp(q, who, true);
       return {};
     }
     if (action === 'bring' || action === 'need') {
       if (action === 'bring') requireComing(); else requireOwner();
       const it = cleanItem(b);
-      const [{ n }] = await q('SELECT count(*)::int AS n FROM gathering_items WHERE event_id = $1', [id]);
-      if (n >= MAX_ITEMS) throw httpError(409, 'The potluck list is full');
-      await q('INSERT INTO gathering_items (event_id, label, category, rsvp_id) VALUES ($1, $2, $3, $4)',
-        [id, it.label, it.category, action === 'bring' ? mine.id : null]);
+      await addExtras(q, id, action === 'bring' ? mine.id : null, [it]);
+      if (action === 'bring') await logRsvp(q, mine.id, true);
       if (action === 'need' && !ev.potluck) await q('UPDATE events SET potluck = true, updated_at = now() WHERE id = $1', [id]);
       return {};
     }
@@ -175,6 +210,7 @@ export async function partyAction(id, v, b) {
       if (!item) return {};
       if (!v.owner && !(mine && item.rsvp_id === mine.id)) throw httpError(403, 'Only whoever added it can take it off');
       await q('DELETE FROM gathering_items WHERE id = $1', [item.id]);
+      if (item.rsvp_id) await logRsvp(q, item.rsvp_id, true);
       return {};
     }
     if (action === 'remove') {

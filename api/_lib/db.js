@@ -150,6 +150,7 @@ CREATE TABLE IF NOT EXISTS availability_history (
   changed_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS availability_history_event ON availability_history(event_id, id DESC);
+CREATE INDEX IF NOT EXISTS availability_history_changed ON availability_history(changed_at DESC);
 CREATE INDEX IF NOT EXISTS availability_history_message ON availability_history(groupme_message_id) WHERE groupme_message_id IS NOT NULL;
 CREATE TABLE IF NOT EXISTS events_history (
   id bigserial PRIMARY KEY,
@@ -229,6 +230,23 @@ CREATE INDEX IF NOT EXISTS blasts_created ON blasts(created_at DESC, id DESC);
 ALTER TABLE blasts DROP CONSTRAINT IF EXISTS blasts_kind_check;
 ALTER TABLE blasts ADD CONSTRAINT blasts_kind_check CHECK (kind IN ('new','ask','confirmed','cancelled','gathering','gathering_ask'));
 ALTER TABLE events ADD COLUMN IF NOT EXISTS potluck_notes text;
+CREATE TABLE IF NOT EXISTS gathering_rsvp_log (
+  id serial PRIMARY KEY,
+  event_id int NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  rsvp_id int NOT NULL REFERENCES gathering_rsvps(id) ON DELETE CASCADE,
+  status text NOT NULL,
+  adults int NOT NULL,
+  kids int NOT NULL,
+  bringing text[] NOT NULL DEFAULT '{}',
+  changed boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS gathering_rsvp_log_created ON gathering_rsvp_log(created_at DESC);
+INSERT INTO gathering_rsvp_log (event_id, rsvp_id, status, adults, kids, bringing, created_at)
+SELECT r.event_id, r.id, r.status, r.adults, r.kids,
+  ARRAY(SELECT i.label FROM gathering_items i WHERE i.rsvp_id = r.id
+        UNION ALL SELECT i.label FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id WHERE c.rsvp_id = r.id), r.updated_at
+FROM gathering_rsvps r WHERE NOT EXISTS (SELECT 1 FROM gathering_rsvp_log);
 -- One-time backfill. Cancellations are left out: a quiet cancel looks the same as an announced one.
 INSERT INTO blasts (event_id, kind, actor, created_at)
 SELECT * FROM (
