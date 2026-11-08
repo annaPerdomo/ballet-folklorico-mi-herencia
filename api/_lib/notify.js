@@ -37,8 +37,11 @@ export const UNCAL_LABEL = '🗓 Remove from my calendar / Quitar de mi calendar
 export const eventWhere = (ev) => [ev.venue, ev.address, ev.city].filter(Boolean).join(', ');
 
 // GroupMe auto-links URLs, so a Google Maps search opens the map app on either phone.
+// Google Maps can't find venue names like "Francisca & Jorge's house"; the street address must lead (mapLinks in team/ mirror this).
+export const mapQuery = (ev) => (ev.address ? [ev.city ? null : ev.venue, ev.address, ev.city] : [ev.venue, ev.city]).filter(Boolean).join(', ');
+
 export function mapLink(ev) {
-  const where = eventWhere(ev);
+  const where = mapQuery(ev);
   return where ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(where)}` : null;
 }
 

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 process.env.SESSION_SECRET ||= 'test-secret';
-const { askText, isRepeatAsk, eventSummary, mapLink } = await import('./notify.js');
+const { askText, isRepeatAsk, eventSummary, mapLink, mapQuery } = await import('./notify.js');
 
 const ev = { id: 5, title: 'Quinceañera — Lopez', event_date: '2026-10-24', start_time: '6:00 PM', end_time: '7:30 PM',
   call_time: '5:15 PM', venue: 'Grand Ballroom', address: '123 Main St', city: 'West Covina' };
@@ -11,7 +11,7 @@ test('the ask blast carries the call time, the full address and a map link', () 
   const text = askText(ev);
   assert.match(text, /Call time \/ Hora de llegada: 5:15 PM/);
   assert.match(text, /📍 Grand Ballroom, 123 Main St, West Covina/);
-  assert.match(text, /🗺 https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=Grand%20Ballroom%2C%20123%20Main%20St%2C%20West%20Covina/);
+  assert.match(text, /🗺 https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=123%20Main%20St%2C%20West%20Covina/);
   assert.match(text, /Sat, Oct 24 · 6:00 PM–7:30 PM/);
   assert.match(text, /\n👉 RSVP: https:\/\/bfmh\.dance\/team\/\?e=5&s=[^\s]+$/, 'ends on the RSVP link');
   assert.doesNotMatch(text, /Reply|calendar/i, 'no chat-reply instructions or extra links');
@@ -24,6 +24,12 @@ test('missing pieces are left out rather than printed blank', () => {
   assert.match(text, /📍 Bell/);
   assert.equal(mapLink({}), null);
   assert.doesNotMatch(askText({ id: 7, title: 'Parade', event_date: '2026-10-24' }), /🗺|📍/);
+});
+
+test('map searches lead with the street address, keeping the venue only when there is nothing better', () => {
+  assert.equal(mapQuery({ venue: 'Francisca & Jorge’s house', address: '12501 Camilla St', city: 'Whittier' }), '12501 Camilla St, Whittier');
+  assert.equal(mapQuery({ venue: 'Grand Ballroom', address: '123 Main St' }), 'Grand Ballroom, 123 Main St');
+  assert.equal(mapQuery({ venue: 'Grand Ballroom', city: 'West Covina' }), 'Grand Ballroom, West Covina');
 });
 
 test('asking again reminds how far off the gig is instead of announcing it as new', () => {

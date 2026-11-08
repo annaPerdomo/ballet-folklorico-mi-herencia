@@ -837,7 +837,7 @@
   }
   function calSheet(ev, href) { return ev.status === 'cancelled' ? removeEventSheet(ev, href) : addEventSheet(ev, href); }
   function mapLinks(ev) {
-    var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
+    var q = encodeURIComponent((ev.address ? [ev.city ? null : ev.venue, ev.address, ev.city] : [ev.venue, ev.city]).filter(Boolean).join(', '));
     return [[t('mapApple'), 'https://maps.apple.com/?daddr=' + q], [t('mapGoogle'), 'https://www.google.com/maps/dir/?api=1&destination=' + q],
       [t('mapWaze'), 'https://waze.com/ul?q=' + q + '&navigate=yes']];
   }

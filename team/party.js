@@ -283,7 +283,7 @@
     function coming(r) { return r && (r.status === 'yes' || r.status === 'maybe'); }
     function shareUrl() { return sig ? location.origin + '/e/' + id + '/' + sig : location.href; }
     function mapLinks(ev) {
-      var q = encodeURIComponent([ev.venue, ev.address, ev.city].filter(Boolean).join(', '));
+      var q = encodeURIComponent((ev.address ? [ev.city ? null : ev.venue, ev.address, ev.city] : [ev.venue, ev.city]).filter(Boolean).join(', '));
       return [['Apple Maps', 'https://maps.apple.com/?daddr=' + q], ['Google Maps', 'https://www.google.com/maps/dir/?api=1&destination=' + q],
         ['Waze', 'https://waze.com/ul?q=' + q + '&navigate=yes']];
     }
