@@ -62,13 +62,13 @@
       answerCleared: 'Answer cleared', dancers: 'Dancers', addDancerPh: 'Add a dancer (e.g. Sofia)', dancerName: 'Dancer name', add: 'Add',
       removeDancer: 'Remove {name} from your family?', remove: 'Remove', phone: 'Phone',
       saved: 'Saved', copied: 'Copied', copyFail: 'Could not copy',
-      tabInbox: 'Inbox', tabGigs: 'Calendar', tabFeed: 'Feed', tabTeam: 'Team', tabChona: 'La Chona', tabInsights: 'Insights', roleAdmin: 'Admin',
+      tabInbox: 'Inbox', tabGigs: 'Schedule', tabFeed: 'Feed', tabTeam: 'Team', tabChona: 'La Chona', tabInsights: 'Insights', roleAdmin: 'Admin',
       adminLoginTitle: 'Admin sign-in', adminLoginText: 'Your admin password opens everything Mayra and Angel see, plus Insights.',
       groupmeOn: 'La Chona is connected', groupmeOff: 'La Chona is not connected — set GROUPME_BOT_ID',
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
       filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
-      archived: 'Didn’t happen', archivedHint: 'Declined, cancelled, or the client never got back to us. Inquiries move here on their own two weeks after their date passes.', posted: 'Posted to the team',
+      archived: 'Didn’t happen', archivedHint: 'Declined, cancelled, or the client never got back to us. Inquiries move here on their own two weeks after their date passes.', posted: 'Gigs',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
       askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
@@ -164,11 +164,11 @@
       dances: 'Dances', dancesHint: 'Every video of a dance, from all our gigs.', danceVideos: 'Videos of this dance', sortMostDone: 'Most performed', sortAz: 'A–Z', region: 'Region', allRegions: 'All', otherRegion: 'Other', danceGigsN: 'Performed at {n} gigs', danceVideosN: '{n} videos', noDanceVideos: 'No videos of this dance yet.',
       musicLibrary: 'Music library', addSongs: 'Add songs', noSongs: 'No songs yet. Add the music for each dance so everyone can practice.',
       gigGalleries: 'Gig & event galleries', noGalleryGigs: 'No gigs yet.',
-      newFolder: 'New folder', folderHint: 'For photos and videos from group events that aren’t gigs — a posada, a trip, a practice. It won’t show in the Calendar tab or anyone’s calendar.',
+      newFolder: 'New folder', folderHint: 'For photos and videos from team events that aren’t gigs — a posada, a trip, a practice. It won’t show in the Schedule tab or anyone’s calendar.',
       folderTitlePh: 'e.g. Christmas posada 2026', folderDateHint: 'Leave the date empty for folders that span many days.', editFolder: 'Edit folder', deleteFolder: 'Delete folder',
       deleteFolderAsk: 'Delete this folder and everything in it for everyone? It can’t be undone.', folderMenu: 'Folder options', deleteGatheringAsk: 'Delete “{title}” and all its photos and videos for everyone? It also comes off the calendar. It can’t be undone.', nothingYet: 'Nothing yet — be the first to add something',
       photoOne: '1 photo', photoMany: '{n} photos', videoOne: '1 video', videoMany: '{n} videos',
-      feedSub: 'Gig news, plus the photos, videos and music the group has shared', blastNew: 'New gig: are you available?', blastAsk: 'Reminder: mark who can dance', blastConfirmed: 'Gig confirmed', blastCancelled: 'Gig cancelled', blastGathering: 'New group event', blastGatheringAsk: 'Reminder: RSVP for the group event', feedAdded: 'added {what}', feedAnd: ' and ',
+      feedSub: 'Gig news, plus the photos, videos and music the group has shared', blastNew: 'New gig: are you available?', blastAsk: 'Reminder: mark who can dance', blastConfirmed: 'Gig confirmed', blastCancelled: 'Gig cancelled', blastGathering: 'New team event', blastGatheringAsk: 'Reminder: RSVP for the team event', feedAdded: 'added {what}', feedAnd: ' and ',
       feedNew: 'New', feedMore: 'more', feedOlder: 'Show older', feedEmpty: 'Nothing added yet.', songOne: '1 song', songMany: '{n} songs',
       rename: 'Rename', untitledSong: 'Untitled song', addedBy: 'Added by {who}', theOwners: 'the Ramirez family', theFamily: 'the {name} family',
       youTitle: 'You', youSub: 'Photos, videos and links you add show under this family instead of “the Ramirez family”. You keep every tool.',
@@ -199,15 +199,15 @@
       changesGigEdited: '{who} edited {fields}', changesGigCreated: '{who} created this gig', changesGigDeleted: '{who} deleted this gig',
       whoBot: 'La Chona ({sender})', whoUndo: 'undo', whoSystem: 'system',
       gkinds: { potluck: 'Potluck', posada: 'Posada', party: 'Party', practice: 'Practice', meeting: 'Meeting', outing: 'Outing', fundraiser: 'Fundraiser', other: 'Get-together' },
-      groupEvents: 'Group events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us, never on bfmh.dance. Post one to GroupMe so families RSVP, and share the invite with anyone you like.',
+      groupEvents: 'Team events', groupEventsSub: 'Potlucks, posadas and get-togethers. Just for us, never on bfmh.dance. Post one to GroupMe so families RSVP, and share the invite with anyone you like.',
       announceEvent: 'Post to GroupMe', remindEvent: 'Remind in GroupMe', eventPosted: 'Posted to GroupMe — it’s in the Feed too', potluckNotes: 'Potluck suggestions', potluckNotesPh: 'e.g. College kids bring dessert, families with little ones bring drinks…',
-      newEvent: 'New group event', newWhat: 'What are you adding?', addGig: 'A gig', addGigSub: 'A performance. Families mark who can dance.',
-      addEvent: 'A group event', addEventSub: 'A potluck, posada or get-together, with RSVPs and an invite anyone can open.',
+      newEvent: 'New team event', newWhat: 'What are you adding?', addGig: 'A gig', addGigSub: 'A performance. Families mark who can dance.',
+      addEvent: 'A team event', addEventSub: 'A potluck, posada or get-together, with RSVPs and an invite anyone can open.',
       eventKind: 'Kind of event', eventTitlePh: 'e.g. Christmas posada', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
       eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…', potluckToggle: 'Potluck sign-up: guests pick what to bring',
-      needEventDate: 'Give the event a date.', modalNewEvent: 'New group event', modalEditEvent: 'Edit group event',
+      needEventDate: 'Give the event a date.', modalNewEvent: 'New team event', modalEditEvent: 'Edit team event',
       eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going', potluckShort: 'Potluck {c}/{n}',
-      noEvents: 'No group events coming up.', pastEvents: 'Past group events', loadingEvent: 'Loading the event…',
+      noEvents: 'No team events coming up.', pastEvents: 'Past team events', loadingEvent: 'Loading the event…',
       shareEvent: 'Share invite', copyEventLink: 'Copy invite link', editEvent: 'Edit event', deleteEvent: 'Delete event', eventMenu: 'Event options',
       deleteEventAsk: 'Delete “{title}”? Its RSVPs, potluck list, photos and videos go too, for everyone. It can’t be undone.',
       addFlyer: 'Add a flyer', changeFlyer: 'Change the flyer', removeFlyer: 'Remove the flyer', removeFlyerAsk: 'Take the flyer off “{title}”?',
@@ -246,13 +246,13 @@
       answerCleared: 'Respuesta borrada', dancers: 'Bailarines', addDancerPh: 'Agregar bailarín (p. ej. Sofía)', dancerName: 'Nombre del bailarín', add: 'Agregar',
       removeDancer: '¿Quitar a {name} de tu familia?', remove: 'Quitar', phone: 'Teléfono',
       saved: 'Guardado', copied: 'Copiado', copyFail: 'No se pudo copiar',
-      tabInbox: 'Solicitudes', tabGigs: 'Calendario', tabFeed: 'Actividad', tabTeam: 'Equipo', tabChona: 'La Chona', tabInsights: 'Datos', roleAdmin: 'Admin',
+      tabInbox: 'Solicitudes', tabGigs: 'Agenda', tabFeed: 'Actividad', tabTeam: 'Equipo', tabChona: 'La Chona', tabInsights: 'Datos', roleAdmin: 'Admin',
       adminLoginTitle: 'Acceso de administración', adminLoginText: 'Tu contraseña de admin abre todo lo que ven Mayra y Angel, más Datos.',
       groupmeOn: 'La Chona está conectada', groupmeOff: 'La Chona no está conectada — falta GROUPME_BOT_ID',
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
       filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
-      archived: 'No se hicieron', archivedHint: 'Rechazados, cancelados o el cliente nunca respondió. Las solicitudes pasan aquí solas dos semanas después de su fecha.', posted: 'Publicados al equipo',
+      archived: 'No se hicieron', archivedHint: 'Rechazados, cancelados o el cliente nunca respondió. Las solicitudes pasan aquí solas dos semanas después de su fecha.', posted: 'Presentaciones',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
       askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
@@ -348,7 +348,7 @@
       dances: 'Bailes', dancesHint: 'Todos los videos de un baile, de todos nuestros eventos.', danceVideos: 'Videos de este baile', sortMostDone: 'Más bailados', sortAz: 'A–Z', region: 'Región', allRegions: 'Todas', otherRegion: 'Otra', danceGigsN: 'Bailado en {n} eventos', danceVideosN: '{n} videos', noDanceVideos: 'Todavía no hay videos de este baile.',
       musicLibrary: 'Biblioteca de música', addSongs: 'Agregar canciones', noSongs: 'Todavía no hay canciones. Agrega la música de cada baile para que todos puedan practicar.',
       gigGalleries: 'Galerías de eventos', noGalleryGigs: 'Todavía no hay eventos.',
-      newFolder: 'Nueva carpeta', folderHint: 'Para fotos y videos de eventos del grupo que no son presentaciones: una posada, un viaje, un ensayo. No aparece en el Calendario ni en los calendarios de nadie.',
+      newFolder: 'Nueva carpeta', folderHint: 'Para fotos y videos de eventos del grupo que no son presentaciones: una posada, un viaje, un ensayo. No aparece en la Agenda ni en los calendarios de nadie.',
       folderTitlePh: 'p. ej. Posada navideña 2026', folderDateHint: 'Deja la fecha vacía si la carpeta abarca muchos días.', editFolder: 'Editar carpeta', deleteFolder: 'Eliminar carpeta',
       deleteFolderAsk: '¿Eliminar esta carpeta y todo lo que tiene para todos? No se puede deshacer.', folderMenu: 'Opciones de la carpeta', deleteGatheringAsk: '¿Eliminar “{title}” y todas sus fotos y videos para todos? También se quita del calendario. No se puede deshacer.', nothingYet: 'Nada todavía; sé el primero en agregar algo',
       photoOne: '1 foto', photoMany: '{n} fotos', videoOne: '1 video', videoMany: '{n} videos',
@@ -383,7 +383,7 @@
       changesGigEdited: '{who} editó {fields}', changesGigCreated: '{who} creó este evento', changesGigDeleted: '{who} eliminó este evento',
       whoBot: 'La Chona ({sender})', whoUndo: 'deshacer', whoSystem: 'sistema',
       gkinds: { potluck: 'Comida compartida', posada: 'Posada', party: 'Fiesta', practice: 'Ensayo', meeting: 'Junta', outing: 'Paseo', fundraiser: 'Recaudación', other: 'Convivio' },
-      groupEvents: 'Convivios del grupo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros, nunca en bfmh.dance. Publícalo en GroupMe para que las familias confirmen, y comparte la invitación con quien quieras.',
+      groupEvents: 'Convivios del equipo', groupEventsSub: 'Comidas, posadas y reuniones. Solo para nosotros, nunca en bfmh.dance. Publícalo en GroupMe para que las familias confirmen, y comparte la invitación con quien quieras.',
       announceEvent: 'Publicar en GroupMe', remindEvent: 'Recordar en GroupMe', eventPosted: 'Publicado en GroupMe; también sale en Actividad', potluckNotes: 'Sugerencias para la comida', potluckNotesPh: 'p. ej. Los universitarios traen postre, las familias con niños chicos traen bebidas…',
       newEvent: 'Nuevo convivio', newWhat: '¿Qué vas a agregar?', addGig: 'Un evento', addGigSub: 'Una presentación. Las familias marcan quién puede bailar.',
       addEvent: 'Un convivio del grupo', addEventSub: 'Comida, posada o reunión, con confirmaciones y una invitación que cualquiera puede abrir.',
@@ -748,6 +748,15 @@
   function section(label, count, extra) {
     return h('div', { class: 'tm-sec' }, h('h2', { class: 'tm-sec-title', text: label }),
       count ? h('span', { class: 'tm-sec-count', text: count }) : null, h('span', { class: 'tm-sec-rule' }), extra || null);
+  }
+  var foldOpen = {};
+  function sectionFold(key, sec, body) {
+    sec.className += ' tm-sec-fold';
+    var d = h('details', { class: 'tm-fold' },
+      h('summary', { class: 'tm-fold-summary', onclick: function (e) { if (e.target.closest('button')) e.preventDefault(); } }, sec), body);
+    d.open = foldOpen[key] !== false;
+    d.addEventListener('toggle', function () { foldOpen[key] = d.open; });
+    return d;
   }
   function emptyState(iconName, text, action) {
     return h('div', { class: 'tm-empty' }, icon(iconName, 1.5), h('p', { text: text }), action || null);
@@ -1320,14 +1329,10 @@
   function renderGigs() {
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
     var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); }).sort(newestFirst);
-    app.appendChild(section(t('posted'), live.length, h('button', { class: 'btn btn-sm btn-print', onclick: printSheet, 'aria-label': t('printSchedule') }, icon('printer', 2.2), h('span', { class: 'lbl-long', text: t('printSchedule') }), h('span', { class: 'lbl-short', text: t('printShort') }))));
-    app.appendChild(h('p', { class: 'tm-sub', text: t('tapGigHint') }));
-    if (!live.length) {
-      app.appendChild(emptyState('calendar', t('nothingPosted'),
-        h('button', { class: 'btn btn-sm btn-gold', text: t('newGig'), onclick: function () { openEventModal(null); } })));
-    } else {
-      app.appendChild(gigList(live));
-    }
+    app.appendChild(sectionFold('gigs', section(t('posted'), live.length, h('button', { class: 'btn btn-sm btn-print', onclick: printSheet, 'aria-label': t('printSchedule') }, icon('printer', 2.2), h('span', { class: 'lbl-long', text: t('printSchedule') }), h('span', { class: 'lbl-short', text: t('printShort') }))), [
+      h('p', { class: 'tm-sub', text: t('tapGigHint') }),
+      live.length ? gigList(live) : emptyState('calendar', t('nothingPosted'),
+        h('button', { class: 'btn btn-sm btn-gold', text: t('newGig'), onclick: function () { openEventModal(null); } }))]));
     gatherSection(true);
     if (past.length) {
       var pastSec = section(t('past'), past.length);
@@ -1908,13 +1913,13 @@
   function gatherSection(withPast) {
     var list = upcomingGatherings(), owner = isOwner();
     if (!list.length && !owner) return;
-    app.appendChild(section(t('groupEvents'), list.length || null, owner
+    app.appendChild(sectionFold('events', section(t('groupEvents'), list.length || null, owner
       ? h('button', { type: 'button', class: 'btn btn-sm btn-icon btn-gold sec-add', 'aria-label': t('newEvent'), title: t('newEvent'),
-        onclick: function () { gatheringForm(null); } }, icon('plus', 2.5)) : null));
-    if (owner) app.appendChild(h('p', { class: 'tm-sub', text: t('groupEventsSub') }));
-    if (list.length) app.appendChild(h('div', { class: 'evlist' }, list.map(gatherRow)));
-    else app.appendChild(h('button', { type: 'button', class: 'evempty', onclick: function () { gatheringForm(null); } },
-      icon('plus', 2.2), h('span', { text: t('noEvents') }), h('b', { text: t('newEvent') })));
+        onclick: function () { gatheringForm(null); } }, icon('plus', 2.5)) : null), [
+      owner ? h('p', { class: 'tm-sub', text: t('groupEventsSub') }) : null,
+      list.length ? h('div', { class: 'evlist' }, list.map(gatherRow))
+        : h('button', { type: 'button', class: 'evempty', onclick: function () { gatheringForm(null); } },
+          icon('plus', 2.2), h('span', { text: t('noEvents') }), h('b', { text: t('newEvent') }))]));
     var past = withPast ? pastGatherings() : [];
     if (past.length) {
       var sec = section(t('pastEvents'), past.length);

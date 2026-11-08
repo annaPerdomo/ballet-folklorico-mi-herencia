@@ -86,6 +86,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   background: linear-gradient(135deg, var(--gold-light), var(--gold)); border-radius: 999px; padding: 3px 9px; }
 .tm-sec-rule { flex: 1; min-width: 1rem; height: 1px; background: var(--hair); }
 .tm-fold { margin-top: 1.7rem; }
+.tm-fold:first-child { margin-top: 0.2rem; }
 .tm-fold-summary { cursor: pointer; list-style: none; }
 .tm-fold-summary > .tm-sec { margin-top: 0; }
 .tm-fold-summary::-webkit-details-marker { display: none; }
