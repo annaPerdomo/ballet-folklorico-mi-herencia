@@ -2,7 +2,7 @@ import { route, ok, query, int, str, httpError, readJson } from './_lib/http.js'
 import { verifyCalendarSig, calendarSig, whoami } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 import { MEMBER_VISIBLE, withCalendarLinks } from './_lib/events.js';
-import { viewerOf, loadParty, partyAction, inviteHtml, hashKey } from './_lib/gatherings.js';
+import { viewerOf, loadParty, partyAction, inviteHtml, hashKey, flyerOf } from './_lib/gatherings.js';
 
 const guestKey = (req) => str(req.headers['x-bfmh-guest'], 64);
 
@@ -20,7 +20,7 @@ async function invitePage(req, res, q) {
   const id = int(q.invite);
   const sig = str(q.s, 32);
   const ok = Boolean(id) && verifyCalendarSig(id, sig);
-  const ev = ok ? await one(`SELECT title, event_date, details FROM events WHERE id = $1 AND status = 'gathering'`, [id]) : null;
+  const ev = ok ? await one(`SELECT title, event_date, details, flyer_key, flyer_w, flyer_h FROM events WHERE id = $1 AND status = 'gathering'`, [id]) : null;
   const host = req.headers['x-forwarded-host'] || req.headers.host || 'bfmh.dance';
   const proto = req.headers['x-forwarded-proto'] || (/^(localhost|127\.)/.test(host) ? 'http' : 'https');
   res.statusCode = ev ? 200 : 404;
@@ -38,6 +38,17 @@ export default route({
   async GET(req, res) {
     const q = query(req);
     if (q.invite !== undefined) return invitePage(req, res, q);
+    // Link previews (iMessage, GroupMe) fetch og:image once, long after a signed URL would have expired.
+    if (q.flyer !== undefined) {
+      const id = int(q.flyer);
+      if (!id || !verifyCalendarSig(id, str(q.s, 32))) throw httpError(403, 'That link is not valid');
+      const flyer = flyerOf(await one(`SELECT flyer_key, flyer_w, flyer_h FROM events WHERE id = $1 AND status = 'gathering'`, [id]) || {});
+      if (!flyer) throw httpError(404, 'No flyer');
+      res.statusCode = 302;
+      res.setHeader('Location', flyer.url);
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+      return res.end();
+    }
     if (q.party !== undefined) {
       const id = int(q.party);
       return ok(res, await partyPayload(id, await partyViewer(req, id, str(q.s, 32), q.guest === '1')));

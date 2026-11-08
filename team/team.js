@@ -209,6 +209,8 @@
       noEvents: 'No group events coming up.', pastEvents: 'Past group events', loadingEvent: 'Loading the event…',
       shareEvent: 'Share invite', copyEventLink: 'Copy invite link', editEvent: 'Edit event', deleteEvent: 'Delete event', eventMenu: 'Event options',
       deleteEventAsk: 'Delete “{title}”? Its RSVPs, potluck list, photos and videos go too, for everyone. It can’t be undone.',
+      addFlyer: 'Add a flyer', changeFlyer: 'Change the flyer', removeFlyer: 'Remove the flyer', removeFlyerAsk: 'Take the flyer off “{title}”?',
+      flyerUploading: 'Uploading the flyer…', flyerSaved: 'Flyer added', flyerRemoved: 'Flyer removed', flyerNotImage: 'Pick a photo or image of the flyer',
       eventShareMsg: 'You’re invited to {title}! RSVP here:', galAll: 'All', galGigs: 'Gigs', galEvents: 'Events', galEventTag: 'Event', noGalleryMatch: 'Nothing here yet.',
     },
     es: {
@@ -390,6 +392,8 @@
       noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
       shareEvent: 'Compartir invitación', copyEventLink: 'Copiar enlace de la invitación', editEvent: 'Editar convivio', deleteEvent: 'Eliminar convivio', eventMenu: 'Opciones del convivio',
       deleteEventAsk: '¿Eliminar “{title}”? Se borran para todos sus confirmaciones, la lista de comida, las fotos y los videos. No se puede deshacer.',
+      addFlyer: 'Agregar un volante', changeFlyer: 'Cambiar el volante', removeFlyer: 'Quitar el volante', removeFlyerAsk: '¿Quitar el volante de “{title}”?',
+      flyerUploading: 'Subiendo el volante…', flyerSaved: 'Volante agregado', flyerRemoved: 'Volante quitado', flyerNotImage: 'Elige una foto o imagen del volante',
       eventShareMsg: '¡Te invitamos a {title}! Confirma aquí:', galAll: 'Todo', galGigs: 'Eventos', galEvents: 'Convivios', galEventTag: 'Convivio', noGalleryMatch: 'Nada por aquí todavía.',
     },
   };
@@ -2012,6 +2016,7 @@
       body.innerHTML = '';
       mine.ctl = window.BFMHParty.mount(body, { id: id, lang: state.lang, embedded: true, toast: toast,
         onChange: function () { mine.dirty = true; },
+        onFlyer: isOwner() ? function (e) { pickFlyer(e.id); } : null,
         onGallery: function (e) { openGallery(e.id); } });
     }, function (e) { toast(e.message, true); closeParty(); });
   }
@@ -2036,6 +2041,12 @@
         var full = state.events.filter(function (e) { return e.id === ev.id; })[0] || ev;
         closeParty(); gatheringForm(full, function () { openParty(ev.id); });
       } },
+      { label: t(ev.flyer ? 'changeFlyer' : 'addFlyer'), icon: 'image', onclick: function () { pickFlyer(ev.id); } },
+      ev.flyer ? { label: t('removeFlyer'), icon: 'trash', onclick: function () {
+        confirmSheet(t('removeFlyerAsk', { title: evTitle(ev) }), t('remove'), true).then(function (yes) {
+          if (yes) flyerApi({ action: 'flyer_clear', event_id: ev.id }, t('flyerRemoved'));
+        });
+      } } : null,
       ev.gallery_open || ev.media_count ? { label: t('gallery'), icon: 'image', onclick: function () { openGallery(ev.id); } } : null,
       { label: t('deleteEvent'), icon: 'trash', cls: 'danger', onclick: function () {
         confirmSheet(t('deleteEventAsk', { title: evTitle(ev) }), t('del'), true).then(function (yes) {
@@ -2045,6 +2056,30 @@
         });
       } },
     ]);
+  }
+
+  function flyerApi(body, okMsg) {
+    return api('/api/media', { method: 'POST', body: body }).then(function () {
+      toast(okMsg);
+      if (partyUI && partyUI.id === body.event_id && partyUI.ctl) partyUI.ctl.reload();
+    }).catch(function (e) { toast(e.message, true); });
+  }
+  function pickFlyer(id) {
+    var input = h('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      input.remove();
+      if (!file) return;
+      if (!/^image\//.test(file.type)) { toast(t('flyerNotImage'), true); return; }
+      toast(t('flyerUploading'));
+      shrinkPhoto(file).catch(function () { return { blob: file }; }).then(function (p) {
+        return api('/api/media', { method: 'POST', body: { action: 'flyer', event_id: id, name: file.name, type: p.blob.type || file.type, size: p.blob.size } })
+          .then(function (r) { return putFile(r.put, p.blob).then(function () { return r.key; }); })
+          .then(function (key) { return flyerApi({ action: 'flyer_set', event_id: id, key: key, width: p.width, height: p.height }, t('flyerSaved')); });
+      }).catch(function (e) { toast(e.message, true); });
+    });
+    document.body.appendChild(input);
+    input.click();
   }
 
   /* ── gallery & music ───────────────────────────────────── */

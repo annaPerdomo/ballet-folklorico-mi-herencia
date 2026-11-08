@@ -98,8 +98,10 @@ export async function deleteEvent(id, tag = { source: 'owner', actor: 'owner' })
     // A group event keeps nothing for analytics, and its guest list holds people's notes.
     await q(`DELETE FROM gathering_rsvps WHERE event_id = $1`, [id]);
     await q(`DELETE FROM gathering_items WHERE event_id = $1`, [id]);
-    await q(`UPDATE events SET status = 'deleted', deleted_at = now(), updated_at = now() WHERE id = $1 AND status <> 'deleted'`, [id]);
-    return files;
+    const [flyer] = await q(`SELECT flyer_key FROM events WHERE id = $1 AND flyer_key IS NOT NULL`, [id]);
+    await q(`UPDATE events SET status = 'deleted', deleted_at = now(), updated_at = now(), flyer_key = NULL, flyer_bytes = NULL
+      WHERE id = $1 AND status <> 'deleted'`, [id]);
+    return flyer ? [...files, { storage_key: flyer.flyer_key }] : files;
   });
 }
 

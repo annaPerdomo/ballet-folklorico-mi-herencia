@@ -5,6 +5,7 @@ import { sql, one, withSource } from './db.js';
 import { httpError, str, int } from './http.js';
 import { withCalendarLinks } from './events.js';
 import { actorOf } from './auth.js';
+import { signedUrl, storageReady } from './storage.js';
 
 export const KINDS = ['potluck', 'posada', 'party', 'practice', 'meeting', 'outing', 'fundraiser', 'other'];
 export const CATEGORIES = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
@@ -15,7 +16,7 @@ const MAX_PARTY = 30;
 const MAX_WRITE_INS_PER_MINUTE = 20;
 const TODAY = `(now() AT TIME ZONE 'America/Los_Angeles')::date`;
 
-const COLS = `id, title, status, event_type, event_date, start_time, end_time, venue, address, city, details, potluck,
+const COLS = `id, title, status, event_type, event_date, start_time, end_time, venue, address, city, details, potluck, flyer_key, flyer_w, flyer_h,
   event_date < ${TODAY} AS past,
   (SELECT count(*) FROM media m WHERE m.event_id = events.id AND m.ready AND m.kind <> 'audio')::int AS media_count`;
 
@@ -90,7 +91,7 @@ export async function loadParty(id, v) {
   const membersOf = (r) => (v.member || r.id === myId ? members.filter((m) => m.rsvp_id === r.id && (v.owner || r.id === myId || m.status !== 'no'))
     .map((m) => ({ name: m.name, status: m.status })) : []);
   return {
-    event: withCalendarLinks(event),
+    event: { ...withCalendarLinks(event), flyer: flyerOf(ev) },
     past,
     // Notes and who said no are for the hosts; guests get only the count.
     declined: rsvps.filter((r) => r.status === 'no').length,
@@ -246,6 +247,9 @@ export function inviteHtml(ev, { id, sig, origin }) {
   const desc = ev ? (ev.details ? ev.details.replace(/\s+/g, ' ').slice(0, 180) : 'You’re invited! RSVP and see who’s coming. · ¡Estás invitado! Confirma tu asistencia.')
     : 'This invite link is not valid.';
   const data = ev ? ` data-party="${esc(id)}" data-s="${esc(sig)}"` : ' data-party-invalid="1"';
+  const flyer = ev && ev.flyer_key;
+  const image = flyer ? `${esc(origin)}/api/gig?flyer=${esc(id)}&amp;s=${esc(sig)}` : `${esc(origin)}/og-image.jpg?v=6`;
+  const size = flyer ? (ev.flyer_w && ev.flyer_h ? [ev.flyer_w, ev.flyer_h] : null) : [1200, 630];
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -259,9 +263,9 @@ export function inviteHtml(ev, { id, sig, origin }) {
   <meta property="og:site_name" content="Ballet Folklórico Mi Herencia" />
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(desc)}" />
-  <meta property="og:image" content="${esc(origin)}/og-image.jpg?v=6" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <meta property="og:image" content="${image}" />${size ? `
+  <meta property="og:image:width" content="${esc(size[0])}" />
+  <meta property="og:image:height" content="${esc(size[1])}" />` : ''}
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />

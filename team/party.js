@@ -218,6 +218,15 @@
         return false;
       });
     }
+    function viewFlyer(f) {
+      var back = h('div', { class: 'pt-lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('flyer'), onclick: function () { close(); } },
+        h('img', { src: f.url, alt: t('flyer') }),
+        h('button', { type: 'button', class: 'pt-lightbox-x', 'aria-label': t('close') }, icon('no', 2.4)));
+      function close() { back.remove(); document.removeEventListener('keydown', onKey); }
+      function onKey(e) { if (e.key === 'Escape') close(); }
+      document.addEventListener('keydown', onKey);
+      document.body.appendChild(back);
+    }
     function load() {
       return api(null).then(function (d) { data = d; err = null; if (d.sig) sig = d.sig; paint(); return d; },
         function (e) { err = e; paint(); throw e; });
@@ -310,8 +319,13 @@
     function hero(ev) {
       var where = [ev.venue, ev.city].filter(Boolean).join(' · ');
       var kind = STR[lang].kinds[ev.event_type] || t('groupEvent');
-      return h('section', { class: 'pt-hero' },
-        picado(26),
+      var flyer = ev.flyer, bg = null;
+      if (flyer) { bg = h('div', { class: 'pt-hero-bg' }); bg.style.backgroundImage = 'url("' + flyer.url + '")'; }
+      return h('section', { class: 'pt-hero' + (flyer ? ' has-flyer' : '') }, bg,
+        picado(),
+        h('div', { class: 'pt-hero-body' },
+        flyer ? h('button', { type: 'button', class: 'pt-flyer', 'aria-label': t('flyer'), onclick: function () { viewFlyer(flyer); } },
+          h('img', { src: flyer.url, alt: t('flyer'), width: flyer.w, height: flyer.h, decoding: 'async' })) : null,
         h('div', { class: 'pt-hero-in' },
           h('p', { class: 'pt-kind' }, h('span', { text: kind }), h('i', { class: 'pt-dot' }), h('span', { text: t('invited') })),
           h('h1', { class: 'pt-title', text: ev.title }),
@@ -322,7 +336,8 @@
           h('div', { class: 'pt-hero-acts' },
             ev.event_date && !data.past ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { calSheet(ev); } }, icon('calendar'), t('addToCal')) : null,
             where || ev.address ? h('a', { class: 'btn btn-sm pt-ghost', href: mapUrl(ev), target: '_blank', rel: 'noopener' }, icon('pin'), t('directions')) : null,
-            data.past ? null : h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { share(ev); } }, icon('share'), t('share')))));
+            data.past ? null : h('button', { type: 'button', class: 'btn btn-sm pt-ghost', onclick: function () { share(ev); } }, icon('share'), t('share')),
+            !flyer && opts.onFlyer && data.me.owner ? h('button', { type: 'button', class: 'btn btn-sm pt-ghost pt-flyer-add', onclick: function () { opts.onFlyer(ev); } }, icon('image'), t('addFlyer')) : null))));
     }
 
     function rsvpCard() {

@@ -222,6 +222,10 @@ CREATE TABLE IF NOT EXISTS gathering_members (
   PRIMARY KEY (rsvp_id, dancer_id)
 );
 ALTER TABLE gathering_rsvps ADD COLUMN IF NOT EXISTS extra int NOT NULL DEFAULT 0;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_key text;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_bytes int;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_w int;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS flyer_h int;
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

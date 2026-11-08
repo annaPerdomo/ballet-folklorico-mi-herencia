@@ -17,6 +17,7 @@
     radial-gradient(90% 80% at 100% 100%, rgba(26,123,106,0.28) 0%, transparent 60%),
     linear-gradient(165deg, #2a163e 0%, #170b24 70%);
   box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(232,201,122,0.12); }
+.pt-hero-body { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
 .pt-hero-in { padding: 0.4rem 1.3rem 1.4rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
 .pt-kind { display: inline-flex; align-items: center; gap: 0.55rem; margin: 0; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.22em;
   text-transform: uppercase; color: var(--gold-light); }
@@ -34,6 +35,28 @@ a.pt-fact:hover b { color: var(--gold-light); }
 .pt-hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.45rem; margin-top: 0.35rem; }
 .pt-ghost { background: rgba(8,3,17,0.35); border-color: rgba(232,201,122,0.3); color: var(--gold-light); }
 .pt-ghost svg { width: 15px; height: 15px; }
+.pt-flyer-add { border-style: dashed; }
+
+/* ── flyer ──────────────────────────────────────────────── */
+.pt-hero-bg { position: absolute; inset: -60px; z-index: 0; background-size: cover; background-position: center;
+  filter: blur(40px) saturate(1.25); opacity: 0.42; pointer-events: none; }
+.pt-flyer { all: unset; box-sizing: border-box; display: block; width: min(80%, 360px); margin: 0 auto 1rem; cursor: zoom-in;
+  border-radius: 14px; overflow: hidden; border: 1px solid rgba(232,201,122,0.6); background: #0c0514;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 6px rgba(232,201,122,0.08); transform: rotate(-1.2deg); transition: transform 0.35s ease; }
+.pt-flyer:hover, .pt-flyer:focus-visible { transform: rotate(0deg) scale(1.01); }
+.pt-flyer:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+.pt-flyer img { display: block; width: 100%; height: auto; max-height: 72vh; object-fit: contain; }
+@media (min-width: 760px) {
+  .pt-hero.has-flyer .pt-hero-body { flex-direction: row; align-items: center; gap: 2rem; padding: 0 2.2rem 1.8rem; }
+  .pt-hero.has-flyer .pt-flyer { width: 320px; flex-shrink: 0; margin: 0; }
+  .pt-hero.has-flyer .pt-hero-in { flex: 1; min-width: 0; padding: 0; }
+}
+.pt-lightbox { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; cursor: zoom-out;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); background: rgba(5,2,10,0.94); }
+.pt-lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+.pt-lightbox-x { all: unset; cursor: pointer; position: absolute; top: calc(0.8rem + env(safe-area-inset-top, 0px)); right: 0.8rem; width: 44px; height: 44px;
+  border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.12); color: #fff; }
+.pt-lightbox-x svg { width: 18px; height: 18px; }
 
 /* ── layout & cards ─────────────────────────────────────── */
 .pt-cols { display: grid; gap: 0.9rem; }
@@ -190,4 +213,4 @@ button.pt-guest:hover .pt-guest-main b { color: var(--gold-light); }
   .pt-item-act { margin-left: auto; }
   .pt-cat-sel { max-width: 8.5rem; }
 }
-@media (prefers-reduced-motion: reduce) { .pt-flag { animation: none; } .pt-bar i { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pt-picado .ppw { animation: none; } .pt-bar i, .pt-flyer { transition: none; } }

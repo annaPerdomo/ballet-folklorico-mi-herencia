@@ -3,9 +3,9 @@ import { route, readJson, ok, query, str, int, httpError } from './_lib/http.js'
 import { requireUser, requireAdmin, actorOf, ownerTag } from './_lib/auth.js';
 import { sql, one, withSource } from './_lib/db.js';
 import { GALLERY_VISIBLE } from './_lib/events.js';
-import { signedUrl, objectSize, storageReady } from './_lib/storage.js';
+import { signedUrl, objectSize, storageReady, removeObject } from './_lib/storage.js';
 import { galleryOpen } from './_lib/ics.js';
-import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine, creditOf } from './_lib/media.js';
+import { LIMITS, THUMB_MAX, TYPES, quotaBytes, usedBytes, youtubeId, youtubeTitle, isPlaylist, safeLink, toItem, removeFiles, canPublish, websiteFlags, coverUrl, FEATURED_FIRST, feedBatches, isMine, creditOf, FLYER_MAX } from './_lib/media.js';
 
 async function visibleEvent(id, me) {
   const ev = await one(`SELECT id, title, event_type, event_date, start_time, call_time, status, venue, city, cover_media_id FROM events WHERE id = $1 AND status <> 'deleted'`, [id]);
@@ -243,6 +243,35 @@ export default route({
         q(`UPDATE events SET cover_media_id = $2 WHERE id = $1 AND status <> 'deleted' RETURNING id`, [eventId, mediaId]));
       const ev = rows[0] || null;
       if (!ev) throw httpError(404, 'Gig not found');
+      return ok(res);
+    }
+
+    if (b.action === 'flyer' || b.action === 'flyer_set' || b.action === 'flyer_clear') {
+      const admin = await requireAdmin(req);
+      const ev = await one(`SELECT id, flyer_key FROM events WHERE id = $1 AND status = 'gathering'`, [int(b.event_id)]);
+      if (!ev) throw httpError(404, 'Event not found');
+      const prefix = `gig-${ev.id}/flyer-`;
+      if (b.action === 'flyer') {
+        const type = str(b.type, 100) || '';
+        const size = int(b.size) || 0;
+        if (!/^image\/(jpeg|png|webp|gif)$/.test(type)) throw httpError(400, 'A flyer has to be a photo or image');
+        if (size <= 0 || size > FLYER_MAX) throw httpError(413, `A flyer can be up to ${Math.round(FLYER_MAX / 1048576)} MB`);
+        if (!storageReady()) throw httpError(503, 'Media storage is not set up yet');
+        if (await usedBytes() + size > quotaBytes()) throw httpError(507, 'The gallery is full — clear out old videos first');
+        const key = `${prefix}${Date.now().toString(36)}-${crypto.randomBytes(6).toString('base64url')}.${extOf(b.name, type)}`;
+        return ok(res, { key, put: signedUrl('PUT', key, { length: size }) });
+      }
+      let key = null, bytes = null;
+      if (b.action === 'flyer_set') {
+        key = str(b.key, 200);
+        if (!key || !key.startsWith(prefix) || !/^[\w\-./]+$/.test(key) || key.includes('..')) throw httpError(400, 'Bad flyer');
+        bytes = await objectSize(key);
+        if (!bytes) throw httpError(400, 'The flyer did not arrive — try again');
+        if (bytes > FLYER_MAX) { await removeObject(key); throw httpError(413, 'That flyer is too big'); }
+      }
+      await withSource(ownerTag(admin), (q) => q(`UPDATE events SET flyer_key = $2, flyer_bytes = $3, flyer_w = $4, flyer_h = $5, updated_at = now() WHERE id = $1`,
+        [ev.id, key, bytes, key ? int(b.width) : null, key ? int(b.height) : null]));
+      if (ev.flyer_key && ev.flyer_key !== key) await removeObject(ev.flyer_key).catch((e) => console.error('flyer delete', e.message));
       return ok(res);
     }
 

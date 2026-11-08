@@ -7,6 +7,7 @@ const MB = 1024 * 1024;
 export const LIMITS = { photo: 25 * MB, video: 150 * MB, audio: 60 * MB };
 export const THUMB_MAX = MB;
 export const TYPES = { photo: /^image\//, video: /^video\//, audio: /^audio\// };
+export const FLYER_MAX = 10 * MB;
 
 export const ADMIN_CREDIT = ADMIN_NAME;
 export const creditOf = (me) => (me.role === 'admin' && me.insights ? ADMIN_CREDIT : null);
@@ -19,7 +20,7 @@ export const FEATURED_FIRST = `COALESCE(m.kind <> 'photo' AND (m.credit = '${ADM
 export const quotaBytes = () => Math.round((Number(process.env.MEDIA_QUOTA_GB) || 9) * 1024 * MB);
 
 export async function usedBytes() {
-  const [{ n }] = await sql('SELECT COALESCE(sum(bytes), 0)::bigint AS n FROM media');
+  const [{ n }] = await sql(`SELECT (SELECT COALESCE(sum(bytes), 0) FROM media) + (SELECT COALESCE(sum(flyer_bytes), 0) FROM events) AS n`);
   return Number(n);
 }
 
