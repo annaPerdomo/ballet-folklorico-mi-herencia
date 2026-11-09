@@ -1072,7 +1072,7 @@
     tabsEl.hidden = false; tabsEl.innerHTML = '';
     [['gigs', 'tabGigs', 'calendar'], ['feed', 'tabFeed', 'pulse'], ['media', 'tabMedia', 'image']].forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.mtab === tb[0] ? ' is-active' : ''), 'aria-current': state.mtab === tb[0] ? 'page' : false,
-        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); if (state.mtab !== tb[0]) track('tab', null, null, tb[0]); state.mtab = tb[0]; render(); } },
+        onclick: function () { if (tb[0] === 'feed' && state.mtab !== 'feed') freshFeedVisit(); if (state.mtab !== tb[0]) track('tab', null, null, tb[0]); state.mtab = tb[0]; render(); } },
         h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)), h('span', { class: 'tm-tab-label', text: t(tb[1]) }), tb[0] === 'feed' ? feedBadge() : null));
     });
     headerRight.innerHTML = '';
@@ -1232,18 +1232,20 @@
       if (f && isGathering(f)) { state.tab = 'gigs'; state.focusEvent = null; if (!partyUI || partyUI.id !== f.id) openParty(f.id); }
       else if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') { state.detail = f.id; state.focusEvent = null; } }
     }
+    if (state.tab === 'inbox') markInboxSeen(inquiries);
+    var seen = inboxSeen(), unseen = inquiries.filter(function (e) { return !seen[e.id]; }).length;
     var listening = state.me.channels && state.me.channels.groupme_listen;
     tabsEl.hidden = false; tabsEl.innerHTML = '';
     var tabs = hasInsights() ? [['insights', 'tabInsights', 'chart']].concat(TABS) : TABS;
     tabsEl.classList.toggle('has-7', tabs.length > 6);
     tabs.forEach(function (tb) {
       tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'aria-current': state.tab === tb[0] ? 'page' : false,
-        onclick: function () { if (tb[0] === 'feed') freshFeedVisit(); if (state.tab !== tb[0]) track('tab', null, null, tb[0]); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
+        onclick: function () { if (tb[0] === 'feed' && state.tab !== 'feed') freshFeedVisit(); if (state.tab !== tb[0]) track('tab', null, null, tb[0]); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
         tb[0] === 'chona'
           ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
           : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
         h('span', { class: 'tm-tab-label', text: t(tb[1]) }),
-        tb[0] === 'inbox' && inquiries.length ? h('span', { class: 'count', text: inquiries.length }) : null,
+        tb[0] === 'inbox' && unseen && state.tab !== 'inbox' ? h('span', { class: 'count', text: unseen }) : null,
         tb[0] === 'feed' ? feedBadge() : null));
     });
 
@@ -1264,6 +1266,15 @@
     focusIfNeeded();
   }
 
+  var INBOX_KEY = 'bfmh_inbox_seen';
+  function inboxSeen() {
+    var seen = {};
+    try { (JSON.parse(localStorage.getItem(INBOX_KEY)) || []).forEach(function (id) { seen[id] = true; }); } catch (e) {}
+    return seen;
+  }
+  function markInboxSeen(inquiries) {
+    try { localStorage.setItem(INBOX_KEY, JSON.stringify(inquiries.map(function (e) { return e.id; }))); } catch (e) {}
+  }
   function renderInbox(inquiries) {
     var shown = filterInquiries(inquiries);
     if (state.focusEvent && !shown.some(function (e) { return e.id === state.focusEvent; }) && inquiries.some(function (e) { return e.id === state.focusEvent; })) {
@@ -2358,8 +2369,9 @@
     try { var v = localStorage.getItem(FEED_KEY); if (v) return v; } catch (e) {}
     return new Date(Date.now() - 7 * 864e5).toISOString().replace('Z', '000Z');
   }
-  // Fixed for the visit, so cards stay marked New after the Feed tab marks them seen.
+  // Fixed while the Feed tab is open, so cards stay marked New after it marks them seen; reset on each visit.
   media.feedPrev = feedSeen();
+  media.feedRead = {};
   function loadFeedCount() {
     return api('/api/media?feed=1&since=' + encodeURIComponent(feedSeen())).then(function (d) { state.feedFresh = d.fresh; }, function () {});
   }
@@ -2374,7 +2386,13 @@
     var n = state.feedFresh;
     return n && !isFeedTab() ? h('span', { class: 'count', text: n > 99 ? '99+' : n, 'aria-label': t('feedNew') + ': ' + n }) : null;
   }
-  function isFresh(b) { return !b.mine && b.stamp > media.feedPrev; }
+  function isFresh(b) { return !b.mine && b.stamp > media.feedPrev && !media.feedRead[b.id]; }
+  function readCard(b, el) {
+    media.feedRead[b.id] = true;
+    el.classList.remove('is-new');
+    var tag = el.querySelector('.feed-new');
+    if (tag) tag.remove();
+  }
   function feedWhen(iso) {
     if (Date.now() - new Date(iso).getTime() < 7 * 864e5) return timeAgo(iso);
     var d = new Date(iso);
@@ -2402,7 +2420,7 @@
     var open = state.events.some(function (e) { return e.id === ev.id; });
     var where = [fmtTime(live), fmtWhere(live)].filter(Boolean).join(' · ');
     return h(open ? 'button' : 'article', { type: open ? 'button' : null, class: 'feed-card feed-blast is-' + b.blast + (isFresh(b) ? ' is-new' : ''),
-      onclick: open ? function () { openFeedEvent(ev.id); } : null },
+      onclick: function (e) { readCard(b, e.currentTarget); if (open) openFeedEvent(ev.id); } },
       h('span', { class: 'feed-head' },
         h('span', { class: 'feed-line feed-kind' }, icon(k[1], 2.5), h('b', { text: t(k[0]) })),
         isFresh(b) ? h('span', { class: 'feed-new', text: t('feedNew') }) : null,
@@ -2439,7 +2457,7 @@
       : party ? t(b.status === 'yes' ? 'feedGoing' : b.status === 'maybe' ? 'feedMaybeParty' : 'feedNoParty', { who: who }) : t('feedAnswered', { who: who });
     var lines = answerLines(b).filter(Boolean);
     return h(open ? 'button' : 'article', { type: open ? 'button' : null, class: 'feed-card feed-blast is-answer' + (party ? ' is-' + b.status : '') + (isFresh(b) ? ' is-new' : ''),
-      onclick: open ? function () { openFeedEvent(ev.id); } : null },
+      onclick: function (e) { readCard(b, e.currentTarget); if (open) openFeedEvent(ev.id); } },
       h('span', { class: 'feed-head' },
         h('span', { class: 'feed-line feed-kind' }, icon(party ? (b.status === 'yes' ? 'yes' : b.status) : 'people', 2.5), h('b', { text: capFirst(head) })),
         isFresh(b) ? h('span', { class: 'feed-new', text: t('feedNew') }) : null,
@@ -2464,7 +2482,7 @@
     if (vis.length > cut) tiles.push(h('button', { type: 'button', class: 'photo feed-rest', onclick: openFolder },
       h('b', { text: '+' + (vis.length - cut) }), h('span', { text: t('feedMore') })));
     var ev = b.event;
-    return h('article', { class: 'feed-card' + (isFresh(b) ? ' is-new' : '') },
+    return h('article', { class: 'feed-card' + (isFresh(b) ? ' is-new' : ''), onclick: function (e) { readCard(b, e.currentTarget); } },
       h('div', { class: 'feed-head' },
         h('p', { class: 'feed-line' }, h('b', { text: capFirst(who) }), ' ' + t('feedAdded', { what: feedWhat(b) })),
         isFresh(b) ? h('span', { class: 'feed-new', text: t('feedNew') }) : null,
@@ -2485,7 +2503,7 @@
     }
     return media.feedLoading;
   }
-  function freshFeedVisit() { media.feedPaged = false; media.feedStale = true; }
+  function freshFeedVisit() { media.feedPaged = false; media.feedStale = true; media.feedPrev = feedSeen(); media.feedRead = {}; }
   function renderFeedTab() {
     var d = media.feed;
     // The badge saw uploads newer than this feed, so fetch again before marking it seen.
