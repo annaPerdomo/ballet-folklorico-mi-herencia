@@ -917,7 +917,7 @@ button.feed-blast:focus-visible { outline: 2px solid var(--gold-light); outline-
 .gkinds-field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .gkinds { gap: 0.35rem; }
 .gkinds .fchip { min-height: 38px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
-.party-body { padding-top: 0.6rem; }
+.party-body { padding-top: 0.6rem; padding-bottom: calc(0.5rem + var(--safe-b)); }
 .gal-kinds { margin: 0 0 0.75rem; }
 .galcard-cover { position: relative; }
 .galcard-tag { position: absolute; left: 8px; top: 8px; padding: 3px 8px; border-radius: 999px; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em;
