@@ -9,16 +9,16 @@
       addToCal: 'Add to calendar', directions: 'Directions', share: 'Share invite', shareMsg: 'You’re invited to {title}! RSVP here:',
       calPick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancel', mapPick: 'Get directions with',
       rsvpTitle: 'Will you be there?', rsvpSub: 'Let the hosts know how many to expect.',
-      yourName: 'Your name', needName: 'Write your name first', namePh: 'e.g. Tía Lupe & family',
+      yourName: 'Name for the guest list', needName: 'Add a name for the guest list first', namePh: 'e.g. Tía Lupe & family',
       notYou: 'Not the {name} family? Write yourself in', asFamily: 'Answer as the {name} family instead',
       going: 'Going', maybe: 'Maybe', cant: 'Can’t go', less: 'One fewer', more: 'One more',
-      noteLabel: 'Note for the hosts', notePh: 'Allergies, arriving late… (optional)', send: 'Send RSVP', update: 'Save changes',
+      noteLabel: 'Note for the hosts', notePh: 'Allergies, arriving late… (optional)', send: 'Send RSVP', needStatus: 'Pick Going, Maybe or Can’t go first', update: 'Save changes',
       youGoing: 'You’re going!', youMaybe: 'You said maybe', youNo: 'You can’t make it', youNoSub: 'We’ll miss you. You can change your answer anytime.',
       change: 'Edit my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
       whoComing: 'Who’s coming', personOne: 'person', personMany: 'people', rsvpOne: '1 RSVP', rsvpMany: '{n} RSVPs',
       maybeN: '{n} maybe', cantN: '{n} can’t make it', beFirst: 'No RSVPs yet — be the first!', you: 'You', familyName: '{name} family',
-      bringOther: 'Bringing something else?', bringPh: 'e.g. Flan, aguas frescas', category: 'Category', add: 'Add',
-      bringing: 'You’re bringing', bringTitle: 'What are you bringing?', bringHint: 'Add what you’re bringing. It saves with your RSVP.', suggestions: 'Ideas from the hosts',
+      bringOther: 'Add a dish', nothingYet: 'Nothing yet', bringPh: 'e.g. Flan, aguas frescas', category: 'Type of dish', chooseType: 'Choose type', needType: 'Choose what type of dish it is', add: 'Add',
+      bringing: 'You’re bringing', bringTitle: 'What are you bringing?', suggestions: 'Ideas from the hosts',
       past: 'This event already happened — thank you for coming!', photos: 'Photos & videos',
       thanks: '¡Gracias! You’re on the list', saved: 'Saved', removed: 'Removed',
       removeGuest: 'Remove from the guest list', removeAsk: 'Take {name} off the guest list? What they signed up to bring goes back on the list.', remove: 'Remove', removeDish: 'Take “{item}” off', hostNote: 'Note',
@@ -26,7 +26,7 @@
       copied: 'Link copied', hosted: 'Hosted by', openInApp: 'Manage this event in the team app',
       rsvpFamily: 'Will the {name} family be there?', howMany: 'How many are coming?', howManyHint: 'Count yourself too.',
       adults: 'Adults', kids: 'Kids', adultsN: '{n} adults', adultN: '1 adult', kidsN: '{n} kids', kidN: '1 kid',
-      addNote: 'Add a note for the hosts', peopleN: '{n} people', personN: '1 person',
+      addNote: 'Add a note for the hosts',
       flyer: 'Event flyer', addFlyer: 'Add a flyer', close: 'Close',
       announce: 'Post to GroupMe', remind: 'Remind in GroupMe', notAnnounced: 'Not posted to GroupMe yet',
     },
@@ -36,16 +36,16 @@
       addToCal: 'Agregar al calendario', directions: 'Cómo llegar', share: 'Compartir invitación', shareMsg: '¡Te invitamos a {title}! Confirma aquí:',
       calPick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancelar', mapPick: 'Cómo llegar con',
       rsvpTitle: '¿Vas a venir?', rsvpSub: 'Avísale a los anfitriones cuántos van.',
-      yourName: 'Tu nombre', needName: 'Primero escribe tu nombre', namePh: 'p. ej. Tía Lupe y familia',
+      yourName: 'Nombre para la lista', needName: 'Primero escribe un nombre para la lista', namePh: 'p. ej. Tía Lupe y familia',
       notYou: '¿No eres de la familia {name}? Escribe tu nombre', asFamily: 'Mejor responder como la familia {name}',
       going: 'Voy', maybe: 'Tal vez', cant: 'No puedo', less: 'Uno menos', more: 'Uno más',
-      noteLabel: 'Nota para los anfitriones', notePh: 'Alergias, si llegas tarde… (opcional)', send: 'Enviar respuesta', update: 'Guardar cambios',
+      noteLabel: 'Nota para los anfitriones', notePh: 'Alergias, si llegas tarde… (opcional)', send: 'Enviar respuesta', needStatus: 'Primero elige Voy, Tal vez o No puedo', update: 'Guardar cambios',
       youGoing: '¡Vas!', youMaybe: 'Dijiste que tal vez', youNo: 'No puedes ir', youNoSub: 'Te vamos a extrañar. Puedes cambiar tu respuesta cuando quieras.',
       change: 'Editar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
       whoComing: 'Quiénes vienen', personOne: 'persona', personMany: 'personas', rsvpOne: '1 respuesta', rsvpMany: '{n} respuestas',
       maybeN: '{n} tal vez', cantN: '{n} no pueden', beFirst: 'Aún no hay respuestas. ¡Sé el primero!', you: 'Tú', familyName: 'Familia {name}',
-      bringOther: '¿Vas a llevar otra cosa?', bringPh: 'p. ej. flan, aguas frescas', category: 'Categoría', add: 'Agregar',
-      bringing: 'Vas a llevar', bringTitle: '¿Qué vas a llevar?', bringHint: 'Agrega lo que vas a llevar. Se guarda con tu respuesta.', suggestions: 'Ideas de los anfitriones',
+      bringOther: 'Agregar un platillo', nothingYet: 'Nada todavía', bringPh: 'p. ej. flan, aguas frescas', category: 'Tipo de platillo', chooseType: 'Elige el tipo', needType: 'Elige qué tipo de platillo es', add: 'Agregar',
+      bringing: 'Vas a llevar', bringTitle: '¿Qué vas a llevar?', suggestions: 'Ideas de los anfitriones',
       past: 'Este convivio ya pasó. ¡Gracias por venir!', photos: 'Fotos y videos',
       thanks: '¡Gracias! Ya estás en la lista', saved: 'Guardado', removed: 'Quitado',
       removeGuest: 'Quitar de la lista', removeAsk: '¿Quitar a {name} de la lista? Lo que iba a llevar vuelve a la lista.', remove: 'Quitar', removeDish: 'Quitar “{item}”', hostNote: 'Nota',
@@ -53,7 +53,7 @@
       copied: 'Enlace copiado', hosted: 'Organiza', openInApp: 'Administra este convivio en la app del equipo',
       rsvpFamily: '¿Va a venir la familia {name}?', howMany: '¿Cuántos van a venir?', howManyHint: 'Cuéntate a ti también.',
       adults: 'Adultos', kids: 'Niños', adultsN: '{n} adultos', adultN: '1 adulto', kidsN: '{n} niños', kidN: '1 niño',
-      addNote: 'Agregar una nota para los anfitriones', peopleN: '{n} personas', personN: '1 persona',
+      addNote: 'Agregar una nota para los anfitriones',
       flyer: 'Volante del convivio', addFlyer: 'Agregar un volante', close: 'Cerrar',
       announce: 'Publicar en GroupMe', remind: 'Recordar en GroupMe', notAnnounced: 'Aún no se ha publicado en GroupMe',
     },
@@ -250,15 +250,9 @@
     }
     function timeText(ev) { return [ev.start_time, ev.end_time].filter(Boolean).join(' – '); }
     function whoName(r) { return r.family ? t('familyName', { name: r.name }) : r.name; }
-    function peopleText(n) { return n === 1 ? t('personN') : t('peopleN', { n: n }); }
     function party(r) {
       if (r.status === 'no' || !(r.adults + r.kids)) return '';
-      if (!r.kids) return peopleText(r.adults);
-      return [r.adults ? (r.adults === 1 ? t('adultN') : t('adultsN', { n: r.adults })) : null, r.kids === 1 ? t('kidN') : t('kidsN', { n: r.kids })].filter(Boolean).join(' · ');
-    }
-    function initials(name) {
-      var w = String(name || '?').replace(/^(the|la|el|tía|tia|tío|tio)\s+/i, '').split(/\s+/).filter(Boolean);
-      return ((w[0] || '?').charAt(0) + (w[1] && !/^(&|y|and)$/i.test(w[1]) ? w[1].charAt(0) : '')).toUpperCase();
+      return [r.adults ? (r.adults === 1 ? t('adultN') : t('adultsN', { n: r.adults })) : null, r.kids ? (r.kids === 1 ? t('kidN') : t('kidsN', { n: r.kids })) : null].filter(Boolean).join(' · ');
     }
     function mine() { return data && data.rsvps.filter(function (r) { return r.mine; })[0] || null; }
     function shareUrl() { return sig ? location.origin + '/e/' + id + '/' + sig : location.href; }
@@ -375,7 +369,7 @@
       card.appendChild(h('p', { class: 'pt-sub', text: t('rsvpSub') }));
       var name = h('input', { class: 'pt-input', value: f.name, placeholder: fam ? t('familyName', { name: me.family_name }) : t('namePh'), autocomplete: fam ? 'off' : 'name', maxlength: 80, 'aria-label': t('yourName'),
         oninput: function () { f.name = name.value; } });
-      card.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('yourName') }), name));
+      card.appendChild(h('label', { class: 'f pt-f' }, h('span', { class: 'f-label pt-h3', text: t('yourName') }), name));
       if (!opts.embedded) {
         if (fam) card.appendChild(h('button', { type: 'button', class: 'btn-link pt-switch', text: t('notYou', { name: me.family_name }),
           onclick: function () { store(GUEST, '1'); form = null; load(); } }));
@@ -389,17 +383,15 @@
       });
       card.appendChild(seg);
       if (f.status === 'yes' || f.status === 'maybe') card.appendChild(headcount(f));
-      if ((f.status === 'yes' || f.status === 'maybe') && potluckOn() && !data.past) card.appendChild(bringPicker(f));
-      if (f.status) {
-        var note = h('textarea', { class: 'pt-input', rows: 2, maxlength: 300, placeholder: t('notePh'), oninput: function () { f.note = note.value; } });
-        note.value = f.note || '';
-        var noteField = h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('noteLabel') }), note);
-        card.appendChild(f.note || f.showNote ? noteField : h('button', { type: 'button', class: 'btn-link pt-add-note', text: t('addNote'),
-          onclick: function () { f.showNote = true; paint(); } }));
-        card.appendChild(h('div', { class: 'pt-row-btns' },
-          h('button', { type: 'button', class: 'btn btn-gold btn-main', text: r ? t('update') : t('send'), onclick: sendRsvp }),
-          r ? h('button', { type: 'button', class: 'btn', text: t('cancel'), onclick: function () { form = null; paint(); } }) : null));
-      }
+      if (f.status !== 'no' && potluckOn()) card.appendChild(bringPicker(f));
+      var note = h('textarea', { class: 'pt-input', rows: 2, maxlength: 300, placeholder: t('notePh'), oninput: function () { f.note = note.value; } });
+      note.value = f.note || '';
+      var noteField = h('label', { class: 'f pt-f' }, h('span', { class: 'f-label', text: t('noteLabel') }), note);
+      card.appendChild(f.note || f.showNote ? noteField : h('button', { type: 'button', class: 'btn-link pt-add-note', text: t('addNote'),
+        onclick: function () { f.showNote = true; paint(); } }));
+      card.appendChild(h('div', { class: 'pt-row-btns' },
+        h('button', { type: 'button', class: 'btn btn-gold btn-main', text: r ? t('update') : t('send'), onclick: sendRsvp }),
+        r ? h('button', { type: 'button', class: 'btn', text: t('cancel'), onclick: function () { form = null; paint(); } }) : null));
       return card;
     }
     var counterIds = 0;
@@ -430,7 +422,7 @@
       return data.items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); }).map(function (i) { return i.label; });
     }
     function bringFrom(r) {
-      var out = { claims: {}, extras: [], text: '', category: 'desserts' };
+      var out = { claims: {}, extras: [], text: '', category: '' };
       if (!r) return out;
       data.items.forEach(function (i) {
         if (i.mine) out.extras.push({ id: i.id, label: i.label, category: i.category });
@@ -444,31 +436,41 @@
       b.extras = b.extras.filter(function (e) { return !e.id || byId[e.id]; });
     }
     function bringPicker(f) {
-      var b = f.bring;
-      var box = h('div', { class: 'pt-bringbox' }, h('p', { class: 'pt-label', text: t('bringTitle') }), h('p', { class: 'pt-hint', text: t('bringHint') }),
-        data.event.potluck_notes ? suggestions(data.event) : null);
-      var open = data.items.filter(function (i) {
-        return !i.by && (b.claims[i.id] !== undefined || i.claims.filter(function (c) { return !c.mine; }).length < i.slots);
+      var b = f.bring, byId = {};
+      data.rsvps.forEach(function (r) { byId[r.id] = r; });
+      var sec = h('div', { class: 'pt-bring' }, h('h3', { class: 'pt-h3', text: t('bringTitle') }));
+      if (data.event.potluck_notes) sec.appendChild(h('div', { class: 'pt-ideas' }, h('span', { class: 'pt-ideas-by', text: t('suggestions') }),
+        h('p', { text: data.event.potluck_notes })));
+      var tiles = {}, counts = {};
+      function cat(c) { return CATS.indexOf(c) === -1 ? 'other' : c; }
+      function line(c, el, counted) { (tiles[cat(c)] = tiles[cat(c)] || []).push(el); if (counted) counts[cat(c)] = (counts[cat(c)] || 0) + 1; }
+      function dish(label, who, cls, btn) {
+        return h('li', { class: cls || '' }, h('b', { text: label }), who ? h('span', { text: ' · ' + who }) : null, btn || null);
+      }
+      function unpick(label, fn) { return h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove') + ': ' + label, onclick: fn }, icon('no', 2.6)); }
+      data.items.forEach(function (i) {
+        if (i.by) { if (!i.mine) line(i.category, dish(i.label, byId[i.by] && byId[i.by].name), true); return; }
+        i.claims.forEach(function (c) { if (!c.mine) line(i.category, dish(i.label, byId[c.rsvp_id] && byId[c.rsvp_id].name), true); });
+        if (b.claims[i.id] !== undefined) line(i.category, dish(i.label, t('you'), 'is-mine', unpick(i.label, function () { delete b.claims[i.id]; paint(); })), true);
       });
-      if (open.length) box.appendChild(h('div', { class: 'pt-pick' }, open.map(function (i) {
-        var on = b.claims[i.id] !== undefined;
-        return h('button', { type: 'button', class: 'fchip' + (on ? ' is-on' : ''), 'aria-pressed': on ? 'true' : 'false',
-          onclick: function () { if (on) delete b.claims[i.id]; else b.claims[i.id] = ''; paint(); } }, on ? icon('yes', 2.8) : null, i.label);
-      })));
-      if (b.extras.length) box.appendChild(h('div', { class: 'pt-extras' }, b.extras.map(function (e, n) {
-        return h('span', { class: 'pt-extra is-mine' }, icon('yes', 2.8), h('b', { text: e.label }),
-          h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove') + ': ' + e.label, onclick: function () { b.extras.splice(n, 1); paint(); } }, icon('no', 2.6)));
+      b.extras.forEach(function (e, n) { line(e.category, dish(e.label, t('you'), 'is-mine', unpick(e.label, function () { b.extras.splice(n, 1); paint(); })), true); });
+      sec.appendChild(h('div', { class: 'pt-menu' }, CATS.filter(function (c) { return c !== 'other' || tiles.other; }).map(function (c) {
+        var n = counts[c] || 0;
+        return h('div', { class: 'pt-tile' + (n ? '' : ' is-empty') },
+          h('div', { class: 'pt-tile-head' }, h('span', { text: STR[lang].cats[c] }), h('b', { text: String(n) })),
+          tiles[c] ? h('ul', {}, tiles[c]) : h('p', { class: 'pt-tile-none', text: t('nothingYet') }));
       })));
       function addOwn() {
         if (!b.text.trim()) { label.focus(); return; }
-        b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; paint();
+        if (!b.category) { toast(t('needType'), true); root.querySelector('.pt-cat-sel').focus(); return; }
+        b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; b.category = ''; f.status = f.status || 'yes'; paint();
       }
       var label = h('input', { class: 'pt-input', value: b.text, placeholder: t('bringPh'), maxlength: 80, 'aria-label': t('bringOther'),
         oninput: function () { b.text = label.value; }, onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); addOwn(); } } });
-      box.appendChild(h('div', { class: 'pt-add' }, h('p', { class: 'pt-label', text: t('bringOther') }), label,
-        h('div', { class: 'pt-add-row' }, catSelect(b.category, function (v) { b.category = v; }),
+      sec.appendChild(h('div', { class: 'pt-add' }, catSelect(b.category, function (v) { b.category = v; }),
+        h('div', { class: 'pt-add-row' }, label,
           h('button', { type: 'button', class: 'btn btn-sm', onclick: addOwn }, icon('plus', 2.6), t('add')))));
-      return box;
+      return sec;
     }
     function draftFrom(r) {
       var fam = data.me.as === 'family';
@@ -480,12 +482,17 @@
     function sendRsvp() {
       var f = form;
       if (data.me.as !== 'family' && !String(f.name || '').trim()) { toast(t('needName'), true); return; }
+      if (!f.status && potluckOn() && f.bring.text.trim()) f.status = 'yes';
+      if (!f.status) { toast(t('needStatus'), true); return; }
       if (data.me.as !== 'family') store('bfmh_party_name', f.name.trim());
       var was = mine();
       var body = { action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note };
       if (f.status !== 'no' && potluckOn()) {
         var b = f.bring;
-        if (b.text.trim()) { b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; }
+        if (b.text.trim()) {
+          if (!b.category) { toast(t('needType'), true); root.querySelector('.pt-cat-sel').focus(); return; }
+          b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; b.category = '';
+        }
         body.bring = { claims: Object.keys(b.claims).map(function (k) { return { item: +k, note: b.claims[k] }; }),
           extras: b.extras.map(function (e) { return e.id ? { id: e.id } : { label: e.label, category: e.category }; }) };
       }
@@ -514,7 +521,7 @@
         var tappable = data.me.owner, bring = r.status !== 'no' && dishes[r.id];
         return h(tappable ? 'button' : 'div', { type: tappable ? 'button' : null, class: 'pt-guest' + (r.mine ? ' is-mine' : '') + ' is-' + r.status,
           onclick: tappable ? function () { guestSheet(r); } : null },
-          h('span', { class: 'pt-av', 'aria-hidden': 'true', text: initials(r.name) }),
+          h('span', { class: 'pt-av', 'aria-hidden': 'true', text: r.status === 'no' ? '–' : String(r.adults + r.kids) }),
           h('span', { class: 'pt-guest-main' }, h('b', { text: whoName(r) }), r.status !== 'no' && party(r) ? h('span', { text: party(r) }) : null,
             bring ? h('span', { class: 'pt-guest-bring' }, icon('pot', 2), bring.join(', ')) : null,
             r.note && data.me.owner ? h('em', { class: 'pt-guest-note', text: '“' + r.note + '”' }) : null),
@@ -549,12 +556,12 @@
       s.body.appendChild(h('button', { type: 'button', class: 'act-close', text: t('cancel'), onclick: s.close }));
     }
 
-    function suggestions(ev) {
-      return h('div', { class: 'pt-suggest' }, h('p', { class: 'pt-label', text: t('suggestions') }), h('p', { class: 'pt-suggest-text', text: ev.potluck_notes }));
-    }
     function catSelect(val, onSet) {
       var sel = h('select', { class: 'pt-input pt-cat-sel', 'aria-label': t('category'), onchange: function () { onSet(sel.value); } },
-        CATS.map(function (c) { return h('option', { value: c, text: STR[lang].cats[c], selected: c === val }); }));
+        [h('option', { value: '', text: t('chooseType'), disabled: true, selected: !val })].concat(
+          CATS.map(function (c) { return h('option', { value: c, text: STR[lang].cats[c], selected: c === val }); })));
+      sel.classList.toggle('is-blank', !val);
+      sel.addEventListener('change', function () { sel.classList.toggle('is-blank', !sel.value); });
       return sel;
     }
     function paint() {

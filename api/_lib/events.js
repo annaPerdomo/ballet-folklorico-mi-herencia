@@ -29,9 +29,7 @@ const PARTY_JSON = `
       'households', count(*) FILTER (WHERE r.status = 'yes'),
       'people', COALESCE(sum(r.adults + r.kids) FILTER (WHERE r.status = 'yes'), 0),
       'maybe', count(*) FILTER (WHERE r.status = 'maybe'),
-      'mine', max(r.status) FILTER (WHERE r.family_id = $1),
-      'needed', (SELECT COALESCE(sum(i.slots), 0) FROM gathering_items i WHERE i.event_id = e.id AND i.rsvp_id IS NULL),
-      'claimed', (SELECT count(*) FROM gathering_claims c JOIN gathering_items i ON i.id = c.item_id WHERE i.event_id = e.id AND i.rsvp_id IS NULL))
+      'mine', max(r.status) FILTER (WHERE r.family_id = $1))
     FROM gathering_rsvps r WHERE r.event_id = e.id) END AS party`;
 
 export async function listEvents({ admin, includePast = false, familyId = null }) {

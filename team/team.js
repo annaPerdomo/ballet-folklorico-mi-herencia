@@ -208,7 +208,7 @@
       eventKind: 'Kind of event', eventTitlePh: 'e.g. End-of-year potluck', eventWhere: 'Where', eventWherePh: 'e.g. The Ramirez home',
       eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…',
       needEventDate: 'Give the event a date.', modalNewEvent: 'New team event', modalEditEvent: 'Edit team event',
-      eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going', potluckShort: 'Potluck {c}/{n}',
+      eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going',
       noEvents: 'No team events coming up.', pastEvents: 'Past team events', loadingEvent: 'Loading the event…',
       shareEvent: 'Share invite', copyEventLink: 'Copy invite link', editEvent: 'Edit event', deleteEvent: 'Delete event', eventMenu: 'Event options',
       deleteEventAsk: 'Delete “{title}”? Its RSVPs, potluck list, photos and videos go too, for everyone. It can’t be undone.',
@@ -394,7 +394,7 @@
       eventKind: 'Tipo de convivio', eventTitlePh: 'p. ej. Comida de fin de año', eventWhere: 'Dónde', eventWherePh: 'p. ej. Casa de la familia Ramirez',
       eventDetails: 'Descripción', eventDetailsPh: 'De qué se trata, estacionamiento, qué ponerse, traer silla…',
       needEventDate: 'Ponle fecha al convivio.', modalNewEvent: 'Nuevo convivio', modalEditEvent: 'Editar convivio',
-      eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas', potluckShort: 'Comida {c}/{n}',
+      eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas',
       noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
       shareEvent: 'Compartir invitación', copyEventLink: 'Copiar enlace de la invitación', editEvent: 'Editar convivio', deleteEvent: 'Eliminar convivio', eventMenu: 'Opciones del convivio',
       deleteEventAsk: '¿Eliminar “{title}”? Se borran para todos sus confirmaciones, la lista de comida, las fotos y los videos. No se puede deshacer.',
@@ -1915,7 +1915,6 @@
       : h('span', { class: 'evrow-cta', text: t('eventRsvp') });
     var foot = [];
     if (!owner && !past && p.people) foot.push(t('eventGoing', { n: p.people }));
-    if (ev.event_type === 'potluck' && p.needed) foot.push(t('potluckShort', { c: p.claimed, n: p.needed }));
     return h('button', { type: 'button', class: 'evrow' + (past ? ' is-past' : '') + (!owner && !past && !mine ? ' is-ask' : ''), id: 'event-' + ev.id,
       'aria-label': evTitle(ev), onclick: function () { openParty(ev.id); } },
       dateBox(ev),
