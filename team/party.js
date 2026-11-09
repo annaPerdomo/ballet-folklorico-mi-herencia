@@ -476,7 +476,7 @@
       var fam = data.me.as === 'family';
       var remembered = fam ? data.me.family_name : store('bfmh_party_name') || '';
       var start = { adults: 1, kids: fam ? Math.min(29, data.me.household || 0) : 0 };
-      if (r && r.status !== 'no') start = { adults: r.adults, kids: r.kids };
+      if (r && r.status !== 'no' && r.adults + r.kids) start = { adults: r.adults, kids: r.kids };
       return { name: r ? r.name : remembered, status: r ? r.status : null, adults: start.adults, kids: start.kids, note: r ? r.note || '' : '', bring: bringFrom(r) };
     }
     function sendRsvp() {
@@ -521,7 +521,7 @@
         var tappable = data.me.owner, bring = r.status !== 'no' && dishes[r.id];
         return h(tappable ? 'button' : 'div', { type: tappable ? 'button' : null, class: 'pt-guest' + (r.mine ? ' is-mine' : '') + ' is-' + r.status,
           onclick: tappable ? function () { guestSheet(r); } : null },
-          h('span', { class: 'pt-av', 'aria-hidden': 'true', text: r.status === 'no' ? '–' : String(r.adults + r.kids) }),
+          h('span', { class: 'pt-av', 'aria-hidden': 'true', text: r.status === 'no' || !(r.adults + r.kids) ? '–' : String(r.adults + r.kids) }),
           h('span', { class: 'pt-guest-main' }, h('b', { text: whoName(r) }), r.status !== 'no' && party(r) ? h('span', { text: party(r) }) : null,
             bring ? h('span', { class: 'pt-guest-bring' }, icon('pot', 2), bring.join(', ')) : null,
             r.note && data.me.owner ? h('em', { class: 'pt-guest-note', text: '“' + r.note + '”' }) : null),
