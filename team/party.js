@@ -17,7 +17,7 @@
       change: 'Edit my RSVP', leave: 'Take me off the list', leaveAsk: 'Take your RSVP off the list? Anything you signed up to bring goes back on the list.',
       whoComing: 'Who’s coming', personOne: 'person', personMany: 'people', rsvpOne: '1 RSVP', rsvpMany: '{n} RSVPs',
       maybeN: '{n} maybe', cantN: '{n} can’t make it', beFirst: 'No RSVPs yet — be the first!', you: 'You', familyName: '{name} family',
-      bringOther: 'Add a dish', nothingYet: 'Nothing yet', bringPh: 'e.g. Flan, aguas frescas', category: 'Type of dish', chooseType: 'Choose type', needType: 'Choose what type of dish it is', add: 'Add',
+      bringOther: 'Add a dish', addAnother: 'Add another dish', removeRow: 'Remove dish {n}', nothingYet: 'Nothing yet', bringPh: 'e.g. Flan, aguas frescas', category: 'Type of dish', chooseType: 'Choose type', needType: 'Choose what type of dish it is',
       bringing: 'You’re bringing', bringTitle: 'What are you bringing?', suggestions: 'Ideas from the hosts',
       past: 'This event already happened — thank you for coming!', photos: 'Photos & videos',
       thanks: '¡Gracias! You’re on the list', saved: 'Saved', removed: 'Removed',
@@ -44,7 +44,7 @@
       change: 'Editar mi respuesta', leave: 'Quitarme de la lista', leaveAsk: '¿Quitar tu respuesta de la lista? Lo que ibas a llevar vuelve a la lista.',
       whoComing: 'Quiénes vienen', personOne: 'persona', personMany: 'personas', rsvpOne: '1 respuesta', rsvpMany: '{n} respuestas',
       maybeN: '{n} tal vez', cantN: '{n} no pueden', beFirst: 'Aún no hay respuestas. ¡Sé el primero!', you: 'Tú', familyName: 'Familia {name}',
-      bringOther: 'Agregar un platillo', nothingYet: 'Nada todavía', bringPh: 'p. ej. flan, aguas frescas', category: 'Tipo de platillo', chooseType: 'Elige el tipo', needType: 'Elige qué tipo de platillo es', add: 'Agregar',
+      bringOther: 'Agregar un platillo', addAnother: 'Agregar otro platillo', removeRow: 'Quitar platillo {n}', nothingYet: 'Nada todavía', bringPh: 'p. ej. flan, aguas frescas', category: 'Tipo de platillo', chooseType: 'Elige el tipo', needType: 'Elige qué tipo de platillo es',
       bringing: 'Vas a llevar', bringTitle: '¿Qué vas a llevar?', suggestions: 'Ideas de los anfitriones',
       past: 'Este convivio ya pasó. ¡Gracias por venir!', photos: 'Fotos y videos',
       thanks: '¡Gracias! Ya estás en la lista', saved: 'Guardado', removed: 'Quitado',
@@ -214,7 +214,7 @@
       busy = true;
       return api(body).then(function (d) {
         busy = false; data = d; if (d.sig) sig = d.sig;
-        if (form && form.bring && BRINGING_ACTS.indexOf(body.action) !== -1) form.bring = Object.assign(bringFrom(mine()), { text: form.bring.text, category: form.bring.category });
+        if (form && form.bring && BRINGING_ACTS.indexOf(body.action) !== -1) form.bring = Object.assign(bringFrom(mine()), { rows: form.bring.rows });
         paint();
         if (okMsg) toast(okMsg);
         if (opts.onChange) opts.onChange(d);
@@ -422,7 +422,7 @@
       return data.items.filter(function (i) { return i.mine || i.claims.some(function (c) { return c.mine; }); }).map(function (i) { return i.label; });
     }
     function bringFrom(r) {
-      var out = { claims: {}, extras: [], text: '', category: '' };
+      var out = { claims: {}, extras: [], rows: [{ category: '', text: '' }] };
       if (!r) return out;
       data.items.forEach(function (i) {
         if (i.mine) out.extras.push({ id: i.id, label: i.label, category: i.category });
@@ -445,7 +445,7 @@
       function cat(c) { return CATS.indexOf(c) === -1 ? 'other' : c; }
       function line(c, el, counted) { (tiles[cat(c)] = tiles[cat(c)] || []).push(el); if (counted) counts[cat(c)] = (counts[cat(c)] || 0) + 1; }
       function dish(label, who, cls, btn) {
-        return h('li', { class: cls || '' }, h('b', { text: label }), who ? h('span', { text: ' · ' + who }) : null, btn || null);
+        return h('li', { class: cls || '' }, h('span', { class: 'pt-dish' }, h('b', { text: label }), who ? h('span', { class: 'pt-who', text: ' · ' + who }) : null), btn || null);
       }
       function unpick(label, fn) { return h('button', { type: 'button', class: 'pt-x', 'aria-label': t('remove') + ': ' + label, onclick: fn }, icon('no', 2.6)); }
       data.items.forEach(function (i) {
@@ -460,16 +460,21 @@
           h('div', { class: 'pt-tile-head' }, h('span', { text: STR[lang].cats[c] }), h('b', { text: String(n) })),
           tiles[c] ? h('ul', {}, tiles[c]) : h('p', { class: 'pt-tile-none', text: t('nothingYet') }));
       })));
-      function addOwn() {
-        if (!b.text.trim()) { label.focus(); return; }
-        if (!b.category) { toast(t('needType'), true); root.querySelector('.pt-cat-sel').focus(); return; }
-        b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; b.category = ''; f.status = f.status || 'yes'; paint();
-      }
-      var label = h('input', { class: 'pt-input', value: b.text, placeholder: t('bringPh'), maxlength: 80, 'aria-label': t('bringOther'),
-        oninput: function () { b.text = label.value; }, onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); addOwn(); } } });
-      sec.appendChild(h('div', { class: 'pt-add' }, catSelect(b.category, function (v) { b.category = v; }),
-        h('div', { class: 'pt-add-row' }, label,
-          h('button', { type: 'button', class: 'btn btn-sm', onclick: addOwn }, icon('plus', 2.6), t('add')))));
+      var rows = h('div', { class: 'pt-add' }, b.rows.map(function (row, n) {
+        var text = h('input', { class: 'pt-input', value: row.text, placeholder: t('bringPh'), maxlength: 80, 'aria-label': t('bringOther'),
+          oninput: function () { row.text = text.value; } });
+        return h('div', { class: 'pt-dish-row' + (b.rows.length > 1 ? '' : ' is-solo') }, catSelect(row.category, function (v) { row.category = v; }),
+          b.rows.length > 1 ? h('button', { type: 'button', class: 'pt-x pt-row-x', 'aria-label': t('removeRow', { n: n + 1 }), onclick: function () {
+            b.rows.splice(n, 1); paint();
+            root.querySelectorAll('.pt-dish-row .pt-cat-sel')[Math.max(0, n - 1)].focus();
+          } }, icon('no', 2.6)) : null,
+          text);
+      }), h('button', { type: 'button', class: 'btn btn-sm pt-add-more', onclick: function () {
+        b.rows.push({ category: '', text: '' }); paint();
+        var sels = root.querySelectorAll('.pt-dish-row .pt-cat-sel');
+        if (sels.length) sels[sels.length - 1].focus();
+      } }, icon('plus', 2.6), t('addAnother')));
+      sec.appendChild(rows);
       return sec;
     }
     function draftFrom(r) {
@@ -482,19 +487,19 @@
     function sendRsvp() {
       var f = form;
       if (data.me.as !== 'family' && !String(f.name || '').trim()) { toast(t('needName'), true); return; }
-      if (!f.status && potluckOn() && f.bring.text.trim()) f.status = 'yes';
+      var typed = potluckOn() ? f.bring.rows.filter(function (row) { return row.text.trim(); }) : [];
+      var untyped = f.status !== 'no' ? f.bring.rows.indexOf(typed.filter(function (row) { return !row.category; })[0]) : -1;
+      if (untyped !== -1) { toast(t('needType'), true); root.querySelectorAll('.pt-dish-row .pt-cat-sel')[untyped].focus(); return; }
+      if (!f.status && typed.length) f.status = 'yes';
       if (!f.status) { toast(t('needStatus'), true); return; }
       if (data.me.as !== 'family') store('bfmh_party_name', f.name.trim());
       var was = mine();
       var body = { action: 'rsvp', name: f.name, status: f.status, adults: f.adults, kids: f.kids, note: f.note };
       if (f.status !== 'no' && potluckOn()) {
         var b = f.bring;
-        if (b.text.trim()) {
-          if (!b.category) { toast(t('needType'), true); root.querySelector('.pt-cat-sel').focus(); return; }
-          b.extras.push({ label: b.text.trim(), category: b.category }); b.text = ''; b.category = '';
-        }
         body.bring = { claims: Object.keys(b.claims).map(function (k) { return { item: +k, note: b.claims[k] }; }),
-          extras: b.extras.map(function (e) { return e.id ? { id: e.id } : { label: e.label, category: e.category }; }) };
+          extras: b.extras.map(function (e) { return e.id ? { id: e.id } : { label: e.label, category: e.category }; })
+            .concat(typed.map(function (row) { return { label: row.text.trim(), category: row.category }; })) };
       }
       act(body, was ? t('saved') : t('thanks'))
         .then(function (ok) { if (ok) { form = null; paint(); } });
