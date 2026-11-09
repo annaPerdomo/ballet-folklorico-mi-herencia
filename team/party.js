@@ -4,7 +4,7 @@
 
   var STR = {
     en: {
-      cats: { mains: 'Main dishes', sides: 'Sides', desserts: 'Desserts', drinks: 'Drinks', supplies: 'Plates & supplies', other: 'Other' },
+      cats: { mains: 'Main dishes', sides: 'Sides', desserts: 'Desserts', drinks: 'Drinks', other: 'Other' },
       invited: 'You’re invited',
       addToCal: 'Add to calendar', directions: 'Directions', share: 'Share invite', shareMsg: 'You’re invited to {title}! RSVP here:',
       calPick: 'Which calendar do you use?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancel', mapPick: 'Get directions with',
@@ -31,7 +31,7 @@
       announce: 'Post to GroupMe', remind: 'Remind in GroupMe', notAnnounced: 'Not posted to GroupMe yet',
     },
     es: {
-      cats: { mains: 'Platillos', sides: 'Guarniciones', desserts: 'Postres', drinks: 'Bebidas', supplies: 'Platos y desechables', other: 'Otros' },
+      cats: { mains: 'Platillos', sides: 'Guarniciones', desserts: 'Postres', drinks: 'Bebidas', other: 'Otros' },
       invited: 'Estás invitado',
       addToCal: 'Agregar al calendario', directions: 'Cómo llegar', share: 'Compartir invitación', shareMsg: '¡Te invitamos a {title}! Confirma aquí:',
       calPick: '¿Qué calendario usas?', calApple: 'Apple Calendar / iPhone', calGoogle: 'Google Calendar', calOutlook: 'Outlook', cancel: 'Cancelar', mapPick: 'Cómo llegar con',
@@ -58,7 +58,7 @@
       announce: 'Publicar en GroupMe', remind: 'Recordar en GroupMe', notAnnounced: 'Aún no se ha publicado en GroupMe',
     },
   };
-  var CATS = ['mains', 'sides', 'desserts', 'drinks', 'supplies', 'other'];
+  var CATS = ['mains', 'sides', 'desserts', 'drinks', 'other'];
   var ICONS = {
     yes: '<path d="M20 6 9 17l-5-5"/>', no: '<path d="M18 6 6 18M6 6l12 12"/>',
     maybe: '<path d="M9.2 9.2a3 3 0 1 1 4.4 2.7c-1 .6-1.6 1.3-1.6 2.5"/><path d="M12 18.2v.01"/>',
