@@ -1,5 +1,6 @@
 import { one, sql, withSource } from './db.js';
 import { str } from './http.js';
+import { recordStudentLead } from './students.js';
 
 const TYPE_TITLES = {
   festival: 'Cultural Festival', quinceanera: 'Quinceañera', wedding: 'Wedding', private: 'Private Event',
@@ -74,6 +75,7 @@ export async function recordInquiry(fields, { source, sourceRef, raw, at = null 
   const n = normalizeInquiry(fields);
   if (!n.client_email && !n.client_name) return { skipped: 'empty' };
   if (isTestInquiry(n)) return { skipped: 'test' };
+  if (n.event_type === 'classes') return recordStudentLead(n, { source, sourceRef, raw, at, ages: str(fields.dancers_ages, 300) });
   if (sourceRef) {
     const dupRef = await one('SELECT id FROM events WHERE source_ref = $1', [sourceRef]);
     if (dupRef) return { id: dupRef.id, skipped: 'duplicate' };

@@ -68,6 +68,15 @@
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
       filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
+      students: 'Students', studentsHint: 'People asking to join as dancers. Move each one along as you hear back; Add to Familia makes them a family on the team.',
+      stages: { 'new': 'To contact', contacted: 'Contacted', trying: 'Trying it out', joined: 'Joined', gone: 'Didn’t continue' },
+      studentsDone: 'Joined or didn’t continue', noStudents: 'No one is waiting. Sign-ups from the classes form land here.',
+      unreadN: '{n} new', newTag: 'New', markUnread: 'Mark as unread', markRead: 'Mark as read', moveToStudents: 'Move to Students', movedToStudents: 'Moved to Students',
+      ages: 'Dancers & ages', addToFamilia: 'Add to Familia', joinTitle: 'Add to Familia', joinHint: 'Makes {name} a family on the team so they can RSVP to gigs. Their invite link comes up next.',
+      joinedToast: 'Added to Familia', inFamilia: 'In Familia as {family}', inviteReady: 'Send {name} this link so they can sign in:',
+      studentNotes: 'Notes', notesPh: 'Called Tuesday, coming to practice on the 18th…', editNotes: 'Notes', saveNotes: 'Save notes',
+      whoReading: 'Who’s using this phone?', whoReadingHint: 'So what you read is marked read for you, not for everyone.', readerIs: 'Reading as {name}', changeReader: 'Change',
+      deleteStudentConfirm: 'Delete {name}? This can’t be undone.',
       archived: 'Didn’t happen', archivedHint: 'Declined, cancelled, or the client never got back to us. Inquiries move here on their own two weeks after their date passes.', posted: 'Gigs',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
       from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via', fromSite: 'Found us through the website', viaForm: 'the website form', viaSite: 'the website',
@@ -254,6 +263,15 @@
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
       filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
+      students: 'Alumnos', studentsHint: 'Personas que quieren unirse como bailarines. Avanza a cada una según te respondan; Agregar a Familia las hace una familia del equipo.',
+      stages: { 'new': 'Por contactar', contacted: 'Contactado', trying: 'Probando', joined: 'Se unió', gone: 'No siguió' },
+      studentsDone: 'Se unieron o no siguieron', noStudents: 'No hay nadie esperando. Las inscripciones del formulario de clases llegan aquí.',
+      unreadN: '{n} nuevos', newTag: 'Nuevo', markUnread: 'Marcar como no leído', markRead: 'Marcar como leído', moveToStudents: 'Mover a Alumnos', movedToStudents: 'Movido a Alumnos',
+      ages: 'Bailarines y edades', addToFamilia: 'Agregar a Familia', joinTitle: 'Agregar a Familia', joinHint: 'Hace a {name} una familia del equipo para que pueda responder a los eventos. Después aparece su enlace de invitación.',
+      joinedToast: 'Agregado a Familia', inFamilia: 'En Familia como {family}', inviteReady: 'Envía a {name} este enlace para que entre:',
+      studentNotes: 'Notas', notesPh: 'Le llamé el martes, viene a la práctica el 18…', editNotes: 'Notas', saveNotes: 'Guardar notas',
+      whoReading: '¿Quién usa este teléfono?', whoReadingHint: 'Así lo que lees queda leído para ti, no para todos.', readerIs: 'Leyendo como {name}', changeReader: 'Cambiar',
+      deleteStudentConfirm: '¿Eliminar a {name}? No se puede deshacer.',
       archived: 'No se hicieron', archivedHint: 'Rechazados, cancelados o el cliente nunca respondió. Las solicitudes pasan aquí solas dos semanas después de su fecha.', posted: 'Presentaciones',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
       from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía', fromSite: 'Nos encontró por la página web', viaForm: 'el formulario de la página', viaSite: 'la página web',
@@ -533,7 +551,7 @@
   function refresh() {
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
-    if (state.me.role === 'admin') { jobs.push(loadFamilies()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
+    if (state.me.role === 'admin') { jobs.push(loadFamilies(), loadStudents()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
     if (isMediaTab()) jobs.push(loadMediaIndex());
     jobs.push(isFeedTab() && !media.feedPaged ? loadFeed().catch(function () {}) : loadFeedCount());
     return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
@@ -1232,20 +1250,20 @@
       if (f && isGathering(f)) { state.tab = 'gigs'; state.focusEvent = null; if (!partyUI || partyUI.id !== f.id) openParty(f.id); }
       else if (f) { state.tab = f.status === 'inquiry' ? 'inbox' : 'gigs'; if (f.status !== 'inquiry') { state.detail = f.id; state.focusEvent = null; } }
     }
-    if (state.tab === 'inbox') markInboxSeen(inquiries);
-    var seen = inboxSeen(), unseen = inquiries.filter(function (e) { return !seen[e.id]; }).length;
+    stopReadWatch();
+    var unseen = unreadCount(inquiries);
     var listening = state.me.channels && state.me.channels.groupme_listen;
     tabsEl.hidden = false; tabsEl.innerHTML = '';
     var tabs = hasInsights() ? [['insights', 'tabInsights', 'chart']].concat(TABS) : TABS;
     tabsEl.classList.toggle('has-7', tabs.length > 6);
     tabs.forEach(function (tb) {
-      tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'aria-current': state.tab === tb[0] ? 'page' : false,
-        onclick: function () { if (tb[0] === 'feed' && state.tab !== 'feed') freshFeedVisit(); if (state.tab !== tb[0]) track('tab', null, null, tb[0]); state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
+      tabsEl.appendChild(h('button', { class: 'tm-tab' + (state.tab === tb[0] ? ' is-active' : ''), 'data-tab': tb[0], 'aria-current': state.tab === tb[0] ? 'page' : false,
+        onclick: function () { if (tb[0] === 'feed' && state.tab !== 'feed') freshFeedVisit(); if (state.tab !== tb[0]) { track('tab', null, null, tb[0]); heldUnread = {}; } state.tab = tb[0]; state.detail = null; render(); if (tb[0] === 'chona' && state.botLog === null) loadBotLog().then(render); } },
         tb[0] === 'chona'
           ? h('span', { class: 'tm-tab-ico' }, h('img', { class: 'tm-tab-face', src: '/images/optimized/la-chona-sm.webp', alt: '' }), h('i', { class: 'tm-tab-dot' + (listening ? ' on' : '') }))
           : h('span', { class: 'tm-tab-ico' }, icon(tb[2], 2)),
         h('span', { class: 'tm-tab-label', text: t(tb[1]) }),
-        tb[0] === 'inbox' && unseen && state.tab !== 'inbox' ? h('span', { class: 'count', text: unseen }) : null,
+        tb[0] === 'inbox' && unseen ? h('span', { class: 'count', text: unseen > 99 ? '99+' : unseen }) : null,
         tb[0] === 'feed' ? feedBadge() : null));
     });
 
@@ -1266,15 +1284,114 @@
     focusIfNeeded();
   }
 
-  var INBOX_KEY = 'bfmh_inbox_seen';
-  function inboxSeen() {
-    var seen = {};
-    try { (JSON.parse(localStorage.getItem(INBOX_KEY)) || []).forEach(function (id) { seen[id] = true; }); } catch (e) {}
-    return seen;
+  /* ── per-owner read marks ──────────────────────────────── */
+  // Owners share one password, so who is reading is asked once per phone and kept there.
+  var READER_KEY = 'bfmh_reader', OLD_SEEN_KEY = 'bfmh_inbox_seen', READERS = ['Mayra', 'Angel', 'Anna'];
+  state.students = []; state.reads = {};
+  function chosenReader() { try { return localStorage.getItem(READER_KEY) || ''; } catch (e) { return ''; } }
+  function deviceReader() {
+    try {
+      var d = localStorage.getItem('bfmh_reader_device');
+      if (!d) { d = 'device:' + Math.random().toString(36).slice(2, 12); localStorage.setItem('bfmh_reader_device', d); }
+      return d;
+    } catch (e) { return 'device:unknown'; }
   }
-  function markInboxSeen(inquiries) {
-    try { localStorage.setItem(INBOX_KEY, JSON.stringify(inquiries.map(function (e) { return e.id; }))); } catch (e) {}
+  function readerKey() { return chosenReader() || (state.me && state.me.insights ? 'Anna' : deviceReader()); }
+  function loadStudents() {
+    return api('/api/inquiry?reader=' + encodeURIComponent(readerKey())).then(function (d) {
+      state.students = d.students || [];
+      var reads = {};
+      (d.reads || []).forEach(function (r) { reads[r.kind + ':' + r.id] = true; });
+      state.reads = reads;
+      carryOldSeen();
+    }, function () {});
   }
+  function carryOldSeen() {
+    var ids;
+    try { ids = JSON.parse(localStorage.getItem(OLD_SEEN_KEY) || 'null'); } catch (e) { ids = null; }
+    if (!Array.isArray(ids)) return;
+    try { localStorage.removeItem(OLD_SEEN_KEY); } catch (e) {}
+    setRead('inquiry', ids.filter(function (id) { return !isRead('inquiry', id); }), false);
+  }
+  function isRead(kind, id) { return !!state.reads[kind + ':' + id]; }
+  // Marked unread by hand: stays unread while its card is on screen, or the watcher would re-read it.
+  var heldUnread = {};
+  function setRead(kind, ids, unread) {
+    ids = ids.filter(function (id) { return id != null; });
+    ids.forEach(function (id) { if (unread) heldUnread[kind + ':' + id] = true; else delete heldUnread[kind + ':' + id]; });
+    if (!ids.length) return Promise.resolve();
+    ids.forEach(function (id) { if (unread) delete state.reads[kind + ':' + id]; else state.reads[kind + ':' + id] = true; });
+    paintUnread();
+    return api('/api/inquiry?r=read', { method: 'POST', body: { reader: readerKey(), unread: !!unread,
+      items: ids.map(function (id) { return { kind: kind, id: id }; }) } }).catch(function () {});
+  }
+  function pickReader(name) {
+    var before = readerKey();
+    try { localStorage.setItem(READER_KEY, name); } catch (e) {}
+    var mine = Object.keys(state.reads);
+    var carry = before.indexOf('device:') !== 0 || !mine.length ? Promise.resolve() : Promise.all(['inquiry', 'student'].map(function (kind) {
+      var ids = mine.filter(function (k) { return k.indexOf(kind + ':') === 0; }).map(function (k) { return +k.split(':')[1]; });
+      return ids.length ? api('/api/inquiry?r=read', { method: 'POST', body: { reader: name, items: ids.map(function (id) { return { kind: kind, id: id }; }) } }) : null;
+    }));
+    return carry.catch(function () {}).then(loadStudents).then(render);
+  }
+  function unreadInquiries(inquiries) { return inquiries.filter(function (e) { return !isRead('inquiry', e.id); }).length; }
+  function unreadStudents() { return state.students.filter(function (s) { return !isRead('student', s.id); }).length; }
+  function unreadCount(inquiries) { return unreadInquiries(inquiries) + unreadStudents(); }
+  function paintUnread() {
+    var inquiries = state.events.filter(function (e) { return e.status === 'inquiry'; });
+    var n = unreadCount(inquiries);
+    var tab = tabsEl.querySelector('.tm-tab[data-tab="inbox"]');
+    var badge = tab && tab.querySelector('.count');
+    if (tab && !n && badge) badge.remove();
+    else if (badge) badge.textContent = n > 99 ? '99+' : n;
+    [['inquiry', unreadInquiries(inquiries)], ['student', unreadStudents()]].forEach(function (p) {
+      var el = app.querySelector('[data-unread="' + p[0] + '"]');
+      if (!el) return;
+      if (p[1]) el.textContent = t('unreadN', { n: p[1] }); else el.remove();
+    });
+  }
+  function unreadTag() { return h('span', { class: 'feed-new unread-tag', text: t('newTag') }); }
+  function readEl(el) {
+    var k = (el.getAttribute('data-read-key') || '').split(':');
+    if (readObs) readObs.unobserve(el);
+    el.classList.remove('is-unread');
+    var tag = el.querySelector('.unread-tag'); if (tag) tag.remove();
+    if (k.length === 2) setRead(k[0], [+k[1]], false);
+  }
+  var readObs = null, readTimers = [];
+  function stopReadWatch() {
+    if (readObs) readObs.disconnect();
+    readObs = null;
+    readTimers.forEach(clearTimeout); readTimers = [];
+  }
+  function watchRead(el, kind, id) {
+    el.setAttribute('data-read-key', kind + ':' + id);
+    if (isRead(kind, id) || !('IntersectionObserver' in window)) return;
+    if (!readObs) readObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var el = en.target, root = en.rootBounds;
+        var seen = en.isIntersecting && (en.intersectionRatio >= 0.6 || (root && en.intersectionRect.height >= root.height * 0.5));
+        el._seen = seen;
+        var key = el.getAttribute('data-read-key');
+        if (heldUnread[key]) { if (!en.isIntersecting) delete heldUnread[key]; return; }
+        if (seen && !el._readTimer) {
+          el._readTimer = setTimeout(function () { el._readTimer = null; if (el._seen && el.isConnected && !document.hidden) readEl(el); }, 1200);
+          readTimers.push(el._readTimer);
+        } else if (!seen && el._readTimer) { clearTimeout(el._readTimer); el._readTimer = null; }
+      });
+    }, { threshold: [0, 0.25, 0.5, 0.6, 0.75, 1] });
+    readObs.observe(el);
+  }
+  function readerBar() {
+    if (state.me.insights) return null;
+    var name = chosenReader();
+    if (name) return h('p', { class: 'reader-line' }, t('readerIs', { name: name }) + ' · ',
+      h('button', { type: 'button', class: 'linklike', text: t('changeReader'), onclick: function () { try { localStorage.removeItem(READER_KEY); } catch (e) {} state.reads = {}; loadStudents().then(render); } }));
+    return h('div', { class: 'reader-ask' }, h('p', { class: 'reader-q', text: t('whoReading') }), h('p', { class: 'hint', text: t('whoReadingHint') }),
+      h('div', { class: 'frow' }, READERS.map(function (n) { return chip(n, false, function () { pickReader(n); }); })));
+  }
+
   function renderInbox(inquiries) {
     var shown = filterInquiries(inquiries);
     if (state.focusEvent && !shown.some(function (e) { return e.id === state.focusEvent; }) && inquiries.some(function (e) { return e.id === state.focusEvent; })) {
@@ -1282,8 +1399,12 @@
       shown = filterInquiries(inquiries);
     }
     var filtered = shown.length !== inquiries.length;
-    app.appendChild(section(t('newInquiries'), filtered ? t('ofTotal', { n: shown.length, total: inquiries.length }) : inquiries.length));
+    var unreadInq = unreadInquiries(inquiries);
+    var head = section(t('newInquiries'), filtered ? t('ofTotal', { n: shown.length, total: inquiries.length }) : unreadInq ? t('unreadN', { n: unreadInq }) : null);
+    if (!filtered && unreadInq) head.querySelector('.tm-sec-count').setAttribute('data-unread', 'inquiry');
+    app.appendChild(head);
     app.appendChild(h('p', { class: 'tm-sub', text: t('inboxSub') }));
+    var who = readerBar(); if (who) app.appendChild(who);
     if (inquiries.length) app.appendChild(inboxFilters());
     if (!inquiries.length) {
       app.appendChild(emptyState('mail', t('inboxEmptyText'),
@@ -1293,6 +1414,7 @@
         h('button', { class: 'btn btn-sm', text: t('clearFilters'), onclick: function () { setInbox({ range: 'all', from: '', to: '', pick: false }); } })));
     }
     shown.forEach(function (ev) { app.appendChild(adminCard(ev)); });
+    app.appendChild(studentsFold());
     var archived = state.events.filter(function (e) { return ['declined', 'cancelled', 'lapsed'].indexOf(e.status) !== -1; });
     if (archived.length) {
       var archSec = section(t('archived'), archived.length);
@@ -1302,6 +1424,113 @@
       arch.open = !!state.archivedOpen;
       app.appendChild(arch);
     }
+  }
+
+  /* ── students ───────────────────────────────────────────── */
+  var ACTIVE_STAGES = ['new', 'contacted', 'trying'];
+  function studentsFold() {
+    var list = state.students;
+    var active = list.filter(function (s) { return ACTIVE_STAGES.indexOf(s.stage) !== -1; });
+    var done = list.filter(function (s) { return ACTIVE_STAGES.indexOf(s.stage) === -1; });
+    var n = unreadStudents();
+    var sec = section(t('students'), n ? t('unreadN', { n: n }) : (active.length || null));
+    if (n) sec.querySelector('.tm-sec-count').setAttribute('data-unread', 'student');
+    sec.className += ' tm-sec-fold';
+    var inner = [h('p', { class: 'hint', text: t('studentsHint') })];
+    inner.push(active.length ? active.map(studentCard) : emptyState('people', t('noStudents')));
+    if (done.length) {
+      var sub = h('details', { class: 'tm-subfold', ontoggle: function () { state.studentsDoneOpen = sub.open; } },
+        h('summary', { class: 'tm-subfold-summary', text: t('studentsDone') + ' (' + done.length + ')' }), done.map(studentCard));
+      sub.open = !!state.studentsDoneOpen;
+      inner.push(sub);
+    }
+    var fold = h('details', { class: 'tm-fold tm-fold-students', ontoggle: function () { state.studentsOpen = fold.open; } },
+      h('summary', { class: 'tm-fold-summary' }, sec), inner);
+    fold.open = !!state.studentsOpen;
+    return fold;
+  }
+  function stagePill(stage) { return h('span', { class: 'pill stage-' + stage, text: t('stages')[stage] || stage }); }
+  function studentCard(s) {
+    var unread = !isRead('student', s.id);
+    var card = h('div', { class: 'card student-card' + (unread ? ' is-unread' : ''), id: 'student-' + s.id });
+    watchRead(card, 'student', s.id);
+    var title = s.name || s.email || t('untitled');
+    card.appendChild(h('div', { class: 'card-head' }, h('div', { class: 'card-headmain' },
+      h('div', { class: 'card-tags' }, stagePill(s.stage), unread ? unreadTag() : null),
+      h('h3', { class: 'card-title sm', text: title }))));
+    var dl = h('dl', { class: 'kv' });
+    if (s.email) dl.appendChild(h('div', {}, h('dt', { text: t('email') }), h('dd', {}, h('a', { href: 'mailto:' + s.email, text: s.email }))));
+    if (s.phone) {
+      var digits = s.phone.replace(/\D/g, '');
+      dl.appendChild(h('div', {}, h('dt', { text: t('phone') }), h('dd', { class: 'kv-phone' },
+        h('a', { href: 'tel:' + digits, text: s.phone }),
+        h('span', { class: 'kv-btns' },
+          h('a', { class: 'btn btn-sm', href: 'tel:' + digits }, icon('phone', 2.2), t('call')),
+          h('a', { class: 'btn btn-sm', href: 'sms:' + digits }, icon('chat', 2.2), t('text'))))));
+    }
+    if (s.ages) dl.appendChild(h('div', {}, h('dt', { text: t('ages') }), h('dd', { text: s.ages })));
+    if (s.family_name) dl.appendChild(h('div', {}, h('dt', { text: t('familia') }), h('dd', { text: t('inFamilia', { family: s.family_name }) })));
+    dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(s.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') })));
+    card.appendChild(dl);
+    if (s.message) card.appendChild(h('p', { class: 'card-text', text: s.message }));
+    if (s.notes) card.appendChild(h('p', { class: 'student-notes' }, h('b', { text: t('studentNotes') + ': ' }), s.notes));
+    if (!s.family_id) {
+      card.appendChild(h('div', { class: 'frow stage-chips' }, ['new', 'contacted', 'trying', 'gone'].map(function (st) {
+        return chip(t('stages')[st], s.stage === st, function () { if (s.stage !== st) setStage(s, st); });
+      })));
+    }
+    var actions = h('div', { class: 'card-actions' });
+    if (!s.family_id) actions.appendChild(h('button', { class: 'btn btn-gold btn-main', onclick: function () { joinSheet(s); } }, icon('people', 2), t('addToFamilia')));
+    actions.appendChild(h('button', { class: 'btn', onclick: function () { notesSheet(s); } }, icon('edit', 2), t('editNotes')));
+    actions.appendChild(h('button', { class: 'btn btn-icon', 'aria-label': t('moreActions'), onclick: function () {
+      actionSheet(title, [readToggle('student', s.id), { label: t('del'), icon: 'trash', cls: 'danger', onclick: function () { deleteStudent(s); } }]);
+    } }, icon('more', 2)));
+    card.appendChild(actions);
+    return card;
+  }
+  function setStage(s, stage) {
+    var was = s.stage; s.stage = stage; render();
+    api('/api/inquiry?id=' + s.id, { method: 'PATCH', body: { stage: stage } })
+      .catch(function (e) { s.stage = was; render(); toast(e.message, true); });
+  }
+  function notesSheet(s) {
+    var ta = h('textarea', { rows: 5, placeholder: t('notesPh') }); ta.value = s.notes || '';
+    var form = h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault();
+      api('/api/inquiry?id=' + s.id, { method: 'PATCH', body: { notes: ta.value } })
+        .then(function () { s.notes = ta.value.trim() || null; closeModal(); toast(t('done')); render(); })
+        .catch(function (x) { toast(x.message, true); });
+    } }, field(t('studentNotes'), ta, true),
+      h('div', { class: 'full card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('saveNotes') }), h('button', { class: 'btn', type: 'button', text: t('close'), onclick: closeModal })));
+    modal(s.name || t('studentNotes'), form);
+  }
+  function joinSheet(s) {
+    var parts = String(s.name || '').trim().split(/\s+/).filter(Boolean);
+    var name = h('input', { value: parts.length > 1 ? parts[parts.length - 1] : (parts[0] || ''), required: true, placeholder: t('familyNamePh') });
+    var dancers = h('input', { required: true, placeholder: t('dancersPh') });
+    var form = h('form', { class: 'form-grid', onsubmit: function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
+      api('/api/inquiry?r=join', { method: 'POST', body: { id: s.id, family_name: name.value, dancers: dancers.value } }).then(function (d) {
+        toast(t('joinedToast'));
+        var link = h('input', { value: d.invite_link, readonly: true });
+        modal(t('joinTitle'), h('div', { class: 'form-grid' }, h('p', { class: 'hint full', text: t('inviteReady', { name: s.name || name.value }) }), field(t('familia'), link, true),
+          h('div', { class: 'full card-actions' }, h('button', { class: 'btn btn-gold', type: 'button', text: t('copyInvite'), onclick: function () { copyText(d.invite_link); } }),
+            h('button', { class: 'btn', type: 'button', text: t('close'), onclick: closeModal }))), null, { noFocus: true });
+        return refresh();
+      }).catch(function (x) { btn.disabled = false; toast(x.message, true); });
+    } },
+      h('p', { class: 'hint full', text: t('joinHint', { name: s.name || t('untitled') }) }),
+      s.ages ? h('p', { class: 'hint full', text: t('ages') + ': ' + s.ages }) : null,
+      field(t('newFamily'), name), field(t('dancers'), dancers, true),
+      h('div', { class: 'full card-actions' }, h('button', { class: 'btn btn-gold', type: 'submit', text: t('addToFamilia') }), h('button', { class: 'btn', type: 'button', text: t('close'), onclick: closeModal })));
+    modal(t('joinTitle'), form);
+  }
+  function deleteStudent(s) {
+    confirmSheet(t('deleteStudentConfirm', { name: s.name || t('untitled') }), t('del'), true).then(function (yes) {
+      if (!yes) return;
+      api('/api/inquiry?id=' + s.id, { method: 'DELETE' }).then(refresh).catch(function (e) { toast(e.message, true); });
+    });
   }
 
   function setInbox(patch) { Object.keys(patch).forEach(function (k) { state.inbox[k] = patch[k]; }); saveInboxPrefs(); render(); }
@@ -1400,9 +1629,11 @@
     return out;
   }
   function adminCard(ev) {
-    var card = h('div', { class: 'card', id: 'event-' + ev.id });
+    var unread = ev.status === 'inquiry' && !isRead('inquiry', ev.id);
+    var card = h('div', { class: 'card' + (unread ? ' is-unread' : ''), id: 'event-' + ev.id });
+    if (ev.status === 'inquiry') watchRead(card, 'inquiry', ev.id);
     card.appendChild(h('div', { class: 'card-head' },
-      h('div', { class: 'card-headmain' }, pill(ev.status),
+      h('div', { class: 'card-headmain' }, h('div', { class: 'card-tags' }, pill(ev.status), unread ? unreadTag() : null),
         h('h3', { class: 'card-title sm' }, h('button', { text: ev.title || t('untitled'), onclick: function () { openDetail(ev.id); } }))),
       dateBox(ev)));
     if (ev.status === 'inquiry' || ev.client_name || fmtWhere(ev) || fmtTime(ev) || ev.call_time) {
@@ -1640,7 +1871,11 @@
   }
 
   /* ── gig detail sheet (owner) ──────────────────────────── */
-  function openDetail(id) { state.detail = id; render(); }
+  function openDetail(id) {
+    var ev = state.events.find(function (e) { return e.id === id; });
+    if (ev && ev.status === 'inquiry') setRead('inquiry', [id], false);
+    state.detail = id; render();
+  }
   function closeDetail() { state.detail = null; closeModal(); }
 
   // Publishing takes no date, so it is the only way a "date TBD" gig reaches the families:
@@ -1689,10 +1924,23 @@
       }).catch(function (e) { toast(e.message, true); });
     });
   }
+  function readToggle(kind, id) {
+    var read = isRead(kind, id);
+    return { label: read ? t('markUnread') : t('markRead'), icon: 'mail', onclick: function () { setRead(kind, [id], read).then(render); } };
+  }
+  function moveToStudents(ev) {
+    api('/api/inquiry?r=move', { method: 'POST', body: { event_id: ev.id } }).then(function () {
+      toast(t('movedToStudents'));
+      state.detail = null; closeModal(); state.studentsOpen = true;
+      return refresh();
+    }).catch(function (e) { toast(e.message, true); });
+  }
   function inquiryActions(ev) {
     return [
       addQuietly(ev),
       mergeAction(ev),
+      readToggle('inquiry', ev.id),
+      { label: t('moveToStudents'), icon: 'people', onclick: function () { moveToStudents(ev); } },
       { label: t('edit'), icon: 'edit', onclick: function () { openEventModal(ev); } },
       { label: t('lapse'), icon: 'clock', onclick: function () { doAction(ev, 'lapse').then(closeDetail); } },
       { label: t('decline'), icon: 'no', cls: 'danger', onclick: function () { doAction(ev, 'decline').then(closeDetail); } },

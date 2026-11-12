@@ -257,6 +257,33 @@ SELECT * FROM (
 ) b WHERE NOT EXISTS (SELECT 1 FROM blasts);
 -- Legacy: group events got a card at creation before a card required a real post.
 DELETE FROM blasts b USING events e WHERE b.event_id = e.id AND e.status = 'gathering' AND e.asked_at IS NULL;
+CREATE TABLE IF NOT EXISTS student_leads (
+  id serial PRIMARY KEY,
+  name text,
+  email text,
+  phone text,
+  ages text,
+  message text,
+  stage text NOT NULL DEFAULT 'new' CHECK (stage IN ('new','contacted','trying','joined','gone')),
+  notes text,
+  source text,
+  source_ref text,
+  source_page text,
+  raw jsonb,
+  from_event_id int,
+  family_id int REFERENCES families(id) ON DELETE SET NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS student_leads_created ON student_leads(created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS student_leads_from_event ON student_leads(from_event_id) WHERE from_event_id IS NOT NULL;
+CREATE TABLE IF NOT EXISTS inbox_reads (
+  reader text NOT NULL,
+  kind text NOT NULL CHECK (kind IN ('inquiry','student')),
+  item_id int NOT NULL,
+  read_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (reader, kind, item_id)
+);
 CREATE OR REPLACE FUNCTION bfmh_history_source() RETURNS text AS $$
   SELECT COALESCE(NULLIF(current_setting('bfmh.source', true), ''), 'sql');
 $$ LANGUAGE sql;

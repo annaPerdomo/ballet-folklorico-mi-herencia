@@ -1,7 +1,7 @@
 import { route, readJson, ok, query, int, str, httpError } from './_lib/http.js';
 import { requireAdmin, requireManage, requireUser, newFamilyToken, actorOf, ownerTag } from './_lib/auth.js';
 import { one, sql, withSource } from './_lib/db.js';
-import { siteUrl } from './_lib/notify.js';
+import { inviteLink, parseDancers, createFamily } from './_lib/family.js';
 
 /* Families, dancers and availability share one function to stay under the 12-function limit on
    the Hobby plan. /api/dancers and /api/availability keep their own URLs: vercel.json rewrites
@@ -14,8 +14,6 @@ async function assertGroupmeFree(uid, { dancerId = 0, familyId = 0 } = {}) {
      UNION ALL SELECT 1 FROM families WHERE groupme_user_id = $1 AND id <> $3 LIMIT 1`, [uid, dancerId, familyId]);
   if (taken) throw httpError(409, 'That GroupMe account is already linked to someone else');
 }
-
-const inviteLink = (token) => `${siteUrl()}/team/?k=${token}`;
 
 async function listFamilies() {
   const rows = await sql(
@@ -113,14 +111,9 @@ const families = {
     const b = await readJson(req);
     const name = str(b.name, 120);
     if (!name) throw httpError(400, 'Family name is required');
-    await assertGroupmeFree(str(b.groupme_user_id, 40));
-    const fam = await one(
-      'INSERT INTO families (name, access_token, groupme_user_id) VALUES ($1,$2,$3) RETURNING id, access_token',
-      [name, newFamilyToken(), str(b.groupme_user_id, 40)]);
-    const dancers = (Array.isArray(b.dancers) ? b.dancers : String(b.dancers || '').split(/[,\n]/))
-      .map((d) => str(d, 80)).filter(Boolean).slice(0, 20);
-    for (const d of dancers) await sql('INSERT INTO dancers (family_id, name) VALUES ($1,$2)', [fam.id, d]);
-    ok(res, { id: fam.id, invite_link: inviteLink(fam.access_token) });
+    const groupmeUserId = str(b.groupme_user_id, 40);
+    await assertGroupmeFree(groupmeUserId);
+    ok(res, await withSource({ source: 'owner' }, (q) => createFamily(q, { name, dancers: parseDancers(b.dancers), groupmeUserId })));
   },
   async PATCH(req, res) {
     const me = await requireManage(req);
