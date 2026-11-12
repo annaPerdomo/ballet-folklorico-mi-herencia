@@ -1,7 +1,7 @@
 import { route, readJson, ok, query, int, httpError, str } from '../_lib/http.js';
 import { whoami, requireAdmin, calendarSig, ownerTag, actorOf } from '../_lib/auth.js';
 import { withSource } from '../_lib/db.js';
-import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry, logBlast } from '../_lib/events.js';
+import { getEvent, updateEvent, deleteEvent, rosterFor, mergeInquiry, logBlast, FORM_SOURCES } from '../_lib/events.js';
 import { eventChanges } from '../_lib/history.js';
 import { removeFiles } from '../_lib/media.js';
 import { cleanPatch } from '../events.js';
@@ -109,6 +109,10 @@ export default route({
     if (Object.keys(patch).length) await updateEvent(id, patch, ownerTag(me));
     if (typeof body.website === 'boolean') await withSource(ownerTag(me), (q) =>
       q('UPDATE events SET website = $2, updated_at = now() WHERE id = $1', [id, body.website]));
+    if (typeof body.from_site === 'boolean' && !FORM_SOURCES.includes(current.source) && !['folder', 'gathering'].includes(current.status)
+        && body.from_site !== (current.source === 'site')) {
+      await withSource(ownerTag(me), (q) => q('UPDATE events SET source = $2, updated_at = now() WHERE id = $1', [id, body.from_site ? 'site' : 'manual']));
+    }
 
     let notified = null;
     const action = str(body.action, 20);

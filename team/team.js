@@ -70,7 +70,7 @@
       filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
       archived: 'Didn’t happen', archivedHint: 'Declined, cancelled, or the client never got back to us. Inquiries move here on their own two weeks after their date passes.', posted: 'Gigs',
       nothingPosted: 'Nothing posted yet. Post an inquiry from the Inbox, or create a new gig.', past: 'Past',
-      from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via',
+      from: 'From', email: 'Email', type: 'Type', received: 'Received', via: 'via', fromSite: 'Found us through the website', viaForm: 'the website form', viaSite: 'the website',
       askGroup: '📢 Ask GroupMe who’s available', postTally: 'Post tally to GroupMe',
       askedNever: 'Not asked in GroupMe yet', askedToast: 'Asked in GroupMe — RSVPs will fill in the roster', askNeedsDate: 'Set the event date first — replies are matched by date',
       justNow: 'just now', minsAgo: '{n} min ago', hoursAgo: '{n} h ago', daysAgo: '{n} d ago',
@@ -256,7 +256,7 @@
       filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
       archived: 'No se hicieron', archivedHint: 'Rechazados, cancelados o el cliente nunca respondió. Las solicitudes pasan aquí solas dos semanas después de su fecha.', posted: 'Presentaciones',
       nothingPosted: 'Nada publicado todavía. Publica una solicitud desde Solicitudes o crea un evento nuevo.', past: 'Pasados',
-      from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía',
+      from: 'De', email: 'Correo', type: 'Tipo', received: 'Recibido', via: 'vía', fromSite: 'Nos encontró por la página web', viaForm: 'el formulario de la página', viaSite: 'la página web',
       askGroup: '📢 Preguntar en GroupMe quién puede', postTally: 'Publicar el conteo en GroupMe',
       askedNever: 'Aún no se ha preguntado en GroupMe', askedToast: 'Preguntado en GroupMe — las confirmaciones llenarán la lista', askNeedsDate: 'Primero pon la fecha del evento — las respuestas se identifican por fecha',
       justNow: 'ahora mismo', minsAgo: 'hace {n} min', hoursAgo: 'hace {n} h', daysAgo: 'hace {n} d',
@@ -1444,7 +1444,7 @@
     if (ev.date_text) dl.appendChild(h('div', {}, h('dt', { text: t('clientWroteShort') }), h('dd', { text: '“' + ev.date_text + '”' })));
     if (withFacts && (fmtTime(ev) || ev.call_time)) dl.appendChild(h('div', {}, h('dt', { text: t('when') }), h('dd', { text: [fmtTime(ev), ev.call_time ? t('callTime') + ': ' + ev.call_time : null].filter(Boolean).join(' · ') })));
     if (withFacts && ev.dancers_needed) dl.appendChild(h('div', {}, h('dt', { text: t('needs') }), h('dd', { text: t('dancersNeeded', { n: ev.dancers_needed }) })));
-    if (ev.status === 'inquiry' || ev.client_name) dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + ev.source : '') })));
+    if (ev.status === 'inquiry' || ev.client_name) dl.appendChild(h('div', {}, h('dt', { text: t('received') }), h('dd', { text: new Date(ev.created_at).toLocaleString(state.lang === 'es' ? 'es-US' : 'en-US') + (ev.source ? ' ' + t('via') + ' ' + sourceName(ev.source) : '') })));
     return dl;
   }
 
@@ -1551,6 +1551,9 @@
   }
   function inp(name, ev, attrs) { return h('input', Object.assign({ name: name, value: ev && ev[name] != null ? ev[name] : '' }, attrs || {})); }
 
+  function sourceName(src) {
+    return src === 'website' || src === 'formspree' ? t('viaForm') : src === 'site' ? t('viaSite') : src;
+  }
   function openEventModal(ev) {
     ev = ev || {};
     var isNew = !ev.id;
@@ -1579,6 +1582,11 @@
     var quietRow = isNew ? h('button', { type: 'button', class: 'pop-toggle full', role: 'switch', 'aria-checked': 'false',
       onclick: function () { quiet = !quiet; quietRow.classList.toggle('is-on', quiet); quietRow.setAttribute('aria-checked', quiet ? 'true' : 'false'); } },
       icon('calendar', 2.2), h('span', { class: 'site-label', text: t('addQuietlyNew') }), h('span', { class: 'switch' })) : null;
+    var fromSite = ev.source === 'site';
+    var siteRow = ev.source === 'website' || ev.source === 'formspree' || ev.status === 'folder' || ev.status === 'gathering' ? null
+      : h('button', { type: 'button', class: 'pop-toggle full' + (fromSite ? ' is-on' : ''), role: 'switch', 'aria-checked': fromSite ? 'true' : 'false',
+        onclick: function () { fromSite = !fromSite; siteRow.classList.toggle('is-on', fromSite); siteRow.setAttribute('aria-checked', fromSite ? 'true' : 'false'); } },
+        icon('mail', 2.2), h('span', { class: 'site-label', text: t('fromSite') }), h('span', { class: 'switch' }));
     var err = h('p', { class: 'error' });
     var form = h('form', { class: 'form-grid', id: 'event-form', onsubmit: function (e) {
       e.preventDefault(); err.textContent = '';
@@ -1586,6 +1594,7 @@
       fd.forEach(function (v, k) { body[k] = v; });
       body.rehearsals = rehearsals.filter(function (r) { return r.date || r.time || r.location; });
       if (!body.title) { err.textContent = t('needTitle'); return; }
+      if (siteRow) body.from_site = fromSite;
       var p;
       if (isNew) {
         body.status = quiet ? 'open' : 'inquiry';
@@ -1617,6 +1626,7 @@
       ev.date_text ? field(t('clientWrote'), h('input', { value: ev.date_text, disabled: true })) : null,
       field(t('detailsForTeam'), h('textarea', { name: 'details', text: ev.details || '', placeholder: t('detailsPh') }), true),
       rehBox,
+      siteRow,
       h('details', { class: 'full' }, h('summary', { class: 'summary' }, t('clientSection')),
         h('div', { class: 'form-grid', style: 'margin-top:0.6rem' },
           field(t('clientName'), inp('client_name', ev)), field(t('clientEmail'), inp('client_email', ev, { type: 'email' })), field(t('clientPhone'), inp('client_phone', ev, { type: 'tel' })),

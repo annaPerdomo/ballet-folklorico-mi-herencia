@@ -48,7 +48,7 @@ const INQUIRIES = `
     SELECT e.id, e.created_at, e.status, e.event_type, e.event_date, e.date_text, e.city, e.client_name, e.client_email,
            e.client_phone, e.message, e.source, e.source_ref, e.deleted_at, e.published_at, e.confirmed_at,
            COALESCE(e.raw->>'page', e.raw->>'_page', substring(e.notes FROM 'Submitted from (\\S+)')) AS page
-      FROM events e WHERE e.source IN ('website', 'formspree')
+      FROM events e WHERE e.source IN ('website', 'formspree', 'site')
   ), merged AS (
     SELECT DISTINCT ON (h.event_id) h.event_id AS id, (h.old_row->>'created_at')::timestamptz AS created_at, 'merged' AS status,
            h.old_row->>'event_type' AS event_type, (h.old_row->>'event_date')::date AS event_date, h.old_row->>'date_text' AS date_text,

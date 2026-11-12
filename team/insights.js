@@ -73,6 +73,8 @@
     });
     return d;
   }
+  // A 'site' row's created_at is when the owner entered the gig, not when the client wrote.
+  function isForm(r) { return r.source !== 'site'; }
   function outcomeOf(st) {
     if (['open', 'confirmed', 'done', 'merged'].indexOf(st) >= 0) return 'booked';
     if (st === 'inquiry') return 'pending';
@@ -443,7 +445,7 @@
     g.appendChild(card('Needs attention', null, attention(d), { cls: 'ins-attn' }));
     g.appendChild(card('Latest inquiries', null, latest(inq.slice(0, 5)), { action: linkTo('inquiries', 'All') }));
     var mo = monthlyOutcomes(inq);
-    g.appendChild(card('Website inquiries by month', 'Every form submission since the inbox started, colored by how it ended.',
+    g.appendChild(card('Website inquiries by month', 'Every website inquiry since the inbox started, colored by how it ended.',
       columns(mo.cats, mo.series, { label: monthShort(mo.cats), aria: 'Inquiries by month', unit: 'inquiries' }), { wide: true, action: linkTo('inquiries', 'All inquiries') }));
     g.appendChild(card('App activity', 'App opens per day, everyone together' + trackingSince(u), dailyChart(u), { wide: true, action: linkTo('gallery', 'Details') }));
     var upcoming = d.gigs.filter(function (x) { return ['open', 'confirmed'].indexOf(x.status) >= 0 && x.event_date && x.event_date >= pt(new Date()).iso; })
@@ -512,8 +514,8 @@
       onclick: function (c) { S.month = c; S.status = 'all'; paint(); var t = root.querySelector('.ins-list'); if (t) t.scrollIntoView({ behavior: 'smooth' }); } }), { wide: true }));
     g.appendChild(card('Where they end up', 'Last ' + windowName(), funnel(cur)));
     g.appendChild(card('What they ask for', 'Last ' + windowName() + ', bars colored by outcome', hbars(groupRows(cur, function (r) { return r.event_type || 'other'; }, function (k) { return ctx.typeLabel(k); }), { legend: OUTCOMES })));
-    g.appendChild(card('How far ahead they ask', 'Days from the form to the event date', hbars(leadBuckets(cur), { legend: OUTCOMES })));
-    g.appendChild(card('When they write', 'Submissions by day and hour, all time (Pacific)', heatmap(all.map(function (r) { return { dow: r.pt.dow, hour: r.pt.hour, n: 1 }; }), { unit: 'inquiries' })));
+    g.appendChild(card('How far ahead they ask', 'Days from the form to the event date', hbars(leadBuckets(cur.filter(isForm)), { legend: OUTCOMES })));
+    g.appendChild(card('When they write', 'Submissions by day and hour, all time (Pacific)', heatmap(all.filter(isForm).map(function (r) { return { dow: r.pt.dow, hour: r.pt.hour, n: 1 }; }), { unit: 'inquiries' })));
     g.appendChild(card('Which page', 'Last ' + windowName() + '. Older imports don’t record a page.', hbars(groupRows(cur, function (r) { return r.landing || 'Not recorded'; }))));
     g.appendChild(card('Site language', 'Last ' + windowName(), hbars(groupRows(cur, function (r) { return r.lang ? LANGS[r.lang] : 'Not recorded'; }))));
     g.appendChild(card('Top cities', 'Last ' + windowName(), hbars(groupRows(cur.filter(function (r) { return r.city; }), function (r) { return r.city.trim(); }, null, 10), { empty: 'No cities given.' })));
@@ -593,7 +595,7 @@
         ['Event date', r.event_date ? fmtDay(r.event_date) + (r.leadDays != null ? ' (' + r.leadDays + ' days ahead)' : '') : r.date_text],
         ['City', r.city],
         ['Page', r.page ? (r.landing + (r.lang && r.lang !== 'en' ? ' · ' + LANGS[r.lang] : '')) : null],
-        ['Came in via', r.source === 'formspree' ? 'Formspree (imported)' : 'Website form'],
+        ['Came in via', r.source === 'formspree' ? 'Formspree (imported)' : r.source === 'site' ? 'Found the website, reached out another way' : 'Website form'],
         ['Repeat', r.repeat ? 'Inquiry #' + (r.repeat + 1) + ' from this person' : null],
       ].forEach(function (f) { if (f[1]) { facts.appendChild(h('dt', { text: f[0] })); facts.appendChild(h('dd', null, f[1])); } });
       row.appendChild(h('div', { class: 'ins-row-body' }, facts,

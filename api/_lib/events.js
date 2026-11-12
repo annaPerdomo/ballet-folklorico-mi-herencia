@@ -3,6 +3,7 @@ import { httpError } from './http.js';
 import { googleEventUrl, outlookEventUrl, googleDayUrl, outlookDayUrl, galleryOpen } from './ics.js';
 import { takeEventMedia } from './media.js';
 
+export const FORM_SOURCES = ['website', 'formspree'];
 export const STATUSES = ['inquiry', 'open', 'confirmed', 'done', 'declined', 'cancelled', 'lapsed'];
 const LAPSE_AFTER_DAYS = 14;
 export const MEMBER_VISIBLE = ['open', 'confirmed', 'done'];
@@ -133,11 +134,11 @@ export async function mergeInquiry(fromId, intoId, actor = 'owner') {
       .filter((c) => from[c] && into[c] && from[c] !== into[c]).map((c) => from[c]);
     const merged = kept.length ? `From merged inquiry “${from.title}”:\n${kept.join('\n')}` : null;
     const notes = [...new Set([into.notes, from.notes, merged].filter(Boolean))].join('\n') || null;
-    const params = [intoId, notes, from.created_at, from.source, from.source_ref];
+    const params = [intoId, notes, from.created_at, from.source, from.source_ref, FORM_SOURCES];
     const fill = FILL.map((c) => { params.push(c === 'raw' && from.raw ? JSON.stringify(from.raw) : c === 'event_type' && from[c] === 'other' ? null : from[c]); return `${c} = COALESCE(${c}, $${params.length})`; });
     await client.query(
       `UPDATE events SET ${fill.join(', ')}, notes = $2, created_at = LEAST(created_at, $3),
-              source = CASE WHEN source = 'manual' THEN $4 ELSE source END, source_ref = COALESCE(source_ref, $5), updated_at = now()
+              source = CASE WHEN source = ANY($6) THEN source WHEN $4 = ANY($6) OR $4 = 'site' OR source = 'manual' THEN $4 ELSE source END, source_ref = COALESCE(source_ref, $5), updated_at = now()
         WHERE id = $1`, params);
     await client.query(`INSERT INTO availability (event_id, dancer_id, status, note, self, updated_at)
                         SELECT $2, dancer_id, status, note, self, updated_at FROM availability WHERE event_id = $1

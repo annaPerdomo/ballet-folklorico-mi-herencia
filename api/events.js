@@ -69,11 +69,12 @@ export default route({
     const vals = Object.values(patch);
     const status = ['inquiry', 'open', 'folder', 'gathering'].includes(body.status) ? body.status : 'inquiry';
     if (status === 'gathering' && !patch.event_date) throw httpError(400, 'Give the event a date');
+    const source = status === 'folder' ? 'folder' : body.from_site === true && status !== 'gathering' ? 'site' : 'manual';
     const row = await withSource(ownerTag(me), (q) => q(
       `INSERT INTO events (${cols.join(',')}, status, source, published_at, quiet)
-       VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, CASE WHEN $${cols.length + 1} = 'folder' THEN 'folder' ELSE 'manual' END,
+       VALUES (${cols.map((_, i) => `$${i + 1}`).join(',')}, $${cols.length + 1}, $${cols.length + 2},
                CASE WHEN $${cols.length + 1} = 'open' THEN now() ELSE NULL END, $${cols.length + 1} IN ('open', 'folder', 'gathering')) RETURNING id`,
-      [...vals, status]));
+      [...vals, status, source]));
     ok(res, { id: row[0].id });
   },
 });
