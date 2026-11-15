@@ -66,7 +66,7 @@ export async function moveInquiryToStudent(eventId, actor) {
   return withSource({ source: 'student', actor }, async (q) => {
     const [ev] = await q('SELECT * FROM events WHERE id = $1 FOR UPDATE', [eventId]);
     if (!ev) throw httpError(404, 'Inquiry not found');
-    if (!MOVABLE.includes(ev.status)) throw httpError(409, 'Only an inquiry can move to Students');
+    if (!MOVABLE.includes(ev.status)) throw httpError(409, 'Only an inquiry can move to Student inquiries');
     const raw = ev.raw || {};
     const ages = str(raw.dancers_ages || (raw.submission && raw.submission.dancers_ages), 300);
     const page = str(raw.page || raw._page, 200) || (String(ev.notes || '').match(/Submitted from (\S+)/) || [])[1] || null;

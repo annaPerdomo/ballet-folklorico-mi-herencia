@@ -68,10 +68,10 @@
       newInquiries: 'New inquiries', inboxSub: 'Every message from the website contact and quote forms lands here automatically.', inboxClear: 'Inbox is clear.',
       sortBy: 'Sort', sortNewest: 'Newest first', sortEventDate: 'By event date', showLabel: 'Show', filterAll: 'All', filterUpcoming: 'Upcoming', filterTbd: 'Date TBD', filterPast: 'Past',
       filterDates: 'Pick dates', filterFrom: 'From', filterTo: 'To', clearFilters: 'Clear filters', noMatch: 'No inquiries match these filters.', ofTotal: '{n} of {total}',
-      students: 'Students', studentsHint: 'People asking to join as dancers. Move each one along as you hear back; Add to Familia makes them a family on the team.',
+      students: 'Student inquiries', studentsHint: 'People asking to join as dancers. Move each one along as you hear back; Add to Familia makes them a family on the team.',
       stages: { 'new': 'To contact', contacted: 'Contacted', trying: 'Trying it out', joined: 'Joined', gone: 'Didn’t continue' },
       studentsDone: 'Joined or didn’t continue', noStudents: 'No one is waiting. Sign-ups from the classes form land here.',
-      unreadN: '{n} new', newTag: 'New', markUnread: 'Mark as unread', markRead: 'Mark as read', moveToStudents: 'Move to Students', movedToStudents: 'Moved to Students',
+      unreadN: '{n} new', newTag: 'New', markUnread: 'Mark as unread', markRead: 'Mark as read', moveToStudents: 'Move to Student inquiries', movedToStudents: 'Moved to Student inquiries',
       ages: 'Dancers & ages', addToFamilia: 'Add to Familia', joinTitle: 'Add to Familia', joinHint: 'Makes {name} a family on the team so they can RSVP to gigs. Their invite link comes up next.',
       joinedToast: 'Added to Familia', inFamilia: 'In Familia as {family}', inviteReady: 'Send {name} this link so they can sign in:',
       studentNotes: 'Notes', notesPh: 'Called Tuesday, coming to practice on the 18th…', editNotes: 'Notes', saveNotes: 'Save notes',
@@ -150,8 +150,8 @@
       waiting: 'no response received', plusWaiting: '+{n} with no response', everyoneAnswered: 'everyone answered', rosterSettled: 'Roster settled',
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
       inboxEmptyText: 'Nothing new from the website. Inquiries from the contact and quote forms show up here on their own.',
-      inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No gigs posted yet. When Mayra and Angel post one you’ll hear about it in GroupMe.',
-      checkMyDancers: 'Check my dancers', allAnsweredText: 'Everything is answered. ¡Gracias! We’ll let you know when the next one is posted.',
+      inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No upcoming gigs planned yet.',
+      allAnsweredText: 'Everything is answered. ¡Gracias! We’ll let you know when the next one is posted.',
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
       openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
       going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
@@ -218,7 +218,7 @@
       eventDetails: 'Description', eventDetailsPh: 'What it is, parking, what to wear, bring a chair…',
       needEventDate: 'Give the event a date.', modalNewEvent: 'New team event', modalEditEvent: 'Edit team event',
       eventGoing: '{n} going', eventRsvp: 'RSVP', youGoingShort: 'You’re going', youMaybeShort: 'Maybe', youNoShort: 'Not going',
-      noEvents: 'No team events coming up.', pastEvents: 'Past team events', loadingEvent: 'Loading the event…',
+      noEvents: 'No team events coming up.', noEventsFamily: 'No team events planned yet.', pastEvents: 'Past team events', loadingEvent: 'Loading the event…',
       shareEvent: 'Share invite', copyEventLink: 'Copy invite link', editEvent: 'Edit event', deleteEvent: 'Delete event', eventMenu: 'Event options',
       deleteEventAsk: 'Delete “{title}”? Its RSVPs, potluck list, photos and videos go too, for everyone. It can’t be undone.',
       addFlyer: 'Add a flyer', changeFlyer: 'Change the flyer', removeFlyer: 'Remove the flyer', removeFlyerAsk: 'Take the flyer off “{title}”?',
@@ -263,10 +263,10 @@
       newInquiries: 'Nuevas solicitudes', inboxSub: 'Cada mensaje del formulario de contacto y de cotización del sitio llega aquí automáticamente.', inboxClear: 'No hay solicitudes pendientes.',
       sortBy: 'Ordenar', sortNewest: 'Más recientes', sortEventDate: 'Por fecha del evento', showLabel: 'Mostrar', filterAll: 'Todas', filterUpcoming: 'Próximas', filterTbd: 'Sin fecha', filterPast: 'Pasadas',
       filterDates: 'Elegir fechas', filterFrom: 'Desde', filterTo: 'Hasta', clearFilters: 'Quitar filtros', noMatch: 'Ninguna solicitud coincide con estos filtros.', ofTotal: '{n} de {total}',
-      students: 'Alumnos', studentsHint: 'Personas que quieren unirse como bailarines. Avanza a cada una según te respondan; Agregar a Familia las hace una familia del equipo.',
+      students: 'Solicitudes de alumnos', studentsHint: 'Personas que quieren unirse como bailarines. Avanza a cada una según te respondan; Agregar a Familia las hace una familia del equipo.',
       stages: { 'new': 'Por contactar', contacted: 'Contactado', trying: 'Probando', joined: 'Se unió', gone: 'No siguió' },
       studentsDone: 'Se unieron o no siguieron', noStudents: 'No hay nadie esperando. Las inscripciones del formulario de clases llegan aquí.',
-      unreadN: '{n} nuevos', newTag: 'Nuevo', markUnread: 'Marcar como no leído', markRead: 'Marcar como leído', moveToStudents: 'Mover a Alumnos', movedToStudents: 'Movido a Alumnos',
+      unreadN: '{n} nuevos', newTag: 'Nuevo', markUnread: 'Marcar como no leído', markRead: 'Marcar como leído', moveToStudents: 'Mover a Solicitudes de alumnos', movedToStudents: 'Movido a Solicitudes de alumnos',
       ages: 'Bailarines y edades', addToFamilia: 'Agregar a Familia', joinTitle: 'Agregar a Familia', joinHint: 'Hace a {name} una familia del equipo para que pueda responder a los eventos. Después aparece su enlace de invitación.',
       joinedToast: 'Agregado a Familia', inFamilia: 'En Familia como {family}', inviteReady: 'Envía a {name} este enlace para que entre:',
       studentNotes: 'Notas', notesPh: 'Le llamé el martes, viene a la práctica el 18…', editNotes: 'Notas', saveNotes: 'Guardar notas',
@@ -345,8 +345,8 @@
       waiting: 'sin respuesta', plusWaiting: '+{n} sin respuesta', everyoneAnswered: 'todos respondieron', rosterSettled: 'Lista completa',
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
       inboxEmptyText: 'Nada nuevo del sitio web. Las solicitudes de los formularios de contacto y cotización aparecen aquí solas.',
-      inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay eventos publicados. Cuando Mayra y Angel publiquen uno, avisarán en GroupMe.',
-      checkMyDancers: 'Ver mis bailarines', allAnsweredText: 'Todo está respondido. ¡Gracias! Te avisamos cuando se publique el próximo.',
+      inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay presentaciones planeadas.',
+      allAnsweredText: 'Todo está respondido. ¡Gracias! Te avisamos cuando se publique el próximo.',
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
       openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
       going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
@@ -413,7 +413,7 @@
       eventDetails: 'Descripción', eventDetailsPh: 'De qué se trata, estacionamiento, qué ponerse, traer silla…',
       needEventDate: 'Ponle fecha al convivio.', modalNewEvent: 'Nuevo convivio', modalEditEvent: 'Editar convivio',
       eventGoing: '{n} van', eventRsvp: 'Confirmar', youGoingShort: 'Vas', youMaybeShort: 'Tal vez', youNoShort: 'No vas',
-      noEvents: 'No hay convivios próximos.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
+      noEvents: 'No hay convivios próximos.', noEventsFamily: 'Aún no hay convivios planeados.', pastEvents: 'Convivios pasados', loadingEvent: 'Cargando el convivio…',
       shareEvent: 'Compartir invitación', copyEventLink: 'Copiar enlace de la invitación', editEvent: 'Editar convivio', deleteEvent: 'Eliminar convivio', eventMenu: 'Opciones del convivio',
       deleteEventAsk: '¿Eliminar “{title}”? Se borran para todos sus confirmaciones, la lista de comida, las fotos y los videos. No se puede deshacer.',
       addFlyer: 'Agregar un volante', changeFlyer: 'Cambiar el volante', removeFlyer: 'Quitar el volante', removeFlyerAsk: '¿Quitar el volante de “{title}”?',
@@ -1114,7 +1114,8 @@
     });
 
     if (!me.dancers.length) app.appendChild(h('div', { class: 'card' }, h('p', { class: 'card-meta', text: t('addDancersFirst') })));
-    gatherSection(false);
+    var eventsFirst = !needs.length && !upcoming.length && upcomingGatherings().length > 0;
+    if (eventsFirst) gatherSection();
     if (needs.length) {
       app.appendChild(section(t('needsAnswer'), needs.length));
       needs.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
@@ -1123,12 +1124,10 @@
     if (!upcoming.length) {
       app.appendChild(needs.length
         ? emptyState('allDone', t('allAnsweredText'))
-        : emptyState('calendar', t('noGigsFamilyText'), me.scope === 'pick' ? null
-            : h('button', { class: 'btn btn-sm', text: t('checkMyDancers'), onclick: function () {
-                var el = document.getElementById('my-family'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              } })));
+        : emptyState('calendar', t('noGigsFamilyText')));
     }
     upcoming.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
+    if (!eventsFirst) gatherSection();
     if (past.length) {
       var pastSec = section(t('recent'), past.length);
       pastSec.className += ' tm-sec-fold';
@@ -1586,11 +1585,14 @@
   function renderGigs() {
     var live = state.events.filter(function (e) { return (e.status === 'open' || e.status === 'confirmed') && !isPast(e); });
     var past = state.events.filter(function (e) { return e.status === 'done' || ((e.status === 'open' || e.status === 'confirmed') && isPast(e)); }).sort(newestFirst);
+    var eventsFirst = !live.length && upcomingGatherings().length > 0;
+    if (eventsFirst) gatherSection();
     app.appendChild(sectionFold('gigs', section(t('posted'), live.length, h('button', { class: 'btn btn-sm btn-print', onclick: printSheet, 'aria-label': t('printSchedule') }, icon('printer', 2.2), h('span', { class: 'lbl-long', text: t('printSchedule') }), h('span', { class: 'lbl-short', text: t('printShort') }))), [
       h('p', { class: 'tm-sub', text: t('tapGigHint') }),
       live.length ? gigList(live) : emptyState('calendar', t('nothingPosted'),
         h('button', { class: 'btn btn-sm btn-gold', text: t('newGig'), onclick: function () { openEventModal(null); } }))]));
-    gatherSection(true);
+    if (!eventsFirst) gatherSection();
+    pastGatherSection();
     if (past.length) {
       var pastSec = section(t('past'), past.length);
       pastSec.className += ' tm-sec-fold';
@@ -2195,17 +2197,19 @@
       side,
       h('span', { class: 'giggo' }, icon('chevron', 2.5)));
   }
-  function gatherSection(withPast) {
+  function gatherSection() {
     var list = upcomingGatherings(), owner = isOwner();
-    if (!list.length && !owner) return;
     app.appendChild(sectionFold('events', section(t('groupEvents'), list.length || null, owner
       ? h('button', { type: 'button', class: 'btn btn-sm btn-icon btn-gold sec-add', 'aria-label': t('newEvent'), title: t('newEvent'),
         onclick: function () { gatheringForm(null); } }, icon('plus', 2.5)) : null), [
       owner ? h('p', { class: 'tm-sub', text: t('groupEventsSub') }) : null,
       list.length ? h('div', { class: 'evlist' }, list.map(gatherRow))
+        : !owner ? emptyState('people', t('noEventsFamily'))
         : h('button', { type: 'button', class: 'evempty', onclick: function () { gatheringForm(null); } },
           icon('plus', 2.2), h('span', { text: t('noEvents') }), h('b', { text: t('newEvent') }))]));
-    var past = withPast ? pastGatherings() : [];
+  }
+  function pastGatherSection() {
+    var past = pastGatherings();
     if (past.length) {
       var sec = section(t('pastEvents'), past.length);
       sec.className += ' tm-sec-fold';
