@@ -58,7 +58,7 @@
       calRehearsalNote: 'Rehearsals come along only with Apple Calendar. Subscribe above to get them everywhere.',
       calGoogleNote: 'Google checks for changes once a day or so, Apple and Outlook every few hours. If a date just moved, open the gig and add it again to get it right away.',
       addDancersFirst: 'Add the dancers in your family below so you can mark availability for each of them.',
-      allAnswered: 'Everything else is answered. ¡Gracias!', noGigs: 'No gigs posted yet. Mayra and Angel will post here when an inquiry comes in.',
+      noGigs: 'No gigs posted yet. Mayra and Angel will post here when an inquiry comes in.',
       answerCleared: 'Answer cleared', dancers: 'Dancers', addDancerPh: 'Add a dancer (e.g. Sofia)', dancerName: 'Dancer name', add: 'Add',
       removeDancer: 'Remove {name} from your family?', remove: 'Remove', phone: 'Phone',
       saved: 'Saved', copied: 'Copied', copyFail: 'Could not copy',
@@ -151,7 +151,6 @@
       neverAsked: 'Never asked', askedAgo: 'Asked {when}', rehearsalsShort: 'Rehearsals',
       inboxEmptyText: 'Nothing new from the website. Inquiries from the contact and quote forms show up here on their own.',
       inboxEmptyBtn: 'Create a gig by hand', noGigsFamilyText: 'No upcoming gigs planned yet.',
-      allAnsweredText: 'Everything is answered. ¡Gracias! We’ll let you know when the next one is posted.',
       families: 'Families', addAFamily: 'Add a family', botHeard: 'What La Chona heard', botLinkedChip: 'Bot linked', notLinked: 'Not linked',
       openGig: 'Open gig', addRehearsalShort: 'Add rehearsal',
       going: 'going', ofNeeded: 'of {n} needed', moreNeeded: '{n} more needed', full: 'Roster is full', noneYet: 'No answers yet',
@@ -253,7 +252,7 @@
       calRehearsalNote: 'Los ensayos solo se incluyen con Apple Calendar. Suscríbete arriba para tenerlos en cualquier calendario.',
       calGoogleNote: 'Google busca cambios una vez al día; Apple y Outlook cada pocas horas. Si una fecha acaba de cambiar, abre el evento y agrégalo de nuevo para tenerlo al instante.',
       addDancersFirst: 'Agrega abajo a los bailarines de tu familia para marcar la disponibilidad de cada uno.',
-      allAnswered: 'Todo lo demás ya está respondido. ¡Gracias!', noGigs: 'Aún no hay eventos publicados. Mayra y Angel publicarán aquí cuando llegue una solicitud.',
+      noGigs: 'Aún no hay eventos publicados. Mayra y Angel publicarán aquí cuando llegue una solicitud.',
       answerCleared: 'Respuesta borrada', dancers: 'Bailarines', addDancerPh: 'Agregar bailarín (p. ej. Sofía)', dancerName: 'Nombre del bailarín', add: 'Agregar',
       removeDancer: '¿Quitar a {name} de tu familia?', remove: 'Quitar', phone: 'Teléfono',
       saved: 'Guardado', copied: 'Copiado', copyFail: 'No se pudo copiar',
@@ -346,7 +345,6 @@
       neverAsked: 'Nunca preguntado', askedAgo: 'Preguntado {when}', rehearsalsShort: 'Ensayos',
       inboxEmptyText: 'Nada nuevo del sitio web. Las solicitudes de los formularios de contacto y cotización aparecen aquí solas.',
       inboxEmptyBtn: 'Crear un evento a mano', noGigsFamilyText: 'Aún no hay presentaciones planeadas.',
-      allAnsweredText: 'Todo está respondido. ¡Gracias! Te avisamos cuando se publique el próximo.',
       families: 'Familias', addAFamily: 'Agregar familia', botHeard: 'Lo que escuchó La Chona', botLinkedChip: 'Vinculado', notLinked: 'Sin vincular',
       openGig: 'Abrir evento', addRehearsalShort: 'Agregar ensayo',
       going: 'van', ofNeeded: 'de {n} necesarios', moreNeeded: 'faltan {n}', full: 'Lista completa', noneYet: 'Aún sin respuestas',
@@ -1120,12 +1118,8 @@
       app.appendChild(section(t('needsAnswer'), needs.length));
       needs.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
     }
-    app.appendChild(section(t('upcoming')));
-    if (!upcoming.length) {
-      app.appendChild(needs.length
-        ? emptyState('allDone', t('allAnsweredText'))
-        : emptyState('calendar', t('noGigsFamilyText')));
-    }
+    if (upcoming.length || !needs.length) app.appendChild(section(t('upcoming')));
+    if (!upcoming.length && !needs.length) app.appendChild(emptyState('calendar', t('noGigsFamilyText')));
     upcoming.forEach(function (ev) { app.appendChild(memberCard(ev, myAnswers(ev))); });
     if (!eventsFirst) gatherSection();
     if (past.length) {
