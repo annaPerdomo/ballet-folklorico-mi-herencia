@@ -1,7 +1,12 @@
 import { route, ok, query, int, str, httpError, readJson } from './_lib/http.js';
-import { verifyCalendarSig, calendarSig, whoami } from './_lib/auth.js';
+import { verifyCalendarSig, calendarSig, verifyReviewSig, whoami } from './_lib/auth.js';
 import { one, sql } from './_lib/db.js';
 import { MEMBER_VISIBLE, withCalendarLinks } from './_lib/events.js';
+import { storageReady } from './_lib/storage.js';
+import {
+  reviewTarget, reviewFor, photoCount, submitReview, startPhoto, finishPhoto, cleanReview, cleanPhoto,
+  defaultDisplayName, firstName, reviewHtml, PHOTO_MAX,
+} from './_lib/reviews.js';
 import { viewerOf, loadParty, partyAction, inviteHtml, hashKey, flyerOf } from './_lib/gatherings.js';
 
 const guestKey = (req) => str(req.headers['x-bfmh-guest'], 64);
@@ -29,6 +34,60 @@ async function invitePage(req, res, q) {
   res.end(inviteHtml(ev, { id, sig, origin: `${proto}://${host}` }));
 }
 
+function originOf(req) {
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'bfmh.dance';
+  const proto = req.headers['x-forwarded-proto'] || (/^(localhost|127\.)/.test(host) ? 'http' : 'https');
+  return `${proto}://${host}`;
+}
+
+async function reviewGate(id, sig) {
+  const ev = id && verifyReviewSig(id, sig) ? await reviewTarget(id) : null;
+  if (!ev) throw httpError(404, 'Not found');
+  return ev;
+}
+
+async function reviewGet(req, res, q) {
+  const id = int(q.review);
+  const sig = str(q.s, 32);
+  res.setHeader('Cache-Control', 'no-store');
+  if (q.json === undefined) {
+    const ev = id && verifyReviewSig(id, sig) ? await reviewTarget(id) : null;
+    res.statusCode = ev ? 200 : 404;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.end(reviewHtml(ev, { id, sig, origin: originOf(req) }));
+  }
+  const ev = await reviewGate(id, sig);
+  const review = await reviewFor(id);
+  const pending = review && review.status === 'pending';
+  ok(res, {
+    event: { first_name: firstName(ev.client_name), title: ev.title, type: ev.event_type, date: ev.event_date },
+    suggested_name: defaultDisplayName(ev.client_name),
+    review: pending ? { rating: review.rating, body: review.body, display_name: review.display_name } : null,
+    received: Boolean(review) && !pending,
+    photos_left: !review ? PHOTO_MAX : pending ? Math.max(0, PHOTO_MAX - await photoCount(review.id)) : 0,
+  });
+}
+
+async function reviewPost(req, res, b) {
+  const id = int(b.review);
+  await reviewGate(id, str(b.s, 32));
+  res.setHeader('Cache-Control', 'no-store');
+  if (b.action === 'submit') {
+    if (b._gotcha) return ok(res);
+    await submitReview(id, cleanReview(b));
+    return ok(res, { ok: true });
+  }
+  if (b.action === 'photo' || b.action === 'photo_done') {
+    if (!storageReady()) throw httpError(503, 'Photo storage is not set up yet');
+    const review = await reviewFor(id);
+    if (!review || review.status !== 'pending') throw httpError(409, 'Send your review first');
+    if (b.action === 'photo') return ok(res, await startPhoto(review.id, cleanPhoto({ type: b.type, size: b.size })));
+    await finishPhoto(review.id, int(b.id));
+    return ok(res);
+  }
+  throw httpError(400, 'Unknown action');
+}
+
 // Readable with no cookie, off a link that travels (forwards, screenshots), so it carries only
 // enough to tell the families apart: first names, no surnames, no answers, no pay, no tokens.
 const COLS = `id, title, status, event_type, event_date, start_time, end_time, call_time,
@@ -38,6 +97,7 @@ export default route({
   async GET(req, res) {
     const q = query(req);
     if (q.invite !== undefined) return invitePage(req, res, q);
+    if (q.review !== undefined) return reviewGet(req, res, q);
     // Link previews (iMessage, GroupMe) fetch og:image once, long after a signed URL would have expired.
     if (q.flyer !== undefined) {
       const id = int(q.flyer);
@@ -76,6 +136,7 @@ export default route({
   },
   async POST(req, res) {
     const b = await readJson(req);
+    if (b.review !== undefined) return reviewPost(req, res, b);
     const id = int(b.party);
     const v = await partyViewer(req, id, str(b.s, 32), b.guest === true);
     const { key } = await partyAction(id, v, b);

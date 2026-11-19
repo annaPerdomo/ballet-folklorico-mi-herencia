@@ -2,6 +2,7 @@ import { route, ok } from './_lib/http.js';
 import { sql } from './_lib/db.js';
 import { storageReady, signedUrl } from './_lib/storage.js';
 import { youtubeId } from './_lib/media.js';
+import { approvedReviews } from './_lib/reviews.js';
 
 // Public: no uploader names. Signed links outlive the CDN cache below by hours.
 function publicItem(m) {
@@ -65,6 +66,7 @@ export default route({
         media: byEvent[e.id] || [],
       };
     });
-    ok(res, { events, media }, { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' });
+    const reviews = await approvedReviews(30).catch((e) => { console.error('reviews', e); return []; });
+    ok(res, { events, media, reviews }, { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600' });
   },
 });

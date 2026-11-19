@@ -83,6 +83,14 @@ export function verifyCalendarSig(eventId, sig) {
   return Boolean(sig) && safeEqual(calendarSig(eventId), sig);
 }
 
+export function reviewSig(eventId) {
+  return sign(`review.${eventId}`).slice(0, 16);
+}
+
+export function verifyReviewSig(eventId, sig) {
+  return Boolean(sig) && safeEqual(reviewSig(eventId), sig);
+}
+
 // Given instead of the family's access_token so a picker session is not itself a forwardable
 // login. No expiry — a phone stays signed in until someone signs out, or until the owners tap
 // "New link", which rotates the access_token this epoch is taken from.

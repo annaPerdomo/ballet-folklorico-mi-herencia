@@ -78,6 +78,8 @@ http.createServer(async (req, res) => {
   if (url.pathname.startsWith('/__media/')) return serveDevMedia(req, res, url);
   const invite = url.pathname.match(/^\/e\/(\d+)\/([\w-]+)\/?$/);
   if (invite) { url.pathname = '/api/gig'; url.searchParams.set('invite', invite[1]); url.searchParams.set('s', invite[2]); }
+  const review = url.pathname.match(/^\/r\/(\d+)\/([\w-]+)\/?$/);
+  if (review) { url.pathname = '/api/gig'; url.searchParams.set('review', review[1]); url.searchParams.set('s', review[2]); }
   if (url.pathname.startsWith('/api/')) {
     const hit = await resolveApi(url.pathname);
     if (!hit) { res.statusCode = 404; return res.end('{"error":"no such api"}'); }

@@ -340,6 +340,31 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER events_history_trigger
   AFTER INSERT OR UPDATE OR DELETE ON events
   FOR EACH ROW EXECUTE FUNCTION events_history_log();
+CREATE TABLE IF NOT EXISTS reviews (
+  id           SERIAL PRIMARY KEY,
+  event_id     INTEGER NOT NULL UNIQUE REFERENCES events(id) ON DELETE CASCADE,
+  rating       SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  body         TEXT NOT NULL,
+  display_name TEXT NOT NULL,
+  consent      BOOLEAN NOT NULL DEFAULT false,
+  status       TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','hidden')),
+  lang         TEXT,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  approved_at  TIMESTAMPTZ,
+  rev          INTEGER NOT NULL DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS review_photos (
+  id          SERIAL PRIMARY KEY,
+  review_id   INTEGER NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
+  slot        SMALLINT NOT NULL CHECK (slot BETWEEN 1 AND 4),
+  storage_key TEXT NOT NULL,
+  mime        TEXT NOT NULL,
+  bytes       INTEGER NOT NULL,
+  ready       BOOLEAN NOT NULL DEFAULT false,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (review_id, slot)
+);
 `;
 
 export function ensureSchema() {

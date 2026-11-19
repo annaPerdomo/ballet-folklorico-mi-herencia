@@ -5,6 +5,10 @@
       "destination": "/api/gig?invite=:id&s=:s"
     },
     {
+      "source": "/r/:id/:s",
+      "destination": "/api/gig?review=:id&s=:s"
+    },
+    {
       "source": "/api/dancers",
       "destination": "/api/families?r=dancers"
     },
