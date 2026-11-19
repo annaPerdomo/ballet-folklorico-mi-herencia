@@ -110,7 +110,7 @@
 
   function summary() {
     var ev = data.event;
-    var parts = [ev.title, STR[lang].types[ev.type] || '', dateLabel(ev.date)].filter(Boolean);
+    var parts = [STR[lang].types[ev.type] || '', dateLabel(ev.date)].filter(Boolean);
     return parts.join(' · ');
   }
 
@@ -169,7 +169,7 @@
 
   function card() {
     var c = h('div', { class: 'rv-card rv-center' });
-    for (var i = 0; i < arguments.length; i++) c.appendChild(arguments[i]);
+    for (var i = 0; i < arguments.length; i++) if (arguments[i]) c.appendChild(arguments[i]);
     return c;
   }
 

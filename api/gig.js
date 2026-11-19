@@ -54,7 +54,7 @@ async function reviewGet(res, q) {
   const review = await reviewFor(id);
   const pending = review && review.status === 'pending';
   ok(res, {
-    event: { first_name: firstName(ev.client_name), title: ev.title, type: ev.event_type, date: ev.event_date },
+    event: { first_name: firstName(ev.client_name), type: ev.event_type, date: ev.event_date },
     suggested_name: defaultDisplayName(ev.client_name),
     review: pending ? { rating: review.rating, body: review.body, display_name: review.display_name } : null,
     received: Boolean(review) && !pending,
