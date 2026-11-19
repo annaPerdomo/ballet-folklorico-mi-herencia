@@ -223,6 +223,17 @@
       addFlyer: 'Add a flyer', changeFlyer: 'Change the flyer', removeFlyer: 'Remove the flyer', removeFlyerAsk: 'Take the flyer off “{title}”?',
       flyerUploading: 'Uploading the flyer…', flyerSaved: 'Flyer added', flyerRemoved: 'Flyer removed', flyerNotImage: 'Pick a photo or image of the flyer',
       eventShareMsg: 'You’re invited to {title}! RSVP here:', galAll: 'All', galGigs: 'Gigs', galEvents: 'Events', galEventTag: 'Event', noGalleryMatch: 'Nothing here yet.',
+      reviewAsk: 'Ask for a review', reviewAskHelp: 'Send this personal link to your client. Their name and the event are already filled in.',
+      reviewMsg: 'Hi {name}! Thank you for having Ballet Folklórico Mi Herencia at your event. If you have a minute, we would love a short review: {url}',
+      reviewMsgNoName: 'Thank you for having Ballet Folklórico Mi Herencia at your event! If you have a minute, we would love a short review: {url}',
+      reviewShare: 'Share', reviewCopyLink: 'Copy link', reviewGot_pending: 'This client already sent a review. It is waiting for you.',
+      reviewGot_approved: 'This client’s review is on the website.', reviewGot_hidden: 'This client’s review is hidden.', reviewOpen: 'See reviews',
+      reviewsHead: 'Reviews', reviewsWaiting: 'To review', reviewsLive: 'On the website', reviewsHiddenShow: 'Show hidden ({n})',
+      reviewsEmpty: 'No reviews yet. Open a finished gig and tap Ask for a review.', reviewApprove: 'Approve', reviewNotNow: 'Not now',
+      reviewTakeDown: 'Take down', reviewDelete: 'Delete', reviewDeleteAsk: 'Delete this review? The client’s link will work again so they can write a new one.',
+      reviewApproved: 'Approved. It can take a few minutes to show on the website.', reviewHiddenToast: 'Hidden from the website.', reviewDeleted: 'Review deleted.',
+      reviewFail: 'That did not save. Try again.', reviewChanged: 'The client just edited this review. Read it again before approving.',
+      reviewStars: '{n} of 5 stars', reviewsRetry: 'Reviews did not load. Tap to retry.',
     },
     es: {
       months: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -417,6 +428,17 @@
       addFlyer: 'Agregar un volante', changeFlyer: 'Cambiar el volante', removeFlyer: 'Quitar el volante', removeFlyerAsk: '¿Quitar el volante de “{title}”?',
       flyerUploading: 'Subiendo el volante…', flyerSaved: 'Volante agregado', flyerRemoved: 'Volante quitado', flyerNotImage: 'Elige una foto o imagen del volante',
       eventShareMsg: '¡Te invitamos a {title}! Confirma aquí:', galAll: 'Todo', galGigs: 'Eventos', galEvents: 'Convivios', galEventTag: 'Convivio', noGalleryMatch: 'Nada por aquí todavía.',
+      reviewAsk: 'Pedir una reseña', reviewAskHelp: 'Mándale este enlace personal a tu cliente. Su nombre y el evento ya aparecen en la página.',
+      reviewMsg: '¡Hola {name}! Gracias por invitar a Ballet Folklórico Mi Herencia a tu evento. Si tienes un minuto, nos encantaría una reseña breve: {url}',
+      reviewMsgNoName: '¡Gracias por invitar a Ballet Folklórico Mi Herencia a tu evento! Si tienes un minuto, nos encantaría una reseña breve: {url}',
+      reviewShare: 'Compartir', reviewCopyLink: 'Copiar enlace', reviewGot_pending: 'Este cliente ya mandó su reseña. Te está esperando.',
+      reviewGot_approved: 'La reseña de este cliente está en el sitio web.', reviewGot_hidden: 'La reseña de este cliente está oculta.', reviewOpen: 'Ver reseñas',
+      reviewsHead: 'Reseñas', reviewsWaiting: 'Por revisar', reviewsLive: 'En el sitio web', reviewsHiddenShow: 'Mostrar ocultas ({n})',
+      reviewsEmpty: 'Todavía no hay reseñas. Abre un evento terminado y toca Pedir una reseña.', reviewApprove: 'Aprobar', reviewNotNow: 'Ahora no',
+      reviewTakeDown: 'Quitar del sitio', reviewDelete: 'Borrar', reviewDeleteAsk: '¿Borrar esta reseña? El enlace del cliente volverá a funcionar para que escriba otra.',
+      reviewApproved: 'Aprobada. Puede tardar unos minutos en aparecer en el sitio web.', reviewHiddenToast: 'Oculta del sitio web.', reviewDeleted: 'Reseña borrada.',
+      reviewFail: 'No se guardó. Intenta de nuevo.', reviewChanged: 'El cliente acaba de editar esta reseña. Léela otra vez antes de aprobar.',
+      reviewStars: '{n} de 5 estrellas', reviewsRetry: 'Las reseñas no cargaron. Toca para reintentar.',
     },
   };
   function t(key, vars) {
@@ -544,12 +566,16 @@
   /* ── data loading ──────────────────────────────────────── */
   function loadMe() { return api('/api/me').then(function (me) { state.me = me; return me; }); }
   function loadEvents() { return api('/api/events').then(function (d) { state.events = d.events; state.roster = d.roster || 0; }); }
+  function loadReviews() {
+    return api('/api/inquiry?r=reviews').then(function (d) { state.reviews = d.reviews || []; state.reviewsFailed = false; },
+      function () { state.reviewsFailed = true; });
+  }
   function loadFamilies() { return api('/api/families').then(function (d) { state.families = d.families; }); }
   function loadBotLog() { return api('/api/groupme?limit=120').then(function (d) { state.botLog = d.messages; }).catch(function () { state.botLog = []; }); }
   function refresh() {
     state.loadedAt = Date.now();   // claim the slot first: visibilitychange and focus both fire on one foreground
     var jobs = [loadEvents()];
-    if (state.me.role === 'admin') { jobs.push(loadFamilies(), loadStudents()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
+    if (state.me.role === 'admin') { jobs.push(loadFamilies(), loadStudents(), loadReviews()); if (state.tab === 'chona') jobs.push(loadBotLog()); }
     if (isMediaTab()) jobs.push(loadMediaIndex());
     jobs.push(isFeedTab() && !media.feedPaged ? loadFeed().catch(function () {}) : loadFeedCount());
     return Promise.all(jobs).then(function () { state.loadedAt = Date.now(); render(); }, function (e) { toast(e.message, true); });
@@ -756,6 +782,7 @@
     link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
     download: '<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',
     chart: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    star: '<path d="m12 3.5 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.9l6-.9z"/>',
   };
   function icon(name, width) {
     var el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -1280,7 +1307,7 @@
   /* ── per-owner read marks ──────────────────────────────── */
   // Owners share one password, so who is reading is asked once per phone and kept there.
   var READER_KEY = 'bfmh_reader', OLD_SEEN_KEY = 'bfmh_inbox_seen', READERS = ['Mayra', 'Angel', 'Anna'];
-  state.students = []; state.reads = {};
+  state.students = []; state.reads = {}; state.reviews = []; state.reviewsFailed = false;
   function chosenReader() { try { return localStorage.getItem(READER_KEY) || ''; } catch (e) { return ''; } }
   function deviceReader() {
     try {
@@ -1330,7 +1357,8 @@
   }
   function unreadInquiries(inquiries) { return inquiries.filter(function (e) { return !isRead('inquiry', e.id); }).length; }
   function unreadStudents() { return state.students.filter(function (s) { return !isRead('student', s.id); }).length; }
-  function unreadCount(inquiries) { return unreadInquiries(inquiries) + unreadStudents(); }
+  function pendingReviews() { return state.reviews.filter(function (r) { return r.status === 'pending'; }).length; }
+  function unreadCount(inquiries) { return unreadInquiries(inquiries) + unreadStudents() + pendingReviews(); }
   function paintUnread() {
     var inquiries = state.events.filter(function (e) { return e.status === 'inquiry'; });
     var n = unreadCount(inquiries);
@@ -1408,6 +1436,7 @@
     }
     shown.forEach(function (ev) { app.appendChild(adminCard(ev)); });
     app.appendChild(studentsFold());
+    app.appendChild(reviewsFold());
     var archived = state.events.filter(function (e) { return ['declined', 'cancelled', 'lapsed'].indexOf(e.status) !== -1; });
     if (archived.length) {
       var archSec = section(t('archived'), archived.length);
@@ -1441,6 +1470,125 @@
       h('summary', { class: 'tm-fold-summary' }, sec), inner);
     fold.open = !!state.studentsOpen;
     return fold;
+  }
+  function reviewsFold() {
+    var list = state.reviews || [];
+    var waiting = list.filter(function (r) { return r.status === 'pending'; });
+    var live = list.filter(function (r) { return r.status === 'approved'; });
+    var hidden = list.filter(function (r) { return r.status === 'hidden'; });
+    var sec = section(t('reviewsHead'), waiting.length || null);
+    sec.className += ' tm-sec-fold';
+    var inner = [];
+    if (state.reviewsFailed) inner.push(h('button', { type: 'button', class: 'btn btn-sm rv-retry', text: t('reviewsRetry'), onclick: function () { loadReviews().then(render); } }));
+    if (!list.length && !state.reviewsFailed) inner.push(emptyState('star', t('reviewsEmpty')));
+    if (waiting.length) inner.push(h('h3', { class: 'rv-sub', text: t('reviewsWaiting') }), waiting.map(reviewCard));
+    if (live.length) inner.push(h('h3', { class: 'rv-sub', text: t('reviewsLive') }), live.map(reviewCard));
+    if (hidden.length) {
+      var sub = h('details', { class: 'tm-subfold', ontoggle: function () { state.reviewsHiddenOpen = sub.open; } },
+        h('summary', { class: 'tm-subfold-summary', text: t('reviewsHiddenShow', { n: hidden.length }) }), hidden.map(reviewCard));
+      sub.open = !!state.reviewsHiddenOpen;
+      inner.push(sub);
+    }
+    var fold = h('details', { class: 'tm-fold tm-fold-reviews', id: 'reviews-sec', ontoggle: function () { state.reviewsOpen = fold.open; } },
+      h('summary', { class: 'tm-fold-summary' }, sec), inner);
+    fold.open = !!state.reviewsOpen;
+    return fold;
+  }
+  function reviewStars(n) {
+    var row = h('span', { class: 'rv-stars', role: 'img', 'aria-label': t('reviewStars', { n: n }) });
+    for (var i = 1; i <= 5; i++) row.appendChild(h('span', { class: 'rv-star' + (i <= n ? ' on' : '') }, icon('star', 2)));
+    return row;
+  }
+  function reviewCard(r) {
+    var live = r.status === 'approved';
+    var known = state.events.some(function (e) { return e.id === r.event_id; });
+    var card = h('div', { class: 'card review-card rv-' + r.status, id: 'review-' + r.id });
+    card.appendChild(h('div', { class: 'rv-top' }, reviewStars(r.rating), h('b', { class: 'rv-name', text: r.display_name || '' })));
+    card.appendChild(h('p', { class: 'rv-body', text: r.body || '' }));
+    card.appendChild(h('p', { class: 'rv-meta' },
+      r.title ? (known ? h('button', { type: 'button', class: 'linklike', text: r.title, onclick: function () { openDetail(r.event_id); } }) : r.title) : null,
+      (r.title ? ' · ' : '') + typeLabel(r.event_type) + ' · ' + fmtDate(r.event_date)));
+    if (r.photos && r.photos.length) {
+      card.appendChild(h('div', { class: 'rv-photos' }, r.photos.map(function (p) {
+        return h('a', { href: p.url, target: '_blank', rel: 'noopener' }, h('img', { class: 'rv-thumb', src: p.url, alt: '', loading: 'lazy' }));
+      })));
+    }
+    var btns;
+    if (r.status === 'pending') btns = [reviewBtn(r, 'approve', 'reviewApprove', 'btn-gold'), reviewBtn(r, 'hide', 'reviewNotNow')];
+    else if (live) btns = [reviewBtn(r, 'hide', 'reviewTakeDown')];
+    else btns = [reviewBtn(r, 'approve', 'reviewApprove', 'btn-gold'), reviewBtn(r, 'delete', 'reviewDelete', 'btn-danger')];
+    card.appendChild(h('div', { class: 'card-actions' }, btns));
+    return card;
+  }
+  function reviewBtn(r, action, label, cls) {
+    return h('button', { type: 'button', class: 'btn btn-sm ' + (cls || ''), text: t(label), disabled: !!reviewBusy[r.id], onclick: function () { reviewAct(r, action); } });
+  }
+  var reviewBusy = {}, reviewLastAt = 0;
+  function reviewAct(r, action) {
+    function blocked() { return reviewBusy[r.id] || Date.now() - reviewLastAt < 600; }
+    if (blocked()) return;
+    var go = action === 'delete' ? confirmSheet(t('reviewDeleteAsk'), t('reviewDelete'), true) : Promise.resolve(true);
+    go.then(function (yes) {
+      if (!yes || blocked()) return;
+      reviewLastAt = Date.now();
+      var cur = state.reviews.filter(function (x) { return x.id === r.id; })[0];
+      if (!cur) return;
+      var at = state.reviews.indexOf(cur), prevStatus = cur.status;
+      function setStatus(status) {
+        state.reviews = state.reviews.map(function (x) { return x.id === r.id ? Object.assign({}, x, { status: status }) : x; });
+      }
+      function rollback() {
+        if (action !== 'delete') { setStatus(prevStatus); return; }
+        if (state.reviews.every(function (x) { return x.id !== r.id; })) state.reviews.splice(Math.min(at, state.reviews.length), 0, cur);
+      }
+      if (action === 'delete') state.reviews = state.reviews.filter(function (x) { return x.id !== r.id; });
+      else setStatus(action === 'approve' ? 'approved' : 'hidden');
+      reviewBusy[r.id] = true;
+      render();
+      api('/api/inquiry?r=reviews', { method: 'POST', body: { id: r.id, action: action, rev: r.rev } }).then(function () {
+        delete reviewBusy[r.id];
+        render();
+        toast(t(action === 'approve' ? 'reviewApproved' : action === 'delete' ? 'reviewDeleted' : 'reviewHiddenToast'));
+      }, function (e) {
+        delete reviewBusy[r.id];
+        rollback(); render();
+        loadReviews().then(render);
+        toast(t(e.status === 409 ? 'reviewChanged' : 'reviewFail'), true);
+      });
+    });
+  }
+  function openReviews() {
+    closeModal(); state.detail = null; state.tab = 'inbox'; state.reviewsOpen = true; render();
+    loadReviews().then(function () {
+      render();
+      var el = document.getElementById('reviews-sec');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  function reviewSheet(ev) {
+    return api('/api/inquiry?r=review-link&event=' + ev.id).then(function (d) {
+      var pop = popSheet(t('reviewAsk'));
+      var first = String(ev.client_name || '').trim().split(/\s+/)[0];
+      var text = first ? t('reviewMsg', { name: first, url: d.url }) : t('reviewMsgNoName', { url: d.url });
+      var copy = h('button', { type: 'button', class: 'btn btn-wide', text: t('reviewCopyLink'), onclick: function () { copyText(d.url); } });
+      if (d.review) {
+        pop.body.appendChild(h('p', { class: 'pop-msg', text: t('reviewGot_' + d.review.status) }));
+        pop.body.appendChild(h('div', { class: 'pop-btns' },
+          h('button', { type: 'button', class: 'btn btn-wide btn-gold', text: t('reviewOpen'), onclick: function () { pop.close(); openReviews(); } }), copy));
+        return;
+      }
+      pop.body.appendChild(h('p', { class: 'pop-msg', text: t('reviewAskHelp') }));
+      pop.body.appendChild(h('p', { class: 'rv-preview', text: text }));
+      pop.body.appendChild(h('div', { class: 'pop-btns' },
+        h('button', { type: 'button', class: 'btn btn-wide btn-gold', text: t('reviewShare'), onclick: function () {
+          if (navigator.share) navigator.share({ text: text }).catch(function (err) { if (!err || err.name !== 'AbortError') copyText(text); });
+          else copyText(text);
+        } }), copy));
+    }).catch(function (e) { toast(e.message, true); });
+  }
+  function reviewButton(ev) {
+    if (!isOwner() || ['confirmed', 'done'].indexOf(ev.status) === -1) return null;
+    return h('button', { type: 'button', class: 'btn btn-sm', onclick: function (e) { var b = e.currentTarget; b.disabled = true; reviewSheet(ev).then(function () { b.disabled = false; }); } }, icon('star', 2), t('reviewAsk'));
   }
   function stagePill(stage) { return h('span', { class: 'pill stage-' + stage, text: t('stages')[stage] || stage }); }
   function studentCard(s) {
@@ -2019,7 +2167,8 @@
     if (facts) body.appendChild(facts);
     var detailCal = calButton(ev);
     var detailGal = ['open', 'confirmed', 'done'].indexOf(ev.status) !== -1 ? galleryButton(ev) : null;
-    if (detailCal || detailGal) body.appendChild(h('div', { class: 'card-actions' }, detailCal, detailGal));
+    var detailRev = reviewButton(ev);
+    if (detailCal || detailGal || detailRev) body.appendChild(h('div', { class: 'card-actions' }, detailCal, detailGal, detailRev));
     var siteRow = websiteRow(ev); if (siteRow) body.appendChild(siteRow);
 
     var roster = rosterFor(ev);
