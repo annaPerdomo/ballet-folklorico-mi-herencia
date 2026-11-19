@@ -940,3 +940,16 @@ button.feed-blast:focus-visible { outline: 2px solid var(--gold-light); outline-
 .student-notes { font-size: 0.85rem; color: var(--text-2); margin: 0.6rem 0 0; white-space: pre-wrap; }
 .tm-subfold { margin-top: 0.4rem; }
 .tm-subfold-summary { cursor: pointer; color: var(--muted); font-size: 0.8rem; padding: 0.5rem 0; }
+
+.rv-sub { margin: 1rem 0 0.4rem; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.rv-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.rv-stars { display: inline-flex; gap: 0.12rem; color: var(--gold-light); }
+.rv-star svg { width: 18px; height: 18px; }
+.rv-star.on svg { fill: currentColor; }
+.rv-body { margin: 0.6rem 0 0.4rem; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; }
+.rv-meta { margin: 0; font-size: 0.8rem; color: var(--muted); }
+.rv-photos { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.rv-thumb { display: block; width: 64px; height: 64px; border-radius: 10px; object-fit: cover; border: 1px solid var(--line); }
+.rv-preview { margin: 0 0 1rem; padding: 0.8rem; border: 1px solid var(--line); border-radius: 12px; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--muted); }
+.rv-retry { margin-bottom: 0.6rem; }
+.review-card.rv-approved { padding: 0.8rem 1rem; }

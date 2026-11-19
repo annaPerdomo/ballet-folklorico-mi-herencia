@@ -1,5 +1,7 @@
 import { route, readJson, ok, bad, str, int, query, httpError } from './_lib/http.js';
-import { requireAdmin, actorOf } from './_lib/auth.js';
+import { requireAdmin, actorOf, reviewSig } from './_lib/auth.js';
+import { siteUrl } from './_lib/notify.js';
+import { listReviews, reviewTarget, reviewFor, setReviewStatus, deleteReview } from './_lib/reviews.js';
 import { recordInquiry, queuedAt } from './_lib/inquiry.js';
 import {
   listStudents, updateStudent, deleteStudent, moveInquiryToStudent, joinStudent, listReads, markReads, cleanReader,
@@ -22,9 +24,34 @@ const OWNER = {
   },
 };
 
+const REVIEW_ACTIONS = { approve: 'approved', hide: 'hidden', pending: 'pending' };
+
+const OWNER_GET = {
+  async reviews(req, res) {
+    ok(res, { reviews: await listReviews() });
+  },
+  async 'review-link'(req, res) {
+    const id = int(query(req).event);
+    if (!id || !(await reviewTarget(id))) throw httpError(404, 'No such gig');
+    const review = await reviewFor(id);
+    ok(res, { url: `${siteUrl()}/r/${id}/${reviewSig(id)}`, review: review ? { id: review.id, status: review.status } : null });
+  },
+};
+
+OWNER.reviews = async (req, res, b) => {
+  const id = int(b.id);
+  if (!id) throw httpError(400, 'Which review?');
+  if (b.action === 'delete') await deleteReview(id);
+  else if (Object.hasOwn(REVIEW_ACTIONS, b.action)) await setReviewStatus(id, REVIEW_ACTIONS[b.action], int(b.rev));
+  else throw httpError(400, 'Unknown action');
+  ok(res);
+};
+
 export default route({
   async GET(req, res) {
     await requireAdmin(req);
+    const r = query(req).r;
+    if (Object.hasOwn(OWNER_GET, r)) return OWNER_GET[r](req, res);
     const reader = cleanReader(query(req).reader);
     const [students, reads] = await Promise.all([listStudents(), listReads(reader)]);
     ok(res, { students, reads });

@@ -295,4 +295,36 @@
       }).join('') + '</ul>';
     }).catch(showFallback);
   })();
+
+  (function () {
+    var TYPES = { weddings: 'wedding', quinceaneras: 'quinceanera' };
+    var segs = location.pathname.split('/').filter(Boolean);
+    if (segs[segs.length - 1] === 'index.html') segs.pop();
+    var type = TYPES[segs[segs.length - 1]];
+    var first = document.querySelector('figure.lp-review');
+    if (!type || !first || !window.fetch) return;
+    fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      var list = ((d && d.reviews) || []).filter(function (rv) { return rv.type === type; }).slice(0, 3);
+      var after = first;
+      list.forEach(function (rv) {
+        var rating = Math.max(0, Math.min(5, Math.round(Number(rv.rating) || 0)));
+        var chars = Array.from(String(rv.body || ''));
+        var body = chars.length > 480 ? chars.slice(0, 400).join('').trimEnd() + '\u2026' : chars.join('');
+        var fig = document.createElement('figure');
+        fig.className = 'lp-review';
+        var stars = document.createElement('span');
+        stars.className = 'stars';
+        stars.setAttribute('role', 'img');
+        stars.setAttribute('aria-label', rating + ' / 5');
+        stars.textContent = '\u2605'.repeat(rating) + '\u2606'.repeat(5 - rating);
+        var quote = document.createElement('blockquote');
+        quote.textContent = '\u201c' + body + '\u201d';
+        var cap = document.createElement('figcaption');
+        cap.textContent = '\u2014 ' + String(rv.name || '');
+        fig.append(stars, quote, cap);
+        after.after(fig);
+        after = fig;
+      });
+    }).catch(function () {});
+  })();
 })();
