@@ -89,6 +89,7 @@
       if (typeof renderEvents === 'function') renderEvents(lang);
       // Keep the gallery toggle label in sync with the language
       if (typeof updateGalleryButton === 'function') updateGalleryButton();
+      if (typeof renderReviews === 'function') renderReviews(lang);
     }
 
     // ─────────────────────────────────────────────────────────
@@ -428,6 +429,12 @@
       fetch('/api/public-events').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
         if (!d) return;
         addSharedMedia(d.media || []);
+        try {
+          publicReviews = Array.isArray(d.reviews) ? d.reviews.filter(function (rv) {
+            return rv && typeof rv === 'object' && typeof rv.body === 'string' && typeof rv.name === 'string';
+          }).slice(0, REVIEWS_SHOWN) : [];
+          renderReviews(currentLang);
+        } catch (e) {}
         if (!d.events || !d.events.length) return;
         var staticByDate = {}, apiPerDate = {};
         EVENTS.forEach(function (ev) { staticByDate[ev.date] = ev; });
@@ -448,6 +455,83 @@
         if (added) renderEvents(currentLang);
         if (newlyAdded.length) addEventsToJsonLd(newlyAdded);
       }).catch(function () {});
+    }
+
+    const REVIEWS_SHOWN = 6;
+    const REVIEW_CHARS = 600;
+    const REVIEW_SLACK = 80;
+    let publicReviews = [];
+
+    function reviewText(key, lang) {
+      const dict = STRINGS[lang] || STRINGS.en;
+      return dict[key] !== undefined ? dict[key] : STRINGS.en[key];
+    }
+
+    function buildReviewCard(rv, lang) {
+      const card = document.createElement('article');
+      card.className = 'about-card review-card visible';
+      card.setAttribute('data-runtime-review', '');
+
+      const top = document.createElement('div');
+      top.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-block-end:0.75rem;';
+      const rating = Math.max(0, Math.min(5, Math.round(Number(rv.rating) || 0)));
+      const stars = document.createElement('span');
+      stars.style.cssText = 'color:#f5c518;font-size:0.9rem;letter-spacing:1px;';
+      stars.setAttribute('role', 'img');
+      stars.setAttribute('aria-label', rating + ' / 5');
+      stars.textContent = '\u2605'.repeat(rating) + '\u2606'.repeat(5 - rating);
+      const verified = document.createElement('span');
+      verified.className = 'review-verified';
+      verified.textContent = reviewText('reviews.verified', lang);
+      top.append(stars, verified);
+
+      const chars = Array.from(rv.body);
+      const long = chars.length > REVIEW_CHARS + REVIEW_SLACK;
+      const quote = document.createElement('p');
+      quote.style.cssText = 'color:var(--text-secondary);font-size:1rem;line-height:1.8;font-style:italic;';
+      const collapsed = long ? chars.slice(0, REVIEW_CHARS).join('').trimEnd() + '\u2026' : rv.body;
+      quote.textContent = '\u201c' + collapsed + '\u201d';
+
+      const author = document.createElement('p');
+      author.style.cssText = 'margin-block-start:1rem;color:var(--gold-light);font-weight:700;font-size:0.88rem;';
+      author.textContent = '\u2014 ' + rv.name;
+
+      card.append(top, quote);
+      if (long) {
+        const more = document.createElement('button');
+        more.type = 'button';
+        more.className = 'review-more';
+        more.setAttribute('aria-expanded', 'false');
+        more.textContent = reviewText('reviews.more', lang);
+        more.addEventListener('click', function () {
+          const open = more.getAttribute('aria-expanded') !== 'true';
+          more.setAttribute('aria-expanded', open ? 'true' : 'false');
+          quote.textContent = '\u201c' + (open ? rv.body : collapsed) + '\u201d';
+          more.textContent = reviewText(open ? 'reviews.less' : 'reviews.more', currentLang);
+        });
+        card.append(more);
+        card._more = more;
+      }
+      card.append(author);
+      card._verified = verified;
+      return card;
+    }
+
+    function renderReviews(lang) {
+      const box = document.getElementById('review-cards');
+      if (!box || !publicReviews.length) return;
+      const cards = box.querySelectorAll('[data-runtime-review]');
+      if (!cards.length) {
+        publicReviews.forEach(function (rv) { box.append(buildReviewCard(rv, lang)); });
+        return;
+      }
+      cards.forEach(function (card) {
+        card._verified.textContent = reviewText('reviews.verified', lang);
+        if (card._more) {
+          const open = card._more.getAttribute('aria-expanded') === 'true';
+          card._more.textContent = reviewText(open ? 'reviews.less' : 'reviews.more', lang);
+        }
+      });
     }
 
     function sameGig(a, b) {
