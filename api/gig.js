@@ -34,19 +34,13 @@ async function invitePage(req, res, q) {
   res.end(inviteHtml(ev, { id, sig, origin: `${proto}://${host}` }));
 }
 
-function originOf(req) {
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'bfmh.dance';
-  const proto = req.headers['x-forwarded-proto'] || (/^(localhost|127\.)/.test(host) ? 'http' : 'https');
-  return `${proto}://${host}`;
-}
-
 async function reviewGate(id, sig) {
   const ev = id && verifyReviewSig(id, sig) ? await reviewTarget(id) : null;
   if (!ev) throw httpError(404, 'Not found');
   return ev;
 }
 
-async function reviewGet(req, res, q) {
+async function reviewGet(res, q) {
   const id = int(q.review);
   const sig = str(q.s, 32);
   res.setHeader('Cache-Control', 'no-store');
@@ -54,7 +48,7 @@ async function reviewGet(req, res, q) {
     const ev = id && verifyReviewSig(id, sig) ? await reviewTarget(id) : null;
     res.statusCode = ev ? 200 : 404;
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return res.end(reviewHtml(ev, { id, sig, origin: originOf(req) }));
+    return res.end(reviewHtml(ev, { id, sig }));
   }
   const ev = await reviewGate(id, sig);
   const review = await reviewFor(id);
@@ -64,7 +58,7 @@ async function reviewGet(req, res, q) {
     suggested_name: defaultDisplayName(ev.client_name),
     review: pending ? { rating: review.rating, body: review.body, display_name: review.display_name } : null,
     received: Boolean(review) && !pending,
-    photos_left: !review ? PHOTO_MAX : pending ? Math.max(0, PHOTO_MAX - await photoCount(review.id)) : 0,
+    photos_left: !storageReady() ? 0 : !review ? PHOTO_MAX : pending ? Math.max(0, PHOTO_MAX - await photoCount(review.id)) : 0,
   });
 }
 
@@ -97,7 +91,7 @@ export default route({
   async GET(req, res) {
     const q = query(req);
     if (q.invite !== undefined) return invitePage(req, res, q);
-    if (q.review !== undefined) return reviewGet(req, res, q);
+    if (q.review !== undefined) return reviewGet(res, q);
     // Link previews (iMessage, GroupMe) fetch og:image once, long after a signed URL would have expired.
     if (q.flyer !== undefined) {
       const id = int(q.flyer);

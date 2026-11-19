@@ -72,3 +72,24 @@ test('review and calendar signatures do not open each other', () => {
   assert.equal(verifyCalendarSig(7, reviewSig(7)), false);
   assert.equal(verifyReviewSig(8, reviewSig(7)), false);
 });
+
+test('reviewHtml carries the id and sig, is noindex and escapes a hostile sig', async () => {
+  const { reviewHtml } = await import('./reviews.js');
+  const html = reviewHtml({ title: 'Quince', client_email: 'b@example.com', client_phone: '555-0100' }, { id: 7, sig: reviewSig(7) });
+  assert.ok(html.includes('data-review="7"'));
+  assert.ok(html.includes(`data-s="${reviewSig(7)}"`));
+  assert.ok(html.includes('noindex'));
+  assert.ok(html.includes('/team/review.js'));
+  assert.ok(!html.includes('b@example.com'));
+  assert.ok(!html.includes('555-0100'));
+  const evil = reviewHtml({ title: 'x' }, { id: 7, sig: '"><script>' });
+  assert.ok(!evil.includes('"><script>'));
+  assert.ok(evil.includes('data-s="&quot;&gt;&lt;script&gt;"'));
+});
+
+test('reviewHtml for an invalid link has data-invalid and no sig', async () => {
+  const { reviewHtml } = await import('./reviews.js');
+  const html = reviewHtml(null, { id: 7, sig: 'abc' });
+  assert.ok(html.includes('data-invalid="1"'));
+  assert.ok(!html.includes('data-s'));
+});

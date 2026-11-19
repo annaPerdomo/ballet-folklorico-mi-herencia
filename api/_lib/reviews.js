@@ -160,18 +160,37 @@ export async function approvedReviews(limit = 30) {
 
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-export function reviewHtml(ev, { id, sig, origin }) {
-  const msg = ev ? 'The review page is coming soon.' : 'This review link is not valid.';
+export function reviewHtml(ev, { id, sig }) {
+  const data = ev ? ` data-review="${esc(id)}" data-s="${esc(sig)}"` : ' data-invalid="1"';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0514" />
   <meta name="robots" content="noindex" />
-  <title>Review</title>
+  <title>Review | Ballet Folklórico Mi Herencia</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/team/team.css" />
+  <link rel="stylesheet" href="/team/review.css" />
 </head>
-<body data-review="${esc(id)}" data-s="${esc(sig)}" data-origin="${esc(origin)}">
-  <p>${msg}</p>
+<body>
+  <header class="tm-header">
+    <a class="tm-brand" href="/" aria-label="Ballet Folklórico Mi Herencia">
+      <img class="tm-logo" src="/images/optimized/logo-dancers-color.webp" alt="" />
+      <span class="tm-wordmark notranslate" translate="no">
+        <span class="tm-wm-1">Ballet Folklórico</span>
+        <span class="tm-wm-2">Mi Herencia</span>
+        <span class="tm-wm-short">BFMH</span>
+      </span>
+    </a>
+    <div class="tm-header-right" id="header-right"></div>
+  </header>
+  <main class="tm-main rv-main" id="review"${data}></main>
+  <script src="/team/review.js" defer></script>
 </body>
 </html>`;
 }
